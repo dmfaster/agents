@@ -40,7 +40,7 @@ for (const { directory, name } of packageDefinitions) {
   }
   if (
     packageJson.repository?.type !== "git"
-    || packageJson.repository?.url !== "git+https://github.com/eemelidevii/dmfaster-agents.git"
+    || packageJson.repository?.url !== "git+https://github.com/dmfaster/agents.git"
     || packageJson.repository?.directory !== `packages/${directory}`
   ) {
     throw new Error(`${name} is missing its canonical repository metadata.`);

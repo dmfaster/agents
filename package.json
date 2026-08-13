@@ -7,7 +7,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eemelidevii/dmfaster-agents.git"
+    "url": "git+https://github.com/dmfaster/agents.git"
   },
   "workspaces": [
     "packages/product-ui",

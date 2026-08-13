@@ -7,7 +7,7 @@
     "name": "DM Faster"
   },
   "homepage": "https://dmfaster.com/docs/agents",
-  "repository": "https://github.com/eemelidevii/dmfaster-agents",
+  "repository": "https://github.com/dmfaster/agents",
   "license": "Apache-2.0",
   "logo": "assets/dm-icon.png",
   "keywords": [
