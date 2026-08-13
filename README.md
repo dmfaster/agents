@@ -33,14 +33,14 @@ Faster, and start a new session so the skill and MCP server load.
 ### Codex
 
 ```bash
-codex plugin marketplace add eemelidevii/dmfaster-agents
+codex plugin marketplace add dmfaster/agents
 codex plugin add dmfaster@dmfaster-agents
 ```
 
 ### Claude Code
 
 ```bash
-claude plugin marketplace add eemelidevii/dmfaster-agents
+claude plugin marketplace add dmfaster/agents
 claude plugin install dmfaster@dmfaster-agents
 ```
 

@@ -7,7 +7,7 @@
   "homepage": "https://dmfaster.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eemelidevii/dmfaster-agents.git",
+    "url": "git+https://github.com/dmfaster/agents.git",
     "directory": "packages/local-auth"
   },
   "type": "module",

@@ -19,7 +19,7 @@ All four `@dmfaster` package names already exist on npm. Do not recreate a
 token-based bootstrap path. Each package must trust GitHub Actions with these
 exact settings:
 
-- repository: `eemelidevii/dmfaster-agents`;
+- repository: `dmfaster/agents`;
 - workflow: `agent-packages-release.yml`;
 - environment: `npm-packages`;
 - allowed action: `npm publish`.
@@ -56,10 +56,10 @@ catalogs and test the complete plugin from clean host profiles:
 Verify clean GitHub installs:
 
 ```bash
-codex plugin marketplace add eemelidevii/dmfaster-agents
+codex plugin marketplace add dmfaster/agents
 codex plugin add dmfaster@dmfaster-agents
 
-claude plugin marketplace add eemelidevii/dmfaster-agents
+claude plugin marketplace add dmfaster/agents
 claude plugin install dmfaster@dmfaster-agents
 ```
 

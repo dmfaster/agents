@@ -71,7 +71,7 @@ if (portableManifest.version !== releaseVersion) {
 if (portableManifest.license !== "Apache-2.0") {
   fail("Agent Plugins manifest must declare Apache-2.0");
 }
-if (portableManifest.repository !== "https://github.com/eemelidevii/dmfaster-agents") {
+if (portableManifest.repository !== "https://github.com/dmfaster/agents") {
   fail("Agent Plugins manifest must link to the approved public agent source");
 }
 if (JSON.stringify(portableManifest.author) !== JSON.stringify({
@@ -108,7 +108,7 @@ for (const [host, manifest] of [
   if (manifest.name !== "dmfaster") fail(`${host} manifest name must be dmfaster`);
   if (manifest.version !== releaseVersion) fail(`${host} manifest version must match agent packages`);
   if (manifest.license !== "Apache-2.0") fail(`${host} manifest must declare Apache-2.0`);
-  if (manifest.repository !== "https://github.com/eemelidevii/dmfaster-agents") {
+  if (manifest.repository !== "https://github.com/dmfaster/agents") {
     fail(`${host} manifest must link to the approved public agent source`);
   }
   if (manifest.skills !== "./skills/") fail(`${host} manifest must use the canonical skills directory`);

@@ -69,9 +69,9 @@ jobs:
               "npm provenance requires a public GitHub source repository. Use an approved public-source release repository before publishing.",
             );
           }
-          if (process.env.RELEASE_REPOSITORY !== "eemelidevii/dmfaster-agents") {
+          if (process.env.RELEASE_REPOSITORY !== "dmfaster/agents") {
             throw new Error(
-              `Agent packages may only publish from eemelidevii/dmfaster-agents; received ${process.env.RELEASE_REPOSITORY}.`,
+              `Agent packages may only publish from dmfaster/agents; received ${process.env.RELEASE_REPOSITORY}.`,
             );
           }
           if (!/^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/u.test(version)) {

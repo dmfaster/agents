@@ -118,9 +118,9 @@ function assertReleaseContext(version) {
   if (process.env.GITHUB_REPOSITORY_VISIBILITY !== "public") {
     throw new Error("Agent package provenance requires an approved public GitHub source repository.");
   }
-  if (process.env.GITHUB_REPOSITORY !== "eemelidevii/dmfaster-agents") {
+  if (process.env.GITHUB_REPOSITORY !== "dmfaster/agents") {
     throw new Error(
-      `Agent packages may only publish from eemelidevii/dmfaster-agents; received ${process.env.GITHUB_REPOSITORY || "(missing)"}.`,
+      `Agent packages may only publish from dmfaster/agents; received ${process.env.GITHUB_REPOSITORY || "(missing)"}.`,
     );
   }
   if (
