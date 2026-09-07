@@ -49,7 +49,7 @@ function presentationResult(input: z.infer<typeof campaignWorkspaceInputSchema>)
       text: [
         `Campaign workspace ready for ${input.state.profile.businessName || "this business"}.`,
         "A compatible MCP Apps host can render the interactive editor.",
-        "In a headless host, keep using the structured state and the 16 DM Faster domain tools directly.",
+        "In a headless host, keep using the structured state and the 17 DM Faster domain tools directly.",
         "Preparing creates only a private disabled draft; launching still requires the owner-approved preflight flow.",
       ].join(" "),
     }],

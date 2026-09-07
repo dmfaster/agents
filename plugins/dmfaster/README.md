@@ -28,7 +28,7 @@ a legacy MCP downgrade.
 
 ## Release status
 
-This public source targets the version-pinned 1.0.0 packages. The repository can
+This public source targets the version-pinned 1.0.1 packages. The repository can
 act as a Codex/ChatGPT desktop repo marketplace and a Claude Code marketplace
 after the exact packages are published and the host-specific checks pass. It is
 not a universal
@@ -45,7 +45,7 @@ Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@1.0.0 auth login --json
+npx --yes @dmfaster/cli@1.0.1 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use

@@ -27,6 +27,10 @@ test("keeps external launch execution outside the interactive view", () => {
   assert.match(APP_SOURCE, /toolName = "campaign_validate"/u);
   assert.match(APP_SOURCE, /toolName = "audience_preview"/u);
   assert.match(APP_SOURCE, /toolName = "campaign_prepare"/u);
+  assert.match(APP_SOURCE, /reviewedAudienceFromPreview/u);
+  assert.match(APP_SOURCE, /reviewedAudience,/u);
+  assert.match(APP_SOURCE, /setReviewedAudience\(null\)/u);
+  assert.match(APP_SOURCE, /!reviewedAudience/u);
   assert.match(APP_SOURCE, /toolName = "campaign_launch_preflight"/u);
   assert.doesNotMatch(APP_SOURCE, /toolName = "campaign_launch";/u);
   assert.doesNotMatch(APP_SOURCE, /toolName = "campaign_pause";/u);

@@ -120,6 +120,40 @@ paths:
         "429": { $ref: "#/components/responses/AuthTooManyRequests" }
         "503": { $ref: "#/components/responses/AuthServiceUnavailable" }
 
+  /api/v1/agent/tools/analytics.summary:
+    post:
+      tags: [Agent tools]
+      operationId: analyticsSummary
+      summary: Inspect an analytics summary
+      description: Returns an authoritative analytics snapshot for an explicit time scope, optionally limited to one campaign. Read-only.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["workspace:read"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyticsSummaryInput"
+      responses:
+        "200":
+          description: Analytics summary.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CacheControl"
+            X-Request-Id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsSummaryResult"
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
   /api/v1/agent/tools/workspace.briefing:
     post:
       tags: [Agent tools]
@@ -230,7 +264,7 @@ paths:
       operationId: sendingInspect
       summary: Inspect sending health
       description: |
-        Returns campaign, queue, failure, and browser-worker health. When campaignId
+        Returns customer-facing campaign, queue, and browser-worker health. When campaignId
         is omitted, the selected, active, or most recent campaign is used. Read-only.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["sending:read"]
@@ -1015,6 +1049,7 @@ components:
     AgentToolName:
       type: string
       enum:
+        - analytics.summary
         - workspace.briefing
         - campaigns.list
         - campaign.inspect
@@ -1063,6 +1098,7 @@ components:
             - company_database
             - classification_catalog
             - campaign_workflow
+            - analytics_snapshot
         observedAt:
           type: string
           format: date-time
@@ -1145,6 +1181,17 @@ components:
           oneOf:
             - $ref: "#/components/schemas/AgentToolError"
             - type: "null"
+
+    AnalyticsSummaryResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: analytics.summary }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/AnalyticsSummaryOutput"
+                - type: "null"
 
     WorkspaceBriefingResult:
       allOf:
@@ -1253,7 +1300,7 @@ components:
             tool: { type: string, const: audience.preview }
             data:
               oneOf:
-                - $ref: "#/components/schemas/AgentHarnessResult"
+                - $ref: "#/components/schemas/AudiencePreviewHarnessResult"
                 - type: "null"
 
     ListPrepareResult:
@@ -1321,6 +1368,19 @@ components:
               oneOf:
                 - $ref: "#/components/schemas/CampaignActionOutput"
                 - type: "null"
+
+    AnalyticsSummaryInput:
+      type: object
+      additionalProperties: false
+      required: [scope]
+      properties:
+        scope:
+          type: string
+          enum: [today, last_24_hours, campaign_to_date]
+        campaign:
+          allOf:
+            - $ref: "#/components/schemas/ResourceId"
+          description: Optional campaign identifier or exact campaign name.
 
     WorkspaceBriefingInput:
       type: object
@@ -1411,10 +1471,37 @@ components:
           minimum: 1
           maximum: 25
 
+    ReviewedAudience:
+      type: object
+      additionalProperties: false
+      description: Server-issued identity from the exact audience preview. Echo this object unchanged when preparing a private list or campaign; clients must not derive it.
+      required: [querySignature, dataFreshness]
+      properties:
+        querySignature:
+          type: string
+          minLength: 1
+          maxLength: 200
+          pattern: ".*\\S.*"
+        dataFreshness:
+          type: object
+          additionalProperties: false
+          required: [engine, revision]
+          properties:
+            engine:
+              type: string
+              const: search_facts
+            revision:
+              type: string
+              minLength: 1
+              maxLength: 200
+              pattern: ".*\\S.*"
+        excludePreviouslyContacted:
+          type: boolean
+
     ListPrepareInput:
       type: object
       additionalProperties: false
-      required: [state]
+      required: [state, reviewedAudience]
       properties:
         state:
           $ref: "#/components/schemas/AgentCampaignState"
@@ -1424,6 +1511,8 @@ components:
           maximum: 25
         idempotencyKey:
           $ref: "#/components/schemas/IdempotencyKey"
+        reviewedAudience:
+          $ref: "#/components/schemas/ReviewedAudience"
 
     CampaignPrepareInput:
       $ref: "#/components/schemas/ListPrepareInput"
@@ -1616,6 +1705,9 @@ components:
         exclusions:
           type: array
           items: { type: string }
+        excludePreviouslyContacted:
+          type: boolean
+          description: Exclude companies already contacted in this workspace. The exact preview and prepare call must use the same setting.
         unsupportedCriteria:
           type: array
           maxItems: 8
@@ -1799,6 +1891,27 @@ components:
             - type: "null"
         data: {}
 
+    AudiencePreviewHarnessData:
+      type: object
+      additionalProperties: true
+      description: Exact preview data plus the opaque audience identity required by preparation calls.
+      required: [reviewedAudience]
+      properties:
+        reviewedAudience:
+          oneOf:
+            - $ref: "#/components/schemas/ReviewedAudience"
+            - type: "null"
+
+    AudiencePreviewHarnessResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentHarnessResult"
+        - type: object
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/AudiencePreviewHarnessData"
+                - type: "null"
+
     AgentCampaignAction:
       type: string
       enum: [campaign.launch, campaign.pause]
@@ -1963,8 +2076,6 @@ components:
         - channels
         - targetCount
         - sentCount
-        - skippedCount
-        - failedCount
         - dailyCap
         - updatedAt
       properties:
@@ -1981,8 +2092,6 @@ components:
             $ref: "#/components/schemas/TargetChannel"
         targetCount: { type: integer, minimum: 0 }
         sentCount: { type: integer, minimum: 0 }
-        skippedCount: { type: integer, minimum: 0 }
-        failedCount: { type: integer, minimum: 0 }
         dailyCap: { type: integer, minimum: 0 }
         updatedAt:
           type: string
@@ -2034,6 +2143,97 @@ components:
           type: string
           description: ISO 8601 timestamp, or an empty string when no worker has been observed.
 
+    AnalyticsSummaryOutput:
+      type: object
+      additionalProperties: false
+      required:
+        - version
+        - generatedAt
+        - asOf
+        - scope
+        - timezone
+        - window
+        - campaign
+        - counts
+        - rates
+        - formulas
+        - coverage
+        - sources
+        - snapshotId
+      properties:
+        version: { type: integer, const: 1 }
+        generatedAt: { type: string, format: date-time }
+        asOf: { type: string, format: date-time }
+        scope:
+          type: string
+          enum: [today, last_24_hours, campaign_to_date]
+        timezone: { type: string, minLength: 1 }
+        window:
+          type: object
+          additionalProperties: false
+          required: [start, end, label]
+          properties:
+            start:
+              oneOf:
+                - { type: string, format: date-time }
+                - { type: "null" }
+            end: { type: string, format: date-time }
+            label: { type: string, minLength: 1 }
+        campaign:
+          oneOf:
+            - type: object
+              additionalProperties: false
+              required: [id, name]
+              properties:
+                id: { type: string, minLength: 1 }
+                name: { type: string, minLength: 1 }
+            - type: "null"
+        counts:
+          type: object
+          additionalProperties: false
+          required: [sent, reachedCompanies, replies, replyingCompanies, bookedCalls]
+          properties:
+            sent: { type: integer, minimum: 0 }
+            reachedCompanies: { type: integer, minimum: 0 }
+            replies: { type: integer, minimum: 0 }
+            replyingCompanies: { type: integer, minimum: 0 }
+            bookedCalls: { type: integer, minimum: 0 }
+        rates:
+          type: object
+          additionalProperties: false
+          required: [replyRateByCompanies, replyRateByMessages]
+          properties:
+            replyRateByCompanies:
+              oneOf: [{ type: number, minimum: 0 }, { type: "null" }]
+            replyRateByMessages:
+              oneOf: [{ type: number, minimum: 0 }, { type: "null" }]
+        formulas:
+          type: object
+          additionalProperties: false
+          required: [replyRateByCompanies, replyRateByMessages]
+          properties:
+            replyRateByCompanies: { type: string, minLength: 1 }
+            replyRateByMessages: { type: string, minLength: 1 }
+        coverage:
+          type: object
+          additionalProperties: false
+          required: [sent, reachedCompanies, replies, bookedCalls]
+          properties:
+            sent: { type: string, enum: [complete, partial, unavailable] }
+            reachedCompanies: { type: string, enum: [complete, partial, unavailable] }
+            replies: { type: string, enum: [complete, partial, unavailable] }
+            bookedCalls: { type: string, enum: [complete, partial, unavailable] }
+        sources:
+          type: object
+          additionalProperties: false
+          required: [sent, reachedCompanies, replies, bookedCalls]
+          properties:
+            sent: { type: string, minLength: 1 }
+            reachedCompanies: { type: string, minLength: 1 }
+            replies: { type: string, minLength: 1 }
+            bookedCalls: { type: string, minLength: 1 }
+        snapshotId: { type: string, minLength: 1 }
+
     WorkspaceBriefingOutput:
       type: object
       additionalProperties: false
@@ -2055,13 +2255,11 @@ components:
         totals:
           type: object
           additionalProperties: false
-          required: [campaigns, targetLists, sent, skipped, failed]
+          required: [campaigns, targetLists, sent]
           properties:
             campaigns: { type: integer, minimum: 0 }
             targetLists: { type: integer, minimum: 0 }
             sent: { type: integer, minimum: 0 }
-            skipped: { type: integer, minimum: 0 }
-            failed: { type: integer, minimum: 0 }
         sending:
           $ref: "#/components/schemas/SendingSummary"
         focusCampaign:
@@ -2097,22 +2295,16 @@ components:
           type: object
           additionalProperties: false
           required:
-            - totalJobs
             - queued
             - running
             - completed
-            - skipped
-            - failed
             - companiesPlanned
             - companiesReached
             - byChannel
           properties:
-            totalJobs: { type: integer, minimum: 0 }
             queued: { type: integer, minimum: 0 }
             running: { type: integer, minimum: 0 }
             completed: { type: integer, minimum: 0 }
-            skipped: { type: integer, minimum: 0 }
-            failed: { type: integer, minimum: 0 }
             companiesPlanned: { type: integer, minimum: 0 }
             companiesReached: { type: integer, minimum: 0 }
             byChannel:
@@ -2285,7 +2477,7 @@ components:
         id: { type: string }
         type:
           type: string
-          enum: [planned, sent, failed, skipped, replied, positive, pipeline_stage]
+          enum: [planned, sent, replied, positive, pipeline_stage]
         occurredAt:
           type: string
           format: date-time

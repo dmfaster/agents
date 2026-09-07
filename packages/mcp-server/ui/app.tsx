@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
-import type { AgentCampaignState } from "@dmfaster/sdk";
+import type { AgentCampaignState, AgentToolInputMap } from "@dmfaster/sdk";
 import {
   CampaignToggle,
   PageIntro,
@@ -28,6 +28,7 @@ type WorkspaceInput = {
 
 type TabId = "audience" | "messages" | "delivery" | "business";
 type CampaignChannel = AgentCampaignState["brief"]["requestedChannels"][number];
+type ReviewedAudience = AgentToolInputMap["campaign.prepare"]["reviewedAudience"];
 type ToolAction = "validate" | "preview" | "prepare" | "preflight";
 type PreviewCompany = {
   name?: string;
@@ -75,6 +76,33 @@ const tabs: Array<{ id: TabId; label: string; description: string }> = [
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" ? value as Record<string, unknown> : null;
+}
+
+function reviewedAudienceFromPreview(value: unknown): ReviewedAudience | null {
+  const reviewed = asRecord(value);
+  const freshness = asRecord(reviewed?.dataFreshness);
+  if (
+    !reviewed || Array.isArray(value) ||
+    Object.keys(reviewed).some((key) => (
+      key !== "querySignature" &&
+      key !== "dataFreshness" &&
+      key !== "excludePreviouslyContacted"
+    )) ||
+    (reviewed.excludePreviouslyContacted !== undefined &&
+      typeof reviewed.excludePreviouslyContacted !== "boolean") ||
+    typeof reviewed.querySignature !== "string" ||
+    !reviewed.querySignature.trim() || reviewed.querySignature.length > 200 ||
+    !freshness || Array.isArray(reviewed.dataFreshness) ||
+    Object.keys(freshness).some((key) => key !== "engine" && key !== "revision") ||
+    freshness.engine !== "search_facts" ||
+    typeof freshness.revision !== "string" ||
+    !freshness.revision.trim() || freshness.revision.length > 200
+  ) {
+    return null;
+  }
+  // Keep the server-issued envelope opaque: the UI validates shape but never
+  // compiles filters or derives either identity value.
+  return reviewed as ReviewedAudience;
 }
 
 function cloneState(state: AgentCampaignState) {
@@ -255,6 +283,17 @@ function AudienceEditor({
       <Field label="Company exclusions" className="sm:col-span-2">
         <input className={inputClass} value={state.brief.exclusions.join(", ")} onChange={(event) => update((next) => { next.brief.exclusions = csv(event.target.value); }, true)} />
       </Field>
+      <div className="sm:col-span-2 flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white px-4 py-3">
+        <div>
+          <p className="text-sm font-semibold text-slate-800">Exclude previously contacted companies</p>
+          <p className="mt-1 text-xs leading-5 text-slate-500">Use this workspace's contact history so the exact preview and saved list contain only new companies.</p>
+        </div>
+        <CampaignToggle
+          checked={state.brief.excludePreviouslyContacted === true}
+          ariaLabel="Exclude previously contacted companies"
+          onChange={(checked) => update((next) => { next.brief.excludePreviouslyContacted = checked; }, true)}
+        />
+      </div>
       <div className="sm:col-span-2">
         <p className="mb-1.5 text-sm font-semibold text-slate-800">Signals and ad evidence</p>
         <Tags values={signalTags} empty="No signal filter requested" />
@@ -521,7 +560,9 @@ function App() {
   const [dirty, setDirty] = useState(false);
   const [busy, setBusy] = useState<ToolAction | "sync" | null>(null);
   const [exactAudience, setExactAudience] = useState<number | null>(null);
+  const [reviewedAudience, setReviewedAudience] = useState<ReviewedAudience | null>(null);
   const [result, setResult] = useState<ToolView | null>(null);
+  const audienceEditGeneration = useRef(0);
   const draftKey = useRef<string | null>(null);
   const launchKey = useRef<string | null>(null);
   const launchKeyCampaignId = useRef<string | null>(null);
@@ -533,7 +574,9 @@ function App() {
     setCampaignId(input.campaignId || null);
     setDirty(false);
     setExactAudience(null);
+    setReviewedAudience(null);
     setResult(null);
+    audienceEditGeneration.current += 1;
     draftKey.current = null;
     launchKey.current = null;
     launchKeyCampaignId.current = null;
@@ -580,7 +623,11 @@ function App() {
     });
     setDirty(true);
     draftKey.current = null;
-    if (invalidateAudience) setExactAudience(null);
+    if (invalidateAudience) {
+      audienceEditGeneration.current += 1;
+      setExactAudience(null);
+      setReviewedAudience(null);
+    }
   }, []);
 
   const forecast = useMemo(() => state ? deliveryForecast(state, exactAudience) : null, [exactAudience, state]);
@@ -593,7 +640,11 @@ function App() {
   const canCall = connection !== "headless" && connection !== "connecting" && bridge.canCallTools();
   const activeTabCopy = tabs.find((tab) => tab.id === activeTab) || tabs[0];
 
-  const consumeResult = useCallback((toolName: string, toolResult: unknown) => {
+  const consumeResult = useCallback((
+    toolName: string,
+    toolResult: unknown,
+    acceptAudienceReview = true,
+  ) => {
     const payload = toolPayload(toolResult);
     const harness = harnessFrom(payload);
     const status = typeof harness?.status === "string" ? harness.status : "";
@@ -603,8 +654,22 @@ function App() {
     const harnessData = asRecord(harness?.data);
     const audience = asRecord(harnessData?.audience);
     const companies = Array.isArray(audience?.companies) ? audience.companies.filter((company) => asRecord(company)).map((company) => company as PreviewCompany) : [];
-    if (audience?.totalMatchesExact === true && typeof audience.totalMatches === "number") setExactAudience(audience.totalMatches);
-    else if (toolName === "audience_preview") setExactAudience(null);
+    if (toolName === "audience_preview") {
+      const nextReviewedAudience = acceptAudienceReview && !failed
+        ? reviewedAudienceFromPreview(harnessData?.reviewedAudience)
+        : null;
+      if (
+        nextReviewedAudience &&
+        audience?.totalMatchesExact === true &&
+        typeof audience.totalMatches === "number"
+      ) {
+        setExactAudience(audience.totalMatches);
+        setReviewedAudience(nextReviewedAudience);
+      } else {
+        setExactAudience(null);
+        setReviewedAudience(null);
+      }
+    }
 
     const refs = asRecord(harness?.resourceRefs);
     if (typeof refs?.campaignId === "string") {
@@ -647,15 +712,24 @@ function App() {
 
   const runAction = useCallback(async (action: ToolAction) => {
     if (!state || busy) return;
+    const previewGeneration = audienceEditGeneration.current;
     setBusy(action);
     try {
       let toolName = "campaign_validate";
       let input: Record<string, unknown> = { state };
       if (action === "preview") { toolName = "audience_preview"; input = { state, sampleSize: 10 }; }
       if (action === "prepare") {
+        if (!reviewedAudience) {
+          throw new Error("Preview and review the exact audience before preparing a private draft.");
+        }
         toolName = "campaign_prepare";
         draftKey.current ||= newKey("prepare");
-        input = { state, sampleSize: 10, idempotencyKey: draftKey.current };
+        input = {
+          state,
+          sampleSize: 10,
+          idempotencyKey: draftKey.current,
+          reviewedAudience,
+        };
       }
       if (action === "preflight") {
         if (!campaignId) throw new Error("Prepare a private campaign draft before requesting launch approval.");
@@ -667,7 +741,11 @@ function App() {
         input = { campaignId, idempotencyKey: launchKey.current };
       }
       const toolResult = await bridge.callTool(toolName, input);
-      consumeResult(toolName, toolResult);
+      consumeResult(
+        toolName,
+        toolResult,
+        toolName !== "audience_preview" || previewGeneration === audienceEditGeneration.current,
+      );
     } catch (error) {
       setResult({
         tool: "Host error",
@@ -684,7 +762,7 @@ function App() {
     } finally {
       setBusy(null);
     }
-  }, [busy, campaignId, consumeResult, state]);
+  }, [busy, campaignId, consumeResult, reviewedAudience, state]);
 
   const sync = useCallback(async () => {
     if (!state || busy) return;
@@ -822,7 +900,7 @@ function App() {
                 <p className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs leading-5 text-blue-800">
                   Prepare creates a private disabled draft. It never starts sending.
                 </p>
-                <button type="button" className={`${primaryButtonClass} w-full`} disabled={!canCall || Boolean(busy)} onClick={() => void runAction("prepare")}>{busy === "prepare" ? "Preparing…" : "Prepare private draft"}</button>
+                <button type="button" className={`${primaryButtonClass} w-full`} disabled={!canCall || Boolean(busy) || !reviewedAudience} onClick={() => void runAction("prepare")}>{busy === "prepare" ? "Preparing…" : "Prepare private draft"}</button>
                 <div className="grid grid-cols-2 gap-2">
                   <button type="button" className={`${subtleButtonClass} px-2`} disabled={!canCall || Boolean(busy)} onClick={() => void runAction("validate")}>{busy === "validate" ? "Validating…" : "Validate"}</button>
                   <button type="button" className={`${subtleButtonClass} px-2`} disabled={!canCall || Boolean(busy)} onClick={() => void runAction("preview")}>{busy === "preview" ? "Previewing…" : "Preview audience"}</button>
