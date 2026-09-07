@@ -58,7 +58,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.0.1 auth login --json
+npx --yes @dmfaster/cli@1.0.2 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -75,8 +75,8 @@ single-use action authorization.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.0.1 workspace briefing --json
-npx --yes @dmfaster/mcp-server@1.0.1
+npx --yes @dmfaster/cli@1.0.2 workspace briefing --json
+npx --yes @dmfaster/mcp-server@1.0.2
 ```
 
 The 17 MCP domain tools cover workspace, campaign, sending, reply, pipeline,
@@ -121,3 +121,15 @@ unpatched exploit.
 The source in this repository is licensed under Apache License 2.0. This
 license applies only to this public repository and does not cover DM Faster's
 private product source or trademarks.
+
+## Import an Instagram list
+
+All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
+
+```bash
+npx --yes @dmfaster/cli@1.0.2 list import --name "My prospects" --file usernames.csv --json
+```
+
+The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
+
+OpenAPI generates the SDK tool catalog and types, MCP input schemas, and CLI help metadata. After changing the contract, run `npm run generate:agent-api`; `npm run check:agent-api` rejects stale artifacts.

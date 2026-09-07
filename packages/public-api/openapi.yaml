@@ -128,6 +128,20 @@ paths:
       description: Returns an authoritative analytics snapshot for an explicit time scope, optionally limited to one campaign. Read-only.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["workspace:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: analytics_summary
+        title: Analytics summary
+        description: Read an authoritative analytics snapshot for an explicit time scope, optionally limited to one campaign identifier or exact name.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Workspace reads
+        usage: analytics summary --scope today|last_24_hours|campaign_to_date [--campaign ID_OR_NAME]
       requestBody:
         required: true
         content:
@@ -162,6 +176,20 @@ paths:
       description: Returns an authoritative workspace, campaign, and sending summary. Read-only.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["workspace:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: workspace_briefing
+        title: Workspace briefing
+        description: Start here when the user has not named a specific DM Faster resource. Read the authoritative workspace summary and current campaign and sending priorities.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Workspace reads
+        usage: workspace briefing
       requestBody:
         required: true
         content:
@@ -196,6 +224,20 @@ paths:
       description: Lists the most recently updated campaigns, optionally filtered by status. Read-only.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["campaigns:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: campaigns_list
+        title: List campaigns
+        description: List campaigns in the current workspace, optionally filtered by status.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Workspace reads
+        usage: campaigns list [--status STATUS] [--limit N]
       requestBody:
         required: true
         content:
@@ -232,6 +274,20 @@ paths:
         omitted, the selected, active, or most recent campaign is used. Read-only.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["campaigns:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: campaign_inspect
+        title: Inspect campaign
+        description: Read delivery, outcome, and pipeline facts for a campaign identifier returned by DM Faster.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Workspace reads
+        usage: campaign inspect [CAMPAIGN_ID]
       requestBody:
         required: true
         content:
@@ -268,6 +324,20 @@ paths:
         is omitted, the selected, active, or most recent campaign is used. Read-only.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["sending:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: sending_inspect
+        title: Inspect sending health
+        description: Read browser-worker, queue, and failed-send health for the workspace or one campaign.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Workspace reads
+        usage: sending inspect [CAMPAIGN_ID]
       requestBody:
         required: true
         content:
@@ -304,6 +374,20 @@ paths:
         is omitted, the selected, active, or most recent campaign is used. Read-only.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["inbox:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: replies_list
+        title: List priority replies
+        description: Read actual reply-stage records that need attention. Never infer replies from sent counts.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Workspace reads
+        usage: replies list [CAMPAIGN_ID] [--limit N] [--query TEXT]
       requestBody:
         required: true
         content:
@@ -340,6 +424,20 @@ paths:
         omitted, the selected, active, or most recent campaign is used. Read-only.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["pipeline:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: pipeline_inspect
+        title: Inspect pipeline
+        description: Read contacted, replied, booked-call, and closed pipeline counts for a campaign.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Workspace reads
+        usage: pipeline inspect [CAMPAIGN_ID]
       requestBody:
         required: true
         content:
@@ -374,6 +472,20 @@ paths:
       description: Returns up to 30 recorded outreach and pipeline events for one company. Read-only.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["campaigns:read", "pipeline:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: company_timeline
+        title: Inspect company timeline
+        description: Read the outreach event timeline for one company record in one campaign.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Workspace reads
+        usage: company timeline CAMPAIGN_ID COMPANY_OUTREACH_ID
       requestBody:
         required: true
         content:
@@ -408,6 +520,20 @@ paths:
       description: Returns a grounded resolution, clarification, or unsupported verdict. Read-only.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["audiences:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: industry_lookup
+        title: Resolve industry
+        description: Resolve a natural-language industry or explicit TOL code into official executable TOL selections. Returns clarification instead of guessing.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign planning and drafts
+        usage: industry lookup QUERY [--version 2008|2025] [--language en|fi]
       requestBody:
         required: true
         content:
@@ -434,6 +560,20 @@ paths:
       description: Validates campaign readiness and capabilities without changing workspace data.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["audiences:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: campaign_validate
+        title: Validate campaign plan
+        description: Validate a complete structured campaign state against DM Faster capabilities and domain rules without changing workspace data.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign planning and drafts
+        usage: campaign validate --state FILE
       requestBody:
         required: true
         content:
@@ -460,6 +600,20 @@ paths:
       description: Returns bounded company samples and an exact total without changing workspace data.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["audiences:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: audience_preview
+        title: Preview exact audience
+        description: Preview bounded company rows and the exact matching total. Never describe a total as final unless totalMatchesExact is true.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign planning and drafts
+        usage: audience preview --state FILE [--sample-size N]
       requestBody:
         required: true
         content:
@@ -478,6 +632,46 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
         "503": { $ref: "#/components/responses/ServiceUnavailable" }
 
+  /api/v1/agent/tools/list.import:
+    post:
+      tags: [Agent tools]
+      operationId: listImport
+      summary: Import a private Instagram username list
+      description: Imports 1–1,000 supplied username rows into an owner-only private list. Available to all account owners, including Basic. Removes duplicates; retries verify the saved username set and reject changed input. Creates no campaign and sends nothing.
+      x-dmfaster-effect: draft
+      x-dmfaster-required-scopes: ["campaigns:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: list_import
+        title: Import Instagram username list
+        description: Save 1–1,000 supplied Instagram usernames as a private list after the user reviews them. Available to all account owners, including Basic. Duplicates are removed. Reuse the idempotency key only for the same list. Creates no campaign and sends nothing.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign planning and drafts
+        usage: list import --name NAME --file FILE [--idempotency-key KEY]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ListImportInput" }
+      responses:
+        "200":
+          description: Private list preparation result.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ListImportResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
   /api/v1/agent/tools/list.prepare:
     post:
       tags: [Agent tools]
@@ -486,6 +680,20 @@ paths:
       description: Requires an exact audience and creates only a private workspace list.
       x-dmfaster-effect: draft
       x-dmfaster-required-scopes: ["audiences:read", "campaigns:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: list_prepare
+        title: Prepare private company list
+        description: Create an idempotent private company list from an exact validated audience. First show the audience_preview result to the user, then echo its server-issued reviewedAudience object unchanged. This does not start outreach.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign planning and drafts
+        usage: list prepare --state FILE --reviewed-audience PREVIEW_JSON [--idempotency-key KEY]
       requestBody:
         required: true
         content:
@@ -512,6 +720,20 @@ paths:
       description: Creates a private company list and disabled campaign draft. Nothing is sent.
       x-dmfaster-effect: draft
       x-dmfaster-required-scopes: ["audiences:read", "campaigns:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_prepare
+        title: Prepare campaign draft
+        description: Create an idempotent private list and disabled campaign draft only after the user reviews audience_preview. Echo the preview's server-issued reviewedAudience object unchanged. Nothing is sent and the campaign is not started.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign planning and drafts
+        usage: campaign prepare --state FILE --reviewed-audience PREVIEW_JSON [--idempotency-key KEY]
       requestBody:
         required: true
         content:
@@ -538,6 +760,20 @@ paths:
       description: Validates readiness. Returns a resumable browser-setup handoff when browser sending is unavailable; otherwise creates or returns a short-lived owner approval request.
       x-dmfaster-effect: write
       x-dmfaster-required-scopes: ["campaigns:launch"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_launch_preflight
+        title: Preflight campaign launch
+        description: Validate one exact campaign version without launching it. A setup_required result means the user must open setup.setupUrl, then you repeat setup.resume exactly; an approval_required result means show the approval URL and confirmation code, then repeat identical inputs after the owner decides.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Human-approved campaign controls
+        usage: campaign launch preflight CAMPAIGN_ID --idempotency-key KEY
       requestBody:
         required: true
         content:
@@ -565,6 +801,20 @@ paths:
       description: Starts only the exact campaign version bound to an approved authorization.
       x-dmfaster-effect: external
       x-dmfaster-required-scopes: ["campaigns:launch"]
+      x-dmfaster-approval: human_confirmation
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_launch
+        title: Launch approved campaign
+        description: Start outreach only after the owner approved the matching preflight. Requires the same campaign ID and idempotency key plus the server-issued authorization ID. If the browser went offline and this returns browser_worker_required, repeat the matching preflight to receive its setup handoff.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: true
+      x-dmfaster-cli:
+        section: Human-approved campaign controls
+        usage: campaign launch CAMPAIGN_ID --idempotency-key KEY --authorization-id ID
       requestBody:
         required: true
         content:
@@ -592,6 +842,20 @@ paths:
       description: Validates current state and creates a short-lived owner approval request.
       x-dmfaster-effect: write
       x-dmfaster-required-scopes: ["campaigns:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_pause_preflight
+        title: Preflight campaign pause
+        description: Create or return the short-lived human approval for pausing one exact active campaign version. Repeat with identical inputs to verify approval status. This tool does not pause it.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Human-approved campaign controls
+        usage: campaign pause preflight CAMPAIGN_ID --idempotency-key KEY
       requestBody:
         required: true
         content:
@@ -619,6 +883,20 @@ paths:
       description: Pauses only the exact campaign version bound to an approved authorization.
       x-dmfaster-effect: write
       x-dmfaster-required-scopes: ["campaigns:write"]
+      x-dmfaster-approval: human_confirmation
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_pause
+        title: Pause approved campaign
+        description: Pause a campaign only after the owner approved the matching preflight. Retries with the same idempotency key are safe.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Human-approved campaign controls
+        usage: campaign pause CAMPAIGN_ID --idempotency-key KEY --authorization-id ID
       requestBody:
         required: true
         content:
@@ -852,7 +1130,7 @@ components:
           pattern: '.*\S.*'
         codeChallenge:
           type: string
-          pattern: '^[A-Za-z0-9_-]{43}$'
+          pattern: "^[A-Za-z0-9_-]{43}$"
           description: Base64url-encoded SHA-256 hash of the local PKCE verifier.
         codeChallengeMethod:
           type: string
@@ -881,13 +1159,13 @@ components:
       properties:
         requestId:
           type: string
-          pattern: '^agent_auth_[a-f0-9]{32}$'
+          pattern: "^agent_auth_[a-f0-9]{32}$"
         deviceCode:
           type: string
-          pattern: '^dmf_device_[A-Za-z0-9_-]{43}$'
+          pattern: "^dmf_device_[A-Za-z0-9_-]{43}$"
         confirmationCode:
           type: string
-          pattern: '^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$'
+          pattern: "^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$"
         verificationUrl:
           type: string
           format: uri
@@ -906,13 +1184,13 @@ components:
       properties:
         deviceCode:
           type: string
-          pattern: '^dmf_device_[A-Za-z0-9_-]{43}$'
+          pattern: "^dmf_device_[A-Za-z0-9_-]{43}$"
           writeOnly: true
         codeVerifier:
           type: string
           minLength: 43
           maxLength: 128
-          pattern: '^[A-Za-z0-9._~-]+$'
+          pattern: "^[A-Za-z0-9._~-]+$"
           writeOnly: true
 
     AgentCredential:
@@ -983,7 +1261,7 @@ components:
       properties:
         accessToken:
           type: string
-          pattern: '^dmf_pat_[a-f0-9]{64}$'
+          pattern: "^dmf_pat_[a-f0-9]{64}$"
         tokenType:
           type: string
           const: Bearer
@@ -1060,6 +1338,7 @@ components:
         - industry.lookup
         - campaign.validate
         - audience.preview
+        - list.import
         - list.prepare
         - campaign.prepare
         - campaign.launch.preflight
@@ -1498,6 +1777,45 @@ components:
         excludePreviouslyContacted:
           type: boolean
 
+    ListImportInput:
+      type: object
+      additionalProperties: false
+      required: [name, usernames, idempotencyKey]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 120 }
+        usernames:
+          type: array
+          minItems: 1
+          maxItems: 1000
+          items: { type: string, minLength: 1, maxLength: 64 }
+          description: Instagram handles; whitespace and a leading @ are removed and case is normalized. Invalid handles reject the whole import.
+        idempotencyKey:
+          $ref: "#/components/schemas/IdempotencyKey"
+
+    ListImportData:
+      type: object
+      additionalProperties: false
+      required: [listId, name, created, replayed, importedCount, inputCount, duplicateCount]
+      properties:
+        listId: { type: string }
+        name: { type: string }
+        created: { type: boolean }
+        replayed: { type: boolean }
+        importedCount: { type: integer, minimum: 1, maximum: 1000 }
+        inputCount: { type: integer, minimum: 1, maximum: 1000 }
+        duplicateCount: { type: integer, minimum: 0, maximum: 999 }
+
+    ListImportResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { const: list.import }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/ListImportData"
+                - type: "null"
+
     ListPrepareInput:
       type: object
       additionalProperties: false
@@ -1538,7 +1856,7 @@ components:
           $ref: "#/components/schemas/IdempotencyKey"
         authorizationId:
           type: string
-          pattern: '^agent_action_[a-f0-9]{32}$'
+          pattern: "^agent_action_[a-f0-9]{32}$"
 
     OptionalCampaignInput:
       type: object
@@ -1550,16 +1868,19 @@ components:
           description: Omit to use the selected, active, or most recent campaign.
 
     ResourceId:
+      description: A resource identifier returned by DM Faster. Never guess an identifier from a name.
+      x-dmfaster-trim: true
       type: string
       minLength: 1
       maxLength: 160
       pattern: ".*\\S.*"
 
     IdempotencyKey:
+      x-dmfaster-trim: true
       type: string
       minLength: 1
       maxLength: 160
-      pattern: '^[A-Za-z0-9._:-]{1,160}$'
+      pattern: "^[A-Za-z0-9._:-]{1,160}$"
 
     TolVersion:
       type: string
@@ -1599,6 +1920,8 @@ components:
         - ZA
 
     AgentCampaignState:
+      description: Complete stateless campaign state. Send the latest returned or user-confirmed state on every planning call.
+      x-dmfaster-max-serialized-chars: 32000
       type: object
       additionalProperties: false
       required: [profile, brief]
@@ -1763,7 +2086,15 @@ components:
       properties:
         key:
           type: string
-          enum: [recent_funding, active_hiring, leadership_change, technology_usage, content_activity, purchase_intent]
+          enum:
+            [
+              recent_funding,
+              active_hiring,
+              leadership_change,
+              technology_usage,
+              content_activity,
+              purchase_intent,
+            ]
         required: { type: boolean }
         description: { type: string }
 
@@ -1821,7 +2152,8 @@ components:
     AgentIndustryResolution:
       type: object
       additionalProperties: false
-      required: [status, sourceText, resolvedLabel, primaryVersion, selections, question, options, evidence]
+      required:
+        [status, sourceText, resolvedLabel, primaryVersion, selections, question, options, evidence]
       properties:
         status: { type: string, enum: [resolved, needs_clarification, unsupported] }
         sourceText: { type: string, maxLength: 800 }
@@ -1852,12 +2184,34 @@ components:
     AgentHarnessResult:
       type: object
       additionalProperties: false
-      required: [version, action, status, executionMode, summary, blockers, allowedNextActions, resourceRefs, approval, data]
+      required:
+        [
+          version,
+          action,
+          status,
+          executionMode,
+          summary,
+          blockers,
+          allowedNextActions,
+          resourceRefs,
+          approval,
+          data,
+        ]
       properties:
         version: { type: integer, const: 1 }
         action:
           type: string
-          enum: [get_workspace_capabilities, validate_campaign_plan, preview_audience, prepare_list, prepare_campaign, preflight_campaign_launch, launch_campaign, pause_campaign]
+          enum:
+            [
+              get_workspace_capabilities,
+              validate_campaign_plan,
+              preview_audience,
+              prepare_list,
+              prepare_campaign,
+              preflight_campaign_launch,
+              launch_campaign,
+              pause_campaign,
+            ]
         status:
           type: string
           enum: [success, needs_input, needs_approval, blocked, failed]
@@ -1919,7 +2273,17 @@ components:
     AgentActionSnapshot:
       type: object
       additionalProperties: false
-      required: [campaignId, campaignName, campaignStatus, campaignUpdatedAt, targetListId, targetCount, channels, dailyCap]
+      required:
+        [
+          campaignId,
+          campaignName,
+          campaignStatus,
+          campaignUpdatedAt,
+          targetListId,
+          targetCount,
+          channels,
+          dailyCap,
+        ]
       properties:
         campaignId: { type: string }
         campaignName: { type: string }
@@ -1936,13 +2300,26 @@ components:
     AgentActionAuthorization:
       type: object
       additionalProperties: false
-      required: [id, action, campaignId, commandId, confirmationCode, status, expiresAt, approvedAt, deniedAt, consumedAt, snapshot]
+      required:
+        [
+          id,
+          action,
+          campaignId,
+          commandId,
+          confirmationCode,
+          status,
+          expiresAt,
+          approvedAt,
+          deniedAt,
+          consumedAt,
+          snapshot,
+        ]
       properties:
-        id: { type: string, pattern: '^agent_action_[a-f0-9]{32}$' }
+        id: { type: string, pattern: "^agent_action_[a-f0-9]{32}$" }
         action: { $ref: "#/components/schemas/AgentCampaignAction" }
         campaignId: { type: string }
         commandId: { type: string }
-        confirmationCode: { type: string, pattern: '^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$' }
+        confirmationCode: { type: string, pattern: "^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$" }
         status: { type: string, enum: [pending, approved, denied, consumed, expired] }
         expiresAt: { type: string, format: date-time }
         approvedAt: { type: string }
@@ -2013,7 +2390,7 @@ components:
       properties:
         action: { $ref: "#/components/schemas/AgentCampaignAction" }
         campaign: { $ref: "#/components/schemas/AgentActionSnapshot" }
-        authorizationId: { type: string, pattern: '^agent_action_[a-f0-9]{32}$' }
+        authorizationId: { type: string, pattern: "^agent_action_[a-f0-9]{32}$" }
         idempotencyKey: { $ref: "#/components/schemas/IdempotencyKey" }
         replayed: { type: boolean }
 

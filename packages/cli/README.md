@@ -8,24 +8,24 @@ through the focused DM Faster browser approval page.
 > authorized source checkout.
 
 ```bash
-npx --yes @dmfaster/cli@1.0.1 auth login --json
-npx --yes @dmfaster/cli@1.0.1 auth login --access plan --json
-npx --yes @dmfaster/cli@1.0.1 auth status --json
+npx --yes @dmfaster/cli@1.0.2 auth login --json
+npx --yes @dmfaster/cli@1.0.2 auth login --access plan --json
+npx --yes @dmfaster/cli@1.0.2 auth status --json
 
-npx --yes @dmfaster/cli@1.0.1 analytics summary --scope today --json
-npx --yes @dmfaster/cli@1.0.1 workspace briefing --json
-npx --yes @dmfaster/cli@1.0.1 campaigns list --status Running --limit 10 --json
-npx --yes @dmfaster/cli@1.0.1 replies list campaign_123 --limit 5 --query "Visio" --json
-npx --yes @dmfaster/cli@1.0.1 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.0.2 analytics summary --scope today --json
+npx --yes @dmfaster/cli@1.0.2 workspace briefing --json
+npx --yes @dmfaster/cli@1.0.2 campaigns list --status Running --limit 10 --json
+npx --yes @dmfaster/cli@1.0.2 replies list campaign_123 --limit 5 --query "Visio" --json
+npx --yes @dmfaster/cli@1.0.2 company timeline campaign_123 outreach_456 --json
 
-npx --yes @dmfaster/cli@1.0.1 campaign validate --state campaign-state.json --json
-npx --yes @dmfaster/cli@1.0.1 audience preview --state campaign-state.json --json > audience-preview.json
+npx --yes @dmfaster/cli@1.0.2 campaign validate --state campaign-state.json --json
+npx --yes @dmfaster/cli@1.0.2 audience preview --state campaign-state.json --json > audience-preview.json
 # Review the exact count and sample in audience-preview.json before continuing.
-npx --yes @dmfaster/cli@1.0.1 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
-npx --yes @dmfaster/cli@1.0.1 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
-npx --yes @dmfaster/cli@1.0.1 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
+npx --yes @dmfaster/cli@1.0.2 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
+npx --yes @dmfaster/cli@1.0.2 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
+npx --yes @dmfaster/cli@1.0.2 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
 
-npx --yes @dmfaster/cli@1.0.1 auth logout --json
+npx --yes @dmfaster/cli@1.0.2 auth logout --json
 ```
 
 `auth login` creates a short-lived PKCE device request, prints a confirmation
@@ -37,12 +37,12 @@ receives the issued credential.
 Login defaults to the complete `full` profile. Use `--access` to grant only the
 needed capability set:
 
-| Profile | Capability |
-| --- | --- |
-| `read` | inspect workspace, campaigns, sending, replies, and pipeline |
-| `plan` | `read` plus industry lookup, validation, and exact audience preview |
+| Profile | Capability                                                                |
+| ------- | ------------------------------------------------------------------------- |
+| `read`  | inspect workspace, campaigns, sending, replies, and pipeline              |
+| `plan`  | `read` plus industry lookup, validation, and exact audience preview       |
 | `draft` | `plan` plus private list/campaign preparation and approved pause requests |
-| `full` | `draft` plus approved campaign launch |
+| `full`  | `draft` plus approved campaign launch                                     |
 
 The server still checks every exact scope, workspace membership, owner-only
 rule, and action authorization. An access profile is a credential ceiling, not
@@ -101,3 +101,25 @@ URL for local development or self-hosting. `DMFASTER_TOKEN` remains an explicit
 developer credential override and takes precedence over the operating-system
 store; the CLI rejects plaintext token fields in the JSON config. Never paste a
 DM Faster token into chat or MCP configuration.
+
+## Import Instagram usernames
+
+Save a reviewed username collection as a private list:
+
+```bash
+dmfaster list import --name "Finland Coaches" --file instagram-usernames.csv --json
+```
+
+Use a one-column CSV with an optional `username` or `instagram_username` header,
+or one username per line. UTF-8 BOM, quoted cells, and CRLF are supported. Up to
+1,000 rows and 64 KiB are accepted. Invalid rows reject the whole import. Case
+and leading @ are normalized; duplicates are reported and removed. The command
+derives a stable retry key from the name and unique usernames; supply a new
+`--idempotency-key` to intentionally create another copy.
+
+The SDK equivalent is `client.invoke("list.import", { name, usernames,
+idempotencyKey })`. It requires `campaigns:write` and owner access, and is available on all plans including Basic. A successful result contains `listId`, `name`,
+`importedCount`, `inputCount`, `duplicateCount`, `created`, and `replayed`.
+A changed payload or an edited saved list returns `idempotency_conflict`.
+The list is selectable in the campaign builder; no campaign is created and
+nothing is sent. Import validates syntax, not live Instagram account existence.

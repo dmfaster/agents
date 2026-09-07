@@ -15,7 +15,11 @@ import { runCli, type CliContext } from "../src/cli.ts";
 function output() {
   let value = "";
   return {
-    stream: { write(chunk: string) { value += chunk; } },
+    stream: {
+      write(chunk: string) {
+        value += chunk;
+      },
+    },
     read: () => value,
   };
 }
@@ -120,31 +124,41 @@ test("maps workspace-read CLI arguments to the public tool contract", async () =
     { ...configuredContext(calls), stdout: stdout.stream },
   );
   assert.equal(exitCode, 0);
-  assert.deepEqual(calls, [{
-    tool: "replies.list",
-    input: { campaignId: "campaign_123", limit: 7, query: "Visio" },
-  }]);
+  assert.deepEqual(calls, [
+    {
+      tool: "replies.list",
+      input: { campaignId: "campaign_123", limit: 7, query: "Visio" },
+    },
+  ]);
   assert.match(stdout.read(), /"tool": "replies.list"/);
 });
 
 test("requires an explicit analytics scope and forwards an optional campaign", async () => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   const stderr = output();
-  assert.equal(await runCli(
-    ["analytics", "summary", "--campaign", "campaign_123"],
-    { ...configuredContext(calls), stderr: stderr.stream },
-  ), 2);
+  assert.equal(
+    await runCli(["analytics", "summary", "--campaign", "campaign_123"], {
+      ...configuredContext(calls),
+      stderr: stderr.stream,
+    }),
+    2,
+  );
   assert.match(stderr.read(), /requires --scope/u);
   assert.deepEqual(calls, []);
 
-  assert.equal(await runCli(
-    ["analytics", "summary", "--scope", "today", "--campaign", "campaign_123"],
-    configuredContext(calls),
-  ), 0);
-  assert.deepEqual(calls, [{
-    tool: "analytics.summary",
-    input: { scope: "today", campaign: "campaign_123" },
-  }]);
+  assert.equal(
+    await runCli(
+      ["analytics", "summary", "--scope", "today", "--campaign", "campaign_123"],
+      configuredContext(calls),
+    ),
+    0,
+  );
+  assert.deepEqual(calls, [
+    {
+      tool: "analytics.summary",
+      input: { scope: "today", campaign: "campaign_123" },
+    },
+  ]);
 });
 
 test("loads stateless campaign input from a bounded JSON file", async () => {
@@ -156,10 +170,14 @@ test("loads stateless campaign input from a bounded JSON file", async () => {
   };
   const exitCode = await runCli(
     [
-      "campaign", "prepare",
-      "--state", "/tmp/plan.json",
-      "--reviewed-audience", "/tmp/audience-preview.json",
-      "--idempotency-key", "campaign:prepare:1",
+      "campaign",
+      "prepare",
+      "--state",
+      "/tmp/plan.json",
+      "--reviewed-audience",
+      "/tmp/audience-preview.json",
+      "--idempotency-key",
+      "campaign:prepare:1",
     ],
     {
       ...configuredContext(calls),
@@ -173,25 +191,25 @@ test("loads stateless campaign input from a bounded JSON file", async () => {
     },
   );
   assert.equal(exitCode, 0);
-  assert.deepEqual(calls, [{
-    tool: "campaign.prepare",
-    input: { state, idempotencyKey: "campaign:prepare:1", reviewedAudience },
-  }]);
+  assert.deepEqual(calls, [
+    {
+      tool: "campaign.prepare",
+      input: { state, idempotencyKey: "campaign:prepare:1", reviewedAudience },
+    },
+  ]);
 });
 
 test("requires an explicitly saved and reviewed audience preview before preparation", async () => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   const stderr = output();
-  const exitCode = await runCli(
-    ["campaign", "prepare", "--state", "/tmp/plan.json"],
-    {
-      ...configuredContext(calls),
-      stderr: stderr.stream,
-      readTextFile: async () => JSON.stringify({
+  const exitCode = await runCli(["campaign", "prepare", "--state", "/tmp/plan.json"], {
+    ...configuredContext(calls),
+    stderr: stderr.stream,
+    readTextFile: async () =>
+      JSON.stringify({
         state: { profile: { version: 1 }, brief: { version: 1 } },
       }),
-    },
-  );
+  });
 
   assert.equal(exitCode, 2);
   assert.deepEqual(calls, []);
@@ -214,38 +232,42 @@ test("requires matching preflight fields for campaign actions", async () => {
     configuredContext(calls),
   );
   assert.equal(exitCode, 0);
-  assert.deepEqual(calls, [{
-    tool: "campaign.launch",
-    input: {
-      campaignId: "campaign_123",
-      idempotencyKey: "launch:campaign_123:1",
-      authorizationId,
+  assert.deepEqual(calls, [
+    {
+      tool: "campaign.launch",
+      input: {
+        campaignId: "campaign_123",
+        idempotencyKey: "launch:campaign_123:1",
+        authorizationId,
+      },
     },
-  }]);
+  ]);
 });
 
 test("maps company timeline identifiers to the public tool contract", async () => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   const stdout = output();
-  const exitCode = await runCli(
-    ["company", "timeline", "campaign_123", "outreach_456"],
-    { ...configuredContext(calls), stdout: stdout.stream },
-  );
+  const exitCode = await runCli(["company", "timeline", "campaign_123", "outreach_456"], {
+    ...configuredContext(calls),
+    stdout: stdout.stream,
+  });
   assert.equal(exitCode, 0);
-  assert.deepEqual(calls, [{
-    tool: "company.timeline",
-    input: { campaignId: "campaign_123", companyOutreachId: "outreach_456" },
-  }]);
+  assert.deepEqual(calls, [
+    {
+      tool: "company.timeline",
+      input: { campaignId: "campaign_123", companyOutreachId: "outreach_456" },
+    },
+  ]);
   assert.match(stdout.read(), /"tool": "company.timeline"/);
 });
 
 test("rejects an explicitly empty optional campaign identifier", async () => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   const stderr = output();
-  const exitCode = await runCli(
-    ["campaign", "inspect", "   "],
-    { ...configuredContext(calls), stderr: stderr.stream },
-  );
+  const exitCode = await runCli(["campaign", "inspect", "   "], {
+    ...configuredContext(calls),
+    stderr: stderr.stream,
+  });
 
   assert.equal(exitCode, 2);
   assert.deepEqual(calls, []);
@@ -283,4 +305,51 @@ test("prints typed retry metadata from SDK transport failures", async () => {
       status: 429,
     },
   });
+});
+
+test("list import forwards the reviewed CSV with a stable retry key", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  for (const file of [
+    "\uFEFFusername\n@Coach.FI\nsecond\ncoach.fi",
+    "username\nsecond\ncoach.fi",
+  ]) {
+    assert.equal(
+      await runCli(
+        ["list", "import", "--name", "Finland Coaches", "--file", "coaches.csv", "--json"],
+        {
+          ...configuredContext(calls),
+          readTextFile: async () => file,
+        },
+      ),
+      0,
+    );
+  }
+  assert.equal(calls[0]?.tool, "list.import");
+  const first = calls[0]?.input as AgentToolInputMap["list.import"];
+  const second = calls[1]?.input as AgentToolInputMap["list.import"];
+  assert.deepEqual(first.usernames, ["coach.fi", "second", "coach.fi"]);
+  assert.equal(first.idempotencyKey, second.idempotencyKey);
+  assert.equal(first.name, "Finland Coaches");
+});
+
+test("list import rejects malformed files/options before invoking the API", async () => {
+  for (const args of [
+    [],
+    ["--name", "Coaches"],
+    ["--name", "Coaches", "--file", "file", "--idempotency-key", "bad key"],
+    ["--name", "Coaches", "--file", "file"],
+    ["--name", "Coaches", "--file", "file", "--name", "Again"],
+  ]) {
+    const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+    const stderr = output();
+    assert.equal(
+      await runCli(["list", "import", ...args], {
+        ...configuredContext(calls),
+        stderr: stderr.stream,
+        readTextFile: async () => "valid\ninvalid username",
+      }),
+      2,
+    );
+    assert.deepEqual(calls, []);
+  }
 });

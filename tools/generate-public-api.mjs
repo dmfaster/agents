@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+import { existsSync } from "node:fs";
+import { parse } from "yaml";
+import { compileAgentContract } from "./lib/agent-contract-generation.mjs";
 import { spawnSync } from "node:child_process";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -15,7 +18,9 @@ const check = process.argv.includes("--check");
 const unknownArguments = process.argv.slice(2).filter((argument) => argument !== "--check");
 
 if (unknownArguments.length > 0) {
-  process.stderr.write(`Unknown argument${unknownArguments.length === 1 ? "" : "s"}: ${unknownArguments.join(" ")}\n`);
+  process.stderr.write(
+    `Unknown argument${unknownArguments.length === 1 ? "" : "s"}: ${unknownArguments.join(" ")}\n`,
+  );
   process.exit(2);
 }
 
@@ -44,7 +49,11 @@ function runOpenapiTypescript(arguments_) {
 }
 
 const version = runOpenapiTypescript(["--version"]);
-if (!new RegExp(`(^|\\D)${EXPECTED_OPENAPI_TYPESCRIPT_VERSION.replaceAll(".", "\\.")}($|\\D)`).test(version)) {
+if (
+  !new RegExp(`(^|\\D)${EXPECTED_OPENAPI_TYPESCRIPT_VERSION.replaceAll(".", "\\.")}($|\\D)`).test(
+    version,
+  )
+) {
   throw new Error(
     `Expected openapi-typescript ${EXPECTED_OPENAPI_TYPESCRIPT_VERSION}, received ${version || "an unknown version"}.`,
   );
@@ -54,13 +63,35 @@ const temporaryDirectory = await mkdtemp(path.join(tmpdir(), "dmfaster-public-ap
 const temporaryOutput = path.join(temporaryDirectory, "api.ts");
 
 try {
-  runOpenapiTypescript([
-    contractPath,
-    "--output",
-    temporaryOutput,
-    "--alphabetize",
-  ]);
+  runOpenapiTypescript([contractPath, "--output", temporaryOutput, "--alphabetize"]);
   const generated = await readFile(temporaryOutput, "utf8");
+
+  const contract = parse(await readFile(contractPath, "utf8"));
+  const artifacts = compileAgentContract(contract, {
+    includeServer: existsSync(path.join(rootDir, "site", "package.json")),
+  });
+  for (const [relativePath, source] of artifacts) {
+    const formattedPath = path.join(temporaryDirectory, path.basename(relativePath));
+    await writeFile(formattedPath, source);
+    const formatting = spawnSync(
+      path.join(rootDir, "node_modules", ".bin", "oxfmt"),
+      ["--config", path.join(rootDir, ".oxfmtrc.json"), formattedPath],
+      { encoding: "utf8" },
+    );
+    if (formatting.status !== 0)
+      throw new Error(formatting.stderr || "Generated artifact formatting failed");
+    const content = await readFile(formattedPath, "utf8");
+    const destination = path.join(rootDir, relativePath);
+    if (check) {
+      if ((await readFile(destination, "utf8").catch(() => "")) !== content) {
+        process.stderr.write(`Generated ${relativePath} is stale. Run ${GENERATE_COMMAND}.\n`);
+        process.exitCode = 1;
+      }
+    } else {
+      await mkdir(path.dirname(destination), { recursive: true });
+      await writeFile(destination, content);
+    }
+  }
 
   if (check) {
     const existing = await readFile(outputPath, "utf8").catch(() => "");

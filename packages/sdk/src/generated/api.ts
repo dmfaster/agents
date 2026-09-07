@@ -322,6 +322,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/list.import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Import a private Instagram username list
+         * @description Imports 1–1,000 supplied username rows into an owner-only private list. Available to all account owners, including Basic. Removes duplicates; retries verify the saved username set and reject changed input. Creates no campaign and sends nothing.
+         */
+        post: operations["listImport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/list.prepare": {
         parameters: {
             query?: never;
@@ -532,6 +552,7 @@ export interface components {
             windowEnd: string;
             windowStart: string;
         };
+        /** @description Complete stateless campaign state. Send the latest returned or user-confirmed state on every planning call. */
         AgentCampaignState: {
             brief: components["schemas"]["AgentCampaignBrief"];
             profile: components["schemas"]["AgentBusinessProfile"];
@@ -691,7 +712,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -1006,6 +1027,26 @@ export interface components {
             /** @constant */
             tool?: "industry.lookup";
         };
+        ListImportData: {
+            created: boolean;
+            duplicateCount: number;
+            importedCount: number;
+            inputCount: number;
+            listId: string;
+            name: string;
+            replayed: boolean;
+        };
+        ListImportInput: {
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            name: string;
+            /** @description Instagram handles; whitespace and a leading @ are removed and case is normalized. Invalid handles reject the whole import. */
+            usernames: string[];
+        };
+        ListImportResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ListImportData"] | null;
+            /** @constant */
+            tool?: "list.import";
+        };
         ListPrepareInput: {
             idempotencyKey?: components["schemas"]["IdempotencyKey"];
             reviewedAudience: components["schemas"]["ReviewedAudience"];
@@ -1062,6 +1103,7 @@ export interface components {
             /** @constant */
             tool?: "replies.list";
         };
+        /** @description A resource identifier returned by DM Faster. Never guess an identifier from a name. */
         ResourceId: string;
         /** @description Server-issued identity from the exact audience preview. Echo this object unchanged when preparing a private list or campaign; clients must not derive it. */
         ReviewedAudience: {
@@ -1828,6 +1870,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["IndustryLookupResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    listImport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListImportInput"];
+            };
+        };
+        responses: {
+            /** @description Private list preparation result. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListImportResult"];
                 };
             };
             400: components["responses"]["BadRequest"];

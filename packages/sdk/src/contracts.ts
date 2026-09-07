@@ -1,92 +1,18 @@
 import type { components } from "./generated/api.ts";
 
-/** Runtime counterpart to the OpenAPI-generated AgentToolName union. */
-export const AGENT_TOOL_NAMES = [
-  "analytics.summary",
-  "workspace.briefing",
-  "campaigns.list",
-  "campaign.inspect",
-  "sending.inspect",
-  "replies.list",
-  "pipeline.inspect",
-  "company.timeline",
-  "industry.lookup",
-  "campaign.validate",
-  "audience.preview",
-  "list.prepare",
-  "campaign.prepare",
-  "campaign.launch.preflight",
-  "campaign.launch",
-  "campaign.pause.preflight",
-  "campaign.pause",
-] as const satisfies readonly components["schemas"]["AgentToolName"][];
+import { AGENT_TOOL_NAMES } from "./generated/tools.ts";
+export {
+  AGENT_TOOL_NAMES,
+  AGENT_TOOL_POLICIES,
+  AGENT_TOOL_SCOPES,
+  AGENT_OWNER_ONLY_TOOLS,
+  AGENT_TOOL_DEFINITIONS,
+} from "./generated/tools.ts";
+export type { AgentToolInputMap, AgentToolDataMap } from "./generated/tool-types.ts";
 
 export type AgentToolName = components["schemas"]["AgentToolName"];
 export type AgentToolPolicy = components["schemas"]["AgentToolPolicy"];
-
-export const AGENT_TOOL_POLICIES = Object.freeze({
-  "analytics.summary": { effect: "read", approval: "none", exposure: "public_api" },
-  "workspace.briefing": { effect: "read", approval: "none", exposure: "public_api" },
-  "campaigns.list": { effect: "read", approval: "none", exposure: "public_api" },
-  "campaign.inspect": { effect: "read", approval: "none", exposure: "public_api" },
-  "sending.inspect": { effect: "read", approval: "none", exposure: "public_api" },
-  "replies.list": { effect: "read", approval: "none", exposure: "public_api" },
-  "pipeline.inspect": { effect: "read", approval: "none", exposure: "public_api" },
-  "company.timeline": { effect: "read", approval: "none", exposure: "public_api" },
-  "industry.lookup": { effect: "read", approval: "none", exposure: "public_api" },
-  "campaign.validate": { effect: "read", approval: "none", exposure: "public_api" },
-  "audience.preview": { effect: "read", approval: "none", exposure: "public_api" },
-  "list.prepare": { effect: "draft", approval: "none", exposure: "public_api" },
-  "campaign.prepare": { effect: "draft", approval: "none", exposure: "public_api" },
-  "campaign.launch.preflight": { effect: "write", approval: "none", exposure: "public_api" },
-  "campaign.launch": { effect: "external", approval: "human_confirmation", exposure: "public_api" },
-  "campaign.pause.preflight": { effect: "write", approval: "none", exposure: "public_api" },
-  "campaign.pause": { effect: "write", approval: "human_confirmation", exposure: "public_api" },
-} as const satisfies Record<AgentToolName, AgentToolPolicy>);
-
 export type CampaignStatus = components["schemas"]["CampaignStatus"];
-
-type OptionalLimit<Input> = Omit<Input, "limit"> & { limit?: number | undefined };
-
-export type AgentToolInputMap = {
-  "analytics.summary": components["schemas"]["AnalyticsSummaryInput"];
-  "workspace.briefing": components["schemas"]["WorkspaceBriefingInput"];
-  "campaigns.list": OptionalLimit<components["schemas"]["CampaignsListInput"]>;
-  "campaign.inspect": components["schemas"]["CampaignInspectInput"];
-  "sending.inspect": components["schemas"]["SendingInspectInput"];
-  "replies.list": OptionalLimit<components["schemas"]["RepliesListInput"]>;
-  "pipeline.inspect": components["schemas"]["PipelineInspectInput"];
-  "company.timeline": components["schemas"]["CompanyTimelineInput"];
-  "industry.lookup": components["schemas"]["IndustryLookupInput"];
-  "campaign.validate": components["schemas"]["CampaignValidateInput"];
-  "audience.preview": components["schemas"]["AudiencePreviewInput"];
-  "list.prepare": components["schemas"]["ListPrepareInput"];
-  "campaign.prepare": components["schemas"]["CampaignPrepareInput"];
-  "campaign.launch.preflight": components["schemas"]["CampaignActionPreflightInput"];
-  "campaign.launch": components["schemas"]["CampaignActionInput"];
-  "campaign.pause.preflight": components["schemas"]["CampaignActionPreflightInput"];
-  "campaign.pause": components["schemas"]["CampaignActionInput"];
-};
-
-export type AgentToolDataMap = {
-  "analytics.summary": components["schemas"]["AnalyticsSummaryOutput"];
-  "workspace.briefing": components["schemas"]["WorkspaceBriefingOutput"];
-  "campaigns.list": components["schemas"]["CampaignsListOutput"];
-  "campaign.inspect": components["schemas"]["CampaignInspectOutput"];
-  "sending.inspect": components["schemas"]["SendingInspectOutput"];
-  "replies.list": components["schemas"]["RepliesListOutput"];
-  "pipeline.inspect": components["schemas"]["PipelineInspectOutput"];
-  "company.timeline": components["schemas"]["CompanyTimelineOutput"];
-  "industry.lookup": components["schemas"]["IndustryLookupOutput"];
-  "campaign.validate": components["schemas"]["AgentHarnessResult"];
-  "audience.preview": components["schemas"]["AgentHarnessResult"];
-  "list.prepare": components["schemas"]["AgentHarnessResult"];
-  "campaign.prepare": components["schemas"]["AgentHarnessResult"];
-  "campaign.launch.preflight": components["schemas"]["CampaignActionPreflightOutput"];
-  "campaign.launch": components["schemas"]["CampaignActionOutput"];
-  "campaign.pause.preflight": components["schemas"]["CampaignActionApprovalRequiredOutput"];
-  "campaign.pause": components["schemas"]["CampaignActionOutput"];
-};
 
 export type AgentToolEvidence = components["schemas"]["AgentToolEvidence"];
 export type AgentToolConsistency = components["schemas"]["AgentToolConsistency"];

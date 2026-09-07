@@ -24,6 +24,7 @@ const EXPECTED_TOOLS = new Map([
   ["industry.lookup", { effect: "read", scopes: ["audiences:read"] }],
   ["campaign.validate", { effect: "read", scopes: ["audiences:read"] }],
   ["audience.preview", { effect: "read", scopes: ["audiences:read"] }],
+  ["list.import", { effect: "draft", scopes: ["campaigns:write"] }],
   ["list.prepare", { effect: "draft", scopes: ["audiences:read", "campaigns:write"] }],
   ["campaign.prepare", { effect: "draft", scopes: ["audiences:read", "campaigns:write"] }],
   ["campaign.launch.preflight", { effect: "write", scopes: ["campaigns:launch"] }],
@@ -67,31 +68,42 @@ test("public API generation scripts and stale-output guidance share one repair c
   const generator = await readFile(generatorPath, "utf8");
 
   assert.equal(packageJson.scripts?.["generate:agent-api"], "node tools/generate-public-api.mjs");
-  assert.equal(packageJson.scripts?.["check:agent-api"], "node tools/generate-public-api.mjs --check");
+  assert.equal(
+    packageJson.scripts?.["check:agent-api"],
+    "node tools/generate-public-api.mjs --check",
+  );
   assert.match(generator, /npm run generate:agent-api/);
   assert.doesNotMatch(generator, /npm run generate:public-api/);
 });
 
 function operationBlocks(source) {
-  return [...source.matchAll(
-    /^  \/api\/v1\/agent\/tools\/([^:]+):\n([\s\S]*?)(?=^  \/api\/v1\/agent\/tools\/|^components:)/gm,
-  )].map((match) => ({ tool: match[1], source: match[2] }));
+  return [
+    ...source.matchAll(
+      /^  \/api\/v1\/agent\/tools\/([^:]+):\n([\s\S]*?)(?=^  \/api\/v1\/agent\/tools\/|^components:)/gm,
+    ),
+  ].map((match) => ({ tool: match[1], source: match[2] }));
 }
 
 function authOperationBlocks(source) {
-  return [...source.matchAll(
-    /^  \/api\/v1\/agent\/auth\/([^:]+):\n([\s\S]*?)(?=^  \/api\/v1\/agent\/(?:auth|tools)\/|^components:)/gm,
-  )].map((match) => ({ operation: match[1], source: match[2] }));
+  return [
+    ...source.matchAll(
+      /^  \/api\/v1\/agent\/auth\/([^:]+):\n([\s\S]*?)(?=^  \/api\/v1\/agent\/(?:auth|tools)\/|^components:)/gm,
+    ),
+  ].map((match) => ({ operation: match[1], source: match[2] }));
 }
 
 test("the Agent API exposes the bounded browser-login lifecycle", async () => {
   const source = await readFile(contractPath, "utf8");
   const blocks = authOperationBlocks(source);
 
-  assert.deepEqual(blocks.map(({ operation }) => operation), [...EXPECTED_AUTH_METHODS.keys()]);
+  assert.deepEqual(
+    blocks.map(({ operation }) => operation),
+    [...EXPECTED_AUTH_METHODS.keys()],
+  );
   for (const { operation, source: block } of blocks) {
-    const methods = [...block.matchAll(/^    (get|post|put|patch|delete|options|head|trace):/gm)]
-      .map((match) => match[1]);
+    const methods = [
+      ...block.matchAll(/^    (get|post|put|patch|delete|options|head|trace):/gm),
+    ].map((match) => match[1]);
     assert.deepEqual(methods, [EXPECTED_AUTH_METHODS.get(operation)]);
   }
 
@@ -101,22 +113,33 @@ test("the Agent API exposes the bounded browser-login lifecycle", async () => {
   }
   for (const operation of ["status", "revoke"]) {
     const block = blocks.find((candidate) => candidate.operation === operation)?.source || "";
-    assert.doesNotMatch(block, /^      security: \[\]$/m, `${operation} must inherit bearer authentication`);
+    assert.doesNotMatch(
+      block,
+      /^      security: \[\]$/m,
+      `${operation} must inherit bearer authentication`,
+    );
   }
 
-  assert.match(source, /^        codeChallengeMethod:\n          type: string\n          const: S256$/m);
+  assert.match(
+    source,
+    /^        codeChallengeMethod:\n          type: string\n          const: S256$/m,
+  );
   assert.match(source, /^        expiresIn:\n          type: integer\n          const: 300$/m);
-  assert.match(source, /pattern: '\^dmf_pat_\[a-f0-9\]\{64\}\$'/);
+  assert.match(source, /pattern:\s+['\"]\^dmf_pat_\[a-f0-9\]\{64\}\$['\"]/);
 });
 
 test("the public Agent API exposes exactly the approved Agent 1.0 operations", async () => {
   const source = await readFile(contractPath, "utf8");
   const blocks = operationBlocks(source);
 
-  assert.deepEqual(blocks.map(({ tool }) => tool), [...EXPECTED_TOOLS.keys()]);
+  assert.deepEqual(
+    blocks.map(({ tool }) => tool),
+    [...EXPECTED_TOOLS.keys()],
+  );
   for (const { tool, source: operation } of blocks) {
-    const methods = [...operation.matchAll(/^    (get|post|put|patch|delete|options|head|trace):/gm)]
-      .map((match) => match[1]);
+    const methods = [
+      ...operation.matchAll(/^    (get|post|put|patch|delete|options|head|trace):/gm),
+    ].map((match) => match[1]);
     assert.deepEqual(methods, ["post"], `${tool} must expose only POST`);
     assert.match(
       operation,
@@ -134,27 +157,20 @@ test("the public Agent API exposes exactly the approved Agent 1.0 operations", a
   assert.match(source, /human approval/i);
 });
 
-test("every public tool registry exactly matches the OpenAPI operations", async () => {
-  const [contract, sdkContracts, mcpTools] = await Promise.all([
-    readFile(contractPath, "utf8"),
+test("every public adapter consumes the generated OpenAPI catalog", async () => {
+  const sdk = await import("../packages/sdk/src/generated/tools.ts");
+  assert.deepEqual(sdk.AGENT_TOOL_NAMES, EXPECTED_TOOL_NAMES);
+  for (const [name, expected] of EXPECTED_TOOLS) {
+    assert.equal(sdk.AGENT_TOOL_POLICIES[name].effect, expected.effect);
+    assert.deepEqual(sdk.AGENT_TOOL_SCOPES[name], expected.scopes);
+  }
+  const [sdkSource, mcp] = await Promise.all([
     readFile(sdkContractsPath, "utf8"),
     readFile(mcpToolsPath, "utf8"),
   ]);
-
-  const registries = new Map([
-    ["OpenAPI AgentToolName", yamlEnumValues(contract, "AgentToolName", "AgentToolPolicy")],
-    ["SDK AGENT_TOOL_NAMES", quotedValues(sourceSlice(
-      sdkContracts,
-      "export const AGENT_TOOL_NAMES = [",
-      "] as const",
-    ))],
-    ["MCP SDK tool mappings", [...mcpTools.matchAll(/^\s+tool: "([^"]+)",$/gm)]
-      .map((match) => match[1])],
-  ]);
-
-  for (const [name, tools] of registries) {
-    assert.deepEqual(tools, EXPECTED_TOOL_NAMES, `${name} drifted from the public operations`);
-  }
+  assert.match(sdkSource, /generated\/tools\.ts/);
+  assert.match(mcp, /AGENT_TOOL_NAMES\.map/);
+  assert.match(mcp, /AGENT_INPUT_SCHEMAS\[tool\]/);
 });
 
 test("every public contract and client scope allowlist stays equal", async () => {
@@ -164,12 +180,14 @@ test("every public contract and client scope allowlist stays equal", async () =>
   ]);
 
   const runtimeAllowlists = new Map([
-    ["OpenAPI AgentApiScope", yamlEnumValues(contract, "AgentApiScope", "AgentDeviceAuthorizationInput")],
-    ["local-auth DMFASTER_AGENT_SCOPES", quotedValues(sourceSlice(
-      localAuth,
-      "export const DMFASTER_AGENT_SCOPES = [",
-      "] as const",
-    ))],
+    [
+      "OpenAPI AgentApiScope",
+      yamlEnumValues(contract, "AgentApiScope", "AgentDeviceAuthorizationInput"),
+    ],
+    [
+      "local-auth DMFASTER_AGENT_SCOPES",
+      quotedValues(sourceSlice(localAuth, "export const DMFASTER_AGENT_SCOPES = [", "] as const")),
+    ],
   ]);
   for (const [name, scopes] of runtimeAllowlists) {
     assert.deepEqual(scopes, EXPECTED_SCOPE_NAMES, `${name} scope drift`);

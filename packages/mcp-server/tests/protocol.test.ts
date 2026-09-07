@@ -71,7 +71,7 @@ function createWire(client: AgentInvoker) {
 
 const modernEnvelope = {
   "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-  "io.modelcontextprotocol/clientInfo": { name: "dmfaster-test", version: "1.0.0" },
+  "io.modelcontextprotocol/clientInfo": { name: "dmfaster-test", version: "1.0.2" },
   "io.modelcontextprotocol/clientCapabilities": {},
 };
 
@@ -234,7 +234,7 @@ test("rejects the 2025 initialize flow and remains available for stateless MCP",
     params: {
       protocolVersion: "2025-11-25",
       capabilities: {},
-      clientInfo: { name: "dmfaster-legacy-test", version: "1.0.0" },
+      clientInfo: { name: "dmfaster-legacy-test", version: "1.0.2" },
     },
   });
   const rejected = await wire.receive();

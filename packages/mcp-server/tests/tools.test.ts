@@ -11,6 +11,7 @@ import { DmfasterHttpError } from "@dmfaster/sdk";
 
 import {
   MCP_AGENT_TOOL_NAMES,
+  createAgentToolDefinitions,
   registerAgentToolDefinitions,
   type AgentInvoker,
   type AgentToolDefinition,
@@ -86,12 +87,14 @@ const campaignState = {
       timezone: "Europe/Helsinki",
       confirmed: true,
     },
-    outreachMessages: [{
-      channels: ["instagram" as const],
-      subject: "",
-      body: "Hi — would a quick revenue pipeline review be useful?",
-      origin: "user" as const,
-    }],
+    outreachMessages: [
+      {
+        channels: ["instagram" as const],
+        subject: "",
+        body: "Hi — would a quick revenue pipeline review be useful?",
+        origin: "user" as const,
+      },
+    ],
   },
 };
 
@@ -102,9 +105,15 @@ const reviewedAudience = {
 
 test("registers the complete Agent 1.0 surface with honest MCP safety hints", () => {
   const definitions: AgentToolDefinition[] = [];
-  registerAgentToolDefinitions({ register: (definition) => definitions.push(definition) }, fakeClient([]));
+  registerAgentToolDefinitions(
+    { register: (definition) => definitions.push(definition) },
+    fakeClient([]),
+  );
 
-  assert.deepEqual(definitions.map((definition) => definition.name), MCP_AGENT_TOOL_NAMES);
+  assert.deepEqual(
+    definitions.map((definition) => definition.name),
+    MCP_AGENT_TOOL_NAMES,
+  );
   for (const definition of definitions.slice(0, 11)) {
     assert.deepEqual(definition.annotations, {
       readOnlyHint: true,
@@ -114,6 +123,7 @@ test("registers the complete Agent 1.0 surface with honest MCP safety hints", ()
     });
   }
   for (const name of [
+    "list_import",
     "list_prepare",
     "campaign_prepare",
     "campaign_launch_preflight",
@@ -141,12 +151,17 @@ test("registers the complete Agent 1.0 surface with honest MCP safety hints", ()
 test("maps MCP tool names and validated inputs onto SDK calls", async () => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   const definitions: AgentToolDefinition[] = [];
-  registerAgentToolDefinitions({ register: (definition) => definitions.push(definition) }, fakeClient(calls));
+  registerAgentToolDefinitions(
+    { register: (definition) => definitions.push(definition) },
+    fakeClient(calls),
+  );
 
   const analytics = definitions.find((definition) => definition.name === "analytics_summary");
   const replies = definitions.find((definition) => definition.name === "replies_list");
   const timeline = definitions.find((definition) => definition.name === "company_timeline");
-  const preflight = definitions.find((definition) => definition.name === "campaign_launch_preflight");
+  const preflight = definitions.find(
+    (definition) => definition.name === "campaign_launch_preflight",
+  );
   const launch = definitions.find((definition) => definition.name === "campaign_launch");
   const prepare = definitions.find((definition) => definition.name === "campaign_prepare");
   assert.ok(analytics);
@@ -213,7 +228,10 @@ test("maps MCP tool names and validated inputs onto SDK calls", async () => {
 test("requires a server-issued reviewed audience before private preparation", async () => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   const definitions: AgentToolDefinition[] = [];
-  registerAgentToolDefinitions({ register: (definition) => definitions.push(definition) }, fakeClient(calls));
+  registerAgentToolDefinitions(
+    { register: (definition) => definitions.push(definition) },
+    fakeClient(calls),
+  );
   const prepare = definitions.find((definition) => definition.name === "campaign_prepare");
   assert.ok(prepare);
 
@@ -226,7 +244,10 @@ test("requires a server-issued reviewed audience before private preparation", as
 test("rejects unknown input fields before calling the SDK", async () => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   const definitions: AgentToolDefinition[] = [];
-  registerAgentToolDefinitions({ register: (definition) => definitions.push(definition) }, fakeClient(calls));
+  registerAgentToolDefinitions(
+    { register: (definition) => definitions.push(definition) },
+    fakeClient(calls),
+  );
   const briefing = definitions.find((definition) => definition.name === "workspace_briefing");
   assert.ok(briefing);
 
@@ -235,16 +256,18 @@ test("rejects unknown input fields before calling the SDK", async () => {
 });
 
 test("preserves the SDK transport retry contract in MCP failures", () => {
-  const failure = toolFailure(new DmfasterHttpError({
-    message: "Too many agent tool requests.",
-    status: 429,
-    responseBody: null,
-    code: "rate_limited",
-    retryable: true,
-    requestId: "req_mcp_123",
-    retryAfterSeconds: 120,
-    details: { bucket: "workspace" },
-  }));
+  const failure = toolFailure(
+    new DmfasterHttpError({
+      message: "Too many agent tool requests.",
+      status: 429,
+      responseBody: null,
+      code: "rate_limited",
+      retryable: true,
+      requestId: "req_mcp_123",
+      retryAfterSeconds: 120,
+      details: { bucket: "workspace" },
+    }),
+  );
 
   assert.deepEqual(failure.structuredContent, {
     error: {
@@ -258,4 +281,53 @@ test("preserves the SDK transport retry contract in MCP failures", () => {
     },
   });
   assert.equal(failure.isError, true);
+});
+
+test("generated schemas preserve strict inputs, campaign size and action authorization bounds", () => {
+  const definitions = createAgentToolDefinitions(fakeClient([]));
+  const schema = (name: string) =>
+    definitions.find((definition) => definition.name === name)!.inputSchema;
+  assert.equal(
+    schema("list_import").safeParse({ name: "Coaches", usernames: [], idempotencyKey: "valid" })
+      .success,
+    false,
+  );
+  assert.equal(
+    schema("list_import").safeParse({
+      name: "Coaches",
+      usernames: ["coach"],
+      idempotencyKey: "valid",
+      workspaceId: "someone_else",
+    }).success,
+    false,
+  );
+  assert.equal(
+    schema("campaign_launch").safeParse({
+      campaignId: "campaign",
+      idempotencyKey: "key",
+      approved: true,
+    }).success,
+    false,
+  );
+  assert.equal(
+    schema("campaign_launch").safeParse({
+      campaignId: "campaign",
+      idempotencyKey: "key",
+      authorizationId: "invented",
+    }).success,
+    false,
+  );
+  assert.equal(
+    schema("campaign_validate").safeParse({
+      state: {
+        ...campaignState,
+        profile: { ...campaignState.profile, businessDescription: "x".repeat(32001) },
+      },
+    }).success,
+    false,
+  );
+  assert.equal(schema("campaigns_list").safeParse({ limit: 26 }).success, false);
+  assert.deepEqual(schema("campaign_inspect").parse({ campaignId: " campaign_123 " }), {
+    campaignId: "campaign_123",
+  });
 });

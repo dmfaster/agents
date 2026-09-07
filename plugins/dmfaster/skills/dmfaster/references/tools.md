@@ -1,6 +1,6 @@
 # DM Faster Agent 1.0 tools
 
-Agent 1.0 exposes exactly 17 bounded domain tools. Each credential is bound to one
+Agent 1.0 exposes exactly 18 bounded domain tools. Each credential is bound to one
 workspace, and every tool requires the exact scopes shown below; scopes are not
 inherited from `workspace:read`. MCP names use underscores and HTTP contract
 names use dots.
@@ -15,28 +15,46 @@ authorizes launch or pause.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@1.0.1
+npx --yes @dmfaster/cli@1.0.2
 ```
 
-| MCP tool | HTTP tool | CLI suffix | Required scope | Effect |
-| --- | --- | --- | --- | --- |
-| `analytics_summary` | `analytics.summary` | `analytics summary --scope <scope> [--campaign ID_OR_NAME] --json` | `workspace:read` | bounded read |
-| `workspace_briefing` | `workspace.briefing` | `workspace briefing --json` | `workspace:read` | bounded read |
-| `campaigns_list` | `campaigns.list` | `campaigns list [options] --json` | `campaigns:read` | bounded read |
-| `campaign_inspect` | `campaign.inspect` | `campaign inspect [campaign-id] --json` | `campaigns:read` | bounded read |
-| `sending_inspect` | `sending.inspect` | `sending inspect [campaign-id] --json` | `sending:read` | bounded read |
-| `replies_list` | `replies.list` | `replies list [campaign-id] [options] --json` | `inbox:read` | bounded read |
-| `pipeline_inspect` | `pipeline.inspect` | `pipeline inspect [campaign-id] --json` | `pipeline:read` | bounded read |
-| `company_timeline` | `company.timeline` | `company timeline <campaign-id> <outreach-id> --json` | `pipeline:read`, `campaigns:read` | bounded read |
-| `industry_lookup` | `industry.lookup` | `industry lookup <query> [options] --json` | `audiences:read` | planning read |
-| `campaign_validate` | `campaign.validate` | `campaign validate --state <file> --json` | `audiences:read` | planning read |
-| `audience_preview` | `audience.preview` | `audience preview --state <file> [--sample-size N] --json` | `audiences:read` | exact preview read |
-| `list_prepare` | `list.prepare` | `list prepare --state <file> [--idempotency-key KEY] --json` | `audiences:read`, `campaigns:write` | private idempotent draft |
-| `campaign_prepare` | `campaign.prepare` | `campaign prepare --state <file> [--idempotency-key KEY] --json` | `audiences:read`, `campaigns:write` | private idempotent draft |
-| `campaign_launch_preflight` | `campaign.launch.preflight` | `campaign launch preflight <campaign-id> --idempotency-key KEY --json` | `campaigns:launch` | readiness and approval request |
-| `campaign_launch` | `campaign.launch` | `campaign launch <campaign-id> --idempotency-key KEY --authorization-id ID --json` | `campaigns:launch` | approved external action |
-| `campaign_pause_preflight` | `campaign.pause.preflight` | `campaign pause preflight <campaign-id> --idempotency-key KEY --json` | `campaigns:write` | eligibility and approval request |
-| `campaign_pause` | `campaign.pause` | `campaign pause <campaign-id> --idempotency-key KEY --authorization-id ID --json` | `campaigns:write` | approved workspace action |
+| MCP tool                    | HTTP tool                   | CLI suffix                                                                         | Required scope                      | Effect                            |
+| --------------------------- | --------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------- | --------------------------------- |
+| `analytics_summary`         | `analytics.summary`         | `analytics summary --scope <scope> [--campaign ID_OR_NAME] --json`                 | `workspace:read`                    | bounded read                      |
+| `workspace_briefing`        | `workspace.briefing`        | `workspace briefing --json`                                                        | `workspace:read`                    | bounded read                      |
+| `campaigns_list`            | `campaigns.list`            | `campaigns list [options] --json`                                                  | `campaigns:read`                    | bounded read                      |
+| `campaign_inspect`          | `campaign.inspect`          | `campaign inspect [campaign-id] --json`                                            | `campaigns:read`                    | bounded read                      |
+| `sending_inspect`           | `sending.inspect`           | `sending inspect [campaign-id] --json`                                             | `sending:read`                      | bounded read                      |
+| `replies_list`              | `replies.list`              | `replies list [campaign-id] [options] --json`                                      | `inbox:read`                        | bounded read                      |
+| `pipeline_inspect`          | `pipeline.inspect`          | `pipeline inspect [campaign-id] --json`                                            | `pipeline:read`                     | bounded read                      |
+| `company_timeline`          | `company.timeline`          | `company timeline <campaign-id> <outreach-id> --json`                              | `pipeline:read`, `campaigns:read`   | bounded read                      |
+| `industry_lookup`           | `industry.lookup`           | `industry lookup <query> [options] --json`                                         | `audiences:read`                    | planning read                     |
+| `campaign_validate`         | `campaign.validate`         | `campaign validate --state <file> --json`                                          | `audiences:read`                    | planning read                     |
+| `audience_preview`          | `audience.preview`          | `audience preview --state <file> [--sample-size N] --json`                         | `audiences:read`                    | exact preview read                |
+| `list_import`               | `list.import`               | `list import --name NAME --file FILE [--idempotency-key KEY] --json`               | `campaigns:write`                   | private Instagram username import |
+| `list_prepare`              | `list.prepare`              | `list prepare --state <file> [--idempotency-key KEY] --json`                       | `audiences:read`, `campaigns:write` | private idempotent draft          |
+| `campaign_prepare`          | `campaign.prepare`          | `campaign prepare --state <file> [--idempotency-key KEY] --json`                   | `audiences:read`, `campaigns:write` | private idempotent draft          |
+| `campaign_launch_preflight` | `campaign.launch.preflight` | `campaign launch preflight <campaign-id> --idempotency-key KEY --json`             | `campaigns:launch`                  | readiness and approval request    |
+| `campaign_launch`           | `campaign.launch`           | `campaign launch <campaign-id> --idempotency-key KEY --authorization-id ID --json` | `campaigns:launch`                  | approved external action          |
+| `campaign_pause_preflight`  | `campaign.pause.preflight`  | `campaign pause preflight <campaign-id> --idempotency-key KEY --json`              | `campaigns:write`                   | eligibility and approval request  |
+| `campaign_pause`            | `campaign.pause`            | `campaign pause <campaign-id> --idempotency-key KEY --authorization-id ID --json`  | `campaigns:write`                   | approved workspace action         |
+
+## Instagram username imports
+
+Use `list_import` for a user-reviewed set of 1–1,000 Instagram usernames.
+It requires the account owner and is available on all plans including Basic. It does not require a company campaign state or audience search preview.
+Pass `name`, `usernames`, and a stable `idempotencyKey`. A leading @ and case
+are normalized; duplicates are removed, and an invalid handle rejects the
+whole request. Reusing a key with changed input or an edited list returns
+`idempotency_conflict` without changing the list.
+
+The CLI accepts a one-column CSV (optional `username` or `instagram_username`
+header, UTF-8 BOM supported) or one username per line. Files are limited to
+64 KiB. The CLI derives a stable key from the name and unique normalized
+usernames when none is supplied. Use a new explicit key to intentionally
+create a second copy. Success reports `listId`, `name`, `importedCount`,
+`inputCount`, `duplicateCount`, `created`, and `replayed`. It creates no campaign
+and sends nothing. The imported list can be selected in the campaign builder.
 
 ## Campaign state
 
