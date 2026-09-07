@@ -21,7 +21,7 @@ or network access. It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 17 domain tools directly.
+continue to use all 18 domain tools directly.
 
 `audience_preview` returns a server-issued `reviewedAudience` identity with an
 exact, immutable search revision. The user must review that preview before a
@@ -42,13 +42,13 @@ server resolves the same operating-system stored credential.
 > from an authorized source checkout.
 
 ```bash
-npx --yes @dmfaster/cli@1.0.1 auth login --json
-npx --yes @dmfaster/mcp-server@1.0.1
+npx --yes @dmfaster/cli@1.0.2 auth login --json
+npx --yes @dmfaster/mcp-server@1.0.2
 ```
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
-smaller ceiling. The MCP server can expose all 17 domain schemas and the
+smaller ceiling. The MCP server can expose all 18 domain schemas and the
 read-only presentation schema while the DM Faster API independently rejects
 domain tools outside the stored credential's scopes.
 
@@ -57,7 +57,7 @@ go to stderr. Tool annotations accurately distinguish reads, private draft
 preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world.
 
-The MCP names are the 17 domain tools:
+The MCP names are the 18 domain tools:
 
 - `analytics_summary`
 - `workspace_briefing`
@@ -70,6 +70,7 @@ The MCP names are the 17 domain tools:
 - `industry_lookup`
 - `campaign_validate`
 - `audience_preview`
+- `list_import`
 - `list_prepare`
 - `campaign_prepare`
 - `campaign_launch_preflight`
@@ -103,7 +104,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.0.1"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.0.2"]
     }
   }
 }

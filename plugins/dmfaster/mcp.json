@@ -6,7 +6,7 @@
       "command": "npx",
       "args": [
         "--yes",
-        "@dmfaster/mcp-server@1.0.1"
+        "@dmfaster/mcp-server@1.0.2"
       ]
     }
   }

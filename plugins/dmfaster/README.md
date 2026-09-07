@@ -6,7 +6,7 @@ stdio MCP 2026-07-28 server definition. It includes the portable Agent Plugins
 Codex, Claude, and Cursor. Hosts that have not
 implemented that revision use the same skill through the version-pinned CLI.
 
-Agent 1.0 exposes 16 bounded domain tools plus an optional portable MCP Apps
+Agent 1.0 exposes 18 bounded domain tools plus an optional portable MCP Apps
 campaign workspace. It can inspect a live workspace, resolve
 industries, validate stateless campaign plans, preview exact audiences, prepare
 private lists and campaign drafts idempotently, and launch or pause a campaign
@@ -22,13 +22,13 @@ resume call; the user only completes the browser-store installation/link and
 the final campaign approval that browsers and DM Faster must keep human-owned.
 
 Compliant MCP Apps hosts can render the campaign workspace inline. Modern
-headless hosts use the same complete campaign state and 16 domain tools without
+headless hosts use the same complete campaign state and 18 domain tools without
 losing any server capability or safety guarantee; older clients do not receive
 a legacy MCP downgrade.
 
 ## Release status
 
-This public source targets the version-pinned 1.0.1 packages. The repository can
+This public source targets the version-pinned 1.0.2 packages. The repository can
 act as a Codex/ChatGPT desktop repo marketplace and a Claude Code marketplace
 after the exact packages are published and the host-specific checks pass. It is
 not a universal
@@ -45,7 +45,7 @@ Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@1.0.1 auth login --json
+npx --yes @dmfaster/cli@1.0.2 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use

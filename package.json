@@ -1,6 +1,6 @@
 {
   "name": "dmfaster-agents",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Public Agent 1.0 interfaces for DM Faster.",
   "license": "Apache-2.0",
@@ -29,13 +29,15 @@
     "test:agent-packages:install": "node tools/test-agent-package-install.mjs",
     "release:agent-packages": "node tools/publish-agent-packages.mjs",
     "typecheck:agents": "npm run typecheck --workspaces --if-present",
-    "test:agents": "node --test tools/public-api-contract.test.mjs tools/agent-package-boundaries.test.mjs tools/publish-agent-packages.test.mjs && npm run test --workspaces --if-present",
+    "test:agents": "node --test tools/agent-contract-generation.test.mjs tools/public-api-contract.test.mjs tools/agent-package-boundaries.test.mjs tools/publish-agent-packages.test.mjs && npm run test --workspaces --if-present",
     "check:agents": "npm run check:agent-api && npm run check:agent-skill && npm run check:agent-plugin && npm run build:agents && npm run check:agent-packages && npm run test:agent-packages:install && npm run typecheck:agents && npm run test:agents"
   },
   "devDependencies": {
     "@types/node": "24.13.3",
     "openapi-typescript": "7.13.0",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "yaml": "2.8.3",
+    "oxfmt": "0.66.0"
   },
   "overrides": {
     "brace-expansion": "5.0.8"

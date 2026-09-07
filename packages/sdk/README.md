@@ -10,7 +10,7 @@ scoped, workspace-bound `dmf_pat_…` token.
 > authorized source checkout.
 
 ```bash
-npm install @dmfaster/sdk@1.0.1
+npm install @dmfaster/sdk@1.0.2
 ```
 
 Non-loopback endpoints must use HTTPS. The client also refuses HTTP redirects so
@@ -48,3 +48,25 @@ The caller must provide an absolute API base URL and a scoped bearer token.
 The SDK sends tool inputs directly to
 `POST /api/v1/agent/tools/{toolName}`, applies a bounded timeout, and validates
 the shared result envelope before returning it.
+
+## Import Instagram usernames
+
+Save a reviewed username collection as a private list:
+
+```bash
+dmfaster list import --name "Finland Coaches" --file instagram-usernames.csv --json
+```
+
+Use a one-column CSV with an optional `username` or `instagram_username` header,
+or one username per line. UTF-8 BOM, quoted cells, and CRLF are supported. Up to
+1,000 rows and 64 KiB are accepted. Invalid rows reject the whole import. Case
+and leading @ are normalized; duplicates are reported and removed. The command
+derives a stable retry key from the name and unique usernames; supply a new
+`--idempotency-key` to intentionally create another copy.
+
+The SDK equivalent is `client.invoke("list.import", { name, usernames,
+idempotencyKey })`. It requires `campaigns:write` and owner access, and is available on all plans including Basic. A successful result contains `listId`, `name`,
+`importedCount`, `inputCount`, `duplicateCount`, `created`, and `replayed`.
+A changed payload or an edited saved list returns `idempotency_conflict`.
+The list is selectable in the campaign builder; no campaign is created and
+nothing is sent. Import validates syntax, not live Instagram account existence.

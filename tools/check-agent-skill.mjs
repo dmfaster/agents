@@ -17,11 +17,12 @@ function fail(message) {
 
 function containsFiles(directory) {
   if (!existsSync(directory)) return false;
-  return readdirSync(directory, { withFileTypes: true }).some((entry) => (
-    entry.isFile()
-    || entry.isSymbolicLink()
-    || (entry.isDirectory() && containsFiles(path.join(directory, entry.name)))
-  ));
+  return readdirSync(directory, { withFileTypes: true }).some(
+    (entry) =>
+      entry.isFile() ||
+      entry.isSymbolicLink() ||
+      (entry.isDirectory() && containsFiles(path.join(directory, entry.name))),
+  );
 }
 
 if (containsFiles(legacySkillRoot)) {
@@ -47,14 +48,14 @@ if (!existsSync(skillPath)) {
       fail("frontmatter description must be informative and at most 1,024 characters");
     }
     if (
-      !/user's live DM Faster sales workspace/i.test(description || "")
-      || !/explicitly asks/i.test(description || "")
+      !/user's live DM Faster sales workspace/i.test(description || "") ||
+      !/explicitly asks/i.test(description || "")
     ) {
       fail("frontmatter description must scope the skill to explicit live-workspace requests");
     }
     if (
-      !/Do not use for repository source debugging/i.test(description || "")
-      || !/extension-runtime diagnosis/i.test(description || "")
+      !/Do not use for repository source debugging/i.test(description || "") ||
+      !/extension-runtime diagnosis/i.test(description || "")
     ) {
       fail("frontmatter description must exclude repository and extension-runtime development");
     }
@@ -91,6 +92,7 @@ if (!existsSync(skillPath)) {
   }
 
   const requiredTools = [
+    "analytics_summary",
     "workspace_briefing",
     "campaigns_list",
     "campaign_inspect",
@@ -101,6 +103,7 @@ if (!existsSync(skillPath)) {
     "industry_lookup",
     "campaign_validate",
     "audience_preview",
+    "list_import",
     "list_prepare",
     "campaign_prepare",
     "campaign_launch_preflight",
@@ -127,14 +130,19 @@ if (!existsSync(agentPath)) {
   fail(`missing ${path.relative(repoRoot, agentPath)}`);
 } else {
   const agentSource = readFileSync(agentPath, "utf8");
-  if (!/^interface:\s*$/m.test(agentSource)) fail("agents/openai.yaml must define interface metadata");
+  if (!/^interface:\s*$/m.test(agentSource))
+    fail("agents/openai.yaml must define interface metadata");
   if (!/short_description:\s*"[^"]*(?:campaign|operate)[^"]*"/i.test(agentSource)) {
     fail("agents/openai.yaml must describe the Agent 1.0 campaign surface");
   }
   if (!/default_prompt:\s*"[^"]*\$dmfaster[^"]*"/.test(agentSource)) {
     fail("agents/openai.yaml default prompt must explicitly invoke $dmfaster");
   }
-  if (!/^dependencies:\s*$[\s\S]*?type:\s*"mcp"$[\s\S]*?value:\s*"dmfaster"$[\s\S]*?transport:\s*"stdio"$/m.test(agentSource)) {
+  if (
+    !/^dependencies:\s*$[\s\S]*?type:\s*"mcp"$[\s\S]*?value:\s*"dmfaster"$[\s\S]*?transport:\s*"stdio"$/m.test(
+      agentSource,
+    )
+  ) {
     fail("agents/openai.yaml must declare the dmfaster stdio MCP dependency");
   }
   if (/\bTODO\b|\[TODO/i.test(agentSource)) fail("agents/openai.yaml contains TODO text");

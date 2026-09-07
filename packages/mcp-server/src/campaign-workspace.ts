@@ -8,12 +8,16 @@ export const CAMPAIGN_WORKSPACE_TOOL_NAME = "campaign_workspace";
 export const CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v1.html";
 export const MCP_APP_RESOURCE_MIME_TYPE = "text/html;profile=mcp-app";
 
-export const campaignWorkspaceInputSchema = z.object({
-  state: campaignStateSchema,
-  campaignId: campaignIdSchema.optional().describe(
-    "Optional DM Faster campaign identifier returned by campaign_prepare or campaign_inspect.",
-  ),
-}).strict();
+export const campaignWorkspaceInputSchema = z
+  .object({
+    state: campaignStateSchema,
+    campaignId: campaignIdSchema
+      .optional()
+      .describe(
+        "Optional DM Faster campaign identifier returned by campaign_prepare or campaign_inspect.",
+      ),
+  })
+  .strict();
 
 const resourceUiMetadata = Object.freeze({
   csp: {
@@ -44,15 +48,17 @@ function presentationResult(input: z.infer<typeof campaignWorkspaceInputSchema>)
   };
 
   return {
-    content: [{
-      type: "text" as const,
-      text: [
-        `Campaign workspace ready for ${input.state.profile.businessName || "this business"}.`,
-        "A compatible MCP Apps host can render the interactive editor.",
-        "In a headless host, keep using the structured state and the 17 DM Faster domain tools directly.",
-        "Preparing creates only a private disabled draft; launching still requires the owner-approved preflight flow.",
-      ].join(" "),
-    }],
+    content: [
+      {
+        type: "text" as const,
+        text: [
+          `Campaign workspace ready for ${input.state.profile.businessName || "this business"}.`,
+          "A compatible MCP Apps host can render the interactive editor.",
+          "In a headless host, keep using the structured state and the DM Faster domain tools directly.",
+          "Preparing creates only a private disabled draft; launching still requires the owner-approved preflight flow.",
+        ].join(" "),
+      },
+    ],
     structuredContent,
   };
 }
@@ -63,7 +69,8 @@ export function registerCampaignWorkspace(server: McpServer) {
     CAMPAIGN_WORKSPACE_RESOURCE_URI,
     {
       title: "DM Faster campaign workspace",
-      description: "Interactive campaign planning, exact audience preview, and safe private-draft preparation.",
+      description:
+        "Interactive campaign planning, exact audience preview, and safe private-draft preparation.",
       mimeType: MCP_APP_RESOURCE_MIME_TYPE,
       _meta: {
         ui: resourceUiMetadata,
@@ -75,19 +82,21 @@ export function registerCampaignWorkspace(server: McpServer) {
       },
     },
     async () => ({
-      contents: [{
-        uri: CAMPAIGN_WORKSPACE_RESOURCE_URI,
-        mimeType: MCP_APP_RESOURCE_MIME_TYPE,
-        text: CAMPAIGN_WORKSPACE_HTML,
-        _meta: {
-          ui: resourceUiMetadata,
-          "openai/widgetCSP": {
-            connect_domains: [],
-            resource_domains: [],
+      contents: [
+        {
+          uri: CAMPAIGN_WORKSPACE_RESOURCE_URI,
+          mimeType: MCP_APP_RESOURCE_MIME_TYPE,
+          text: CAMPAIGN_WORKSPACE_HTML,
+          _meta: {
+            ui: resourceUiMetadata,
+            "openai/widgetCSP": {
+              connect_domains: [],
+              resource_domains: [],
+            },
+            "openai/widgetPrefersBorder": true,
           },
-          "openai/widgetPrefersBorder": true,
         },
-      }],
+      ],
     }),
   );
 

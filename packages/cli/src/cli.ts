@@ -1,5 +1,7 @@
 import {
   createDmfasterClient,
+  AGENT_TOOL_NAMES,
+  AGENT_TOOL_DEFINITIONS,
   DmfasterHttpError,
   DmfasterSdkError,
   type AgentToolInputMap,
@@ -25,10 +27,25 @@ import {
   type OpenBrowser,
 } from "@dmfaster/local-auth";
 import { readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "1.0.1";
+export const CLI_VERSION = "1.0.2";
+
+function agentCommandHelp() {
+  const sections = new Map<string, string[]>();
+  for (const tool of AGENT_TOOL_NAMES) {
+    const { section, usage } = AGENT_TOOL_DEFINITIONS[tool].cli;
+    const commands = sections.get(section) || [];
+    commands.push(`  ${usage}`);
+    sections.set(section, commands);
+  }
+  return [...sections]
+    .map(([section, commands]) => `${section}:\n${commands.join("\n")}`)
+    .join("\n\n");
+}
 
 const HELP = `DM Faster CLI ${CLI_VERSION}
 
@@ -41,28 +58,7 @@ Configuration:
   auth status
   auth logout
 
-Workspace reads:
-  analytics summary --scope today|last_24_hours|campaign_to_date [--campaign ID_OR_NAME]
-  workspace briefing
-  campaigns list [--status STATUS] [--limit N]
-  campaign inspect [CAMPAIGN_ID]
-  sending inspect [CAMPAIGN_ID]
-  replies list [CAMPAIGN_ID] [--limit N] [--query TEXT]
-  pipeline inspect [CAMPAIGN_ID]
-  company timeline CAMPAIGN_ID COMPANY_OUTREACH_ID
-
-Campaign planning and drafts:
-  industry lookup QUERY [--version 2008|2025] [--language en|fi]
-  campaign validate --state FILE
-  audience preview --state FILE [--sample-size N]
-  list prepare --state FILE --reviewed-audience PREVIEW_JSON [--idempotency-key KEY]
-  campaign prepare --state FILE --reviewed-audience PREVIEW_JSON [--idempotency-key KEY]
-
-Human-approved campaign controls:
-  campaign launch preflight CAMPAIGN_ID --idempotency-key KEY
-  campaign launch CAMPAIGN_ID --idempotency-key KEY --authorization-id ID
-  campaign pause preflight CAMPAIGN_ID --idempotency-key KEY
-  campaign pause CAMPAIGN_ID --idempotency-key KEY --authorization-id ID
+${agentCommandHelp()}
 
 Agent quick start:
   Begin with 'workspace briefing --json'. For a new campaign, create one complete
@@ -201,7 +197,14 @@ function parseAnalyticsSummary(args: string[]): AgentToolInputMap["analytics.sum
 
 function parseCampaignList(args: string[]): AgentToolInputMap["campaigns.list"] {
   const input: AgentToolInputMap["campaigns.list"] = {};
-  const statuses: CampaignStatus[] = ["Draft", "Queued", "Running", "Paused", "Cooldown", "Completed"];
+  const statuses: CampaignStatus[] = [
+    "Draft",
+    "Queued",
+    "Running",
+    "Paused",
+    "Cooldown",
+    "Completed",
+  ];
   for (let index = 0; index < args.length; index += 1) {
     const option = args[index];
     if (option === "--status") {
@@ -242,7 +245,8 @@ function parseRepliesList(args: string[]): AgentToolInputMap["replies.list"] {
       }
       const campaignId = option.trim();
       if (!campaignId) throw new UsageError("Campaign identifiers cannot be empty.");
-      if (campaignId.length > 160) throw new UsageError("Campaign identifiers cannot exceed 160 characters.");
+      if (campaignId.length > 160)
+        throw new UsageError("Campaign identifiers cannot exceed 160 characters.");
       positionalCampaignId = campaignId;
     } else {
       throw new UsageError(`Unknown replies list option: ${option || "(empty)"}.`);
@@ -333,15 +337,14 @@ async function parseCampaignStateFile(path: string, context: CliContext) {
     throw new UsageError("Campaign state must be a JSON object.");
   }
   const candidate = parsed as Record<string, unknown>;
-  const state = candidate.state && typeof candidate.state === "object"
-    ? candidate.state
-    : candidate;
+  const state =
+    candidate.state && typeof candidate.state === "object" ? candidate.state : candidate;
   return state;
 }
 
 function asJsonObject(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
-    ? value as Record<string, unknown>
+    ? (value as Record<string, unknown>)
     : null;
 }
 
@@ -374,34 +377,27 @@ async function parseReviewedAudienceFile(
   const structured = asJsonObject(root?.structuredContent);
   const structuredData = asJsonObject(structured?.data);
   const structuredHarnessData = asJsonObject(structuredData?.data);
-  const candidates = [
-    root,
-    data,
-    harnessData,
-    structured,
-    structuredData,
-    structuredHarnessData,
-  ];
-  const reviewed = candidates
-    .map((candidate) => asJsonObject(candidate?.reviewedAudience))
-    .find(Boolean) || null;
+  const candidates = [root, data, harnessData, structured, structuredData, structuredHarnessData];
+  const reviewed =
+    candidates.map((candidate) => asJsonObject(candidate?.reviewedAudience)).find(Boolean) || null;
   const freshness = asJsonObject(reviewed?.dataFreshness);
   if (
     !reviewed ||
-    Object.keys(reviewed).some((key) => (
-      key !== "querySignature" &&
-      key !== "dataFreshness" &&
-      key !== "excludePreviouslyContacted"
-    )) ||
+    Object.keys(reviewed).some(
+      (key) =>
+        key !== "querySignature" && key !== "dataFreshness" && key !== "excludePreviouslyContacted",
+    ) ||
     (reviewed.excludePreviouslyContacted !== undefined &&
       typeof reviewed.excludePreviouslyContacted !== "boolean") ||
     typeof reviewed.querySignature !== "string" ||
-    !reviewed.querySignature.trim() || reviewed.querySignature.length > 200 ||
+    !reviewed.querySignature.trim() ||
+    reviewed.querySignature.length > 200 ||
     !freshness ||
     Object.keys(freshness).some((key) => key !== "engine" && key !== "revision") ||
     freshness.engine !== "search_facts" ||
     typeof freshness.revision !== "string" ||
-    !freshness.revision.trim() || freshness.revision.length > 200
+    !freshness.revision.trim() ||
+    freshness.revision.length > 200
   ) {
     throw new UsageError(
       "The reviewed audience file must be an unmodified successful exact audience preview containing a server-issued reviewedAudience.",
@@ -448,9 +444,10 @@ async function parseStateCommand(
       "--reviewed-audience PREVIEW_JSON is required. Run audience preview, review its exact result, and save that JSON first.",
     );
   }
-  const state = await parseCampaignStateFile(statePath, context) as AgentToolInputMap[
-    "campaign.validate"
-  ]["state"];
+  const state = (await parseCampaignStateFile(
+    statePath,
+    context,
+  )) as AgentToolInputMap["campaign.validate"]["state"];
   const reviewedAudience = reviewedAudiencePath
     ? await parseReviewedAudienceFile(reviewedAudiencePath, context)
     : undefined;
@@ -462,10 +459,7 @@ async function parseStateCommand(
   };
 }
 
-function parseCampaignAction(
-  args: string[],
-  options: { execute: boolean },
-) {
+function parseCampaignAction(args: string[], options: { execute: boolean }) {
   const campaignIdValue = args[0]?.trim() || "";
   if (!campaignIdValue || campaignIdValue.length > 160 || campaignIdValue.startsWith("--")) {
     throw new UsageError("A campaign identifier of at most 160 characters is required.");
@@ -501,83 +495,136 @@ function parseCampaignAction(
   };
 }
 
-async function commandFromArgs(args: string[], context: CliContext): Promise<{
+async function commandFromArgs(
+  args: string[],
+  context: CliContext,
+): Promise<{
   tool: AgentToolName;
   input: AgentToolInputMap[AgentToolName];
 }> {
-  const [group, action, ...rest] = args;
-  if (group === "analytics" && action === "summary") {
+  const tool = [...AGENT_TOOL_NAMES]
+    .sort((a, b) => b.split(".").length - a.split(".").length)
+    .find((name) =>
+      AGENT_TOOL_DEFINITIONS[name].cli.command.every((word, index) => args[index] === word),
+    );
+  if (!tool)
+    throw new UsageError(`Unknown command: ${args.join(" ") || "(none)"}. Run dmfaster --help.`);
+  const rest = args.slice(AGENT_TOOL_DEFINITIONS[tool].cli.command.length);
+  if (tool === "analytics.summary") {
     return { tool: "analytics.summary", input: parseAnalyticsSummary(rest) };
   }
-  if (group === "workspace" && action === "briefing") {
+  if (tool === "workspace.briefing") {
     requireNoArguments(rest, "workspace briefing");
     return { tool: "workspace.briefing", input: {} };
   }
-  if (group === "campaigns" && action === "list") {
+  if (tool === "campaigns.list") {
     return { tool: "campaigns.list", input: parseCampaignList(rest) };
   }
-  if (group === "campaign" && action === "inspect") {
+  if (tool === "campaign.inspect") {
     return { tool: "campaign.inspect", input: parseOptionalCampaignId(rest, "campaign inspect") };
   }
-  if (group === "sending" && action === "inspect") {
+  if (tool === "sending.inspect") {
     return { tool: "sending.inspect", input: parseOptionalCampaignId(rest, "sending inspect") };
   }
-  if (group === "replies" && action === "list") {
+  if (tool === "replies.list") {
     return { tool: "replies.list", input: parseRepliesList(rest) };
   }
-  if (group === "pipeline" && action === "inspect") {
+  if (tool === "pipeline.inspect") {
     return { tool: "pipeline.inspect", input: parseOptionalCampaignId(rest, "pipeline inspect") };
   }
-  if (group === "company" && action === "timeline") {
+  if (tool === "company.timeline") {
     return { tool: "company.timeline", input: parseCompanyTimeline(rest) };
   }
-  if (group === "industry" && action === "lookup") {
+  if (tool === "industry.lookup") {
     return { tool: "industry.lookup", input: parseIndustryLookup(rest) };
   }
-  if (group === "campaign" && action === "validate") {
+  if (tool === "campaign.validate") {
     const input = await parseStateCommand(rest, context);
     return { tool: "campaign.validate", input: { state: input.state } };
   }
-  if (group === "audience" && action === "preview") {
+  if (tool === "audience.preview") {
     const input = await parseStateCommand(rest, context);
     return {
       tool: "audience.preview",
       input: { state: input.state, ...(input.sampleSize ? { sampleSize: input.sampleSize } : {}) },
     };
   }
-  if (group === "list" && action === "prepare") {
+  if (tool === "list.import") {
+    const options = new Map<string, string>();
+    for (let index = 0; index < rest.length; index += 2) {
+      const option = rest[index];
+      const value = rest[index + 1];
+      if (
+        !["--name", "--file", "--idempotency-key"].includes(option || "") ||
+        !value ||
+        value.startsWith("--") ||
+        options.has(option!)
+      ) {
+        throw new UsageError(
+          "Use list import --name NAME --file FILE [--idempotency-key KEY], with each option once.",
+        );
+      }
+      options.set(option!, value);
+    }
+    const name = options.get("--name")?.trim();
+    const file = options.get("--file");
+    if (!name || name.length > 120 || !file)
+      throw new UsageError("A list name of 1–120 characters and --file are required.");
+    let usernames: string[];
+    try {
+      const text = context.readTextFile
+        ? await context.readTextFile(file)
+        : await readFile(file, "utf8");
+      usernames = parseInstagramUsernameFile(text);
+    } catch (error) {
+      throw new UsageError(
+        error instanceof Error ? error.message : "The username file could not be read.",
+      );
+    }
+    const idempotencyKey =
+      options.get("--idempotency-key") ||
+      `instagram-import:${createHash("sha256")
+        .update(JSON.stringify([name, [...new Set(usernames)].sort()]))
+        .digest("hex")}`;
+    if (!/^[A-Za-z0-9._:-]{1,160}$/.test(idempotencyKey))
+      throw new UsageError(
+        "Invalid --idempotency-key; use 1–160 letters, numbers, dots, underscores, colons or hyphens.",
+      );
+    return { tool: "list.import", input: { name, usernames, idempotencyKey } };
+  }
+  if (tool === "list.prepare") {
     const input = await parseStateCommand(rest, context, { requireReviewedAudience: true });
     return {
       tool: "list.prepare",
       input: { ...input, reviewedAudience: input.reviewedAudience! },
     };
   }
-  if (group === "campaign" && action === "prepare") {
+  if (tool === "campaign.prepare") {
     const input = await parseStateCommand(rest, context, { requireReviewedAudience: true });
     return {
       tool: "campaign.prepare",
       input: { ...input, reviewedAudience: input.reviewedAudience! },
     };
   }
-  if (group === "campaign" && action === "launch" && rest[0] === "preflight") {
+  if (tool === "campaign.launch.preflight") {
     return {
       tool: "campaign.launch.preflight",
-      input: parseCampaignAction(rest.slice(1), { execute: false }),
+      input: parseCampaignAction(rest, { execute: false }),
     };
   }
-  if (group === "campaign" && action === "launch") {
+  if (tool === "campaign.launch") {
     return {
       tool: "campaign.launch",
       input: parseCampaignAction(rest, { execute: true }) as AgentToolInputMap["campaign.launch"],
     };
   }
-  if (group === "campaign" && action === "pause" && rest[0] === "preflight") {
+  if (tool === "campaign.pause.preflight") {
     return {
       tool: "campaign.pause.preflight",
-      input: parseCampaignAction(rest.slice(1), { execute: false }),
+      input: parseCampaignAction(rest, { execute: false }),
     };
   }
-  if (group === "campaign" && action === "pause") {
+  if (tool === "campaign.pause") {
     return {
       tool: "campaign.pause",
       input: parseCampaignAction(rest, { execute: true }) as AgentToolInputMap["campaign.pause"],
@@ -657,8 +704,9 @@ async function cleanupIssuedRemoteCredential(input: {
   context: CliContext;
   stderr: Output;
 }) {
-  const cleanupSleep = input.context.deviceAuthAdapters?.sleep
-    ?? ((milliseconds: number) => new Promise<void>((resolve) => setTimeout(resolve, milliseconds)));
+  const cleanupSleep =
+    input.context.deviceAuthAdapters?.sleep ??
+    ((milliseconds: number) => new Promise<void>((resolve) => setTimeout(resolve, milliseconds)));
   let lastError: unknown = null;
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
@@ -673,10 +721,11 @@ async function cleanupIssuedRemoteCredential(input: {
         return true;
       }
       lastError = error;
-      if (attempt < 2) await cleanupSleep(250 * (2 ** attempt));
+      if (attempt < 2) await cleanupSleep(250 * 2 ** attempt);
     }
   }
-  const detail = lastError instanceof Error ? lastError.message : "Remote revocation was unavailable.";
+  const detail =
+    lastError instanceof Error ? lastError.message : "Remote revocation was unavailable.";
   line(
     input.stderr,
     `warning: The unused remote DM Faster credential could not be revoked after 3 attempts. Revoke the new CLI session from Agent access settings. ${detail}`,
@@ -706,11 +755,14 @@ async function runAuthLogin(input: {
   }
 
   const store = input.context.credentialStore ?? createSystemCredentialStore();
-  const acquireLock = input.context.acquireLoginLock ?? ((baseUrl: string) => acquireSystemLoginLock({
-    baseUrl,
-    ...(input.context.env ? { env: input.context.env } : {}),
-    ...(input.context.homeDirectory ? { homeDirectory: input.context.homeDirectory } : {}),
-  }));
+  const acquireLock =
+    input.context.acquireLoginLock ??
+    ((baseUrl: string) =>
+      acquireSystemLoginLock({
+        baseUrl,
+        ...(input.context.env ? { env: input.context.env } : {}),
+        ...(input.context.homeDirectory ? { homeDirectory: input.context.homeDirectory } : {}),
+      }));
   const loginLock = await acquireLock(input.config.baseUrl);
   const result = await (async () => {
     let persisted = false;
@@ -729,13 +781,16 @@ async function runAuthLogin(input: {
         access: input.access,
         adapters: authAdapters(input.context),
       });
-      line(input.stdout, JSON.stringify({
-        event: "authorization_required",
-        confirmationCode: authorization.confirmationCode,
-        verificationUrl: authorization.verificationUrl,
-        expiresIn: authorization.expiresIn,
-        requestedAccess: input.access,
-      }));
+      line(
+        input.stdout,
+        JSON.stringify({
+          event: "authorization_required",
+          confirmationCode: authorization.confirmationCode,
+          verificationUrl: authorization.verificationUrl,
+          expiresIn: authorization.expiresIn,
+          requestedAccess: input.access,
+        }),
+      );
       line(input.stderr, `Confirmation code: ${authorization.confirmationCode}`);
       line(input.stderr, `Requested access: ${input.access}`);
       line(input.stderr, "Check that this code matches in the browser before approving.");
@@ -791,9 +846,10 @@ async function runAuthLogin(input: {
         await loginLock.release();
       } catch (cleanupError) {
         if (persisted) {
-          const detail = cleanupError instanceof Error
-            ? cleanupError.message
-            : "Could not remove the browser-login lock.";
+          const detail =
+            cleanupError instanceof Error
+              ? cleanupError.message
+              : "Could not remove the browser-login lock.";
           line(
             input.stderr,
             `warning: Authentication succeeded, but browser-login lock cleanup failed. ${detail}`,
@@ -805,14 +861,17 @@ async function runAuthLogin(input: {
     }
   })();
 
-  line(input.stdout, JSON.stringify({
-    event: "authenticated",
-    status: "authenticated",
-    verifiedRemotely: true,
-    credentialSource: credentialSourceLabel(store.kind),
-    baseUrl: input.config.baseUrl,
-    ...publicIdentity(result),
-  }));
+  line(
+    input.stdout,
+    JSON.stringify({
+      event: "authenticated",
+      status: "authenticated",
+      verifiedRemotely: true,
+      credentialSource: credentialSourceLabel(store.kind),
+      baseUrl: input.config.baseUrl,
+      ...publicIdentity(result),
+    }),
+  );
   return 0;
 }
 
@@ -823,12 +882,19 @@ async function runAuthStatus(input: {
   stderr: Output;
 }) {
   if (!input.config.token) {
-    line(input.stdout, JSON.stringify({
-      status: "not_authenticated",
-      verifiedRemotely: false,
-      credentialSource: null,
-      baseUrl: input.config.baseUrl,
-    }, null, 2));
+    line(
+      input.stdout,
+      JSON.stringify(
+        {
+          status: "not_authenticated",
+          verifiedRemotely: false,
+          credentialSource: null,
+          baseUrl: input.config.baseUrl,
+        },
+        null,
+        2,
+      ),
+    );
     line(input.stderr, missingTokenMessage(input.config));
     return 1;
   }
@@ -839,25 +905,43 @@ async function runAuthStatus(input: {
       token: input.config.token,
       ...(input.context.fetch ? { fetch: input.context.fetch } : {}),
     });
-    line(input.stdout, JSON.stringify({
-      status: "authenticated",
-      verifiedRemotely: true,
-      credentialSource: input.config.tokenSource,
-      baseUrl: input.config.baseUrl,
-      ...publicIdentity(identity),
-    }, null, 2));
+    line(
+      input.stdout,
+      JSON.stringify(
+        {
+          status: "authenticated",
+          verifiedRemotely: true,
+          credentialSource: input.config.tokenSource,
+          baseUrl: input.config.baseUrl,
+          ...publicIdentity(identity),
+        },
+        null,
+        2,
+      ),
+    );
     return 0;
   } catch (error) {
-    const invalid = error instanceof AgentAuthError
-      && (error.code === "unauthorized" || error.code === "workspace_access_denied");
-    line(input.stdout, JSON.stringify({
-      status: invalid ? "invalid" : "unavailable",
-      verifiedRemotely: invalid,
-      credentialSource: input.config.tokenSource,
-      baseUrl: input.config.baseUrl,
-    }, null, 2));
+    const invalid =
+      error instanceof AgentAuthError &&
+      (error.code === "unauthorized" || error.code === "workspace_access_denied");
+    line(
+      input.stdout,
+      JSON.stringify(
+        {
+          status: invalid ? "invalid" : "unavailable",
+          verifiedRemotely: invalid,
+          credentialSource: input.config.tokenSource,
+          baseUrl: input.config.baseUrl,
+        },
+        null,
+        2,
+      ),
+    );
     if (error instanceof AgentAuthError) throw error;
-    line(input.stderr, `error: ${error instanceof Error ? error.message : "Could not verify DM Faster login."}`);
+    line(
+      input.stderr,
+      `error: ${error instanceof Error ? error.message : "Could not verify DM Faster login."}`,
+    );
     return 1;
   }
 }
@@ -882,27 +966,37 @@ async function runAuthLogout(input: {
     } catch (error) {
       if (!(error instanceof AgentAuthError) || error.code !== "unauthorized") throw error;
     }
-    line(input.stdout, JSON.stringify({
-      status: "revoked",
-      revoked: true,
-      localCredentialRemoved: false,
-      credentialSource: "DMFASTER_TOKEN",
-      actionRequired: "Unset DMFASTER_TOKEN in the parent process.",
-    }, null, 2));
+    line(
+      input.stdout,
+      JSON.stringify(
+        {
+          status: "revoked",
+          revoked: true,
+          localCredentialRemoved: false,
+          credentialSource: "DMFASTER_TOKEN",
+          actionRequired: "Unset DMFASTER_TOKEN in the parent process.",
+        },
+        null,
+        2,
+      ),
+    );
     return 0;
   }
 
   if (input.config.credentialStoreError) throw new UsageError(input.config.credentialStoreError);
   const store = input.context.credentialStore ?? createSystemCredentialStore();
-  const acquireLock = input.context.acquireLoginLock ?? ((baseUrl: string) => acquireSystemLoginLock({
-    baseUrl,
-    ...(input.context.env ? { env: input.context.env } : {}),
-    ...(input.context.homeDirectory ? { homeDirectory: input.context.homeDirectory } : {}),
-  }));
+  const acquireLock =
+    input.context.acquireLoginLock ??
+    ((baseUrl: string) =>
+      acquireSystemLoginLock({
+        baseUrl,
+        ...(input.context.env ? { env: input.context.env } : {}),
+        ...(input.context.homeDirectory ? { homeDirectory: input.context.homeDirectory } : {}),
+      }));
   const loginLock = await acquireLock(input.config.baseUrl);
   let completed = false;
   try {
-    const token = await store.get(input.config.baseUrl) ?? input.config.token;
+    const token = (await store.get(input.config.baseUrl)) ?? input.config.token;
     if (!token) {
       line(input.stdout, JSON.stringify({ status: "not_authenticated", revoked: false }, null, 2));
       completed = true;
@@ -922,12 +1016,19 @@ async function runAuthLogout(input: {
     }
 
     await store.delete(input.config.baseUrl);
-    line(input.stdout, JSON.stringify({
-      status: "logged_out",
-      revoked: true,
-      localCredentialRemoved: true,
-      credentialSource: input.config.tokenSource ?? credentialSourceLabel(store.kind),
-    }, null, 2));
+    line(
+      input.stdout,
+      JSON.stringify(
+        {
+          status: "logged_out",
+          revoked: true,
+          localCredentialRemoved: true,
+          credentialSource: input.config.tokenSource ?? credentialSourceLabel(store.kind),
+        },
+        null,
+        2,
+      ),
+    );
     completed = true;
     return 0;
   } finally {
@@ -970,14 +1071,21 @@ export async function runCli(argv: string[], context: CliContext = {}) {
 
     if (args[0] === "config" && args[1] === "show") {
       requireNoArguments(args.slice(2), "config show");
-      line(stdout, JSON.stringify({
-        baseUrl: config.baseUrl,
-        baseUrlSource: config.baseUrlSource,
-        tokenConfigured: Boolean(config.token),
-        tokenSource: config.tokenSource,
-        secureCredentialStoreAvailable: !config.credentialStoreError,
-        configPath: config.configPath,
-      }, null, 2));
+      line(
+        stdout,
+        JSON.stringify(
+          {
+            baseUrl: config.baseUrl,
+            baseUrlSource: config.baseUrlSource,
+            tokenConfigured: Boolean(config.token),
+            tokenSource: config.tokenSource,
+            secureCredentialStoreAvailable: !config.credentialStoreError,
+            configPath: config.configPath,
+          },
+          null,
+          2,
+        ),
+      );
       return 0;
     }
     if (args[0] === "auth" && args[1] === "login") {
@@ -996,7 +1104,12 @@ export async function runCli(argv: string[], context: CliContext = {}) {
     }
     if (args[0] === "auth" && args[1] === "logout") {
       requireNoArguments(args.slice(2), "auth logout");
-      return await runAuthLogout({ config, context: { ...context, credentialStore }, stdout, stderr });
+      return await runAuthLogout({
+        config,
+        context: { ...context, credentialStore },
+        stdout,
+        stderr,
+      });
     }
 
     const command = await commandFromArgs(args, context);

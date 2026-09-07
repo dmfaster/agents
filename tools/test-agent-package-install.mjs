@@ -37,6 +37,7 @@ const expectedTools = [
   "campaigns_list",
   "company_timeline",
   "industry_lookup",
+  "list_import",
   "list_prepare",
   "pipeline_inspect",
   "replies_list",
@@ -60,7 +61,9 @@ function run(command, args, options = {}) {
         `${command} ${args.join(" ")} failed with exit code ${result.status}.`,
         result.stdout.trim(),
         result.stderr.trim(),
-      ].filter(Boolean).join("\n"),
+      ]
+        .filter(Boolean)
+        .join("\n"),
     );
   }
   return result;
@@ -84,8 +87,12 @@ function runAsync(command, args, options = {}) {
     }, options.timeout || 120_000);
     child.stdout.setEncoding("utf8");
     child.stderr.setEncoding("utf8");
-    child.stdout.on("data", (chunk) => { stdout += chunk; });
-    child.stderr.on("data", (chunk) => { stderr += chunk; });
+    child.stdout.on("data", (chunk) => {
+      stdout += chunk;
+    });
+    child.stderr.on("data", (chunk) => {
+      stderr += chunk;
+    });
     child.on("error", (error) => {
       if (settled) return;
       settled = true;
@@ -97,11 +104,17 @@ function runAsync(command, args, options = {}) {
       settled = true;
       clearTimeout(timeout);
       if (status !== 0) {
-        reject(new Error([
-          `${command} ${args.join(" ")} failed with exit code ${status}.`,
-          stdout.trim(),
-          stderr.trim(),
-        ].filter(Boolean).join("\n")));
+        reject(
+          new Error(
+            [
+              `${command} ${args.join(" ")} failed with exit code ${status}.`,
+              stdout.trim(),
+              stderr.trim(),
+            ]
+              .filter(Boolean)
+              .join("\n"),
+          ),
+        );
         return;
       }
       resolve({ status, stdout, stderr });
@@ -152,21 +165,32 @@ try {
     tarballs.push(path.join(artifactDirectory, report.filename));
   }
 
-  run("npm", [
-    "install",
-    "--ignore-scripts",
-    "--no-audit",
-    "--no-fund",
-    "--package-lock=false",
-    mcpClientPackage,
-    ...tarballs,
-  ], { cwd: projectDirectory });
+  run(
+    "npm",
+    [
+      "install",
+      "--ignore-scripts",
+      "--no-audit",
+      "--no-fund",
+      "--package-lock=false",
+      mcpClientPackage,
+      ...tarballs,
+    ],
+    { cwd: projectDirectory },
+  );
 
   for (const packageName of packageNames) {
     const installedManifest = JSON.parse(
-      readFileSync(path.join(projectDirectory, "node_modules", ...packageName.split("/"), "package.json"), "utf8"),
+      readFileSync(
+        path.join(projectDirectory, "node_modules", ...packageName.split("/"), "package.json"),
+        "utf8",
+      ),
     );
-    assert.equal(installedManifest.version, releaseVersion, `${packageName} installed at an unexpected version`);
+    assert.equal(
+      installedManifest.version,
+      releaseVersion,
+      `${packageName} installed at an unexpected version`,
+    );
   }
 
   const cli = path.join(projectDirectory, "node_modules", ".bin", "dmfaster");
@@ -180,7 +204,9 @@ try {
   const cliApi = createServer((request, response) => {
     let body = "";
     request.setEncoding("utf8");
-    request.on("data", (chunk) => { body += chunk; });
+    request.on("data", (chunk) => {
+      body += chunk;
+    });
     request.on("end", () => {
       cliRequests.push({
         method: request.method,
@@ -190,19 +216,25 @@ try {
         body,
       });
       response.writeHead(200, { "content-type": "application/json" });
-      response.end(JSON.stringify({
-        version: 1,
-        tool: "workspace.briefing",
-        policy: { effect: "read", approval: "none", exposure: "public_api" },
-        ok: true,
-        generatedAt: "2026-08-02T12:00:00.000Z",
-        durationMs: 1,
-        evidence: [],
-        consistency: { status: "verified", checks: ["packed_cli_fallback"] },
-        data: { summary: "Disposable packed CLI fallback passed." },
-        artifacts: [],
-        error: null,
-      }));
+      response.end(
+        JSON.stringify({
+          version: 1,
+          tool: request.url.endsWith("list.import") ? "list.import" : "workspace.briefing",
+          policy: {
+            effect: request.url.endsWith("list.import") ? "draft" : "read",
+            approval: "none",
+            exposure: "public_api",
+          },
+          ok: true,
+          generatedAt: "2026-08-02T12:00:00.000Z",
+          durationMs: 1,
+          evidence: [],
+          consistency: { status: "verified", checks: ["packed_cli_fallback"] },
+          data: { summary: "Disposable packed CLI fallback passed." },
+          artifacts: [],
+          error: null,
+        }),
+      );
     });
   });
   await listen(cliApi);
@@ -222,24 +254,51 @@ try {
     const result = JSON.parse(briefing.stdout);
     assert.equal(result.tool, "workspace.briefing");
     assert.equal(result.ok, true);
-    assert.deepEqual(cliRequests, [{
-      method: "POST",
-      url: "/api/v1/agent/tools/workspace.briefing",
-      authorization: `Bearer ${cliToken}`,
-      contentType: "application/json",
-      body: "{}",
-    }]);
+    assert.deepEqual(cliRequests, [
+      {
+        method: "POST",
+        url: "/api/v1/agent/tools/workspace.briefing",
+        authorization: `Bearer ${cliToken}`,
+        contentType: "application/json",
+        body: "{}",
+      },
+    ]);
+    const importFile = path.join(projectDirectory, "coaches.csv");
+    writeFileSync(importFile, '\uFEFFusername\r\n"@Coach.FI"\r\nsecond_coach\r\ncoach.fi\r\n');
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const imported = await runAsync(
+        cli,
+        ["list", "import", "--name", "Coaches", "--file", importFile, "--json"],
+        {
+          cwd: projectDirectory,
+          env: {
+            ...process.env,
+            DMFASTER_API_URL: `http://127.0.0.1:${address.port}`,
+            DMFASTER_TOKEN: cliToken,
+          },
+        },
+      );
+      assert.equal(JSON.parse(imported.stdout).tool, "list.import");
+      assert.doesNotMatch(imported.stdout + imported.stderr, new RegExp(cliToken, "u"));
+    }
+    const importedBody = JSON.parse(cliRequests[1].body);
+    assert.equal(cliRequests[1].url, "/api/v1/agent/tools/list.import");
+    assert.equal(cliRequests[1].authorization, `Bearer ${cliToken}`);
+    assert.deepEqual(importedBody.usernames, ["coach.fi", "second_coach", "coach.fi"]);
+    assert.equal(importedBody.name, "Coaches");
+    assert.match(importedBody.idempotencyKey, /^instagram-import:[a-f0-9]{64}$/);
+    assert.deepEqual(JSON.parse(cliRequests[2].body), importedBody);
   } finally {
     await close(cliApi);
   }
 
   const requireFromConsumer = createRequire(path.join(projectDirectory, "package.json"));
-  const clientModule = await import(pathToFileURL(
-    requireFromConsumer.resolve("@modelcontextprotocol/client"),
-  ).href);
-  const transportModule = await import(pathToFileURL(
-    requireFromConsumer.resolve("@modelcontextprotocol/client/stdio"),
-  ).href);
+  const clientModule = await import(
+    pathToFileURL(requireFromConsumer.resolve("@modelcontextprotocol/client")).href
+  );
+  const transportModule = await import(
+    pathToFileURL(requireFromConsumer.resolve("@modelcontextprotocol/client/stdio")).href
+  );
   const mcpServerBinary = path.join(
     projectDirectory,
     "node_modules",
@@ -273,7 +332,7 @@ try {
     assert.deepEqual(
       listed.tools.map((tool) => tool.name).sort(),
       expectedTools,
-      "the packed MCP server must expose 17 Agent 1.0 domain tools and the campaign workspace",
+      "the packed MCP server must expose 18 Agent 1.0 domain tools and the campaign workspace",
     );
     const workspaceTool = listed.tools.find((tool) => tool.name === "campaign_workspace");
     assert.equal(workspaceTool?._meta?.ui?.resourceUri, campaignWorkspaceUri);
@@ -295,7 +354,7 @@ try {
   }
 
   process.stdout.write(
-    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 with 17 Agent 1.0 domain tools plus the campaign workspace passed.\n",
+    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 with 18 Agent 1.0 domain tools plus the campaign workspace passed.\n",
   );
 } finally {
   const expectedPrefix = path.join(tmpdir(), "dmfaster-agent-packages-");
