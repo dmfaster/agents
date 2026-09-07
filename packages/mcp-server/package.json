@@ -37,7 +37,7 @@
     "@dmfaster/local-auth": "1.0.2",
     "@dmfaster/sdk": "1.0.2",
     "@modelcontextprotocol/server": "2.0.0",
-    "zod": "4.4.3"
+    "zod": "4.5.4"
   },
   "devDependencies": {
     "@dmfaster/product-ui": "0.1.0",
