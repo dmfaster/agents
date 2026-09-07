@@ -1,6 +1,6 @@
 # DM Faster MCP server
 
-Local stdio MCP server for the 16 DM Faster Agent 1.0 domain tools plus one
+Local stdio MCP server for the 17 DM Faster Agent 1.0 domain tools plus one
 portable `campaign_workspace` presentation tool. It uses the MCP TypeScript SDK
 v2 serving entry in strict modern-only mode. MCP 2026-07-28 clients use the new
 per-request protocol; 2025-era initialization is explicitly rejected. The
@@ -21,7 +21,18 @@ or network access. It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 16 domain tools directly.
+continue to use all 17 domain tools directly.
+
+`audience_preview` returns a server-issued `reviewedAudience` identity with an
+exact, immutable search revision. The user must review that preview before a
+caller echoes the object unchanged into `list_prepare` or `campaign_prepare`.
+Clients must never compute the signature themselves; changing audience fields
+requires a new preview and review.
+
+To build a fresh prospect list, set `brief.excludePreviouslyContacted` to
+`true`. The preview and prepare call then apply the workspace contact ledger;
+the returned reviewed audience records that setting and cannot be reused for a
+different one.
 
 Authenticate first through the DM Faster CLI's focused browser flow. The MCP
 server resolves the same operating-system stored credential.
@@ -31,13 +42,13 @@ server resolves the same operating-system stored credential.
 > from an authorized source checkout.
 
 ```bash
-npx --yes @dmfaster/cli@1.0.0 auth login --json
-npx --yes @dmfaster/mcp-server@1.0.0
+npx --yes @dmfaster/cli@1.0.1 auth login --json
+npx --yes @dmfaster/mcp-server@1.0.1
 ```
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
-smaller ceiling. The MCP server can expose all 16 domain schemas and the
+smaller ceiling. The MCP server can expose all 17 domain schemas and the
 read-only presentation schema while the DM Faster API independently rejects
 domain tools outside the stored credential's scopes.
 
@@ -46,8 +57,9 @@ go to stderr. Tool annotations accurately distinguish reads, private draft
 preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world.
 
-The MCP names are the 16 domain tools:
+The MCP names are the 17 domain tools:
 
+- `analytics_summary`
 - `workspace_briefing`
 - `campaigns_list`
 - `campaign_inspect`
@@ -91,7 +103,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.0.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.0.1"]
     }
   }
 }

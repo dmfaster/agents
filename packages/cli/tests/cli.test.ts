@@ -127,24 +127,75 @@ test("maps workspace-read CLI arguments to the public tool contract", async () =
   assert.match(stdout.read(), /"tool": "replies.list"/);
 });
 
+test("requires an explicit analytics scope and forwards an optional campaign", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const stderr = output();
+  assert.equal(await runCli(
+    ["analytics", "summary", "--campaign", "campaign_123"],
+    { ...configuredContext(calls), stderr: stderr.stream },
+  ), 2);
+  assert.match(stderr.read(), /requires --scope/u);
+  assert.deepEqual(calls, []);
+
+  assert.equal(await runCli(
+    ["analytics", "summary", "--scope", "today", "--campaign", "campaign_123"],
+    configuredContext(calls),
+  ), 0);
+  assert.deepEqual(calls, [{
+    tool: "analytics.summary",
+    input: { scope: "today", campaign: "campaign_123" },
+  }]);
+});
+
 test("loads stateless campaign input from a bounded JSON file", async () => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   const state = { profile: { version: 1 }, brief: { version: 1 } };
+  const reviewedAudience = {
+    querySignature: `4:${"a".repeat(32)}`,
+    dataFreshness: { engine: "search_facts", revision: "FI:r1" },
+  };
   const exitCode = await runCli(
-    ["campaign", "prepare", "--state", "/tmp/plan.json", "--idempotency-key", "campaign:prepare:1"],
+    [
+      "campaign", "prepare",
+      "--state", "/tmp/plan.json",
+      "--reviewed-audience", "/tmp/audience-preview.json",
+      "--idempotency-key", "campaign:prepare:1",
+    ],
     {
       ...configuredContext(calls),
       readTextFile: async (path) => {
-        assert.equal(path, "/tmp/plan.json");
-        return JSON.stringify({ state });
+        if (path === "/tmp/plan.json") return JSON.stringify({ state });
+        if (path === "/tmp/audience-preview.json") {
+          return JSON.stringify({ data: { data: { reviewedAudience } } });
+        }
+        throw new Error(`Unexpected path: ${path}`);
       },
     },
   );
   assert.equal(exitCode, 0);
   assert.deepEqual(calls, [{
     tool: "campaign.prepare",
-    input: { state, idempotencyKey: "campaign:prepare:1" },
+    input: { state, idempotencyKey: "campaign:prepare:1", reviewedAudience },
   }]);
+});
+
+test("requires an explicitly saved and reviewed audience preview before preparation", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const stderr = output();
+  const exitCode = await runCli(
+    ["campaign", "prepare", "--state", "/tmp/plan.json"],
+    {
+      ...configuredContext(calls),
+      stderr: stderr.stream,
+      readTextFile: async () => JSON.stringify({
+        state: { profile: { version: 1 }, brief: { version: 1 } },
+      }),
+    },
+  );
+
+  assert.equal(exitCode, 2);
+  assert.deepEqual(calls, []);
+  assert.match(stderr.read(), /--reviewed-audience PREVIEW_JSON is required/u);
 });
 
 test("requires matching preflight fields for campaign actions", async () => {

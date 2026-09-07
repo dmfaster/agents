@@ -23,14 +23,14 @@ import {
 } from "./tools.ts";
 import { registerCampaignWorkspace } from "./campaign-workspace.ts";
 
-export const MCP_SERVER_VERSION = "1.0.0";
+export const MCP_SERVER_VERSION = "1.0.1";
 export const DEFAULT_MCP_API_URL = DEFAULT_DMFASTER_API_URL;
 export const MCP_SERVER_INSTRUCTIONS = [
   "DM Faster lets a user describe a sales campaign while you operate the bounded workflow for them; do not assume prior product knowledge.",
   "Start with workspace_briefing for existing-workspace context.",
-  "For a new campaign, assemble one complete campaign state, resolve uncertain industries with industry_lookup, then call campaign_validate, audience_preview, and campaign_prepare in order.",
+  "For a new campaign, assemble one complete campaign state, resolve uncertain industries with industry_lookup, then call campaign_validate and audience_preview. Show the exact preview to the user before campaign_prepare, and echo the preview's server-issued reviewedAudience object unchanged; never derive it.",
   "When the host renders MCP Apps, use campaign_workspace to let the user review that complete state; headless hosts continue with the same state and domain tools.",
-  "Preparation creates only a private disabled draft and requires an exact audience; keep the latest complete state because this MCP server is stateless.",
+  "Preparation creates only a private disabled draft and requires the matching exact reviewed audience; keep the latest complete state and reviewedAudience because this MCP server is stateless.",
   "Launch requires campaign_launch_preflight followed by the owner's focused approval and campaign_launch with the same campaign ID and idempotency key.",
   "If launch preflight returns status setup_required, show its setup.setupUrl to the user, leave the campaign disabled, and repeat the exact resume tool input after the user completes browser setup.",
   "Never operate a human approval or browser-store page on the user's behalf, guess resource IDs, expose credentials, or claim an action succeeded without a verified tool result.",

@@ -2,6 +2,7 @@ import type { components } from "./generated/api.ts";
 
 /** Runtime counterpart to the OpenAPI-generated AgentToolName union. */
 export const AGENT_TOOL_NAMES = [
+  "analytics.summary",
   "workspace.briefing",
   "campaigns.list",
   "campaign.inspect",
@@ -24,6 +25,7 @@ export type AgentToolName = components["schemas"]["AgentToolName"];
 export type AgentToolPolicy = components["schemas"]["AgentToolPolicy"];
 
 export const AGENT_TOOL_POLICIES = Object.freeze({
+  "analytics.summary": { effect: "read", approval: "none", exposure: "public_api" },
   "workspace.briefing": { effect: "read", approval: "none", exposure: "public_api" },
   "campaigns.list": { effect: "read", approval: "none", exposure: "public_api" },
   "campaign.inspect": { effect: "read", approval: "none", exposure: "public_api" },
@@ -47,6 +49,7 @@ export type CampaignStatus = components["schemas"]["CampaignStatus"];
 type OptionalLimit<Input> = Omit<Input, "limit"> & { limit?: number | undefined };
 
 export type AgentToolInputMap = {
+  "analytics.summary": components["schemas"]["AnalyticsSummaryInput"];
   "workspace.briefing": components["schemas"]["WorkspaceBriefingInput"];
   "campaigns.list": OptionalLimit<components["schemas"]["CampaignsListInput"]>;
   "campaign.inspect": components["schemas"]["CampaignInspectInput"];
@@ -66,6 +69,7 @@ export type AgentToolInputMap = {
 };
 
 export type AgentToolDataMap = {
+  "analytics.summary": components["schemas"]["AnalyticsSummaryOutput"];
   "workspace.briefing": components["schemas"]["WorkspaceBriefingOutput"];
   "campaigns.list": components["schemas"]["CampaignsListOutput"];
   "campaign.inspect": components["schemas"]["CampaignInspectOutput"];

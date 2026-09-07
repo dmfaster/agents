@@ -7,6 +7,7 @@ import type {
 import { z } from "zod";
 
 export const MCP_AGENT_TOOL_NAMES = [
+  "analytics_summary",
   "workspace_briefing",
   "campaigns_list",
   "campaign_inspect",
@@ -189,6 +190,9 @@ export const campaignStateSchema = z.object({
       description: z.string(),
     }).strict()),
     exclusions: z.array(z.string()),
+    excludePreviouslyContacted: z.boolean().optional().describe(
+      "When true, remove companies that this workspace has already contacted before saving the list or campaign.",
+    ),
     unsupportedCriteria: z.array(z.string().max(160)).max(8).optional(),
     callToAction: z.string(),
     requestedChannels: z.array(channel),
@@ -225,6 +229,16 @@ export const campaignStateSchema = z.object({
 const idempotencyKey = z.string().trim().regex(/^[A-Za-z0-9._:-]{1,160}$/).describe(
   "A stable caller-generated key for this exact intended operation. Reuse it when retrying; never reuse it for a different action.",
 );
+const reviewedAudience = z.object({
+  querySignature: z.string().trim().min(1).max(200),
+  dataFreshness: z.object({
+    engine: z.literal("search_facts"),
+    revision: z.string().trim().min(1).max(200),
+  }).strict(),
+  excludePreviouslyContacted: z.boolean().optional(),
+}).strict().describe(
+  "The opaque reviewedAudience object returned by audience_preview. Echo it exactly; never derive or modify its signature or data revision.",
+);
 const authorizationId = z.string().trim().regex(/^agent_action_[a-f0-9]{32}$/).describe(
   "The server-issued authorization ID returned by the matching preflight tool after the owner approves it.",
 );
@@ -253,6 +267,19 @@ function definition<Name extends AgentToolName>(input: {
 
 export function createAgentToolDefinitions(client: AgentInvoker): AgentToolDefinition[] {
   return [
+    definition({
+      name: "analytics_summary",
+      tool: "analytics.summary",
+      title: "Analytics summary",
+      description: "Read an authoritative analytics snapshot for an explicit time scope, optionally limited to one campaign identifier or exact name.",
+      inputSchema: z.object({
+        scope: z.enum(["today", "last_24_hours", "campaign_to_date"]),
+        campaign: campaignIdSchema.optional().describe(
+          "Optional campaign identifier or exact campaign name.",
+        ),
+      }).strict(),
+      client,
+    }),
     definition({
       name: "workspace_briefing",
       tool: "workspace.briefing",
@@ -356,11 +383,12 @@ export function createAgentToolDefinitions(client: AgentInvoker): AgentToolDefin
       name: "list_prepare",
       tool: "list.prepare",
       title: "Prepare private company list",
-      description: "Create an idempotent private company list from an exact validated audience. This does not start outreach.",
+      description: "Create an idempotent private company list from an exact validated audience. First show the audience_preview result to the user, then echo its server-issued reviewedAudience object unchanged. This does not start outreach.",
       inputSchema: z.object({
         state: campaignStateSchema,
         sampleSize: z.number().int().min(1).max(25).optional(),
         idempotencyKey: idempotencyKey.optional(),
+        reviewedAudience,
       }).strict(),
       annotations: draftAnnotations,
       client,
@@ -369,11 +397,12 @@ export function createAgentToolDefinitions(client: AgentInvoker): AgentToolDefin
       name: "campaign_prepare",
       tool: "campaign.prepare",
       title: "Prepare campaign draft",
-      description: "Create an idempotent private list and disabled campaign draft. Nothing is sent and the campaign is not started.",
+      description: "Create an idempotent private list and disabled campaign draft only after the user reviews audience_preview. Echo the preview's server-issued reviewedAudience object unchanged. Nothing is sent and the campaign is not started.",
       inputSchema: z.object({
         state: campaignStateSchema,
         sampleSize: z.number().int().min(1).max(25).optional(),
         idempotencyKey: idempotencyKey.optional(),
+        reviewedAudience,
       }).strict(),
       annotations: draftAnnotations,
       client,

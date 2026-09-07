@@ -28,7 +28,7 @@ import { readFile } from "node:fs/promises";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "1.0.0";
+export const CLI_VERSION = "1.0.1";
 
 const HELP = `DM Faster CLI ${CLI_VERSION}
 
@@ -42,6 +42,7 @@ Configuration:
   auth logout
 
 Workspace reads:
+  analytics summary --scope today|last_24_hours|campaign_to_date [--campaign ID_OR_NAME]
   workspace briefing
   campaigns list [--status STATUS] [--limit N]
   campaign inspect [CAMPAIGN_ID]
@@ -54,8 +55,8 @@ Campaign planning and drafts:
   industry lookup QUERY [--version 2008|2025] [--language en|fi]
   campaign validate --state FILE
   audience preview --state FILE [--sample-size N]
-  list prepare --state FILE [--idempotency-key KEY]
-  campaign prepare --state FILE [--idempotency-key KEY]
+  list prepare --state FILE --reviewed-audience PREVIEW_JSON [--idempotency-key KEY]
+  campaign prepare --state FILE --reviewed-audience PREVIEW_JSON [--idempotency-key KEY]
 
 Human-approved campaign controls:
   campaign launch preflight CAMPAIGN_ID --idempotency-key KEY
@@ -65,7 +66,10 @@ Human-approved campaign controls:
 
 Agent quick start:
   Begin with 'workspace briefing --json'. For a new campaign, create one complete
-  state and run validate, exact audience preview, then private draft preparation.
+  state and run validate, then save and review the exact audience preview. Pass
+  that preview JSON with --reviewed-audience when preparing a private draft. Set
+  brief.excludePreviouslyContacted to true to have the exact preview and saved
+  list exclude companies already contacted in this workspace.
   Launch preflight may return setup_required; show setup.setupUrl to the user and
   repeat setup.resume exactly after browser setup. Never treat setup or preparation
   as launch approval.
@@ -162,6 +166,37 @@ function parseOptionalCampaignId(args: string[], command: string) {
     throw new UsageError("Campaign identifiers cannot exceed 160 characters.");
   }
   return campaignId ? { campaignId } : {};
+}
+
+function parseAnalyticsSummary(args: string[]): AgentToolInputMap["analytics.summary"] {
+  let scope: AgentToolInputMap["analytics.summary"]["scope"] | undefined;
+  let campaign: string | undefined;
+  const scopes = ["today", "last_24_hours", "campaign_to_date"] as const;
+  for (let index = 0; index < args.length; index += 1) {
+    const option = args[index];
+    if (option === "--scope") {
+      const candidate = args[index + 1];
+      if (!scopes.includes(candidate as (typeof scopes)[number])) {
+        throw new UsageError(`--scope must be one of: ${scopes.join(", ")}.`);
+      }
+      scope = candidate as (typeof scopes)[number];
+      index += 1;
+    } else if (option === "--campaign") {
+      const candidate = args[index + 1]?.trim() || "";
+      if (!candidate || candidate.startsWith("--")) {
+        throw new UsageError("--campaign requires a campaign identifier or exact name.");
+      }
+      if (candidate.length > 160) {
+        throw new UsageError("Campaign references cannot exceed 160 characters.");
+      }
+      campaign = candidate;
+      index += 1;
+    } else {
+      throw new UsageError(`Unknown analytics summary option: ${option || "(empty)"}.`);
+    }
+  }
+  if (!scope) throw new UsageError("analytics summary requires --scope.");
+  return { scope, ...(campaign ? { campaign } : {}) };
 }
 
 function parseCampaignList(args: string[]): AgentToolInputMap["campaigns.list"] {
@@ -304,15 +339,89 @@ async function parseCampaignStateFile(path: string, context: CliContext) {
   return state;
 }
 
+function asJsonObject(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+async function parseReviewedAudienceFile(
+  path: string,
+  context: CliContext,
+): Promise<AgentToolInputMap["campaign.prepare"]["reviewedAudience"]> {
+  const read = context.readTextFile ?? ((filePath: string) => readFile(filePath, "utf8"));
+  let source: string;
+  try {
+    source = await read(path);
+  } catch (cause) {
+    throw new UsageError(
+      `Could not read reviewed audience file ${path}: ${cause instanceof Error ? cause.message : "read failed"}`,
+    );
+  }
+  if (Buffer.byteLength(source, "utf8") > 256 * 1024) {
+    throw new UsageError("Reviewed audience files cannot exceed 256 KiB.");
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(source);
+  } catch {
+    throw new UsageError("Reviewed audience files must be valid JSON.");
+  }
+
+  const root = asJsonObject(parsed);
+  const data = asJsonObject(root?.data);
+  const harnessData = asJsonObject(data?.data);
+  const structured = asJsonObject(root?.structuredContent);
+  const structuredData = asJsonObject(structured?.data);
+  const structuredHarnessData = asJsonObject(structuredData?.data);
+  const candidates = [
+    root,
+    data,
+    harnessData,
+    structured,
+    structuredData,
+    structuredHarnessData,
+  ];
+  const reviewed = candidates
+    .map((candidate) => asJsonObject(candidate?.reviewedAudience))
+    .find(Boolean) || null;
+  const freshness = asJsonObject(reviewed?.dataFreshness);
+  if (
+    !reviewed ||
+    Object.keys(reviewed).some((key) => (
+      key !== "querySignature" &&
+      key !== "dataFreshness" &&
+      key !== "excludePreviouslyContacted"
+    )) ||
+    (reviewed.excludePreviouslyContacted !== undefined &&
+      typeof reviewed.excludePreviouslyContacted !== "boolean") ||
+    typeof reviewed.querySignature !== "string" ||
+    !reviewed.querySignature.trim() || reviewed.querySignature.length > 200 ||
+    !freshness ||
+    Object.keys(freshness).some((key) => key !== "engine" && key !== "revision") ||
+    freshness.engine !== "search_facts" ||
+    typeof freshness.revision !== "string" ||
+    !freshness.revision.trim() || freshness.revision.length > 200
+  ) {
+    throw new UsageError(
+      "The reviewed audience file must be an unmodified successful exact audience preview containing a server-issued reviewedAudience.",
+    );
+  }
+  return reviewed as AgentToolInputMap["campaign.prepare"]["reviewedAudience"];
+}
+
 async function parseStateCommand(
   args: string[],
   context: CliContext,
+  options: { requireReviewedAudience?: boolean } = {},
 ): Promise<{
   state: AgentToolInputMap["campaign.validate"]["state"];
   sampleSize?: number;
   idempotencyKey?: string;
+  reviewedAudience?: AgentToolInputMap["campaign.prepare"]["reviewedAudience"];
 }> {
   let statePath = "";
+  let reviewedAudiencePath = "";
   let sampleSize: number | undefined;
   let idempotencyKeyValue: string | undefined;
   for (let index = 0; index < args.length; index += 1) {
@@ -326,18 +435,30 @@ async function parseStateCommand(
     } else if (value === "--idempotency-key") {
       idempotencyKeyValue = parseIdempotencyKey(args[index + 1]);
       index += 1;
+    } else if (value === "--reviewed-audience" && options.requireReviewedAudience) {
+      reviewedAudiencePath = args[index + 1]?.trim() || "";
+      index += 1;
     } else {
       throw new UsageError(`Unknown campaign state option: ${value || "(empty)"}.`);
     }
   }
   if (!statePath) throw new UsageError("--state FILE is required.");
+  if (options.requireReviewedAudience && !reviewedAudiencePath) {
+    throw new UsageError(
+      "--reviewed-audience PREVIEW_JSON is required. Run audience preview, review its exact result, and save that JSON first.",
+    );
+  }
   const state = await parseCampaignStateFile(statePath, context) as AgentToolInputMap[
     "campaign.validate"
   ]["state"];
+  const reviewedAudience = reviewedAudiencePath
+    ? await parseReviewedAudienceFile(reviewedAudiencePath, context)
+    : undefined;
   return {
     state,
     ...(sampleSize ? { sampleSize } : {}),
     ...(idempotencyKeyValue ? { idempotencyKey: idempotencyKeyValue } : {}),
+    ...(reviewedAudience ? { reviewedAudience } : {}),
   };
 }
 
@@ -385,6 +506,9 @@ async function commandFromArgs(args: string[], context: CliContext): Promise<{
   input: AgentToolInputMap[AgentToolName];
 }> {
   const [group, action, ...rest] = args;
+  if (group === "analytics" && action === "summary") {
+    return { tool: "analytics.summary", input: parseAnalyticsSummary(rest) };
+  }
   if (group === "workspace" && action === "briefing") {
     requireNoArguments(rest, "workspace briefing");
     return { tool: "workspace.briefing", input: {} };
@@ -422,12 +546,18 @@ async function commandFromArgs(args: string[], context: CliContext): Promise<{
     };
   }
   if (group === "list" && action === "prepare") {
-    const input = await parseStateCommand(rest, context);
-    return { tool: "list.prepare", input };
+    const input = await parseStateCommand(rest, context, { requireReviewedAudience: true });
+    return {
+      tool: "list.prepare",
+      input: { ...input, reviewedAudience: input.reviewedAudience! },
+    };
   }
   if (group === "campaign" && action === "prepare") {
-    const input = await parseStateCommand(rest, context);
-    return { tool: "campaign.prepare", input };
+    const input = await parseStateCommand(rest, context, { requireReviewedAudience: true });
+    return {
+      tool: "campaign.prepare",
+      input: { ...input, reviewedAudience: input.reviewedAudience! },
+    };
   }
   if (group === "campaign" && action === "launch" && rest[0] === "preflight") {
     return {

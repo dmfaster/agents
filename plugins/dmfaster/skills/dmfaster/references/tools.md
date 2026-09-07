@@ -1,6 +1,6 @@
 # DM Faster Agent 1.0 tools
 
-Agent 1.0 exposes exactly 16 bounded domain tools. Each credential is bound to one
+Agent 1.0 exposes exactly 17 bounded domain tools. Each credential is bound to one
 workspace, and every tool requires the exact scopes shown below; scopes are not
 inherited from `workspace:read`. MCP names use underscores and HTTP contract
 names use dots.
@@ -15,11 +15,12 @@ authorizes launch or pause.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@1.0.0
+npx --yes @dmfaster/cli@1.0.1
 ```
 
 | MCP tool | HTTP tool | CLI suffix | Required scope | Effect |
 | --- | --- | --- | --- | --- |
+| `analytics_summary` | `analytics.summary` | `analytics summary --scope <scope> [--campaign ID_OR_NAME] --json` | `workspace:read` | bounded read |
 | `workspace_briefing` | `workspace.briefing` | `workspace briefing --json` | `workspace:read` | bounded read |
 | `campaigns_list` | `campaigns.list` | `campaigns list [options] --json` | `campaigns:read` | bounded read |
 | `campaign_inspect` | `campaign.inspect` | `campaign inspect [campaign-id] --json` | `campaigns:read` | bounded read |
@@ -47,6 +48,9 @@ take a complete campaign state object. The CLI accepts either that object or
 - a versioned campaign brief;
 - countries, cities, roles, company-size ranges, requested signals, exclusions,
   and supported ad-activity filters;
+- `brief.excludePreviouslyContacted: true` to exclude companies already
+  contacted in the current workspace (the exact preview and prepare call must
+  use the same setting);
 - a grounded TOL 2008/2025 industry resolution when industry targeting is used;
 - requested channels, language, tone, daily volume and confirmed delivery
   settings;

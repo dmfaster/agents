@@ -13,6 +13,7 @@ const mcpToolsPath = path.join(rootDir, "packages", "mcp-server", "src", "tools.
 const localAuthConstantsPath = path.join(rootDir, "packages", "local-auth", "src", "constants.ts");
 
 const EXPECTED_TOOLS = new Map([
+  ["analytics.summary", { effect: "read", scopes: ["workspace:read"] }],
   ["workspace.briefing", { effect: "read", scopes: ["workspace:read"] }],
   ["campaigns.list", { effect: "read", scopes: ["campaigns:read"] }],
   ["campaign.inspect", { effect: "read", scopes: ["campaigns:read"] }],

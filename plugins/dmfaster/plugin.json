@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "dmfaster",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plan campaigns, prepare private drafts, inspect live sales activity, and run human-approved campaign controls through DM Faster Agent 1.0.",
   "author": {
     "name": "DM Faster",

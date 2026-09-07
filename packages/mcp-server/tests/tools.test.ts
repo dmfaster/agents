@@ -42,12 +42,70 @@ function fakeClient(calls: Array<{ tool: AgentToolName; input: unknown }>): Agen
   };
 }
 
+const campaignState = {
+  profile: {
+    version: 1 as const,
+    businessName: "Example Analytics",
+    websiteUrl: "https://example.test",
+    businessDescription: "Revenue analytics for B2B software companies.",
+    offer: "A revenue analytics workspace",
+    customerOutcome: "Find pipeline gaps and improve conversion.",
+    differentiators: ["Fast setup"],
+    proofPoints: ["Used by revenue teams"],
+    preferredTone: "Direct and useful",
+    preferredLanguages: ["English"],
+    defaultCountries: ["FI" as const],
+    excludedCompanyTraits: [],
+  },
+  brief: {
+    version: 1 as const,
+    objective: "Book a discovery call",
+    offer: "A revenue analytics workspace",
+    targetDescription: "Finnish B2B software companies",
+    countries: ["FI" as const],
+    industryCodes: ["62010"],
+    decisionMakerRoles: ["Head of Sales"],
+    companySize: {
+      employeeMin: 10,
+      employeeMax: 250,
+      revenueMinEur: null,
+      revenueMaxEur: null,
+    },
+    requestedSignals: [],
+    exclusions: [],
+    callToAction: "Open to a 15-minute review?",
+    requestedChannels: ["instagram" as const],
+    messageLanguage: "English",
+    tone: "Direct and useful",
+    dailyVolume: 20,
+    deliverySettings: {
+      dailyCap: 20,
+      windowStart: "09:00",
+      windowEnd: "16:00",
+      weekdays: 31,
+      timezone: "Europe/Helsinki",
+      confirmed: true,
+    },
+    outreachMessages: [{
+      channels: ["instagram" as const],
+      subject: "",
+      body: "Hi — would a quick revenue pipeline review be useful?",
+      origin: "user" as const,
+    }],
+  },
+};
+
+const reviewedAudience = {
+  querySignature: `4:${"a".repeat(32)}`,
+  dataFreshness: { engine: "search_facts" as const, revision: "FI:r1" },
+};
+
 test("registers the complete Agent 1.0 surface with honest MCP safety hints", () => {
   const definitions: AgentToolDefinition[] = [];
   registerAgentToolDefinitions({ register: (definition) => definitions.push(definition) }, fakeClient([]));
 
   assert.deepEqual(definitions.map((definition) => definition.name), MCP_AGENT_TOOL_NAMES);
-  for (const definition of definitions.slice(0, 10)) {
+  for (const definition of definitions.slice(0, 11)) {
     assert.deepEqual(definition.annotations, {
       readOnlyHint: true,
       destructiveHint: false,
@@ -85,18 +143,23 @@ test("maps MCP tool names and validated inputs onto SDK calls", async () => {
   const definitions: AgentToolDefinition[] = [];
   registerAgentToolDefinitions({ register: (definition) => definitions.push(definition) }, fakeClient(calls));
 
+  const analytics = definitions.find((definition) => definition.name === "analytics_summary");
   const replies = definitions.find((definition) => definition.name === "replies_list");
   const timeline = definitions.find((definition) => definition.name === "company_timeline");
   const preflight = definitions.find((definition) => definition.name === "campaign_launch_preflight");
   const launch = definitions.find((definition) => definition.name === "campaign_launch");
+  const prepare = definitions.find((definition) => definition.name === "campaign_prepare");
+  assert.ok(analytics);
   assert.ok(replies);
   assert.ok(timeline);
   assert.ok(preflight);
   assert.ok(launch);
+  assert.ok(prepare);
   assert.match(preflight.description, /setup_required/u);
   assert.match(preflight.description, /setup\.resume/u);
   assert.match(launch.description, /browser_worker_required/u);
 
+  await analytics.call({ scope: "today", campaign: "campaign_123" });
   await replies.call({ campaignId: "campaign_123", limit: 4, query: "Visio" });
   await timeline.call({ campaignId: "campaign_123", companyOutreachId: "outreach_456" });
   await preflight.call({ campaignId: "campaign_123", idempotencyKey: "launch:campaign_123:1" });
@@ -105,8 +168,17 @@ test("maps MCP tool names and validated inputs onto SDK calls", async () => {
     idempotencyKey: "launch:campaign_123:1",
     authorizationId: `agent_action_${"a".repeat(32)}`,
   });
+  await prepare.call({
+    state: campaignState,
+    idempotencyKey: "prepare:campaign:1",
+    reviewedAudience,
+  });
 
   assert.deepEqual(calls, [
+    {
+      tool: "analytics.summary",
+      input: { scope: "today", campaign: "campaign_123" },
+    },
     {
       tool: "replies.list",
       input: { campaignId: "campaign_123", limit: 4, query: "Visio" },
@@ -127,7 +199,28 @@ test("maps MCP tool names and validated inputs onto SDK calls", async () => {
         authorizationId: `agent_action_${"a".repeat(32)}`,
       },
     },
+    {
+      tool: "campaign.prepare",
+      input: {
+        state: campaignState,
+        idempotencyKey: "prepare:campaign:1",
+        reviewedAudience,
+      },
+    },
   ]);
+});
+
+test("requires a server-issued reviewed audience before private preparation", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const definitions: AgentToolDefinition[] = [];
+  registerAgentToolDefinitions({ register: (definition) => definitions.push(definition) }, fakeClient(calls));
+  const prepare = definitions.find((definition) => definition.name === "campaign_prepare");
+  assert.ok(prepare);
+
+  await assert.rejects(
+    prepare.call({ state: campaignState, idempotencyKey: "prepare:campaign:1" }),
+  );
+  assert.deepEqual(calls, []);
 });
 
 test("rejects unknown input fields before calling the SDK", async () => {

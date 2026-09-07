@@ -81,6 +81,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/analytics.summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect an analytics summary
+         * @description Returns an authoritative analytics snapshot for an explicit time scope, optionally limited to one campaign. Read-only.
+         */
+        post: operations["analyticsSummary"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/audience.preview": {
         parameters: {
             query?: never;
@@ -375,7 +395,7 @@ export interface paths {
         put?: never;
         /**
          * Inspect sending health
-         * @description Returns campaign, queue, failure, and browser-worker health. When campaignId
+         * @description Returns customer-facing campaign, queue, and browser-worker health. When campaignId
          *     is omitted, the selected, active, or most recent campaign is used. Read-only.
          */
         post: operations["sendingInspect"];
@@ -485,6 +505,8 @@ export interface components {
             dailyVolume: number | null;
             decisionMakerRoles: string[];
             deliverySettings: components["schemas"]["AgentCampaignDeliverySettings"];
+            /** @description Exclude companies already contacted in this workspace. The exact preview and prepare call must use the same setting. */
+            excludePreviouslyContacted?: boolean;
             exclusions: string[];
             googleAdsActivityWindow?: ("last_30_days" | "last_90_days" | "last_12_months") | null;
             industryCodes: string[];
@@ -666,10 +688,10 @@ export interface components {
             /** @enum {string} */
             scope: "workspace" | "campaign" | "audience" | "conversation";
             /** @enum {string} */
-            source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow";
+            source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -693,12 +715,85 @@ export interface components {
             /** @constant */
             version: 1;
         };
+        AnalyticsSummaryInput: {
+            /** @description Optional campaign identifier or exact campaign name. */
+            campaign?: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            scope: "today" | "last_24_hours" | "campaign_to_date";
+        };
+        AnalyticsSummaryOutput: {
+            /** Format: date-time */
+            asOf: string;
+            campaign: {
+                id: string;
+                name: string;
+            } | null;
+            counts: {
+                bookedCalls: number;
+                reachedCompanies: number;
+                replies: number;
+                replyingCompanies: number;
+                sent: number;
+            };
+            coverage: {
+                /** @enum {string} */
+                bookedCalls: "complete" | "partial" | "unavailable";
+                /** @enum {string} */
+                reachedCompanies: "complete" | "partial" | "unavailable";
+                /** @enum {string} */
+                replies: "complete" | "partial" | "unavailable";
+                /** @enum {string} */
+                sent: "complete" | "partial" | "unavailable";
+            };
+            formulas: {
+                replyRateByCompanies: string;
+                replyRateByMessages: string;
+            };
+            /** Format: date-time */
+            generatedAt: string;
+            rates: {
+                replyRateByCompanies: number | null;
+                replyRateByMessages: number | null;
+            };
+            /** @enum {string} */
+            scope: "today" | "last_24_hours" | "campaign_to_date";
+            snapshotId: string;
+            sources: {
+                bookedCalls: string;
+                reachedCompanies: string;
+                replies: string;
+                sent: string;
+            };
+            timezone: string;
+            /** @constant */
+            version: 1;
+            window: {
+                /** Format: date-time */
+                end: string;
+                label: string;
+                start: string | null;
+            };
+        };
+        AnalyticsSummaryResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AnalyticsSummaryOutput"] | null;
+            /** @constant */
+            tool?: "analytics.summary";
+        };
+        /** @description Exact preview data plus the opaque audience identity required by preparation calls. */
+        AudiencePreviewHarnessData: {
+            reviewedAudience: components["schemas"]["ReviewedAudience"] | null;
+        } & {
+            [key: string]: unknown;
+        };
+        AudiencePreviewHarnessResult: components["schemas"]["AgentHarnessResult"] & {
+            data?: components["schemas"]["AudiencePreviewHarnessData"] | null;
+        };
         AudiencePreviewInput: {
             sampleSize?: number;
             state: components["schemas"]["AgentCampaignState"];
         };
         AudiencePreviewResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["AgentHarnessResult"] | null;
+            data?: components["schemas"]["AudiencePreviewHarnessResult"] | null;
             /** @constant */
             tool?: "audience.preview";
         };
@@ -768,11 +863,8 @@ export interface components {
                 companiesPlanned: number;
                 companiesReached: number;
                 completed: number;
-                failed: number;
                 queued: number;
                 running: number;
-                skipped: number;
-                totalJobs: number;
             };
             /** Format: date-time */
             generatedAt: string;
@@ -840,11 +932,9 @@ export interface components {
         CampaignSummary: {
             channels: components["schemas"]["TargetChannel"][];
             dailyCap: number;
-            failedCount: number;
             id: string;
             name: string;
             sentCount: number;
-            skippedCount: number;
             status: components["schemas"]["CampaignStatus"];
             targetCount: number;
             /** Format: date-time */
@@ -865,7 +955,7 @@ export interface components {
             occurredAt: string;
             targetName: string;
             /** @enum {string} */
-            type: "planned" | "sent" | "failed" | "skipped" | "replied" | "positive" | "pipeline_stage";
+            type: "planned" | "sent" | "replied" | "positive" | "pipeline_stage";
         };
         CompanyTimelineInput: {
             campaignId: components["schemas"]["ResourceId"];
@@ -918,6 +1008,7 @@ export interface components {
         };
         ListPrepareInput: {
             idempotencyKey?: components["schemas"]["IdempotencyKey"];
+            reviewedAudience: components["schemas"]["ReviewedAudience"];
             sampleSize?: number;
             state: components["schemas"]["AgentCampaignState"];
         };
@@ -972,6 +1063,16 @@ export interface components {
             tool?: "replies.list";
         };
         ResourceId: string;
+        /** @description Server-issued identity from the exact audience preview. Echo this object unchanged when preparing a private list or campaign; clients must not derive it. */
+        ReviewedAudience: {
+            dataFreshness: {
+                /** @constant */
+                engine: "search_facts";
+                revision: string;
+            };
+            excludePreviouslyContacted?: boolean;
+            querySignature: string;
+        };
         SendingInspectInput: components["schemas"]["OptionalCampaignInput"];
         SendingInspectOutput: {
             campaignId: string;
@@ -1022,9 +1123,7 @@ export interface components {
             sending: components["schemas"]["SendingSummary"];
             totals: {
                 campaigns: number;
-                failed: number;
                 sent: number;
-                skipped: number;
                 targetLists: number;
             };
         };
@@ -1361,6 +1460,39 @@ export interface operations {
             428: components["responses"]["AuthPending"];
             429: components["responses"]["AuthTooManyRequests"];
             503: components["responses"]["AuthServiceUnavailable"];
+        };
+    };
+    analyticsSummary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnalyticsSummaryInput"];
+            };
+        };
+        responses: {
+            /** @description Analytics summary. */
+            200: {
+                headers: {
+                    "Cache-Control": components["headers"]["CacheControl"];
+                    "X-Request-Id": components["headers"]["RequestId"];
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnalyticsSummaryResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
         };
     };
     audiencePreview: {

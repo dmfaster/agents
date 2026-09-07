@@ -8,22 +8,24 @@ through the focused DM Faster browser approval page.
 > authorized source checkout.
 
 ```bash
-npx --yes @dmfaster/cli@1.0.0 auth login --json
-npx --yes @dmfaster/cli@1.0.0 auth login --access plan --json
-npx --yes @dmfaster/cli@1.0.0 auth status --json
+npx --yes @dmfaster/cli@1.0.1 auth login --json
+npx --yes @dmfaster/cli@1.0.1 auth login --access plan --json
+npx --yes @dmfaster/cli@1.0.1 auth status --json
 
-npx --yes @dmfaster/cli@1.0.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.0.0 campaigns list --status Running --limit 10 --json
-npx --yes @dmfaster/cli@1.0.0 replies list campaign_123 --limit 5 --query "Visio" --json
-npx --yes @dmfaster/cli@1.0.0 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.0.1 analytics summary --scope today --json
+npx --yes @dmfaster/cli@1.0.1 workspace briefing --json
+npx --yes @dmfaster/cli@1.0.1 campaigns list --status Running --limit 10 --json
+npx --yes @dmfaster/cli@1.0.1 replies list campaign_123 --limit 5 --query "Visio" --json
+npx --yes @dmfaster/cli@1.0.1 company timeline campaign_123 outreach_456 --json
 
-npx --yes @dmfaster/cli@1.0.0 campaign validate --state campaign-state.json --json
-npx --yes @dmfaster/cli@1.0.0 audience preview --state campaign-state.json --json
-npx --yes @dmfaster/cli@1.0.0 campaign prepare --state campaign-state.json --idempotency-key prepare-001 --json
-npx --yes @dmfaster/cli@1.0.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
-npx --yes @dmfaster/cli@1.0.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
+npx --yes @dmfaster/cli@1.0.1 campaign validate --state campaign-state.json --json
+npx --yes @dmfaster/cli@1.0.1 audience preview --state campaign-state.json --json > audience-preview.json
+# Review the exact count and sample in audience-preview.json before continuing.
+npx --yes @dmfaster/cli@1.0.1 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
+npx --yes @dmfaster/cli@1.0.1 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
+npx --yes @dmfaster/cli@1.0.1 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
 
-npx --yes @dmfaster/cli@1.0.0 auth logout --json
+npx --yes @dmfaster/cli@1.0.1 auth logout --json
 ```
 
 `auth login` creates a short-lived PKCE device request, prints a confirmation
@@ -59,7 +61,10 @@ server. `auth logout` revokes a stored credential before deleting it locally.
 Campaign state files contain the complete latest state returned or confirmed by
 the caller. Re-send that state for every validation, audience, or preparation
 call; the MCP/API process does not keep a hidden planning session. Preparation
-commands create private resources and require stable idempotency keys.
+commands create private resources and require stable idempotency keys. They also
+require `--reviewed-audience` with the saved, human-reviewed output from the
+matching exact preview. The CLI echoes the server-issued audience identity from
+that result unchanged; it never derives a signature from the state file.
 
 Agents should assume the user does not know DM Faster's fields or command names:
 translate the user's goal into the complete state, ask only for material missing

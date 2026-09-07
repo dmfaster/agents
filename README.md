@@ -58,7 +58,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.0.0 auth login --json
+npx --yes @dmfaster/cli@1.0.1 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -75,11 +75,11 @@ single-use action authorization.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.0.0 workspace briefing --json
-npx --yes @dmfaster/mcp-server@1.0.0
+npx --yes @dmfaster/cli@1.0.1 workspace briefing --json
+npx --yes @dmfaster/mcp-server@1.0.1
 ```
 
-The 16 MCP domain tools cover workspace, campaign, sending, reply, pipeline,
+The 17 MCP domain tools cover workspace, campaign, sending, reply, pipeline,
 company-history, industry, validation, exact-audience preview, private draft,
 launch, and pause workflows. Compliant MCP Apps hosts can also render the
 read-only `campaign_workspace` presentation tool inline. Headless hosts receive
