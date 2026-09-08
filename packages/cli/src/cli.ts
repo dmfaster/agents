@@ -33,7 +33,7 @@ import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "1.2.0";
+export const CLI_VERSION = "1.3.0";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();
@@ -77,8 +77,9 @@ Environment:
   DMFASTER_CONFIG      Optional config JSON path
 
 Run 'dmfaster auth login' for secure browser sign-in. Tokens are stored in the OS
-credential store, never in the config file. Launch and pause require a separate
-short-lived approval in DM Faster for one exact campaign version.`;
+credential store, never in the config file. Full access includes direct campaign
+control on explicit user instructions. Older connections need one new full-access
+login or per-action approval. Preflight always binds the exact campaign version.`;
 
 type Output = {
   write(value: string): unknown;
@@ -487,7 +488,7 @@ function parseCampaignAction(args: string[], options: { execute: boolean }) {
     throw new UsageError("--idempotency-key KEY is required.");
   }
   if (options.execute && !authorizationIdValue) {
-    throw new UsageError("--authorization-id ID is required after human approval.");
+    throw new UsageError("--authorization-id ID from a ready or approved preflight is required.");
   }
   return {
     campaignId: campaignIdValue,

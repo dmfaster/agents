@@ -56,6 +56,7 @@ function identity(accessToken = generatedToken()) {
         "audiences:read",
         "campaigns:write",
         "campaigns:launch",
+        "campaigns:control",
       ],
       expiresAt: "2026-08-28T12:00:00.000Z",
     },
@@ -146,39 +147,45 @@ test("device start, auth status, and revoke preserve Retry-After metadata", asyn
     {
       name: "device start",
       retryAfterSeconds: 31,
-      run: () => beginDeviceAuthorization({
-        baseUrl: BASE_URL,
-        adapters: {
-          fetch: async () => Response.json(
-            { error: { code: "rate_limited" } },
-            { status: 429, headers: { "retry-after": "31" } },
-          ),
-        },
-      }),
+      run: () =>
+        beginDeviceAuthorization({
+          baseUrl: BASE_URL,
+          adapters: {
+            fetch: async () =>
+              Response.json(
+                { error: { code: "rate_limited" } },
+                { status: 429, headers: { "retry-after": "31" } },
+              ),
+          },
+        }),
     },
     {
       name: "auth status",
       retryAfterSeconds: 67,
-      run: () => getRemoteAuthStatus({
-        baseUrl: BASE_URL,
-        token,
-        fetch: async () => Response.json(
-          { error: { code: "rate_limited" } },
-          { status: 429, headers: { "retry-after": "67" } },
-        ),
-      }),
+      run: () =>
+        getRemoteAuthStatus({
+          baseUrl: BASE_URL,
+          token,
+          fetch: async () =>
+            Response.json(
+              { error: { code: "rate_limited" } },
+              { status: 429, headers: { "retry-after": "67" } },
+            ),
+        }),
     },
     {
       name: "credential revoke",
       retryAfterSeconds: 103,
-      run: () => revokeRemoteCredential({
-        baseUrl: BASE_URL,
-        token,
-        fetch: async () => Response.json(
-          { error: { code: "rate_limited" } },
-          { status: 429, headers: { "retry-after": "103" } },
-        ),
-      }),
+      run: () =>
+        revokeRemoteCredential({
+          baseUrl: BASE_URL,
+          token,
+          fetch: async () =>
+            Response.json(
+              { error: { code: "rate_limited" } },
+              { status: 429, headers: { "retry-after": "103" } },
+            ),
+        }),
     },
   ];
 
@@ -240,7 +247,10 @@ test("polls at the server interval, respects slow-down, and returns a validated 
       return Response.json({ error: "authorization_pending", interval: 5 }, { status: 428 });
     }
     if (pollCount === 2) {
-      return Response.json({ error: "slow_down" }, { status: 429, headers: { "retry-after": "9" } });
+      return Response.json(
+        { error: "slow_down" },
+        { status: 429, headers: { "retry-after": "9" } },
+      );
     }
     return Response.json(resultBody);
   };
@@ -251,7 +261,10 @@ test("polls at the server interval, respects slow-down, and returns a validated 
     adapters: {
       fetch,
       now: () => now,
-      sleep: async (milliseconds) => { sleeps.push(milliseconds); now += milliseconds; },
+      sleep: async (milliseconds) => {
+        sleeps.push(milliseconds);
+        now += milliseconds;
+      },
     },
   });
 
@@ -281,12 +294,15 @@ test("surfaces a transport rate limit instead of treating it as OAuth slow-down"
       adapters: {
         fetch,
         now: () => now,
-        sleep: async (milliseconds) => { now += milliseconds; },
+        sleep: async (milliseconds) => {
+          now += milliseconds;
+        },
       },
     }),
-    (error: unknown) => error instanceof AgentAuthError
-      && error.code === "rate_limited"
-      && error.retryAfterSeconds === 900,
+    (error: unknown) =>
+      error instanceof AgentAuthError &&
+      error.code === "rate_limited" &&
+      error.retryAfterSeconds === 900,
   );
   assert.equal(pollCount, 1, "a transport rate limit must stop the device polling loop");
 });
@@ -294,20 +310,28 @@ test("surfaces a transport rate limit instead of treating it as OAuth slow-down"
 test("reports browser denial and timeout without including in-memory secrets", async () => {
   const server = generatedDeviceResponse();
   let now = 0;
-  const fetch = async (url: string | URL | Request) => String(url).endsWith("/device")
-    ? Response.json(server, { status: 201 })
-    : Response.json({ error: "access_denied" }, { status: 403 });
+  const fetch = async (url: string | URL | Request) =>
+    String(url).endsWith("/device")
+      ? Response.json(server, { status: 201 })
+      : Response.json({ error: "access_denied" }, { status: 403 });
   const authorization = await beginDeviceAuthorization({ baseUrl: BASE_URL, adapters: { fetch } });
 
   await assert.rejects(
     pollDeviceAuthorization({
       baseUrl: BASE_URL,
       authorization,
-      adapters: { fetch, now: () => now, sleep: async (milliseconds) => { now += milliseconds; } },
+      adapters: {
+        fetch,
+        now: () => now,
+        sleep: async (milliseconds) => {
+          now += milliseconds;
+        },
+      },
     }),
-    (error: unknown) => error instanceof AgentAuthError
-      && error.code === "access_denied"
-      && !error.message.includes(server.deviceCode),
+    (error: unknown) =>
+      error instanceof AgentAuthError &&
+      error.code === "access_denied" &&
+      !error.message.includes(server.deviceCode),
   );
 
   now = 0;
@@ -317,9 +341,13 @@ test("reports browser denial and timeout without including in-memory secrets", a
       baseUrl: BASE_URL,
       authorization: shortAuthorization,
       adapters: {
-        fetch: async () => { throw new Error("poll should not run after deadline"); },
+        fetch: async () => {
+          throw new Error("poll should not run after deadline");
+        },
         now: () => now,
-        sleep: async (milliseconds) => { now += milliseconds; },
+        sleep: async (milliseconds) => {
+          now += milliseconds;
+        },
       },
     }),
     (error: unknown) => error instanceof AgentAuthError && error.code === "expired_token",
@@ -344,7 +372,10 @@ test("verifies status and revokes through bearer-only headers, never URL paramet
   await revokeRemoteCredential({ baseUrl: BASE_URL, token: body.accessToken, fetch });
 
   assert.equal(status.credential.id, body.credential.id);
-  assert.deepEqual(calls.map((call) => call.method), ["GET", "POST"]);
+  assert.deepEqual(
+    calls.map((call) => call.method),
+    ["GET", "POST"],
+  );
   assert.ok(calls.every((call) => !call.url.includes(body.accessToken)));
   assert.ok(calls.every((call) => call.authorization === `Bearer ${body.accessToken}`));
 });

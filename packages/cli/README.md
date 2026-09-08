@@ -8,24 +8,24 @@ through the focused DM Faster browser approval page.
 > authorized source checkout.
 
 ```bash
-npx --yes @dmfaster/cli@1.2.0 auth login --json
-npx --yes @dmfaster/cli@1.2.0 auth login --access plan --json
-npx --yes @dmfaster/cli@1.2.0 auth status --json
+npx --yes @dmfaster/cli@1.3.0 auth login --json
+npx --yes @dmfaster/cli@1.3.0 auth login --access plan --json
+npx --yes @dmfaster/cli@1.3.0 auth status --json
 
-npx --yes @dmfaster/cli@1.2.0 analytics summary --scope today --json
-npx --yes @dmfaster/cli@1.2.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.2.0 campaigns list --status Running --limit 10 --json
-npx --yes @dmfaster/cli@1.2.0 replies list campaign_123 --limit 5 --query "Visio" --json
-npx --yes @dmfaster/cli@1.2.0 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.3.0 analytics summary --scope today --json
+npx --yes @dmfaster/cli@1.3.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.3.0 campaigns list --status Running --limit 10 --json
+npx --yes @dmfaster/cli@1.3.0 replies list campaign_123 --limit 5 --query "Visio" --json
+npx --yes @dmfaster/cli@1.3.0 company timeline campaign_123 outreach_456 --json
 
-npx --yes @dmfaster/cli@1.2.0 campaign validate --state campaign-state.json --json
-npx --yes @dmfaster/cli@1.2.0 audience preview --state campaign-state.json --json > audience-preview.json
+npx --yes @dmfaster/cli@1.3.0 campaign validate --state campaign-state.json --json
+npx --yes @dmfaster/cli@1.3.0 audience preview --state campaign-state.json --json > audience-preview.json
 # Review the exact count and sample in audience-preview.json before continuing.
-npx --yes @dmfaster/cli@1.2.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
-npx --yes @dmfaster/cli@1.2.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
-npx --yes @dmfaster/cli@1.2.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
+npx --yes @dmfaster/cli@1.3.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
+npx --yes @dmfaster/cli@1.3.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
+npx --yes @dmfaster/cli@1.3.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
 
-npx --yes @dmfaster/cli@1.2.0 auth logout --json
+npx --yes @dmfaster/cli@1.3.0 auth logout --json
 ```
 
 `auth login` creates a short-lived PKCE device request, prints a confirmation
@@ -37,12 +37,12 @@ receives the issued credential.
 Login defaults to the complete `full` profile. Use `--access` to grant only the
 needed capability set:
 
-| Profile | Capability                                                                |
-| ------- | ------------------------------------------------------------------------- |
-| `read`  | inspect workspace, campaigns, sending, replies, and pipeline              |
-| `plan`  | `read` plus industry lookup, validation, and exact audience preview       |
-| `draft` | `plan` plus private list/campaign preparation and approved pause requests |
-| `full`  | `draft` plus approved campaign launch                                     |
+| Profile | Capability                                                                      |
+| ------- | ------------------------------------------------------------------------------- |
+| `read`  | inspect workspace, campaigns, sending, replies, and pipeline                    |
+| `plan`  | `read` plus industry lookup, validation, and exact audience preview             |
+| `draft` | `plan` plus private list/campaign preparation and approved pause requests       |
+| `full`  | `draft` plus launch/pause on explicit instructions after a one-time owner grant |
 
 The server still checks every exact scope, workspace membership, owner-only
 rule, and action authorization. An access profile is a credential ceiling, not
@@ -72,16 +72,17 @@ facts, and carry validation, exact preview, and private draft preparation in
 order. `dmfaster --help` includes the same quick-start sequence for CLI-only
 hosts.
 
-Launch and pause require a separate short-lived approval in DM Faster for the
-exact campaign version. A launch preflight can first return `setup_required`;
-show `setup.setupUrl`, keep the campaign disabled, and repeat the exact
-`setup.resume` call after the human installs or reconnects the extension. Once
-preflight returns `approval_required`, the response supplies the approval page
-and authorization ID. The human controls both the browser-store and approval
-pages. After approval, retry the action with the same campaign ID and
-idempotency key plus the authorization ID. Scripts can repeat the identical
-preflight first to verify that the existing authorization now reports
-`approved`; that retry never creates a second request.
+The `full` connection profile includes `campaigns:control`. After the owner
+grants it once, an explicit instruction such as “launch it” is enough. Call
+preflight, then execute immediately when it returns `ready`, using the returned
+authorization ID and the same campaign ID and idempotency key. The authorization
+remains short-lived and bound to the exact campaign version.
+
+Older connections keep per-action browser approval. Reconnect once with
+`dmfaster auth logout` followed by `dmfaster auth login --access full` to enable conversational controls, or follow
+the returned `approval_required` URL for a single action. Only the human operates
+connection and action approval pages. If launch returns `setup_required`, show
+`setup.setupUrl` and repeat `setup.resume` after the extension reconnects.
 
 `--json` is accepted anywhere and JSON is the default for every API command.
 Run `dmfaster --help` for the complete Agent 1.0 command list. The production

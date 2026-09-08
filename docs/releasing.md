@@ -65,7 +65,11 @@ claude plugin install dmfaster@dmfaster-agents
 
 Start a new host session, authenticate through the browser flow, and verify a
 workspace briefing, exact-audience preview, idempotent private draft, setup
-handoff, and refusal to launch or pause without the separate owner approval.
+handoff, direct launch/pause on explicit instructions after an owner grants
+`campaigns:control`, and the original per-action approval path for legacy
+connections. Verify stale versions, revoked credentials, and mismatched
+authorizations are rejected. Apply and verify the new backend scope migration
+before publishing clients that request it.
 
 With explicit approval, submit the public source through
 `https://cursor.com/marketplace/publish`; Cursor reviews the publisher and

@@ -46,8 +46,11 @@ shared Codex, Claude, and Cursor plugin.
 - Planning and inspection tools are bounded reads.
 - List and campaign preparation may create only private, disabled drafts and
   must remain idempotent.
-- Launch and pause require a separate server-issued authorization bound to the
-  exact campaign version after the owner approves it in DM Faster.
+- Launch and pause require an explicit user instruction and a server-issued
+  authorization bound to the exact campaign version. An owner may grant
+  `campaigns:control` once during browser connection so preflight returns `ready`
+  without per-action approval. Existing connections retain their original
+  per-action browser approval contract; never upgrade credentials silently.
 - Never add reply sending, meeting booking, provider-credential access,
   approval bypasses, or arbitrary workspace mutations.
 - Exact audience totals are invariant. Never substitute a lower bound, sample,

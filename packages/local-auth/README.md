@@ -10,7 +10,7 @@ supports `DMFASTER_TOKEN` for non-interactive CI environments.
 > authorized source checkout.
 
 ```sh
-npm install @dmfaster/local-auth@1.2.0
+npm install @dmfaster/local-auth@1.3.0
 ```
 
 Application integrations normally use `@dmfaster/sdk` directly. This package
@@ -26,3 +26,12 @@ authority for the workspace and permissions actually granted.
 The supported runtime is Node.js 24. Browser sign-in defaults to
 `https://app.dmfaster.com`; compatible loopback API endpoints are available for
 local development and tests.
+
+## Direct campaign control (1.3.0)
+
+An owner can grant `campaigns:control` once when connecting an agent with the
+`full` profile. Explicit user instructions then suffice for launch or pause:
+preflight returns `ready` and a version-bound authorization ID for immediate
+execution. The normal action scope is still required. Existing credentials
+retain per-action approval until the owner reconnects and grants this permission.
+Planning or preparing a campaign never authorizes launch.

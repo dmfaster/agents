@@ -15,7 +15,7 @@ authorizes launch or pause.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@1.2.0
+npx --yes @dmfaster/cli@1.3.0
 ```
 
 | MCP tool                    | HTTP tool                   | CLI suffix                                                                         | Required scope                      | Effect                            |
@@ -80,7 +80,7 @@ and user-requested values. Each message is 1–1,000 characters; at most four
 variants are accepted. Daily cap is 1–60 and pacing is 12–3,600 seconds.
 The result reports exact saved copy/settings, campaign/list versions,
 `audienceCount` for the saved list and `targetCount` for the saved campaign (known-contact exclusions are enforced during sending), plus `created`/`replayed`. Status must be `Draft` and
-`enabled` must be false. Launch remains a separate approval-bound operation.
+`enabled` must be false. Launch remains a separate, explicitly requested operation with a server-issued authorization.
 
 ## Update an existing draft
 
@@ -158,9 +158,12 @@ maximum of 160 characters. Reuse it only for an exact retry. For private draft
 preparation, DM Faster derives a stable key from the complete brief when the
 caller omits one; action preflights always require an explicit key.
 
-Launch and pause require this sequence:
+Launch and pause require an explicit user instruction, then this sequence:
 
-1. Call the matching preflight with the campaign ID and idempotency key.
+1. Call the matching preflight with the campaign ID and idempotency key. If it
+   returns `status: "ready"`, execute the matching action immediately using the
+   returned server-issued authorization ID. The owner has already granted
+   `campaigns:control` at connection time; no further approval page is required.
 2. If launch returns `status: "setup_required"`, show `setup.setupUrl` and keep
    the campaign disabled while the owner installs or reconnects the browser
    extension. After the owner completes setup, call the tool and exact input in
@@ -172,7 +175,8 @@ Launch and pause require this sequence:
    confirmation code and approval URL. The owner personally
    approves or denies the exact campaign version in DM Faster.
 4. Repeat the same preflight to read the existing authorization status. Do not
-   create a new request or assume conversational confirmation is sufficient.
+   create a new request. For conversational control, reconnect once with the full
+   profile and grant `campaigns:control`; existing credentials do not gain it automatically.
 5. When authorization status is `approved`, call the action with the returned
    `agent_action_…` authorization ID, the same campaign ID, and the same
    idempotency key.

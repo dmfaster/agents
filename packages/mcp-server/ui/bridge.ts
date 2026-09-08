@@ -110,7 +110,7 @@ export class McpAppBridge {
       const initialized = (await this.request(
         "ui/initialize",
         {
-          appInfo: { name: "DM Faster campaign workspace", version: "1.2.0" },
+          appInfo: { name: "DM Faster campaign workspace", version: "1.3.0" },
           appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] },
           protocolVersion: MCP_APP_PROTOCOL_VERSION,
         },

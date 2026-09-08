@@ -2,7 +2,7 @@
 
 Typed Node.js client for DM Faster Agent 1.0. It exposes bounded workspace
 inspection, stateless campaign planning, exact audience previews, idempotent
-private-draft preparation, and human-approved campaign controls through a
+private-draft preparation, and authorized campaign controls through a
 scoped, workspace-bound `dmf_pat_…` token.
 
 > Distribution note: the registry command below works only after this exact
@@ -10,7 +10,7 @@ scoped, workspace-bound `dmf_pat_…` token.
 > authorized source checkout.
 
 ```bash
-npm install @dmfaster/sdk@1.2.0
+npm install @dmfaster/sdk@1.3.0
 ```
 
 Non-loopback endpoints must use HTTPS. The client also refuses HTTP redirects so
@@ -120,3 +120,12 @@ in `settings`, alongside the current window, copy, pacing, and enabled state.
 Send both endpoints when changing the interval. A saved window can be toggled
 on or off while the draft stays disabled; only the separate launch operation
 arms the schedule. Started campaigns cannot be edited with this draft tool.
+
+## Direct campaign control (1.3.0)
+
+An owner can grant `campaigns:control` once when connecting an agent with the
+`full` profile. Explicit user instructions then suffice for launch or pause:
+preflight returns `ready` and a version-bound authorization ID for immediate
+execution. The normal action scope is still required. Existing credentials
+retain per-action approval until the owner reconnects and grants this permission.
+Planning or preparing a campaign never authorizes launch.

@@ -9,6 +9,7 @@ export const DMFASTER_AGENT_SCOPES = [
   "audiences:read",
   "campaigns:write",
   "campaigns:launch",
+  "campaigns:control",
 ] as const;
 
 export const DMFASTER_AGENT_ACCESS_PROFILES = Object.freeze({
@@ -20,16 +21,14 @@ export const DMFASTER_AGENT_ACCESS_PROFILES = Object.freeze({
 
 export type DmfasterAgentAccessProfile = keyof typeof DMFASTER_AGENT_ACCESS_PROFILES;
 
-export function isDmfasterAgentAccessProfile(
-  value: unknown,
-): value is DmfasterAgentAccessProfile {
-  return typeof value === "string"
-    && Object.prototype.hasOwnProperty.call(DMFASTER_AGENT_ACCESS_PROFILES, value);
+export function isDmfasterAgentAccessProfile(value: unknown): value is DmfasterAgentAccessProfile {
+  return (
+    typeof value === "string" &&
+    Object.prototype.hasOwnProperty.call(DMFASTER_AGENT_ACCESS_PROFILES, value)
+  );
 }
 
-export function getDmfasterAgentScopes(
-  profile: DmfasterAgentAccessProfile = "full",
-) {
+export function getDmfasterAgentScopes(profile: DmfasterAgentAccessProfile = "full") {
   if (!isDmfasterAgentAccessProfile(profile)) {
     throw new TypeError("Unknown DM Faster agent access profile.");
   }

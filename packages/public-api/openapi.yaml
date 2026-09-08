@@ -5,8 +5,11 @@ info:
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
-    domain services as the app. Launch and pause require a separate, short-lived
-    human approval bound to an exact campaign version and idempotency key.
+    domain services as the app. Launch and pause require a short-lived server
+    authorization bound to an exact campaign version and idempotency key. Owners
+    may grant campaigns:control once when connecting an agent to act on their
+    explicit instructions without a separate approval page for each action.
+    Connections without that permission retain per-action browser approval.
     Browser-based launches first return a resumable setup handoff when no fresh
     browser worker is connected.
   license:
@@ -30,6 +33,7 @@ x-dmfaster-scopes:
   "audiences:read": Resolve industries and preview exact company audiences.
   "campaigns:write": Validate plans, prepare private drafts, and request confirmed pauses.
   "campaigns:launch": Request and execute separately approved campaign launches.
+  "campaigns:control": With the action's normal scope, start or pause campaigns on explicit user instructions without per-action browser approval. Requires an owner grant at connection time.
 paths:
   /api/v1/agent/auth/device:
     post:
@@ -1020,7 +1024,7 @@ paths:
       tags: [Agent tools]
       operationId: campaignLaunchPreflight
       summary: Preflight one exact campaign launch
-      description: Validates readiness. Returns a resumable browser-setup handoff when browser sending is unavailable; otherwise creates or returns a short-lived owner approval request.
+      description: Validates readiness. Returns a resumable browser-setup handoff when browser sending is unavailable; otherwise returns ready for a connection granted campaigns:control, or a short-lived owner approval request for other connections.
       x-dmfaster-effect: write
       x-dmfaster-required-scopes: ["campaigns:launch"]
       x-dmfaster-approval: none
@@ -1028,14 +1032,14 @@ paths:
       x-dmfaster-mcp:
         name: campaign_launch_preflight
         title: Preflight campaign launch
-        description: Validate one exact campaign version without launching it. A setup_required result means the user must open setup.setupUrl, then you repeat setup.resume exactly; an approval_required result means show the approval URL and confirmation code, then repeat identical inputs after the owner decides.
+        description: Use only after the user explicitly instructs you to launch this campaign. Validate one exact campaign version without launching it. A ready result authorizes immediate launch with its server-issued authorization ID. A setup_required result means the user must open setup.setupUrl, then you repeat setup.resume exactly; an approval_required result means show the approval URL and confirmation code, then repeat identical inputs after the owner decides.
         annotations:
           readOnlyHint: false
           destructiveHint: false
           idempotentHint: true
           openWorldHint: false
       x-dmfaster-cli:
-        section: Human-approved campaign controls
+        section: Campaign controls
         usage: campaign launch preflight CAMPAIGN_ID --idempotency-key KEY
       requestBody:
         required: true
@@ -1060,7 +1064,7 @@ paths:
     post:
       tags: [Agent tools]
       operationId: campaignLaunch
-      summary: Execute a human-approved campaign launch
+      summary: Execute an authorized campaign launch
       description: Starts only the exact campaign version bound to an approved authorization.
       x-dmfaster-effect: external
       x-dmfaster-required-scopes: ["campaigns:launch"]
@@ -1069,14 +1073,14 @@ paths:
       x-dmfaster-mcp:
         name: campaign_launch
         title: Launch approved campaign
-        description: Start outreach only after the owner approved the matching preflight. Requires the same campaign ID and idempotency key plus the server-issued authorization ID. If the browser went offline and this returns browser_worker_required, repeat the matching preflight to receive its setup handoff.
+        description: Start outreach only on an explicit user instruction and a matching ready or owner-approved preflight. A connection with campaigns:control needs no additional approval page. Requires the same campaign ID and idempotency key plus the server-issued authorization ID. If the browser went offline and this returns browser_worker_required, repeat the matching preflight to receive its setup handoff.
         annotations:
           readOnlyHint: false
           destructiveHint: true
           idempotentHint: true
           openWorldHint: true
       x-dmfaster-cli:
-        section: Human-approved campaign controls
+        section: Campaign controls
         usage: campaign launch CAMPAIGN_ID --idempotency-key KEY --authorization-id ID
       requestBody:
         required: true
@@ -1102,7 +1106,7 @@ paths:
       tags: [Agent tools]
       operationId: campaignPausePreflight
       summary: Preflight one exact campaign pause
-      description: Validates current state and creates a short-lived owner approval request.
+      description: Validates current state and returns ready for a connection granted campaigns:control, or a short-lived owner approval request otherwise.
       x-dmfaster-effect: write
       x-dmfaster-required-scopes: ["campaigns:write"]
       x-dmfaster-approval: none
@@ -1110,14 +1114,14 @@ paths:
       x-dmfaster-mcp:
         name: campaign_pause_preflight
         title: Preflight campaign pause
-        description: Create or return the short-lived human approval for pausing one exact active campaign version. Repeat with identical inputs to verify approval status. This tool does not pause it.
+        description: Use only after an explicit user instruction to pause this campaign. A ready result permits immediate pause using its authorization ID; approval_required needs the owner to approve the returned page. This preflight does not pause it.
         annotations:
           readOnlyHint: false
           destructiveHint: false
           idempotentHint: true
           openWorldHint: false
       x-dmfaster-cli:
-        section: Human-approved campaign controls
+        section: Campaign controls
         usage: campaign pause preflight CAMPAIGN_ID --idempotency-key KEY
       requestBody:
         required: true
@@ -1142,7 +1146,7 @@ paths:
     post:
       tags: [Agent tools]
       operationId: campaignPause
-      summary: Execute a human-approved campaign pause
+      summary: Execute an authorized campaign pause
       description: Pauses only the exact campaign version bound to an approved authorization.
       x-dmfaster-effect: write
       x-dmfaster-required-scopes: ["campaigns:write"]
@@ -1151,14 +1155,14 @@ paths:
       x-dmfaster-mcp:
         name: campaign_pause
         title: Pause approved campaign
-        description: Pause a campaign only after the owner approved the matching preflight. Retries with the same idempotency key are safe.
+        description: Pause a campaign only on an explicit user instruction and a matching ready or owner-approved preflight. A connection with campaigns:control needs no additional approval page. Retries with the same idempotency key are safe.
         annotations:
           readOnlyHint: false
           destructiveHint: false
           idempotentHint: true
           openWorldHint: false
       x-dmfaster-cli:
-        section: Human-approved campaign controls
+        section: Campaign controls
         usage: campaign pause CAMPAIGN_ID --idempotency-key KEY --authorization-id ID
       requestBody:
         required: true
@@ -1369,6 +1373,7 @@ components:
         - audiences:read
         - campaigns:write
         - campaigns:launch
+        - campaigns:control
 
     AgentDeviceAuthorizationInput:
       type: object
@@ -1401,7 +1406,7 @@ components:
         scopes:
           type: array
           minItems: 1
-          maxItems: 8
+          maxItems: 9
           uniqueItems: true
           items:
             $ref: "#/components/schemas/AgentApiScope"
@@ -1476,7 +1481,7 @@ components:
         scopes:
           type: array
           minItems: 1
-          maxItems: 8
+          maxItems: 9
           uniqueItems: true
           items:
             $ref: "#/components/schemas/AgentApiScope"
@@ -1903,6 +1908,7 @@ components:
             data:
               oneOf:
                 - $ref: "#/components/schemas/CampaignActionApprovalRequiredOutput"
+                - $ref: "#/components/schemas/CampaignActionReadyOutput"
                 - type: "null"
 
     CampaignPauseResult:
@@ -3077,6 +3083,17 @@ components:
         deniedAt: { type: string }
         consumedAt: { type: string }
         snapshot: { $ref: "#/components/schemas/AgentActionSnapshot" }
+        approvalMethod:
+          type: string
+          enum: [in_app_approval, connection_permission]
+
+    CampaignActionReadyOutput:
+      type: object
+      additionalProperties: false
+      required: [status, authorization]
+      properties:
+        status: { type: string, const: ready }
+        authorization: { $ref: "#/components/schemas/AgentActionAuthorization" }
 
     CampaignActionApprovalRequiredOutput:
       type: object
@@ -3126,11 +3143,13 @@ components:
 
     CampaignActionPreflightOutput:
       oneOf:
+        - $ref: "#/components/schemas/CampaignActionReadyOutput"
         - $ref: "#/components/schemas/CampaignActionApprovalRequiredOutput"
         - $ref: "#/components/schemas/CampaignLaunchSetupRequiredOutput"
       discriminator:
         propertyName: status
         mapping:
+          ready: "#/components/schemas/CampaignActionReadyOutput"
           approval_required: "#/components/schemas/CampaignActionApprovalRequiredOutput"
           setup_required: "#/components/schemas/CampaignLaunchSetupRequiredOutput"
 

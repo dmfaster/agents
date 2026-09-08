@@ -545,7 +545,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "campaign_launch_preflight",
       title: "Preflight campaign launch",
       description:
-        "Validate one exact campaign version without launching it. A setup_required result means the user must open setup.setupUrl, then you repeat setup.resume exactly; an approval_required result means show the approval URL and confirmation code, then repeat identical inputs after the owner decides.",
+        "Use only after the user explicitly instructs you to launch this campaign. Validate one exact campaign version without launching it. A ready result authorizes immediate launch with its server-issued authorization ID. A setup_required result means the user must open setup.setupUrl, then you repeat setup.resume exactly; an approval_required result means show the approval URL and confirmation code, then repeat identical inputs after the owner decides.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -554,7 +554,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       },
     },
     cli: {
-      section: "Human-approved campaign controls",
+      section: "Campaign controls",
       usage: "campaign launch preflight CAMPAIGN_ID --idempotency-key KEY",
       command: ["campaign", "launch", "preflight"],
     },
@@ -564,7 +564,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "campaign_launch",
       title: "Launch approved campaign",
       description:
-        "Start outreach only after the owner approved the matching preflight. Requires the same campaign ID and idempotency key plus the server-issued authorization ID. If the browser went offline and this returns browser_worker_required, repeat the matching preflight to receive its setup handoff.",
+        "Start outreach only on an explicit user instruction and a matching ready or owner-approved preflight. A connection with campaigns:control needs no additional approval page. Requires the same campaign ID and idempotency key plus the server-issued authorization ID. If the browser went offline and this returns browser_worker_required, repeat the matching preflight to receive its setup handoff.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: true,
@@ -573,7 +573,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       },
     },
     cli: {
-      section: "Human-approved campaign controls",
+      section: "Campaign controls",
       usage: "campaign launch CAMPAIGN_ID --idempotency-key KEY --authorization-id ID",
       command: ["campaign", "launch"],
     },
@@ -583,7 +583,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "campaign_pause_preflight",
       title: "Preflight campaign pause",
       description:
-        "Create or return the short-lived human approval for pausing one exact active campaign version. Repeat with identical inputs to verify approval status. This tool does not pause it.",
+        "Use only after an explicit user instruction to pause this campaign. A ready result permits immediate pause using its authorization ID; approval_required needs the owner to approve the returned page. This preflight does not pause it.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -592,7 +592,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       },
     },
     cli: {
-      section: "Human-approved campaign controls",
+      section: "Campaign controls",
       usage: "campaign pause preflight CAMPAIGN_ID --idempotency-key KEY",
       command: ["campaign", "pause", "preflight"],
     },
@@ -602,7 +602,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "campaign_pause",
       title: "Pause approved campaign",
       description:
-        "Pause a campaign only after the owner approved the matching preflight. Retries with the same idempotency key are safe.",
+        "Pause a campaign only on an explicit user instruction and a matching ready or owner-approved preflight. A connection with campaigns:control needs no additional approval page. Retries with the same idempotency key are safe.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -611,7 +611,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       },
     },
     cli: {
-      section: "Human-approved campaign controls",
+      section: "Campaign controls",
       usage: "campaign pause CAMPAIGN_ID --idempotency-key KEY --authorization-id ID",
       command: ["campaign", "pause"],
     },
