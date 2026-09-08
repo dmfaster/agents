@@ -8,24 +8,24 @@ through the focused DM Faster browser approval page.
 > authorized source checkout.
 
 ```bash
-npx --yes @dmfaster/cli@1.1.0 auth login --json
-npx --yes @dmfaster/cli@1.1.0 auth login --access plan --json
-npx --yes @dmfaster/cli@1.1.0 auth status --json
+npx --yes @dmfaster/cli@1.2.0 auth login --json
+npx --yes @dmfaster/cli@1.2.0 auth login --access plan --json
+npx --yes @dmfaster/cli@1.2.0 auth status --json
 
-npx --yes @dmfaster/cli@1.1.0 analytics summary --scope today --json
-npx --yes @dmfaster/cli@1.1.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.1.0 campaigns list --status Running --limit 10 --json
-npx --yes @dmfaster/cli@1.1.0 replies list campaign_123 --limit 5 --query "Visio" --json
-npx --yes @dmfaster/cli@1.1.0 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.2.0 analytics summary --scope today --json
+npx --yes @dmfaster/cli@1.2.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.2.0 campaigns list --status Running --limit 10 --json
+npx --yes @dmfaster/cli@1.2.0 replies list campaign_123 --limit 5 --query "Visio" --json
+npx --yes @dmfaster/cli@1.2.0 company timeline campaign_123 outreach_456 --json
 
-npx --yes @dmfaster/cli@1.1.0 campaign validate --state campaign-state.json --json
-npx --yes @dmfaster/cli@1.1.0 audience preview --state campaign-state.json --json > audience-preview.json
+npx --yes @dmfaster/cli@1.2.0 campaign validate --state campaign-state.json --json
+npx --yes @dmfaster/cli@1.2.0 audience preview --state campaign-state.json --json > audience-preview.json
 # Review the exact count and sample in audience-preview.json before continuing.
-npx --yes @dmfaster/cli@1.1.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
-npx --yes @dmfaster/cli@1.1.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
-npx --yes @dmfaster/cli@1.1.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
+npx --yes @dmfaster/cli@1.2.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
+npx --yes @dmfaster/cli@1.2.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
+npx --yes @dmfaster/cli@1.2.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
 
-npx --yes @dmfaster/cli@1.1.0 auth logout --json
+npx --yes @dmfaster/cli@1.2.0 auth logout --json
 ```
 
 `auth login` creates a short-lived PKCE device request, prints a confirmation
@@ -145,7 +145,7 @@ start or arm sending. Reusing a key with different settings or an edited audienc
 fails without changing the original campaign.
 
 SDK operation names are `lists.list`, `list.inspect`, `list.target.remove`,
-and `campaign.draft.prepare`; MCP names replace dots with underscores. List
+`campaign.draft.prepare`, and `campaign.draft.update`; MCP names replace dots with underscores. List
 reads require `campaigns:read`; removal requires owner `campaigns:write`;
 draft preparation requires both scopes. No company-search entitlement is needed
 for these Instagram lists. Existing campaign launch/pause approval is unchanged.
@@ -153,3 +153,23 @@ for these Instagram lists. Existing campaign launch/pause approval is unchanged.
 Instagram campaigns always exclude known contacts: `onlyNewChats` and
 `skipPreviouslyMessaged` must both be `true`. Unsupported values are rejected
 before a draft is created.
+
+To change an existing disabled Instagram draft, use
+`dmfaster campaign draft update --input update.json --json`. Supply `campaignId`,
+`expectedCampaignUpdatedAt` from campaign inspection, and a nonempty `updates`
+object containing any of `name`, `messageVariants`, `dailyCap` (1–60), or
+`pacingSeconds` (12–3,600). Omitted settings and the audience are preserved.
+Stale versions and started campaigns are rejected. After an uncertain
+response, inspect the campaign before retrying. No launch approval is needed to
+edit a disabled draft.
+
+Automatic sending windows are also editable through `campaign.draft.update`:
+`instagramSendingWindowEnabled` is a boolean; `instagramSendingWindowStartMinute`
+is 0–1380; `instagramSendingWindowEndMinute` is 60–1440; and
+`instagramSendingWindowWeekdays` is a bitmask from 1–127 (Monday=1, Tuesday=2,
+through Sunday=64; Monday–Friday=31). The interval must span at least 60 minutes
+in the same day. Times use the workspace timezone returned by `campaign.inspect`
+in `settings`, alongside the current window, copy, pacing, and enabled state.
+Send both endpoints when changing the interval. A saved window can be toggled
+on or off while the draft stays disabled; only the separate launch operation
+arms the schedule. Started campaigns cannot be edited with this draft tool.

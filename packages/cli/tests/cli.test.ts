@@ -415,3 +415,28 @@ test("saved-list CLI rejects malformed options and activation payloads without c
     assert.notEqual(await runCli([...args, "--json"], context), 0);
   assert.equal(calls.length, 0);
 });
+
+test("draft update CLI preserves the campaign ID and patch and rejects activation", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const input = {
+    campaignId: "existing",
+    expectedCampaignUpdatedAt: "2026-09-08T12:00:00.000Z",
+    updates: { dailyCap: 60, messageVariants: ["Hei!\n\nOnko sulla aikaa meetille?"] },
+  };
+  const context = { ...configuredContext(calls), readTextFile: async () => JSON.stringify(input) };
+  assert.equal(
+    await runCli(["campaign", "draft", "update", "--input", "update.json", "--json"], context),
+    0,
+  );
+  assert.deepEqual(calls, [{ tool: "campaign.draft.update", input }]);
+  for (const updates of [{}, { enabled: true }, { dailyCap: 61 }, { targetListId: "other" }]) {
+    assert.equal(
+      await runCli(["campaign", "draft", "update", "--input", "update.json"], {
+        ...context,
+        readTextFile: async () => JSON.stringify({ ...input, updates }),
+      }),
+      2,
+    );
+  }
+  assert.equal(calls.length, 1);
+});

@@ -833,6 +833,68 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/agent/tools/campaign.draft.update:
+    post:
+      tags:
+        - Agent tools
+      operationId: campaignDraftUpdate
+      summary: Update a saved Instagram campaign draft
+      description: Patch the name, messages, delivery cap, pacing, or automatic sending window of an
+        existing disabled, unstarted Instagram draft. Echo campaign.inspect
+        updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved.
+        Stale versions and started campaigns are rejected; saving a window never arms it. Inspect
+        after an uncertain response before retrying. Never creates another
+        campaign, enables sending, or launches.
+      x-dmfaster-effect: draft
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_draft_update
+        title: Update a saved Instagram campaign draft
+        description:
+          Patch the name, messages, delivery cap, pacing, or automatic sending window of an
+          existing disabled, unstarted Instagram draft. Echo campaign.inspect
+          updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved.
+          Stale versions and started campaigns are rejected; saving a window never arms it. Inspect
+          after an uncertain response before retrying. Never creates another
+          campaign, enables sending, or launches.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign planning and drafts
+        usage: campaign draft update --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignDraftUpdateInput"
+      responses:
+        "200":
+          description: Update a saved Instagram campaign draft
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignDraftUpdateResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/agent/tools/list.import:
     post:
       tags: [Agent tools]
@@ -1543,6 +1605,7 @@ components:
         - list.inspect
         - list.target.remove
         - campaign.draft.prepare
+        - campaign.draft.update
         - list.import
         - list.prepare
         - campaign.prepare
@@ -2152,6 +2215,150 @@ components:
       pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$
       minLength: 20
       maxLength: 27
+    CampaignDraftUpdateInput:
+      type: object
+      additionalProperties: false
+      required:
+        - campaignId
+        - expectedCampaignUpdatedAt
+        - updates
+      properties:
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
+        expectedCampaignUpdatedAt:
+          $ref: "#/components/schemas/ResourceVersion"
+        updates:
+          type: object
+          additionalProperties: false
+          minProperties: 1
+          properties:
+            name:
+              type: string
+              minLength: 1
+              maxLength: 120
+            messageVariants:
+              type: array
+              minItems: 1
+              maxItems: 4
+              items:
+                type: string
+                minLength: 1
+                maxLength: 1000
+            dailyCap:
+              type: integer
+              minimum: 1
+              maximum: 60
+            pacingSeconds:
+              type: integer
+              minimum: 12
+              maximum: 3600
+            instagramSendingWindowEnabled:
+              type: boolean
+            instagramSendingWindowStartMinute:
+              type: integer
+              minimum: 0
+              maximum: 1380
+            instagramSendingWindowEndMinute:
+              type: integer
+              minimum: 60
+              maximum: 1440
+            instagramSendingWindowWeekdays:
+              type: integer
+              minimum: 1
+              maximum: 127
+    CampaignDraftUpdateData:
+      type: object
+      additionalProperties: false
+      required:
+        - campaignId
+        - listId
+        - campaignUpdatedAt
+        - name
+        - status
+        - enabled
+        - channel
+        - targetCount
+        - messageVariants
+        - dailyCap
+        - pacingSeconds
+        - onlyNewChats
+        - skipPreviouslyMessaged
+        - instagramSendingWindowEnabled
+        - instagramSendingWindowStartMinute
+        - instagramSendingWindowEndMinute
+        - instagramSendingWindowWeekdays
+        - timezone
+      properties:
+        campaignId:
+          type: string
+          minLength: 1
+          maxLength: 160
+        listId:
+          type: string
+          minLength: 1
+          maxLength: 160
+        campaignUpdatedAt:
+          type: string
+          minLength: 1
+          maxLength: 160
+        name:
+          type: string
+        status:
+          const: Draft
+        enabled:
+          const: false
+        channel:
+          const: instagram
+        targetCount:
+          type: integer
+          minimum: 0
+        messageVariants:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1000
+        dailyCap:
+          type: integer
+          minimum: 1
+          maximum: 60
+        pacingSeconds:
+          type: integer
+          minimum: 12
+          maximum: 3600
+        onlyNewChats:
+          type: boolean
+        skipPreviouslyMessaged:
+          type: boolean
+        instagramSendingWindowEnabled:
+          type: boolean
+        instagramSendingWindowStartMinute:
+          type: integer
+          minimum: 0
+          maximum: 1380
+        instagramSendingWindowEndMinute:
+          type: integer
+          minimum: 60
+          maximum: 1440
+        instagramSendingWindowWeekdays:
+          type: integer
+          minimum: 1
+          maximum: 127
+        timezone:
+          type: string
+    CampaignDraftUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              const: campaign.draft.update
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignDraftUpdateData"
+                - type: "null"
     CampaignDraftPrepareInput:
       type: object
       additionalProperties: false
@@ -3205,7 +3412,12 @@ components:
     CampaignInspectOutput:
       type: object
       additionalProperties: false
-      required: [generatedAt, campaign, execution, pipeline, rates]
+      required:
+        - generatedAt
+        - campaign
+        - execution
+        - pipeline
+        - rates
       properties:
         generatedAt:
           type: string
@@ -3223,36 +3435,109 @@ components:
             - companiesReached
             - byChannel
           properties:
-            queued: { type: integer, minimum: 0 }
-            running: { type: integer, minimum: 0 }
-            completed: { type: integer, minimum: 0 }
-            companiesPlanned: { type: integer, minimum: 0 }
-            companiesReached: { type: integer, minimum: 0 }
+            queued:
+              type: integer
+              minimum: 0
+            running:
+              type: integer
+              minimum: 0
+            completed:
+              type: integer
+              minimum: 0
+            companiesPlanned:
+              type: integer
+              minimum: 0
+            companiesReached:
+              type: integer
+              minimum: 0
             byChannel:
               type: object
               additionalProperties: false
-              required: [instagram, facebook, linkedin, gmail]
+              required:
+                - instagram
+                - facebook
+                - linkedin
+                - gmail
               properties:
-                instagram: { type: integer, minimum: 0 }
-                facebook: { type: integer, minimum: 0 }
-                linkedin: { type: integer, minimum: 0 }
-                gmail: { type: integer, minimum: 0 }
+                instagram:
+                  type: integer
+                  minimum: 0
+                facebook:
+                  type: integer
+                  minimum: 0
+                linkedin:
+                  type: integer
+                  minimum: 0
+                gmail:
+                  type: integer
+                  minimum: 0
         pipeline:
           $ref: "#/components/schemas/PipelineCounts"
         rates:
           type: object
           additionalProperties: false
-          required: [replyOrFurtherPercent, bookedCallPercent]
+          required:
+            - replyOrFurtherPercent
+            - bookedCallPercent
           properties:
             replyOrFurtherPercent:
               oneOf:
-                - { type: number, minimum: 0, maximum: 100 }
-                - { type: "null" }
+                - type: number
+                  minimum: 0
+                  maximum: 100
+                - type: "null"
             bookedCallPercent:
               oneOf:
-                - { type: number, minimum: 0, maximum: 100 }
-                - { type: "null" }
-
+                - type: number
+                  minimum: 0
+                  maximum: 100
+                - type: "null"
+        settings:
+          type: object
+          additionalProperties: false
+          properties:
+            targetListId:
+              type: string
+            messageVariants:
+              type: array
+              items:
+                type: string
+            pacingSeconds:
+              type: integer
+            onlyNewChats:
+              type: boolean
+            skipPreviouslyMessaged:
+              type: boolean
+            enabled:
+              type: boolean
+            instagramSendingWindowEnabled:
+              type: boolean
+            instagramSendingWindowStartMinute:
+              type: integer
+              minimum: 0
+              maximum: 1380
+            instagramSendingWindowEndMinute:
+              type: integer
+              minimum: 60
+              maximum: 1440
+            instagramSendingWindowWeekdays:
+              type: integer
+              minimum: 1
+              maximum: 127
+            timezone:
+              type: string
+          required:
+            - targetListId
+            - messageVariants
+            - pacingSeconds
+            - onlyNewChats
+            - skipPreviouslyMessaged
+            - enabled
+            - instagramSendingWindowEnabled
+            - instagramSendingWindowStartMinute
+            - instagramSendingWindowEndMinute
+            - instagramSendingWindowWeekdays
+            - timezone
     SendingIssue:
       type: object
       additionalProperties: false

@@ -11,8 +11,8 @@ implementation, review, tests, migrations, or deployments, follow the
 repository's own development guidance unless the user explicitly asks for live
 workspace evidence.
 
-Agent 1.0 has 22 narrow tools: ten operational reads, three planning and
-preview reads, four private-draft operations, one bounded target-removal write,
+Agent 1.0 has 23 narrow tools: ten operational reads, three planning and
+preview reads, five private-draft operations, one bounded target-removal write,
 two action preflights, and two human-approved campaign controls. It does not expose generic mutation,
 provider execution, reply sending, meeting booking, browser-worker credentials,
 or database access.
@@ -21,7 +21,7 @@ The MCP server may additionally offer the read-only `campaign_workspace`
 presentation tool. When the host supports MCP Apps, use it after assembling or
 revising a complete campaign state when an inline editor would help the user
 review audience, delivery, and messages. Never require it: Codex and other
-headless hosts should continue with the 22 domain tools and the same complete
+headless hosts should continue with the 23 domain tools and the same complete
 state. The view does not authorize or execute launch or pause.
 
 ## Connect
@@ -124,8 +124,15 @@ Use existing delivery preferences when established; otherwise ask for material
 missing settings. The tool accepts an existing Instagram audience without a
 business profile, industry lookup, or Enterprise company-search entitlement.
 It rejects company lists and lists containing non-Instagram rows; ancillary contact fields on Instagram profiles are preserved. It cannot activate or schedule
-activation. For changed draft inputs use a new idempotency key; retries never
-overwrite an edited or launched campaign.
+activation. To revise a saved draft, use `campaign_draft_update` with the campaign
+ID, `expectedCampaignUpdatedAt` from `campaign_inspect`, and only the requested
+settings in `updates`. Supported settings are name, messageVariants, dailyCap, pacingSeconds, and the automatic sending window. Keep the same campaign ID; do not create a replacement draft
+for a setting change. Omitted settings and the audience are preserved. Stale
+versions and started or selected campaigns are rejected. After an
+uncertain response, inspect again before retrying; the previous version cannot
+overwrite a newer edit. Draft edits require no separate launch approval.
+Use a new preparation idempotency key only when intentionally creating another
+campaign; preparation retries never overwrite an edited or launched campaign.
 
 ## Import an Instagram list
 
@@ -207,3 +214,14 @@ without a documented tool.
 End with the concrete outcome, the most important risk or blocker, and the next
 safe action. Never claim DM Faster performed an action unless the corresponding
 documented tool returned a successful, verified result.
+
+Automatic sending windows are also editable through `campaign.draft.update`:
+`instagramSendingWindowEnabled` is a boolean; `instagramSendingWindowStartMinute`
+is 0–1380; `instagramSendingWindowEndMinute` is 60–1440; and
+`instagramSendingWindowWeekdays` is a bitmask from 1–127 (Monday=1, Tuesday=2,
+through Sunday=64; Monday–Friday=31). The interval must span at least 60 minutes
+in the same day. Times use the workspace timezone returned by `campaign.inspect`
+in `settings`, alongside the current window, copy, pacing, and enabled state.
+Send both endpoints when changing the interval. A saved window can be toggled
+on or off while the draft stays disabled; only the separate launch operation
+arms the schedule. Started campaigns cannot be edited with this draft tool.

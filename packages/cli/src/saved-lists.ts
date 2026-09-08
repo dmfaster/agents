@@ -4,7 +4,8 @@ export type SavedListCommand =
   | "lists.list"
   | "list.inspect"
   | "list.target.remove"
-  | "campaign.draft.prepare";
+  | "campaign.draft.prepare"
+  | "campaign.draft.update";
 
 function options(args: string[], allowed: string[]) {
   const result = new Map<string, string>();
@@ -42,7 +43,9 @@ function handle(value: unknown) {
 function version(value: unknown) {
   const result = bounded(value, 27);
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$/.test(result))
-    throw new Error("Use the exact updatedAt from list inspect as the expected version.");
+    throw new Error(
+      "Use the exact updatedAt from the resource inspection as the expected version.",
+    );
   return result;
 }
 function newContactsOnly(value: unknown) {
@@ -58,7 +61,7 @@ export async function parseSavedListCommand(
   args: string[],
   read: (file: string) => Promise<string>,
 ): Promise<AgentToolInputMap[SavedListCommand]> {
-  if (tool === "campaign.draft.prepare") {
+  if (tool === "campaign.draft.prepare" || tool === "campaign.draft.update") {
     const opts = options(args, ["--input"]);
     const text = await read(bounded(opts.get("--input"), 4096));
     if (Buffer.byteLength(text, "utf8") > 32_768) throw new Error("Draft input exceeds 32 KiB.");
@@ -66,6 +69,80 @@ export async function parseSavedListCommand(
     if (!data || typeof data !== "object" || Array.isArray(data))
       throw new Error("Draft input must be a JSON object.");
     const value = data as Record<string, unknown>;
+    if (tool === "campaign.draft.update") {
+      if (
+        Object.keys(value).some(
+          (key) => !["campaignId", "expectedCampaignUpdatedAt", "updates"].includes(key),
+        )
+      )
+        throw new Error("Unsupported draft update field.");
+      if (!value.updates || typeof value.updates !== "object" || Array.isArray(value.updates))
+        throw new Error("Supply an updates object.");
+      const patch = value.updates as Record<string, unknown>;
+      if (
+        !Object.keys(patch).length ||
+        Object.keys(patch).some(
+          (key) =>
+            ![
+              "name",
+              "messageVariants",
+              "dailyCap",
+              "pacingSeconds",
+              "instagramSendingWindowEnabled",
+              "instagramSendingWindowStartMinute",
+              "instagramSendingWindowEndMinute",
+              "instagramSendingWindowWeekdays",
+            ].includes(key),
+        )
+      )
+        throw new Error(
+          "Supply at least one supported draft setting. Activation is a separate command.",
+        );
+      const updates: AgentToolInputMap["campaign.draft.update"]["updates"] = {};
+      if ("name" in patch) updates.name = bounded(patch.name, 120);
+      if ("dailyCap" in patch) updates.dailyCap = integer(patch.dailyCap, 1, 60);
+      if ("pacingSeconds" in patch) updates.pacingSeconds = integer(patch.pacingSeconds, 12, 3600);
+      if ("instagramSendingWindowEnabled" in patch) {
+        if (typeof patch.instagramSendingWindowEnabled !== "boolean")
+          throw new Error("The window toggle must be true or false.");
+        updates.instagramSendingWindowEnabled = patch.instagramSendingWindowEnabled;
+      }
+      if ("instagramSendingWindowStartMinute" in patch)
+        updates.instagramSendingWindowStartMinute = integer(
+          patch.instagramSendingWindowStartMinute,
+          0,
+          1380,
+        );
+      if ("instagramSendingWindowEndMinute" in patch)
+        updates.instagramSendingWindowEndMinute = integer(
+          patch.instagramSendingWindowEndMinute,
+          60,
+          1440,
+        );
+      if ("instagramSendingWindowWeekdays" in patch)
+        updates.instagramSendingWindowWeekdays = integer(
+          patch.instagramSendingWindowWeekdays,
+          1,
+          127,
+        );
+      if ("messageVariants" in patch) {
+        if (
+          !Array.isArray(patch.messageVariants) ||
+          patch.messageVariants.length < 1 ||
+          patch.messageVariants.length > 4
+        )
+          throw new Error("Supply 1–4 message variations.");
+        updates.messageVariants = patch.messageVariants.map((body) => {
+          bounded(body, 1000);
+          return body as string;
+        });
+      }
+      return {
+        campaignId: bounded(value.campaignId, 160),
+        expectedCampaignUpdatedAt: version(value.expectedCampaignUpdatedAt),
+        updates,
+      };
+    }
     const allowed = [
       "listId",
       "expectedListUpdatedAt",

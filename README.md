@@ -14,7 +14,7 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-Agent 1.0 exposes 22 bounded domain tools. It can inspect a live workspace,
+Agent 1.0 exposes 23 bounded domain tools. It can inspect a live workspace,
 resolve industries, validate complete campaign plans, preview exact audiences,
 inspect saved lists, remove an exact Instagram username, prepare private lists and
 disabled campaign drafts idempotently, and launch or
@@ -59,7 +59,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.1.0 auth login --json
+npx --yes @dmfaster/cli@1.2.0 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -76,11 +76,11 @@ single-use action authorization.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.1.0 workspace briefing --json
-npx --yes @dmfaster/mcp-server@1.1.0
+npx --yes @dmfaster/cli@1.2.0 workspace briefing --json
+npx --yes @dmfaster/mcp-server@1.2.0
 ```
 
-The 22 MCP domain tools cover workspace, campaign, sending, reply, pipeline,
+The 23 MCP domain tools cover workspace, campaign, sending, reply, pipeline,
 company-history, industry, validation, exact-audience preview, private draft,
 launch, and pause workflows. Compliant MCP Apps hosts can also render the
 read-only `campaign_workspace` presentation tool inline. Headless hosts receive
@@ -128,9 +128,20 @@ private product source or trademarks.
 All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
 
 ```bash
-npx --yes @dmfaster/cli@1.1.0 list import --name "My prospects" --file usernames.csv --json
+npx --yes @dmfaster/cli@1.2.0 list import --name "My prospects" --file usernames.csv --json
 ```
 
 The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
 
 OpenAPI generates the SDK tool catalog and types, MCP input schemas, and CLI help metadata. After changing the contract, run `npm run generate:agent-api`; `npm run check:agent-api` rejects stale artifacts.
+
+## Edit a saved draft
+
+Version 1.2.0 adds `campaign_draft_update` / `campaign draft update --input FILE`.
+Inspect the campaign, then send its ID, `expectedCampaignUpdatedAt`, and a
+nonempty `updates` object. You can edit the name, exact message variations,
+daily cap, pacing, and automatic sending window without creating another
+campaign. `campaign.inspect` reports current copy, delivery settings, window,
+and workspace timezone. Edits preserve omitted settings and reject stale
+versions or started campaigns. Saving or toggling a draft window leaves it
+disabled; the separate approved launch arms the schedule.

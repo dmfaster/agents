@@ -41,6 +41,7 @@ const expectedTools = [
   "list_inspect",
   "list_target_remove",
   "campaign_draft_prepare",
+  "campaign_draft_update",
   "list_import",
   "list_prepare",
   "pipeline_inspect",

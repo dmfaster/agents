@@ -20,7 +20,7 @@ import {
 } from "./tools.ts";
 import { registerCampaignWorkspace } from "./campaign-workspace.ts";
 
-export const MCP_SERVER_VERSION = "1.1.0";
+export const MCP_SERVER_VERSION = "1.2.0";
 export const DEFAULT_MCP_API_URL = DEFAULT_DMFASTER_API_URL;
 export const MCP_SERVER_INSTRUCTIONS = [
   "DM Faster lets a user describe a sales campaign while you operate the bounded workflow for them; do not assume prior product knowledge.",

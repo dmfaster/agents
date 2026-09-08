@@ -401,6 +401,25 @@ export const CampaignDraftPrepareInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
+export const CampaignDraftUpdateInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    expectedCampaignUpdatedAt: ResourceVersionSchema,
+    updates: z
+      .object({
+        name: z.string().min(1).max(120).optional(),
+        messageVariants: z.array(z.string().min(1).max(1000)).min(1).max(4).optional(),
+        dailyCap: z.number().int().min(1).max(60).optional(),
+        pacingSeconds: z.number().int().min(12).max(3600).optional(),
+        instagramSendingWindowEnabled: z.boolean().optional(),
+        instagramSendingWindowStartMinute: z.number().int().min(0).max(1380).optional(),
+        instagramSendingWindowEndMinute: z.number().int().min(60).max(1440).optional(),
+        instagramSendingWindowWeekdays: z.number().int().min(1).max(127).optional(),
+      })
+      .strict()
+      .refine((value) => Object.keys(value).length >= 1, "Provide at least 1 properties"),
+  })
+  .strict();
 export const ListImportInputSchema = z
   .object({
     name: z.string().min(1).max(120),
@@ -464,6 +483,7 @@ export const AGENT_INPUT_SCHEMAS = {
   "list.inspect": ListInspectInputSchema,
   "list.target.remove": ListTargetRemoveInputSchema,
   "campaign.draft.prepare": CampaignDraftPrepareInputSchema,
+  "campaign.draft.update": CampaignDraftUpdateInputSchema,
   "list.import": ListImportInputSchema,
   "list.prepare": ListPrepareInputSchema,
   "campaign.prepare": CampaignPrepareInputSchema,

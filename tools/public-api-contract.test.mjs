@@ -29,6 +29,7 @@ const EXPECTED_TOOLS = new Map([
   ["list.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["list.target.remove", { effect: "write", scopes: ["campaigns:write"] }],
   ["campaign.draft.prepare", { effect: "draft", scopes: ["campaigns:read", "campaigns:write"] }],
+  ["campaign.draft.update", { effect: "draft", scopes: ["campaigns:read", "campaigns:write"] }],
   ["list.import", { effect: "draft", scopes: ["campaigns:write"] }],
   ["list.prepare", { effect: "draft", scopes: ["audiences:read", "campaigns:write"] }],
   ["campaign.prepare", { effect: "draft", scopes: ["audiences:read", "campaigns:write"] }],

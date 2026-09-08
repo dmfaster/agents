@@ -15,6 +15,7 @@ export const AGENT_TOOL_NAMES = [
   "list.inspect",
   "list.target.remove",
   "campaign.draft.prepare",
+  "campaign.draft.update",
   "list.import",
   "list.prepare",
   "campaign.prepare",
@@ -99,6 +100,11 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "campaign.draft.update": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
   "list.import": {
     effect: "draft",
     approval: "none",
@@ -151,6 +157,7 @@ export const AGENT_TOOL_SCOPES = {
   "list.inspect": ["campaigns:read"],
   "list.target.remove": ["campaigns:write"],
   "campaign.draft.prepare": ["campaigns:read", "campaigns:write"],
+  "campaign.draft.update": ["campaigns:read", "campaigns:write"],
   "list.import": ["campaigns:write"],
   "list.prepare": ["audiences:read", "campaigns:write"],
   "campaign.prepare": ["audiences:read", "campaigns:write"],
@@ -162,6 +169,7 @@ export const AGENT_TOOL_SCOPES = {
 export const AGENT_OWNER_ONLY_TOOLS = [
   "list.target.remove",
   "campaign.draft.prepare",
+  "campaign.draft.update",
   "list.import",
   "list.prepare",
   "campaign.prepare",
@@ -453,6 +461,25 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "Campaign planning and drafts",
       usage: "campaign draft prepare --input FILE",
       command: ["campaign", "draft", "prepare"],
+    },
+  },
+  "campaign.draft.update": {
+    mcp: {
+      name: "campaign_draft_update",
+      title: "Update a saved Instagram campaign draft",
+      description:
+        "Patch the name, messages, delivery cap, pacing, or automatic sending window of an existing disabled, unstarted Instagram draft. Echo campaign.inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale versions and started campaigns are rejected; saving a window never arms it. Inspect after an uncertain response before retrying. Never creates another campaign, enables sending, or launches.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "campaign draft update --input FILE",
+      command: ["campaign", "draft", "update"],
     },
   },
   "list.import": {

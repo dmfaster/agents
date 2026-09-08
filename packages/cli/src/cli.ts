@@ -33,7 +33,7 @@ import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "1.1.0";
+export const CLI_VERSION = "1.2.0";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();
@@ -515,6 +515,7 @@ async function commandFromArgs(
     tool === "lists.list" ||
     tool === "list.inspect" ||
     tool === "list.target.remove" ||
+    tool === "campaign.draft.update" ||
     tool === "campaign.draft.prepare"
   ) {
     try {
