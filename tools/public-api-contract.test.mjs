@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import { parse } from "yaml";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const contractPath = path.join(rootDir, "packages", "public-api", "openapi.yaml");
@@ -24,6 +25,10 @@ const EXPECTED_TOOLS = new Map([
   ["industry.lookup", { effect: "read", scopes: ["audiences:read"] }],
   ["campaign.validate", { effect: "read", scopes: ["audiences:read"] }],
   ["audience.preview", { effect: "read", scopes: ["audiences:read"] }],
+  ["lists.list", { effect: "read", scopes: ["campaigns:read"] }],
+  ["list.inspect", { effect: "read", scopes: ["campaigns:read"] }],
+  ["list.target.remove", { effect: "write", scopes: ["campaigns:write"] }],
+  ["campaign.draft.prepare", { effect: "draft", scopes: ["campaigns:read", "campaigns:write"] }],
   ["list.import", { effect: "draft", scopes: ["campaigns:write"] }],
   ["list.prepare", { effect: "draft", scopes: ["audiences:read", "campaigns:write"] }],
   ["campaign.prepare", { effect: "draft", scopes: ["audiences:read", "campaigns:write"] }],
@@ -147,9 +152,7 @@ test("the public Agent API exposes exactly the approved Agent 1.0 operations", a
       `${tool} effect drift`,
     );
 
-    const scopeLine = operation.match(/^      x-dmfaster-required-scopes: \[([^\]]+)]$/m);
-    assert.ok(scopeLine, `${tool} must declare scopes`);
-    const scopes = scopeLine[1].split(",").map((scope) => scope.trim().replaceAll('"', ""));
+    const scopes = parse(source).paths[`/api/v1/agent/tools/${tool}`].post["x-dmfaster-required-scopes"];
     assert.deepEqual(scopes, EXPECTED_TOOLS.get(tool).scopes, `${tool} scope drift`);
   }
 

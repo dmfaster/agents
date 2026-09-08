@@ -11,6 +11,10 @@ export const AGENT_TOOL_NAMES = [
   "industry.lookup",
   "campaign.validate",
   "audience.preview",
+  "lists.list",
+  "list.inspect",
+  "list.target.remove",
+  "campaign.draft.prepare",
   "list.import",
   "list.prepare",
   "campaign.prepare",
@@ -75,6 +79,26 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "lists.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "list.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "list.target.remove": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.draft.prepare": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
   "list.import": {
     effect: "draft",
     approval: "none",
@@ -123,6 +147,10 @@ export const AGENT_TOOL_SCOPES = {
   "industry.lookup": ["audiences:read"],
   "campaign.validate": ["audiences:read"],
   "audience.preview": ["audiences:read"],
+  "lists.list": ["campaigns:read"],
+  "list.inspect": ["campaigns:read"],
+  "list.target.remove": ["campaigns:write"],
+  "campaign.draft.prepare": ["campaigns:read", "campaigns:write"],
   "list.import": ["campaigns:write"],
   "list.prepare": ["audiences:read", "campaigns:write"],
   "campaign.prepare": ["audiences:read", "campaigns:write"],
@@ -132,6 +160,8 @@ export const AGENT_TOOL_SCOPES = {
   "campaign.pause": ["campaigns:write"],
 } as const;
 export const AGENT_OWNER_ONLY_TOOLS = [
+  "list.target.remove",
+  "campaign.draft.prepare",
   "list.import",
   "list.prepare",
   "campaign.prepare",
@@ -347,6 +377,82 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "Campaign planning and drafts",
       usage: "audience preview --state FILE [--sample-size N]",
       command: ["audience", "preview"],
+    },
+  },
+  "lists.list": {
+    mcp: {
+      name: "lists_list",
+      title: "Find saved target lists",
+      description:
+        "Find existing workspace lists by a case-insensitive name search. Results are paginated with an exact matching-list total; inspect a selected list for authoritative audience counts and membership.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Workspace reads",
+      usage: "lists list [--query TEXT] [--limit N] [--offset N]",
+      command: ["lists", "list"],
+    },
+  },
+  "list.inspect": {
+    mcp: {
+      name: "list_inspect",
+      title: "Inspect a saved Instagram list",
+      description:
+        "Read an existing Instagram list, its exact target count, bounded username page and resource version. Supply username to check exact membership across the whole list, independently of the page. Company lists require the company audience workflow.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Workspace reads",
+      usage: "list inspect LIST_ID [--username HANDLE] [--limit N] [--offset N]",
+      command: ["list", "inspect"],
+    },
+  },
+  "list.target.remove": {
+    mcp: {
+      name: "list_target_remove",
+      title: "Remove an Instagram target",
+      description:
+        "Ensure one exact Instagram username is absent from an owner-owned saved list after the user requests removal. Echo list.inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and lists protected by active campaigns. Already absent is a verified no-op. Sends nothing.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "list target remove LIST_ID --username HANDLE --expected-version TIMESTAMP",
+      command: ["list", "target", "remove"],
+    },
+  },
+  "campaign.draft.prepare": {
+    mcp: {
+      name: "campaign_draft_prepare",
+      title: "Prepare a campaign from a saved Instagram list",
+      description:
+        "Create an idempotent disabled Instagram campaign draft from a saved list and 1–4 exact message variations. Echo list.inspect updatedAt and exact total as expectedListUpdatedAt and expectedTargetCount. Delivery settings must be supplied. Never launches, schedules activation, or sends messages.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "campaign draft prepare --input FILE",
+      command: ["campaign", "draft", "prepare"],
     },
   },
   "list.import": {

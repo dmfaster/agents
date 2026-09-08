@@ -8,7 +8,7 @@ Both require an explicitly reviewed version on public `main`.
 1. All four published package versions, all three plugin versions, and every
    pinned command match exactly. `packages/product-ui` remains private.
 2. `npm run check:agents` passes, including strict MCP 2026-07-28 negotiation,
-   all 18 domain tools, and the portable campaign workspace.
+   all 22 domain tools, and the portable campaign workspace.
 3. `npm audit --omit=dev` passes.
 4. The production browser-authorization and action-approval backend is healthy.
 5. GitHub environments and npm publishing identities are configured.

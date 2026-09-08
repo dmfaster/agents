@@ -632,6 +632,207 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
         "503": { $ref: "#/components/responses/ServiceUnavailable" }
 
+  /api/v1/agent/tools/lists.list:
+    post:
+      tags:
+        - Agent tools
+      operationId: listsList
+      summary: Find saved target lists
+      description: Find existing workspace lists by a case-insensitive name search. Results are paginated with an exact matching-list total; inspect a selected list for authoritative audience counts and membership.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - campaigns:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: lists_list
+        title: Find saved target lists
+        description: Find existing workspace lists by a case-insensitive name search. Results are paginated with an exact matching-list total; inspect a selected list for authoritative audience counts and membership.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Workspace reads
+        usage: lists list [--query TEXT] [--limit N] [--offset N]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListsListInput"
+      responses:
+        "200":
+          description: Find saved target lists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListsListResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/list.inspect:
+    post:
+      tags:
+        - Agent tools
+      operationId: listInspect
+      summary: Inspect a saved Instagram list
+      description: Read an existing Instagram list, its exact target count, bounded username page and resource version. Supply username to check exact membership across the whole list, independently of the page. Company lists require the company audience workflow.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - campaigns:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: list_inspect
+        title: Inspect a saved Instagram list
+        description: Read an existing Instagram list, its exact target count, bounded username page and resource version. Supply username to check exact membership across the whole list, independently of the page. Company lists require the company audience workflow.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Workspace reads
+        usage: list inspect LIST_ID [--username HANDLE] [--limit N] [--offset N]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListInspectInput"
+      responses:
+        "200":
+          description: Inspect a saved Instagram list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListInspectResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/list.target.remove:
+    post:
+      tags:
+        - Agent tools
+      operationId: listTargetRemove
+      summary: Remove an Instagram target
+      description: Ensure one exact Instagram username is absent from an owner-owned saved list after the user requests removal. Echo list.inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and lists protected by active campaigns. Already absent is a verified no-op. Sends nothing.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: list_target_remove
+        title: Remove an Instagram target
+        description: Ensure one exact Instagram username is absent from an owner-owned saved list after the user requests removal. Echo list.inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and lists protected by active campaigns. Already absent is a verified no-op. Sends nothing.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign planning and drafts
+        usage: list target remove LIST_ID --username HANDLE --expected-version TIMESTAMP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListTargetRemoveInput"
+      responses:
+        "200":
+          description: Remove an Instagram target
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListTargetRemoveResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/campaign.draft.prepare:
+    post:
+      tags:
+        - Agent tools
+      operationId: campaignDraftPrepare
+      summary: Prepare a campaign from a saved Instagram list
+      description: Create an idempotent disabled Instagram campaign draft from a saved list and 1–4 exact message variations. Echo list.inspect updatedAt and exact total as expectedListUpdatedAt and expectedTargetCount. Delivery settings must be supplied. Never launches, schedules activation, or sends messages.
+      x-dmfaster-effect: draft
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_draft_prepare
+        title: Prepare a campaign from a saved Instagram list
+        description: Create an idempotent disabled Instagram campaign draft from a saved list and 1–4 exact message variations. Echo list.inspect updatedAt and exact total as expectedListUpdatedAt and expectedTargetCount. Delivery settings must be supplied. Never launches, schedules activation, or sends messages.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign planning and drafts
+        usage: campaign draft prepare --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignDraftPrepareInput"
+      responses:
+        "200":
+          description: Prepare a campaign from a saved Instagram list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignDraftPrepareResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/agent/tools/list.import:
     post:
       tags: [Agent tools]
@@ -1338,6 +1539,10 @@ components:
         - industry.lookup
         - campaign.validate
         - audience.preview
+        - lists.list
+        - list.inspect
+        - list.target.remove
+        - campaign.draft.prepare
         - list.import
         - list.prepare
         - campaign.prepare
@@ -1776,6 +1981,345 @@ components:
               pattern: ".*\\S.*"
         excludePreviouslyContacted:
           type: boolean
+
+    ListsListInput:
+      type: object
+      additionalProperties: false
+      required: []
+      properties:
+        query:
+          type: string
+          minLength: 1
+          maxLength: 120
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 25
+        offset:
+          type: integer
+          minimum: 0
+          maximum: 1000000
+    ListsListData:
+      type: object
+      additionalProperties: false
+      required:
+        - lists
+        - total
+        - nextOffset
+      properties:
+        lists:
+          type: array
+          maxItems: 25
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - listId
+              - name
+              - isCompanyLeadList
+            properties:
+              listId:
+                type: string
+                minLength: 1
+                maxLength: 160
+              name:
+                type: string
+              isCompanyLeadList:
+                type: boolean
+        total:
+          type: integer
+          minimum: 0
+        nextOffset:
+          type:
+            - integer
+            - "null"
+    ListInspectInput:
+      type: object
+      additionalProperties: false
+      required:
+        - listId
+      properties:
+        listId:
+          $ref: "#/components/schemas/ResourceId"
+        username:
+          type: string
+          minLength: 1
+          maxLength: 64
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        offset:
+          type: integer
+          minimum: 0
+          maximum: 1000000
+    SavedInstagramList:
+      type: object
+      additionalProperties: false
+      required:
+        - listId
+        - name
+        - updatedAt
+        - total
+      properties:
+        listId:
+          type: string
+          minLength: 1
+          maxLength: 160
+        name:
+          type: string
+        updatedAt:
+          type: string
+          minLength: 1
+          maxLength: 160
+        total:
+          type: integer
+          minimum: 0
+    ListInspectData:
+      type: object
+      additionalProperties: false
+      required:
+        - list
+        - usernames
+        - nextOffset
+        - membership
+      properties:
+        list:
+          $ref: "#/components/schemas/SavedInstagramList"
+        usernames:
+          type: array
+          maxItems: 100
+          items:
+            type: string
+            minLength: 1
+            maxLength: 30
+        nextOffset:
+          type:
+            - integer
+            - "null"
+        membership:
+          oneOf:
+            - type: object
+              additionalProperties: false
+              required:
+                - username
+                - present
+              properties:
+                username:
+                  type: string
+                  minLength: 1
+                  maxLength: 30
+                present:
+                  type: boolean
+            - type: "null"
+    ListTargetRemoveInput:
+      type: object
+      additionalProperties: false
+      required:
+        - listId
+        - username
+        - expectedListUpdatedAt
+      properties:
+        listId:
+          $ref: "#/components/schemas/ResourceId"
+        username:
+          type: string
+          minLength: 1
+          maxLength: 64
+        expectedListUpdatedAt:
+          $ref: "#/components/schemas/ResourceVersion"
+    ListTargetRemoveData:
+      type: object
+      additionalProperties: false
+      required:
+        - list
+        - username
+        - removed
+        - present
+      properties:
+        list:
+          $ref: "#/components/schemas/SavedInstagramList"
+        username:
+          type: string
+          minLength: 1
+          maxLength: 30
+        removed:
+          type: boolean
+        present:
+          const: false
+    ResourceVersion:
+      type: string
+      pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$
+      minLength: 20
+      maxLength: 27
+    CampaignDraftPrepareInput:
+      type: object
+      additionalProperties: false
+      required:
+        - listId
+        - expectedListUpdatedAt
+        - expectedTargetCount
+        - name
+        - messageVariants
+        - dailyCap
+        - pacingSeconds
+        - onlyNewChats
+        - skipPreviouslyMessaged
+        - idempotencyKey
+      properties:
+        listId:
+          $ref: "#/components/schemas/ResourceId"
+        expectedListUpdatedAt:
+          $ref: "#/components/schemas/ResourceVersion"
+        expectedTargetCount:
+          type: integer
+          minimum: 1
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        messageVariants:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1000
+        dailyCap:
+          type: integer
+          minimum: 1
+          maximum: 60
+        pacingSeconds:
+          type: integer
+          minimum: 12
+          maximum: 3600
+        onlyNewChats:
+          const: true
+        skipPreviouslyMessaged:
+          const: true
+        idempotencyKey:
+          $ref: "#/components/schemas/IdempotencyKey"
+    CampaignDraftPrepareData:
+      type: object
+      additionalProperties: false
+      required:
+        - campaignId
+        - listId
+        - campaignUpdatedAt
+        - listUpdatedAt
+        - name
+        - status
+        - enabled
+        - channel
+        - targetCount
+        - audienceCount
+        - messageVariants
+        - dailyCap
+        - pacingSeconds
+        - onlyNewChats
+        - skipPreviouslyMessaged
+        - created
+        - replayed
+      properties:
+        campaignId:
+          type: string
+          minLength: 1
+          maxLength: 160
+        listId:
+          type: string
+          minLength: 1
+          maxLength: 160
+        campaignUpdatedAt:
+          type: string
+          minLength: 1
+          maxLength: 160
+        listUpdatedAt:
+          type: string
+          minLength: 1
+          maxLength: 160
+        name:
+          type: string
+        status:
+          const: Draft
+        enabled:
+          const: false
+        channel:
+          const: instagram
+        targetCount:
+          type: integer
+          minimum: 0
+        audienceCount:
+          type: integer
+          minimum: 1
+        messageVariants:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            type: string
+            minLength: 1
+            maxLength: 1000
+        dailyCap:
+          type: integer
+          minimum: 1
+          maximum: 60
+        pacingSeconds:
+          type: integer
+          minimum: 12
+          maximum: 3600
+        onlyNewChats:
+          type: boolean
+        skipPreviouslyMessaged:
+          type: boolean
+        created:
+          type: boolean
+        replayed:
+          type: boolean
+    ListsListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              const: lists.list
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/ListsListData"
+                - type: "null"
+    ListInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              const: list.inspect
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/ListInspectData"
+                - type: "null"
+    ListTargetRemoveResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              const: list.target.remove
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/ListTargetRemoveData"
+                - type: "null"
+    CampaignDraftPrepareResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              const: campaign.draft.prepare
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignDraftPrepareData"
+                - type: "null"
 
     ListImportInput:
       type: object

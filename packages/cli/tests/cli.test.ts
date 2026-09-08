@@ -353,3 +353,65 @@ test("list import rejects malformed files/options before invoking the API", asyn
     assert.deepEqual(calls, []);
   }
 });
+
+test("saved-list CLI supports exact membership, removal, and a draft with untouched Finnish copy", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const expectedListUpdatedAt = "2026-09-08T12:00:00.000Z";
+  const draft = {
+    listId: "coaches",
+    expectedListUpdatedAt,
+    expectedTargetCount: 2,
+    name: "Valmentajat",
+    messageVariants: [
+      "Pystytkö ottamaan lisää valmennettavia?\n\nOnko sulla aikaa meetille?",
+      "Toinen versio",
+    ],
+    dailyCap: 40,
+    pacingSeconds: 30,
+    onlyNewChats: true,
+    skipPreviouslyMessaged: true,
+    idempotencyKey: "coaches:1",
+  };
+  const context = { ...configuredContext(calls), readTextFile: async () => JSON.stringify(draft) };
+  for (const args of [
+    ["lists", "list", "--query", "Coaches", "--limit", "10"],
+    ["list", "inspect", "coaches", "--username", "@PT.J.JYLHA", "--offset", "100"],
+    [
+      "list",
+      "target",
+      "remove",
+      "coaches",
+      "--username",
+      "pt.j.jylha",
+      "--expected-version",
+      expectedListUpdatedAt,
+    ],
+    ["campaign", "draft", "prepare", "--input", "draft.json"],
+  ])
+    assert.equal(await runCli([...args, "--json"], context), 0);
+  assert.deepEqual(
+    calls.map((call) => call.tool),
+    ["lists.list", "list.inspect", "list.target.remove", "campaign.draft.prepare"],
+  );
+  assert.deepEqual(calls[1]?.input, { listId: "coaches", username: "pt.j.jylha", offset: 100 });
+  assert.deepEqual(calls[3]?.input, draft);
+});
+
+test("saved-list CLI rejects malformed options and activation payloads without calling the API", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const context = {
+    ...configuredContext(calls),
+    readTextFile: async () => JSON.stringify({ enabled: true }),
+  };
+  for (const args of [
+    ["lists", "list", "--limit", "1.5"],
+    ["lists", "list", "--offset", "-1"],
+    ["lists", "list", "--limit", "10", "--limit", "2"],
+    ["list", "inspect", "coaches", "--username", "pt..j"],
+    ["list", "target", "remove", "coaches", "--username", "pt.j.jylha"],
+    ["campaign", "draft", "prepare", "--input", "draft.json"],
+    ["campaign", "draft", "prepare", "--input", "draft.json", "--launch", "true"],
+  ])
+    assert.notEqual(await runCli([...args, "--json"], context), 0);
+  assert.equal(calls.length, 0);
+});

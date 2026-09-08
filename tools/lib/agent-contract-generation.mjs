@@ -183,7 +183,8 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
         (key) => typeof mcp.annotations[key] !== "boolean",
       ) ||
       mcp.annotations.openWorldHint !== (effect === "external") ||
-      mcp.annotations.destructiveHint !== (effect === "external") ||
+      (effect === "external" && !mcp.annotations.destructiveHint) ||
+      (["read", "draft"].includes(effect) && mcp.annotations.destructiveHint) ||
       (approval === "human_confirmation" && !["write", "external"].includes(effect))
     )
       throw Error(`Unsafe MCP annotations: ${name}`);
