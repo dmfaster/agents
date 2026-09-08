@@ -16,7 +16,11 @@ const BASE_URL = "https://app.dmfaster.test";
 function output() {
   let value = "";
   return {
-    stream: { write(chunk: string) { value += chunk; } },
+    stream: {
+      write(chunk: string) {
+        value += chunk;
+      },
+    },
     read: () => value,
   };
 }
@@ -58,7 +62,8 @@ function successfulExchange(token: string) {
     accessToken: token,
     tokenType: "Bearer",
     expiresAt: "2026-08-28T12:00:00.000Z",
-    scope: "workspace:read campaigns:read sending:read inbox:read pipeline:read audiences:read campaigns:write campaigns:launch",
+    scope:
+      "workspace:read campaigns:read sending:read inbox:read pipeline:read audiences:read campaigns:write campaigns:launch campaigns:control",
     credential: {
       id: `agent_cred_${randomBytes(8).toString("hex")}`,
       name: "DM Faster CLI",
@@ -72,6 +77,7 @@ function successfulExchange(token: string) {
         "audiences:read",
         "campaigns:write",
         "campaigns:launch",
+        "campaigns:control",
       ],
       expiresAt: "2026-08-28T12:00:00.000Z",
     },
@@ -80,17 +86,26 @@ function successfulExchange(token: string) {
   };
 }
 
-function fakeStore(input: {
-  existing?: string | null;
-  onGet?: () => void | Promise<void>;
-  onSet?: (token: string) => void | Promise<void>;
-  onDelete?: () => void | Promise<void>;
-} = {}): CredentialStore {
+function fakeStore(
+  input: {
+    existing?: string | null;
+    onGet?: () => void | Promise<void>;
+    onSet?: (token: string) => void | Promise<void>;
+    onDelete?: () => void | Promise<void>;
+  } = {},
+): CredentialStore {
   return {
     kind: "macos-keychain",
-    async get() { await input.onGet?.(); return input.existing ?? null; },
-    async set(_baseUrl, token) { await input.onSet?.(token); },
-    async delete() { await input.onDelete?.(); },
+    async get() {
+      await input.onGet?.();
+      return input.existing ?? null;
+    },
+    async set(_baseUrl, token) {
+      await input.onSet?.(token);
+    },
+    async delete() {
+      await input.onDelete?.();
+    },
   };
 }
 
@@ -98,7 +113,9 @@ function fakeLoginLock(events?: string[], onRelease?: () => void | Promise<void>
   return async () => {
     events?.push("lock:acquire");
     return {
-      async assertOwned() { events?.push("lock:assert"); },
+      async assertOwned() {
+        events?.push("lock:assert");
+      },
       async release() {
         events?.push("lock:release");
         await onRelease?.();
@@ -111,7 +128,9 @@ function instantPolling() {
   let now = 0;
   return {
     now: () => now,
-    sleep: async (milliseconds: number) => { now += milliseconds; },
+    sleep: async (milliseconds: number) => {
+      now += milliseconds;
+    },
     randomBytes: (size: number) => randomBytes(size),
   };
 }
@@ -140,11 +159,19 @@ test("browser login prints the confirmation code, opens the server URL, and stor
     stderr: stderr.stream,
     resolveConfig: async () => config(null, null),
     credentialStore: fakeStore({
-      onGet() { lifecycle.push("store:get"); },
-      onSet(value) { savedToken = value; lifecycle.push("store:set"); },
+      onGet() {
+        lifecycle.push("store:get");
+      },
+      onSet(value) {
+        savedToken = value;
+        lifecycle.push("store:set");
+      },
     }),
     acquireLoginLock: fakeLoginLock(lifecycle),
-    openBrowser: async (url) => { openedUrl = url; lifecycle.push("browser:open"); },
+    openBrowser: async (url) => {
+      openedUrl = url;
+      lifecycle.push("browser:open");
+    },
     fetch,
     deviceAuthAdapters: instantPolling(),
   };
@@ -166,11 +193,21 @@ test("browser login prints the confirmation code, opens the server URL, and stor
   assert.match(stdout.read(), new RegExp(server.confirmationCode));
   assert.match(stderr.read(), /Check that this code matches/);
   assert.match(stdout.read(), /"status":"authenticated"/);
-  const events = stdout.read().trim().split("\n").map((line) => JSON.parse(line) as {
-    event: string;
-    requestedAccess?: string;
-  });
-  assert.deepEqual(events.map((event) => event.event), ["authorization_required", "authenticated"]);
+  const events = stdout
+    .read()
+    .trim()
+    .split("\n")
+    .map(
+      (line) =>
+        JSON.parse(line) as {
+          event: string;
+          requestedAccess?: string;
+        },
+    );
+  assert.deepEqual(
+    events.map((event) => event.event),
+    ["authorization_required", "authenticated"],
+  );
   assert.equal(events[0]?.requestedAccess, "full");
   for (const secret of [token, server.deviceCode, codeVerifier]) {
     assert.ok(secret);
@@ -248,7 +285,11 @@ test("browser login succeeds with a warning when cleanup fails after secure pers
     stdout: stdout.stream,
     stderr: stderr.stream,
     resolveConfig: async () => config(null, null),
-    credentialStore: fakeStore({ onSet(value) { savedToken = value; } }),
+    credentialStore: fakeStore({
+      onSet(value) {
+        savedToken = value;
+      },
+    }),
     acquireLoginLock: fakeLoginLock(undefined, async () => {
       throw new Error("lock cleanup unavailable");
     }),
@@ -260,7 +301,10 @@ test("browser login succeeds with a warning when cleanup fails after secure pers
   assert.equal(exitCode, 0);
   assert.equal(savedToken, token);
   assert.match(stdout.read(), /"status":"authenticated"/);
-  assert.match(stderr.read(), /warning: Authentication succeeded, but browser-login lock cleanup failed/);
+  assert.match(
+    stderr.read(),
+    /warning: Authentication succeeded, but browser-login lock cleanup failed/,
+  );
   assert.match(stderr.read(), /lock cleanup unavailable/);
 });
 
@@ -274,12 +318,20 @@ test("browser login never overwrites an existing stored credential", async () =>
     stdout: output().stream,
     stderr: stderr.stream,
     resolveConfig: async () => config(token, "macOS Keychain"),
-    credentialStore: fakeStore({ existing: token, onSet() { writes += 1; } }),
+    credentialStore: fakeStore({
+      existing: token,
+      onSet() {
+        writes += 1;
+      },
+    }),
     acquireLoginLock: async () => {
       lockCalls += 1;
       return { async assertOwned() {}, async release() {} };
     },
-    fetch: async () => { deviceCalls += 1; throw new Error("should not request a device code"); },
+    fetch: async () => {
+      deviceCalls += 1;
+      throw new Error("should not request a device code");
+    },
   });
 
   assert.equal(exitCode, 2);
@@ -310,7 +362,11 @@ test("revokes the new remote credential when secure storage fails", async () => 
     stderr: stderr.stream,
     stdout: output().stream,
     resolveConfig: async () => config(null, null),
-    credentialStore: fakeStore({ async onSet() { throw new Error("Secure storage failed."); } }),
+    credentialStore: fakeStore({
+      async onSet() {
+        throw new Error("Secure storage failed.");
+      },
+    }),
     acquireLoginLock: fakeLoginLock(undefined, async () => {
       throw new Error("lock cleanup unavailable");
     }),
@@ -348,10 +404,18 @@ test("revokes instead of storing when stale-lock recovery replaced this login", 
     stderr: stderr.stream,
     stdout: output().stream,
     resolveConfig: async () => config(null, null),
-    credentialStore: fakeStore({ onSet() { writes += 1; } }),
+    credentialStore: fakeStore({
+      onSet() {
+        writes += 1;
+      },
+    }),
     acquireLoginLock: async () => ({
-      async assertOwned() { throw new LoginLockLostError(); },
-      async release() { releases += 1; },
+      async assertOwned() {
+        throw new LoginLockLostError();
+      },
+      async release() {
+        releases += 1;
+      },
     }),
     openBrowser: async () => {},
     fetch,
@@ -370,15 +434,20 @@ test("handles browser denial without storing a credential", async () => {
   const stderr = output();
   const server = deviceResponse();
   let writes = 0;
-  const fetch = async (url: string | URL | Request) => String(url).endsWith("/device")
-    ? Response.json(server, { status: 201 })
-    : Response.json({ error: "access_denied" }, { status: 403 });
+  const fetch = async (url: string | URL | Request) =>
+    String(url).endsWith("/device")
+      ? Response.json(server, { status: 201 })
+      : Response.json({ error: "access_denied" }, { status: 403 });
 
   const exitCode = await runCli(["auth", "login"], {
     stdout: output().stream,
     stderr: stderr.stream,
     resolveConfig: async () => config(null, null),
-    credentialStore: fakeStore({ onSet() { writes += 1; } }),
+    credentialStore: fakeStore({
+      onSet() {
+        writes += 1;
+      },
+    }),
     acquireLoginLock: fakeLoginLock(),
     openBrowser: async () => {},
     fetch,
@@ -419,9 +488,16 @@ test("auth status identifies revoked workspace access without browser-denial cop
     stdout: stdout.stream,
     stderr: stderr.stream,
     resolveConfig: async () => config(token, "macOS Keychain"),
-    fetch: async () => Response.json({
-      error: { code: "workspace_access_denied", message: "Workspace access is no longer available." },
-    }, { status: 403 }),
+    fetch: async () =>
+      Response.json(
+        {
+          error: {
+            code: "workspace_access_denied",
+            message: "Workspace access is no longer available.",
+          },
+        },
+        { status: 403 },
+      ),
   });
 
   assert.equal(exitCode, 1);
@@ -440,10 +516,11 @@ test("auth status --json prints structured rate-limit recovery metadata", async 
     stdout: stdout.stream,
     stderr: stderr.stream,
     resolveConfig: async () => config(token, "macOS Keychain"),
-    fetch: async () => Response.json(
-      { error: { code: "rate_limited", message: "Authentication rate limit exceeded." } },
-      { status: 429, headers: { "retry-after": "75" } },
-    ),
+    fetch: async () =>
+      Response.json(
+        { error: { code: "rate_limited", message: "Authentication rate limit exceeded." } },
+        { status: 429, headers: { "retry-after": "75" } },
+      ),
   });
 
   assert.equal(exitCode, 1);
@@ -471,7 +548,11 @@ test("logout revokes first and only then deletes the local credential", async ()
   const exitCode = await runCli(["auth", "logout"], {
     stdout: output().stream,
     resolveConfig: async () => config(token, "macOS Keychain"),
-    credentialStore: fakeStore({ onDelete() { events.push("delete"); } }),
+    credentialStore: fakeStore({
+      onDelete() {
+        events.push("delete");
+      },
+    }),
     acquireLoginLock: fakeLoginLock(events),
     fetch: async () => {
       events.push("revoke");
@@ -491,9 +572,15 @@ test("logout preserves the local credential when remote revocation cannot be con
     stdout: output().stream,
     stderr: stderr.stream,
     resolveConfig: async () => config(token, "macOS Keychain"),
-    credentialStore: fakeStore({ onDelete() { deletes += 1; } }),
+    credentialStore: fakeStore({
+      onDelete() {
+        deletes += 1;
+      },
+    }),
     acquireLoginLock: fakeLoginLock(),
-    fetch: async () => { throw new Error("offline"); },
+    fetch: async () => {
+      throw new Error("offline");
+    },
   });
 
   assert.equal(exitCode, 1);
@@ -509,7 +596,11 @@ test("environment-token logout revokes remotely and tells the parent process to 
   const exitCode = await runCli(["auth", "logout"], {
     stdout: stdout.stream,
     resolveConfig: async () => config(token, "DMFASTER_TOKEN"),
-    credentialStore: fakeStore({ onDelete() { deletes += 1; } }),
+    credentialStore: fakeStore({
+      onDelete() {
+        deletes += 1;
+      },
+    }),
     fetch: async () => Response.json({ revoked: true }),
   });
 
@@ -528,7 +619,12 @@ test("logout cannot race an in-flight browser login", async () => {
     stdout: output().stream,
     stderr: stderr.stream,
     resolveConfig: async () => config(token, "macOS Keychain"),
-    credentialStore: fakeStore({ existing: token, onDelete() { deletes += 1; } }),
+    credentialStore: fakeStore({
+      existing: token,
+      onDelete() {
+        deletes += 1;
+      },
+    }),
     acquireLoginLock: async () => {
       throw new Error("Another DM Faster browser login is already in progress.");
     },
@@ -564,7 +660,11 @@ test("failed login retries revocation and reports an actionable orphan warning",
     stderr: stderr.stream,
     stdout: output().stream,
     resolveConfig: async () => config(null, null),
-    credentialStore: fakeStore({ async onSet() { throw new Error("Secure storage failed."); } }),
+    credentialStore: fakeStore({
+      async onSet() {
+        throw new Error("Secure storage failed.");
+      },
+    }),
     acquireLoginLock: fakeLoginLock(),
     openBrowser: async () => {},
     fetch,

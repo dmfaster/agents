@@ -192,7 +192,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Execute a human-approved campaign launch
+         * Execute an authorized campaign launch
          * @description Starts only the exact campaign version bound to an approved authorization.
          */
         post: operations["campaignLaunch"];
@@ -213,7 +213,7 @@ export interface paths {
         put?: never;
         /**
          * Preflight one exact campaign launch
-         * @description Validates readiness. Returns a resumable browser-setup handoff when browser sending is unavailable; otherwise creates or returns a short-lived owner approval request.
+         * @description Validates readiness. Returns a resumable browser-setup handoff when browser sending is unavailable; otherwise returns ready for a connection granted campaigns:control, or a short-lived owner approval request for other connections.
          */
         post: operations["campaignLaunchPreflight"];
         delete?: never;
@@ -232,7 +232,7 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Execute a human-approved campaign pause
+         * Execute an authorized campaign pause
          * @description Pauses only the exact campaign version bound to an approved authorization.
          */
         post: operations["campaignPause"];
@@ -253,7 +253,7 @@ export interface paths {
         put?: never;
         /**
          * Preflight one exact campaign pause
-         * @description Validates current state and creates a short-lived owner approval request.
+         * @description Validates current state and returns ready for a connection granted campaigns:control, or a short-lived owner approval request otherwise.
          */
         post: operations["campaignPausePreflight"];
         delete?: never;
@@ -551,6 +551,8 @@ export interface components {
     schemas: {
         AgentActionAuthorization: {
             action: components["schemas"]["AgentCampaignAction"];
+            /** @enum {string} */
+            approvalMethod?: "in_app_approval" | "connection_permission";
             approvedAt: string;
             campaignId: string;
             commandId: string;
@@ -576,7 +578,7 @@ export interface components {
             targetListId: string;
         };
         /** @enum {string} */
-        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch";
+        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control";
         AgentAuthenticatedParty: {
             /** Format: email */
             email: string;
@@ -962,7 +964,15 @@ export interface components {
             campaignId: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
         };
-        CampaignActionPreflightOutput: components["schemas"]["CampaignActionApprovalRequiredOutput"] | components["schemas"]["CampaignLaunchSetupRequiredOutput"];
+        CampaignActionPreflightOutput: components["schemas"]["CampaignActionReadyOutput"] | components["schemas"]["CampaignActionApprovalRequiredOutput"] | components["schemas"]["CampaignLaunchSetupRequiredOutput"];
+        CampaignActionReadyOutput: {
+            authorization: components["schemas"]["AgentActionAuthorization"];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            status: "ready";
+        };
         CampaignCounts: {
             Completed: number;
             Cooldown: number;
@@ -1115,7 +1125,7 @@ export interface components {
             status: "setup_required";
         };
         CampaignPausePreflightResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CampaignActionApprovalRequiredOutput"] | null;
+            data?: components["schemas"]["CampaignActionApprovalRequiredOutput"] | components["schemas"]["CampaignActionReadyOutput"] | null;
             /** @constant */
             tool?: "campaign.pause.preflight";
         };

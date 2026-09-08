@@ -1108,9 +1108,11 @@ function App() {
               ? setup.message
               : approvalUrl
                 ? "Launch review is ready. The workspace owner must approve this exact campaign version in DM Faster."
-                : failed
-                  ? "The operation could not be completed."
-                  : "The operation completed.";
+                : toolName === "campaign_launch_preflight" && data?.status === "ready"
+                  ? "This campaign is ready. Tell your agent to launch it to start outreach."
+                  : failed
+                    ? "The operation could not be completed."
+                    : "The operation completed.";
       const blockers = Array.isArray(harness?.blockers)
         ? harness.blockers.map((blocker) => {
             const record = asRecord(blocker);
@@ -1165,7 +1167,7 @@ function App() {
         }
         if (action === "preflight") {
           if (!campaignId)
-            throw new Error("Prepare a private campaign draft before requesting launch approval.");
+            throw new Error("Prepare a private campaign draft before checking launch readiness.");
           toolName = "campaign_launch_preflight";
           if (!launchKey.current || launchKeyCampaignId.current !== campaignId) {
             launchKey.current = newKey("launch");

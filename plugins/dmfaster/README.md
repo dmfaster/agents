@@ -10,7 +10,8 @@ Agent 1.0 exposes 23 bounded domain tools plus an optional portable MCP Apps
 campaign workspace. It can inspect a live workspace, resolve
 industries, validate stateless campaign plans, preview exact audiences, prepare
 private lists and campaign drafts idempotently, and launch or pause a campaign
-only after the owner approves the exact campaign version in DM Faster. It does
+on explicit user instructions after the owner grants direct control at connection
+time, or after per-action approval for older connections. It does
 not send replies, book meetings, expose provider credentials, or bypass the
 browser extension's execution boundary.
 
@@ -28,7 +29,7 @@ a legacy MCP downgrade.
 
 ## Release status
 
-This source targets the version-pinned 1.2.0 packages. Changes in this private
+This source targets the version-pinned 1.3.0 packages. Changes in this private
 canonical directory do not reach installed users until they are synchronized to
 the approved public repository and released.
 
@@ -50,7 +51,7 @@ Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@1.2.0 auth login --json
+npx --yes @dmfaster/cli@1.3.0 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use

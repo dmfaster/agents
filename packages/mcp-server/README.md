@@ -42,8 +42,8 @@ server resolves the same operating-system stored credential.
 > from an authorized source checkout.
 
 ```bash
-npx --yes @dmfaster/cli@1.2.0 auth login --json
-npx --yes @dmfaster/mcp-server@1.2.0
+npx --yes @dmfaster/cli@1.3.0 auth login --json
+npx --yes @dmfaster/mcp-server@1.3.0
 ```
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
@@ -109,7 +109,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.2.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.3.0"]
     }
   }
 }
@@ -171,3 +171,12 @@ in `settings`, alongside the current window, copy, pacing, and enabled state.
 Send both endpoints when changing the interval. A saved window can be toggled
 on or off while the draft stays disabled; only the separate launch operation
 arms the schedule. Started campaigns cannot be edited with this draft tool.
+
+## Direct campaign control (1.3.0)
+
+An owner can grant `campaigns:control` once when connecting an agent with the
+`full` profile. Explicit user instructions then suffice for launch or pause:
+preflight returns `ready` and a version-bound authorization ID for immediate
+execution. The normal action scope is still required. Existing credentials
+retain per-action approval until the owner reconnects and grants this permission.
+Planning or preparing a campaign never authorizes launch.

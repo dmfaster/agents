@@ -19,13 +19,13 @@ repository, or MCP configuration.
 Check the current credential without a global install:
 
 ```bash
-npx --yes @dmfaster/cli@1.2.0 auth status --json
+npx --yes @dmfaster/cli@1.3.0 auth status --json
 ```
 
 When authentication is required:
 
 ```bash
-npx --yes @dmfaster/cli@1.2.0 auth login --json
+npx --yes @dmfaster/cli@1.3.0 auth login --json
 ```
 
 The CLI prints an `authorization_required` JSON event and a human-readable
@@ -42,15 +42,21 @@ CLI emits a verified `authenticated` event. Do not control the approval page for
 the human.
 
 Agent 1.0 defines these bounded scopes: `workspace:read`, `campaigns:read`,
-`sending:read`, `inbox:read`, `pipeline:read`, `audiences:read`,
-`campaigns:write`, and `campaigns:launch`. Login defaults to the `full` profile.
-When a smaller grant is appropriate, append `--access read`, `--access plan`,
-or `--access draft`; the profiles cumulatively add operational reads, campaign
-planning, and private preparation. The two write-capable scopes can bind only
-to the authenticated account owner's workspace. Granting
-`campaigns:launch` allows a client to request a launch preflight; it does not
-approve a launch. Launch and pause still require a separate short-lived approval
-for one exact campaign version.
+`sending:read`, `inbox:read`, `pipeline:read`, `audiences:read`, `campaigns:write`,
+`campaigns:launch`, and `campaigns:control`. Login defaults to the `full` profile.
+The owner approves this connection once. With `campaigns:control`, explicit user
+instructions authorize launch and pause without another approval page per action;
+the normal `campaigns:launch` or `campaigns:write` permission is still required.
+Existing connections are never upgraded silently. When the owner wants direct
+control, use `auth logout` to revoke the stored connection, then
+`auth login --access full` to request the new permission. Login deliberately
+refuses to overwrite an existing stored credential. The human personally approves
+the new connection page; the agent must not operate it for them.
+
+Use `--access read`, `--access plan`, or `--access draft` for smaller grants.
+These profiles add operational reads, planning, and private drafts respectively.
+All three write/control scopes are owner-only. Connections without
+`campaigns:control` retain the per-action browser approval workflow.
 
 If the pinned package is unavailable, report that DM Faster Agent 1.0 is not
 installed. Do not search for a private source checkout or fall back to another

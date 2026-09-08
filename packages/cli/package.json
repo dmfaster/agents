@@ -1,6 +1,6 @@
 {
   "name": "@dmfaster/cli",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Command-line interface for DM Faster Agent 1.0.",
   "license": "Apache-2.0",
   "author": "DM Faster",
@@ -33,8 +33,8 @@
     "check": "npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
-    "@dmfaster/local-auth": "1.2.0",
-    "@dmfaster/sdk": "1.2.0"
+    "@dmfaster/local-auth": "1.3.0",
+    "@dmfaster/sdk": "1.3.0"
   },
   "devDependencies": {
     "@types/node": "24.13.3",

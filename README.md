@@ -59,7 +59,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.2.0 auth login --json
+npx --yes @dmfaster/cli@1.3.0 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -68,16 +68,21 @@ Keychain or Linux Secret Service and are never written to plaintext config.
 Use `--access read`, `plan`, or `draft` to grant a smaller capability ceiling;
 the default `full` profile enables the complete Agent 1.0 flow.
 
-Login permission alone never authorizes launch or pause. Those tools first
-return a separate approval page and confirmation code. The owner must approve
-the exact campaign version in DM Faster before the server issues a short-lived,
-single-use action authorization.
+The `full` profile includes the owner-granted `campaigns:control` permission.
+After this one-time connection approval, telling your agent “launch it” or
+“pause it” is enough. Preflight returns `ready`; the agent executes using the
+returned authorization ID and the same campaign ID and idempotency key.
+Planning and draft preparation never authorize launch.
+
+Existing connections retain per-action approval. To enable conversational
+controls, run `auth logout`, then `auth login --access full` and personally
+approve the new connection. Credentials are never upgraded silently.
 
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.2.0 workspace briefing --json
-npx --yes @dmfaster/mcp-server@1.2.0
+npx --yes @dmfaster/cli@1.3.0 workspace briefing --json
+npx --yes @dmfaster/mcp-server@1.3.0
 ```
 
 The 23 MCP domain tools cover workspace, campaign, sending, reply, pipeline,
@@ -128,7 +133,7 @@ private product source or trademarks.
 All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
 
 ```bash
-npx --yes @dmfaster/cli@1.2.0 list import --name "My prospects" --file usernames.csv --json
+npx --yes @dmfaster/cli@1.3.0 list import --name "My prospects" --file usernames.csv --json
 ```
 
 The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
@@ -144,4 +149,4 @@ daily cap, pacing, and automatic sending window without creating another
 campaign. `campaign.inspect` reports current copy, delivery settings, window,
 and workspace timezone. Edits preserve omitted settings and reject stale
 versions or started campaigns. Saving or toggling a draft window leaves it
-disabled; the separate approved launch arms the schedule.
+disabled; an explicitly instructed, authorized launch arms the schedule.

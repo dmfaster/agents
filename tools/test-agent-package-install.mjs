@@ -201,8 +201,15 @@ try {
   const cli = path.join(projectDirectory, "node_modules", ".bin", "dmfaster");
   const help = run(cli, ["--help"], { cwd: projectDirectory });
   assert.ok(help.stdout.includes(`DM Faster CLI ${releaseVersion}`));
-  assert.match(help.stdout, /Human-approved campaign controls:/u);
-  assert.match(help.stdout, /short-lived approval in DM Faster for one exact campaign version/u);
+  assert.match(help.stdout, /Campaign controls:/u);
+  assert.match(
+    help.stdout,
+    /Full access includes direct campaign\s+control on explicit user instructions/u,
+  );
+  assert.match(
+    help.stdout,
+    /Older connections need one new full-access\s+login or per-action approval/u,
+  );
 
   const cliToken = `dmf_pat_${"1".repeat(64)}`;
   const cliRequests = [];

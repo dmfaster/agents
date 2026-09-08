@@ -48,6 +48,7 @@ const EXPECTED_AUTH_METHODS = new Map([
 const EXPECTED_TOOL_NAMES = [...EXPECTED_TOOLS.keys()];
 const EXPECTED_SCOPE_NAMES = [
   ...new Set([...EXPECTED_TOOLS.values()].flatMap(({ scopes }) => scopes)),
+  "campaigns:control",
 ];
 
 function sourceSlice(source, start, end) {
