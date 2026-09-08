@@ -21,7 +21,7 @@ or network access. It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 22 domain tools directly.
+continue to use all 23 domain tools directly.
 
 `audience_preview` returns a server-issued `reviewedAudience` identity with an
 exact, immutable search revision. The user must review that preview before a
@@ -42,13 +42,13 @@ server resolves the same operating-system stored credential.
 > from an authorized source checkout.
 
 ```bash
-npx --yes @dmfaster/cli@1.1.0 auth login --json
-npx --yes @dmfaster/mcp-server@1.1.0
+npx --yes @dmfaster/cli@1.2.0 auth login --json
+npx --yes @dmfaster/mcp-server@1.2.0
 ```
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
-smaller ceiling. The MCP server can expose all 22 domain schemas and the
+smaller ceiling. The MCP server can expose all 23 domain schemas and the
 read-only presentation schema while the DM Faster API independently rejects
 domain tools outside the stored credential's scopes.
 
@@ -57,7 +57,7 @@ go to stderr. Tool annotations accurately distinguish reads, private draft
 preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world.
 
-The MCP names are the 22 domain tools:
+The MCP names are the 23 domain tools:
 
 - `analytics_summary`
 - `workspace_briefing`
@@ -74,6 +74,7 @@ The MCP names are the 22 domain tools:
 - `list_inspect`
 - `list_target_remove`
 - `campaign_draft_prepare`
+- `campaign_draft_update`
 - `list_import`
 - `list_prepare`
 - `campaign_prepare`
@@ -108,7 +109,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.1.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.2.0"]
     }
   }
 }
@@ -142,7 +143,7 @@ start or arm sending. Reusing a key with different settings or an edited audienc
 fails without changing the original campaign.
 
 SDK operation names are `lists.list`, `list.inspect`, `list.target.remove`,
-and `campaign.draft.prepare`; MCP names replace dots with underscores. List
+`campaign.draft.prepare`, and `campaign.draft.update`; MCP names replace dots with underscores. List
 reads require `campaigns:read`; removal requires owner `campaigns:write`;
 draft preparation requires both scopes. No company-search entitlement is needed
 for these Instagram lists. Existing campaign launch/pause approval is unchanged.
@@ -150,3 +151,23 @@ for these Instagram lists. Existing campaign launch/pause approval is unchanged.
 Instagram campaigns always exclude known contacts: `onlyNewChats` and
 `skipPreviouslyMessaged` must both be `true`. Unsupported values are rejected
 before a draft is created.
+
+To change an existing disabled Instagram draft, use
+`dmfaster campaign draft update --input update.json --json`. Supply `campaignId`,
+`expectedCampaignUpdatedAt` from campaign inspection, and a nonempty `updates`
+object containing any of `name`, `messageVariants`, `dailyCap` (1–60), or
+`pacingSeconds` (12–3,600). Omitted settings and the audience are preserved.
+Stale versions and started campaigns are rejected. After an uncertain
+response, inspect the campaign before retrying. No launch approval is needed to
+edit a disabled draft.
+
+Automatic sending windows are also editable through `campaign.draft.update`:
+`instagramSendingWindowEnabled` is a boolean; `instagramSendingWindowStartMinute`
+is 0–1380; `instagramSendingWindowEndMinute` is 60–1440; and
+`instagramSendingWindowWeekdays` is a bitmask from 1–127 (Monday=1, Tuesday=2,
+through Sunday=64; Monday–Friday=31). The interval must span at least 60 minutes
+in the same day. Times use the workspace timezone returned by `campaign.inspect`
+in `settings`, alongside the current window, copy, pacing, and enabled state.
+Send both endpoints when changing the interval. A saved window can be toggled
+on or off while the draft stays disabled; only the separate launch operation
+arms the schedule. Started campaigns cannot be edited with this draft tool.

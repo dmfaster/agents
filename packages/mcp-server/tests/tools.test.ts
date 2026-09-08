@@ -372,3 +372,25 @@ test("saved-list tools describe target removal honestly and reject draft activat
   ])
     assert.equal(schema.safeParse({ ...draft, ...invalid }).success, false);
 });
+
+test("draft update MCP requires a version and bounded nonempty patch, never activation", () => {
+  const definitions: AgentToolDefinition[] = [];
+  registerAgentToolDefinitions(
+    { register: (definition) => definitions.push(definition) },
+    fakeClient([]),
+  );
+  const tool = definitions.find((item) => item.name === "campaign_draft_update")!;
+  assert.equal(tool.annotations.readOnlyHint, false);
+  const input = {
+    campaignId: "existing",
+    expectedCampaignUpdatedAt: "2026-09-08T12:00:00.000Z",
+    updates: { dailyCap: 60 },
+  };
+  assert.deepEqual(tool.inputSchema.parse(input), input);
+  for (const updates of [{}, { enabled: true }, { dailyCap: 61 }, { targetListId: "other" }])
+    assert.equal(tool.inputSchema.safeParse({ ...input, updates }).success, false);
+  assert.equal(
+    tool.inputSchema.safeParse({ ...input, expectedCampaignUpdatedAt: undefined }).success,
+    false,
+  );
+});

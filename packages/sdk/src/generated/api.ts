@@ -141,6 +141,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/campaign.draft.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update a saved Instagram campaign draft
+         * @description Patch the name, messages, delivery cap, pacing, or automatic sending window of an existing disabled, unstarted Instagram draft. Echo campaign.inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale versions and started campaigns are rejected; saving a window never arms it. Inspect after an uncertain response before retrying. Never creates another campaign, enables sending, or launches.
+         */
+        post: operations["campaignDraftUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/campaign.inspect": {
         parameters: {
             query?: never;
@@ -792,7 +812,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -992,6 +1012,48 @@ export interface components {
             /** @constant */
             tool?: "campaign.draft.prepare";
         };
+        CampaignDraftUpdateData: {
+            campaignId: string;
+            campaignUpdatedAt: string;
+            /** @constant */
+            channel: "instagram";
+            dailyCap: number;
+            /** @constant */
+            enabled: false;
+            instagramSendingWindowEnabled: boolean;
+            instagramSendingWindowEndMinute: number;
+            instagramSendingWindowStartMinute: number;
+            instagramSendingWindowWeekdays: number;
+            listId: string;
+            messageVariants: string[];
+            name: string;
+            onlyNewChats: boolean;
+            pacingSeconds: number;
+            skipPreviouslyMessaged: boolean;
+            /** @constant */
+            status: "Draft";
+            targetCount: number;
+            timezone: string;
+        };
+        CampaignDraftUpdateInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
+            updates: {
+                dailyCap?: number;
+                instagramSendingWindowEnabled?: boolean;
+                instagramSendingWindowEndMinute?: number;
+                instagramSendingWindowStartMinute?: number;
+                instagramSendingWindowWeekdays?: number;
+                messageVariants?: string[];
+                name?: string;
+                pacingSeconds?: number;
+            };
+        };
+        CampaignDraftUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignDraftUpdateData"] | null;
+            /** @constant */
+            tool?: "campaign.draft.update";
+        };
         CampaignInspectInput: components["schemas"]["OptionalCampaignInput"];
         CampaignInspectOutput: {
             campaign: components["schemas"]["CampaignSummary"];
@@ -1014,6 +1076,19 @@ export interface components {
             rates: {
                 bookedCallPercent: number | null;
                 replyOrFurtherPercent: number | null;
+            };
+            settings?: {
+                enabled: boolean;
+                instagramSendingWindowEnabled: boolean;
+                instagramSendingWindowEndMinute: number;
+                instagramSendingWindowStartMinute: number;
+                instagramSendingWindowWeekdays: number;
+                messageVariants: string[];
+                onlyNewChats: boolean;
+                pacingSeconds: number;
+                skipPreviouslyMessaged: boolean;
+                targetListId: string;
+                timezone: string;
             };
         };
         CampaignInspectResult: components["schemas"]["AgentToolResultBase"] & {
@@ -1771,6 +1846,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CampaignDraftPrepareResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    campaignDraftUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignDraftUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Update a saved Instagram campaign draft */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignDraftUpdateResult"];
                 };
             };
             400: components["responses"]["BadRequest"];

@@ -81,3 +81,15 @@ test("missing permissions, unsafe action hints and duplicate aliases fail genera
     assert.throws(() => compileAgentContract(d));
   }
 });
+
+test("object minimum properties are enforced and invalid constraints fail generation", () => {
+  const source = compileAgentContract(contract()).get(
+    "packages/mcp-server/src/generated/input-schemas.ts",
+  );
+  assert.match(source, /Object.keys\(value\).length >= 1/);
+  for (const value of [-1, 0.5, "1"]) {
+    const d = contract();
+    d.components.schemas.CampaignDraftUpdateInput.properties.updates.minProperties = value;
+    assert.throws(() => compileAgentContract(d));
+  }
+});

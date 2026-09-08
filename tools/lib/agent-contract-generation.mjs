@@ -25,6 +25,7 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     "pattern",
     "minimum",
     "maximum",
+    "minProperties",
     "minItems",
     "maxItems",
     "x-dmfaster-trim",
@@ -74,6 +75,13 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
         throw Error(`Invalid numeric constraint: ${key}`);
     }
     if (
+      schema.minProperties !== undefined &&
+      (schema.type !== "object" ||
+        !Number.isInteger(schema.minProperties) ||
+        schema.minProperties < 0)
+    )
+      throw Error("minProperties requires an object and a nonnegative integer");
+    if (
       schema["x-dmfaster-trim"] !== undefined &&
       (schema.type !== "string" || schema["x-dmfaster-trim"] !== true)
     )
@@ -117,6 +125,8 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
       if (schema.additionalProperties !== false)
         throw Error("Public input objects must reject unknown properties");
       result = `z.object({${properties.join(",")}}).strict()`;
+      if (schema.minProperties !== undefined)
+        result += `.refine((value) => Object.keys(value).length >= ${schema.minProperties}, "Provide at least ${schema.minProperties} properties")`;
     } else if (schema.type === "string") {
       result = "z.string()";
       if (schema["x-dmfaster-trim"]) result += ".trim()";

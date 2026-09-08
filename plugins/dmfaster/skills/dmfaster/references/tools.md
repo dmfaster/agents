@@ -1,6 +1,6 @@
 # DM Faster Agent 1.0 tools
 
-Agent 1.0 exposes exactly 22 bounded domain tools. Each credential is bound to one
+Agent 1.0 exposes exactly 23 bounded domain tools. Each credential is bound to one
 workspace, and every tool requires the exact scopes shown below; scopes are not
 inherited from `workspace:read`. MCP names use underscores and HTTP contract
 names use dots.
@@ -15,7 +15,7 @@ authorizes launch or pause.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@1.1.0
+npx --yes @dmfaster/cli@1.2.0
 ```
 
 | MCP tool                    | HTTP tool                   | CLI suffix                                                                         | Required scope                      | Effect                            |
@@ -35,6 +35,7 @@ npx --yes @dmfaster/cli@1.1.0
 | `list_inspect`              | `list.inspect`              | `list inspect LIST_ID [--username HANDLE] [--limit N] [--offset N] --json`         | `campaigns:read`                    | exact audience and membership     |
 | `list_target_remove`        | `list.target.remove`        | `list target remove LIST_ID --username HANDLE --expected-version TIMESTAMP --json` | `campaigns:write`                   | owner-only target removal         |
 | `campaign_draft_prepare`    | `campaign.draft.prepare`    | `campaign draft prepare --input FILE --json`                                       | `campaigns:read`, `campaigns:write` | disabled Instagram draft          |
+| `campaign_draft_update`     | `campaign.draft.update`     | `campaign draft update --input FILE --json`                                        | `campaigns:read`, `campaigns:write` | update an existing disabled draft |
 | `list_import`               | `list.import`               | `list import --name NAME --file FILE [--idempotency-key KEY] --json`               | `campaigns:write`                   | private Instagram username import |
 | `list_prepare`              | `list.prepare`              | `list prepare --state <file> [--idempotency-key KEY] --json`                       | `audiences:read`, `campaigns:write` | private idempotent draft          |
 | `campaign_prepare`          | `campaign.prepare`          | `campaign prepare --state <file> [--idempotency-key KEY] --json`                   | `audiences:read`, `campaigns:write` | private idempotent draft          |
@@ -80,6 +81,27 @@ variants are accepted. Daily cap is 1–60 and pacing is 12–3,600 seconds.
 The result reports exact saved copy/settings, campaign/list versions,
 `audienceCount` for the saved list and `targetCount` for the saved campaign (known-contact exclusions are enforced during sending), plus `created`/`replayed`. Status must be `Draft` and
 `enabled` must be false. Launch remains a separate approval-bound operation.
+
+## Update an existing draft
+
+Use `campaign_draft_update` to revise the same campaign rather than creating a
+replacement. Inspect it first and provide the returned `campaign.updatedAt`:
+
+```json
+{
+  "campaignId": "RETURNED_CAMPAIGN_ID",
+  "expectedCampaignUpdatedAt": "2026-09-08T12:00:00.000Z",
+  "updates": { "dailyCap": 60 }
+}
+```
+
+`updates` requires at least one of `name`, `messageVariants`, `dailyCap`, or
+`pacingSeconds`, with the same bounds as draft preparation. Omitted settings and
+the audience are preserved. The owner can edit only disabled, unstarted,
+Instagram drafts. The result echoes the saved settings and new
+`campaignUpdatedAt`; it never launches or queues sending. Stale versions fail
+without overwriting another edit. After a timeout, inspect the campaign to
+check whether the requested change was saved before deciding to retry.
 
 ## Instagram username imports
 
@@ -186,3 +208,14 @@ Use [authentication.md](authentication.md) for login and HTTP error handling.
 Instagram campaigns always exclude known contacts: `onlyNewChats` and
 `skipPreviouslyMessaged` must both be `true`. Unsupported values are rejected
 before a draft is created.
+
+Automatic sending windows are also editable through `campaign.draft.update`:
+`instagramSendingWindowEnabled` is a boolean; `instagramSendingWindowStartMinute`
+is 0–1380; `instagramSendingWindowEndMinute` is 60–1440; and
+`instagramSendingWindowWeekdays` is a bitmask from 1–127 (Monday=1, Tuesday=2,
+through Sunday=64; Monday–Friday=31). The interval must span at least 60 minutes
+in the same day. Times use the workspace timezone returned by `campaign.inspect`
+in `settings`, alongside the current window, copy, pacing, and enabled state.
+Send both endpoints when changing the interval. A saved window can be toggled
+on or off while the draft stays disabled; only the separate launch operation
+arms the schedule. Started campaigns cannot be edited with this draft tool.
