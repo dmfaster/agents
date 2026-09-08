@@ -51,21 +51,21 @@ export function PageIntro({
 }) {
   return (
     <header>
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between lg:gap-4">
         <div className="max-w-3xl">
           {eyebrow ? (
-            <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.18em] text-slate-500">{eyebrow}</p>
+            <p className="hidden font-mono text-[0.65rem] font-bold uppercase tracking-[0.18em] text-slate-500 lg:block">{eyebrow}</p>
           ) : null}
-          <h1 className={`${eyebrow ? "mt-1.5 " : ""}text-[1.8rem] font-bold leading-[1.08] tracking-[-0.035em] text-slate-950 sm:text-3xl`}>
+          <h1 className={`${eyebrow ? "lg:mt-1.5 " : ""}text-xl font-bold leading-[1.08] tracking-[-0.025em] text-slate-950 lg:text-3xl lg:tracking-[-0.035em]`}>
             {title}
           </h1>
           {body ? (
-            <p className="mt-2 max-w-[48rem] text-[0.9375rem] leading-6 text-slate-600">
+            <p className="mt-1.5 max-w-[48rem] text-sm leading-5 text-slate-600 lg:mt-2 lg:text-[0.9375rem] lg:leading-6">
               {body}
             </p>
           ) : null}
         </div>
-        {actions ? <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0 sm:justify-end">{actions}</div> : null}
+        {actions ? <div className="flex w-full flex-wrap items-center gap-2 lg:w-auto lg:shrink-0 lg:justify-end">{actions}</div> : null}
       </div>
     </header>
   );

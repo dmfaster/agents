@@ -28,11 +28,12 @@ import {
 } from "@dmfaster/local-auth";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
+import { parseSavedListCommand } from "./saved-lists.ts";
 import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "1.0.2";
+export const CLI_VERSION = "1.1.0";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();
@@ -510,6 +511,25 @@ async function commandFromArgs(
   if (!tool)
     throw new UsageError(`Unknown command: ${args.join(" ") || "(none)"}. Run dmfaster --help.`);
   const rest = args.slice(AGENT_TOOL_DEFINITIONS[tool].cli.command.length);
+  if (
+    tool === "lists.list" ||
+    tool === "list.inspect" ||
+    tool === "list.target.remove" ||
+    tool === "campaign.draft.prepare"
+  ) {
+    try {
+      return {
+        tool,
+        input: await parseSavedListCommand(
+          tool,
+          rest,
+          context.readTextFile ?? ((file) => readFile(file, "utf8")),
+        ),
+      };
+    } catch (error) {
+      throw new UsageError(error instanceof Error ? error.message : "Invalid saved-list command.");
+    }
+  }
   if (tool === "analytics.summary") {
     return { tool: "analytics.summary", input: parseAnalyticsSummary(rest) };
   }

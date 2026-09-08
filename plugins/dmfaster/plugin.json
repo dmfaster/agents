@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "dmfaster",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Plan campaigns, prepare private drafts, inspect live sales activity, and run human-approved campaign controls through DM Faster Agent 1.0.",
   "author": {
     "name": "DM Faster",
@@ -10,11 +10,5 @@
   "homepage": "https://dmfaster.com/docs/agents",
   "repository": "https://github.com/dmfaster/agents",
   "license": "Apache-2.0",
-  "keywords": [
-    "sales",
-    "outreach",
-    "campaigns",
-    "mcp",
-    "agent"
-  ]
+  "keywords": ["sales", "outreach", "campaigns", "mcp", "agent"]
 }

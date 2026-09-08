@@ -4,10 +4,7 @@
     "dmfaster": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "--yes",
-        "@dmfaster/mcp-server@1.0.2"
-      ]
+      "args": ["--yes", "@dmfaster/mcp-server@1.1.0"]
     }
   }
 }

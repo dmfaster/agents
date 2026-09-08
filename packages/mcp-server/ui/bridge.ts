@@ -59,14 +59,18 @@ export class McpAppBridge {
         this.#pending.delete(id);
         window.clearTimeout(pending.timer);
         const error = message.error as JsonObject | undefined;
-        if (error) pending.reject(new Error(String(error.message || "The MCP host returned an error.")));
+        if (error)
+          pending.reject(new Error(String(error.message || "The MCP host returned an error.")));
         else pending.resolve(message.result);
         return;
       }
       if (typeof message.method === "string") {
         const notification = {
           method: message.method,
-          params: message.params && typeof message.params === "object" ? message.params as JsonObject : undefined,
+          params:
+            message.params && typeof message.params === "object"
+              ? (message.params as JsonObject)
+              : undefined,
         };
         this.#listeners.forEach((listener) => listener(notification));
       }
@@ -103,11 +107,15 @@ export class McpAppBridge {
 
   async initialize() {
     try {
-      const initialized = await this.request("ui/initialize", {
-        appInfo: { name: "DM Faster campaign workspace", version: "1.0.2" },
-        appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] },
-        protocolVersion: MCP_APP_PROTOCOL_VERSION,
-      }, 4_000) as {
+      const initialized = (await this.request(
+        "ui/initialize",
+        {
+          appInfo: { name: "DM Faster campaign workspace", version: "1.1.0" },
+          appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] },
+          protocolVersion: MCP_APP_PROTOCOL_VERSION,
+        },
+        4_000,
+      )) as {
         hostCapabilities?: HostCapabilities;
         hostContext?: HostContext;
       };
@@ -137,7 +145,9 @@ export class McpAppBridge {
   }
 
   canCallTools() {
-    return this.standard ? Boolean(this.capabilities.serverTools) : Boolean(window.openai?.callTool);
+    return this.standard
+      ? Boolean(this.capabilities.serverTools)
+      : Boolean(window.openai?.callTool);
   }
 
   async callTool(name: string, input: unknown) {
@@ -154,11 +164,16 @@ export class McpAppBridge {
     if (this.standard && this.capabilities.message) {
       const record = asJsonObject(content);
       const summary = Array.isArray(record.content)
-        ? record.content.map((part) => String(asJsonObject(part).text || "")).filter(Boolean).join("\n")
+        ? record.content
+            .map((part) => String(asJsonObject(part).text || ""))
+            .filter(Boolean)
+            .join("\n")
         : "The user updated the DM Faster campaign workspace.";
       return this.request("ui/message", {
         role: "user",
-        content: [{ type: "text", text: `${summary}\n\n${JSON.stringify(record.structuredContent || {})}` }],
+        content: [
+          { type: "text", text: `${summary}\n\n${JSON.stringify(record.structuredContent || {})}` },
+        ],
       });
     }
     throw new Error("This host cannot add the edited campaign state back to model context.");
@@ -173,7 +188,9 @@ export class McpAppBridge {
   async toggleDisplayMode() {
     if (!this.standard) return;
     const nextMode = this.context.displayMode === "fullscreen" ? "inline" : "fullscreen";
-    const result = await this.request("ui/request-display-mode", { mode: nextMode }) as { mode?: string };
+    const result = (await this.request("ui/request-display-mode", { mode: nextMode })) as {
+      mode?: string;
+    };
     if (result.mode) this.context = { ...this.context, displayMode: result.mode };
   }
 
@@ -187,5 +204,5 @@ export class McpAppBridge {
 }
 
 function asJsonObject(value: unknown): JsonObject {
-  return value && typeof value === "object" ? value as JsonObject : {};
+  return value && typeof value === "object" ? (value as JsonObject) : {};
 }

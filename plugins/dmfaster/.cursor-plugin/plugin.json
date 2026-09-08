@@ -1,7 +1,7 @@
 {
   "name": "dmfaster",
   "displayName": "DM Faster",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Plan campaigns, prepare private drafts, inspect live sales activity, and run human-approved campaign controls through DM Faster Agent 1.0.",
   "author": {
     "name": "DM Faster"
@@ -10,20 +10,9 @@
   "repository": "https://github.com/dmfaster/agents",
   "license": "Apache-2.0",
   "logo": "assets/dm-icon.png",
-  "keywords": [
-    "sales",
-    "outreach",
-    "campaigns",
-    "mcp",
-    "agent"
-  ],
+  "keywords": ["sales", "outreach", "campaigns", "mcp", "agent"],
   "category": "productivity",
-  "tags": [
-    "sales",
-    "outreach",
-    "campaigns",
-    "human-approval"
-  ],
+  "tags": ["sales", "outreach", "campaigns", "human-approval"],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"
 }

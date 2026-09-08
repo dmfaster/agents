@@ -354,12 +354,53 @@ export const AudiencePreviewInputSchema = z
     sampleSize: z.number().int().min(1).max(25).optional(),
   })
   .strict();
+export const ListsListInputSchema = z
+  .object({
+    query: z.string().min(1).max(120).optional(),
+    limit: z.number().int().min(1).max(25).optional(),
+    offset: z.number().int().min(0).max(1000000).optional(),
+  })
+  .strict();
+export const ListInspectInputSchema = z
+  .object({
+    listId: ResourceIdSchema,
+    username: z.string().min(1).max(64).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    offset: z.number().int().min(0).max(1000000).optional(),
+  })
+  .strict();
+export const ResourceVersionSchema = z
+  .string()
+  .min(20)
+  .max(27)
+  .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"));
+export const ListTargetRemoveInputSchema = z
+  .object({
+    listId: ResourceIdSchema,
+    username: z.string().min(1).max(64),
+    expectedListUpdatedAt: ResourceVersionSchema,
+  })
+  .strict();
 export const IdempotencyKeySchema = z
   .string()
   .trim()
   .min(1)
   .max(160)
   .regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$"));
+export const CampaignDraftPrepareInputSchema = z
+  .object({
+    listId: ResourceIdSchema,
+    expectedListUpdatedAt: ResourceVersionSchema,
+    expectedTargetCount: z.number().int().min(1),
+    name: z.string().min(1).max(120),
+    messageVariants: z.array(z.string().min(1).max(1000)).min(1).max(4),
+    dailyCap: z.number().int().min(1).max(60),
+    pacingSeconds: z.number().int().min(12).max(3600),
+    onlyNewChats: z.literal(true),
+    skipPreviouslyMessaged: z.literal(true),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
 export const ListImportInputSchema = z
   .object({
     name: z.string().min(1).max(120),
@@ -419,6 +460,10 @@ export const AGENT_INPUT_SCHEMAS = {
   "industry.lookup": IndustryLookupInputSchema,
   "campaign.validate": CampaignValidateInputSchema,
   "audience.preview": AudiencePreviewInputSchema,
+  "lists.list": ListsListInputSchema,
+  "list.inspect": ListInspectInputSchema,
+  "list.target.remove": ListTargetRemoveInputSchema,
+  "campaign.draft.prepare": CampaignDraftPrepareInputSchema,
   "list.import": ListImportInputSchema,
   "list.prepare": ListPrepareInputSchema,
   "campaign.prepare": CampaignPrepareInputSchema,

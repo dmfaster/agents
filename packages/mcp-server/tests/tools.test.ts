@@ -331,3 +331,44 @@ test("generated schemas preserve strict inputs, campaign size and action authori
     campaignId: "campaign_123",
   });
 });
+
+test("saved-list tools describe target removal honestly and reject draft activation fields", () => {
+  const definitions: AgentToolDefinition[] = [];
+  registerAgentToolDefinitions(
+    { register: (definition) => definitions.push(definition) },
+    fakeClient([]),
+  );
+  for (const name of ["lists_list", "list_inspect"])
+    assert.equal(definitions.find((tool) => tool.name === name)?.annotations.readOnlyHint, true);
+  assert.deepEqual(definitions.find((tool) => tool.name === "list_target_remove")?.annotations, {
+    readOnlyHint: false,
+    destructiveHint: true,
+    idempotentHint: true,
+    openWorldHint: false,
+  });
+  assert.deepEqual(
+    definitions.find((tool) => tool.name === "campaign_draft_prepare")?.annotations,
+    { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  );
+  const schema = definitions.find((tool) => tool.name === "campaign_draft_prepare")!.inputSchema;
+  const draft = {
+    listId: "coaches",
+    expectedListUpdatedAt: "2026-09-08T12:00:00.000Z",
+    expectedTargetCount: 2,
+    name: "Coaches",
+    messageVariants: ["Hello"],
+    dailyCap: 40,
+    pacingSeconds: 30,
+    onlyNewChats: true,
+    skipPreviouslyMessaged: true,
+    idempotencyKey: "coaches:1",
+  };
+  assert.equal(schema.safeParse(draft).success, true);
+  for (const invalid of [
+    { enabled: true },
+    { instagramSendingWindowEnabled: true },
+    { messageVariants: ["1", "2", "3", "4", "5"] },
+    { expectedTargetCount: 0 },
+  ])
+    assert.equal(schema.safeParse({ ...draft, ...invalid }).success, false);
+});

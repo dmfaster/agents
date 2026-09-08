@@ -121,6 +121,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/campaign.draft.prepare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Prepare a campaign from a saved Instagram list
+         * @description Create an idempotent disabled Instagram campaign draft from a saved list and 1–4 exact message variations. Echo list.inspect updatedAt and exact total as expectedListUpdatedAt and expectedTargetCount. Delivery settings must be supplied. Never launches, schedules activation, or sends messages.
+         */
+        post: operations["campaignDraftPrepare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/campaign.inspect": {
         parameters: {
             query?: never;
@@ -342,6 +362,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/list.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect a saved Instagram list
+         * @description Read an existing Instagram list, its exact target count, bounded username page and resource version. Supply username to check exact membership across the whole list, independently of the page. Company lists require the company audience workflow.
+         */
+        post: operations["listInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/list.prepare": {
         parameters: {
             query?: never;
@@ -356,6 +396,46 @@ export interface paths {
          * @description Requires an exact audience and creates only a private workspace list.
          */
         post: operations["listPrepare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/list.target.remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remove an Instagram target
+         * @description Ensure one exact Instagram username is absent from an owner-owned saved list after the user requests removal. Echo list.inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and lists protected by active campaigns. Already absent is a verified no-op. Sends nothing.
+         */
+        post: operations["listTargetRemove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/lists.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Find saved target lists
+         * @description Find existing workspace lists by a case-insensitive name search. Results are paginated with an exact matching-list total; inspect a selected list for authoritative audience counts and membership.
+         */
+        post: operations["listsList"];
         delete?: never;
         options?: never;
         head?: never;
@@ -712,7 +792,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -870,6 +950,47 @@ export interface components {
             Paused: number;
             Queued: number;
             Running: number;
+        };
+        CampaignDraftPrepareData: {
+            audienceCount: number;
+            campaignId: string;
+            campaignUpdatedAt: string;
+            /** @constant */
+            channel: "instagram";
+            created: boolean;
+            dailyCap: number;
+            /** @constant */
+            enabled: false;
+            listId: string;
+            listUpdatedAt: string;
+            messageVariants: string[];
+            name: string;
+            onlyNewChats: boolean;
+            pacingSeconds: number;
+            replayed: boolean;
+            skipPreviouslyMessaged: boolean;
+            /** @constant */
+            status: "Draft";
+            targetCount: number;
+        };
+        CampaignDraftPrepareInput: {
+            dailyCap: number;
+            expectedListUpdatedAt: components["schemas"]["ResourceVersion"];
+            expectedTargetCount: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            listId: components["schemas"]["ResourceId"];
+            messageVariants: string[];
+            name: string;
+            /** @constant */
+            onlyNewChats: true;
+            pacingSeconds: number;
+            /** @constant */
+            skipPreviouslyMessaged: true;
+        };
+        CampaignDraftPrepareResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignDraftPrepareData"] | null;
+            /** @constant */
+            tool?: "campaign.draft.prepare";
         };
         CampaignInspectInput: components["schemas"]["OptionalCampaignInput"];
         CampaignInspectOutput: {
@@ -1047,6 +1168,26 @@ export interface components {
             /** @constant */
             tool?: "list.import";
         };
+        ListInspectData: {
+            list: components["schemas"]["SavedInstagramList"];
+            membership: {
+                present: boolean;
+                username: string;
+            } | null;
+            nextOffset: number | null;
+            usernames: string[];
+        };
+        ListInspectInput: {
+            limit?: number;
+            listId: components["schemas"]["ResourceId"];
+            offset?: number;
+            username?: string;
+        };
+        ListInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ListInspectData"] | null;
+            /** @constant */
+            tool?: "list.inspect";
+        };
         ListPrepareInput: {
             idempotencyKey?: components["schemas"]["IdempotencyKey"];
             reviewedAudience: components["schemas"]["ReviewedAudience"];
@@ -1057,6 +1198,42 @@ export interface components {
             data?: components["schemas"]["AgentHarnessResult"] | null;
             /** @constant */
             tool?: "list.prepare";
+        };
+        ListsListData: {
+            lists: {
+                isCompanyLeadList: boolean;
+                listId: string;
+                name: string;
+            }[];
+            nextOffset: number | null;
+            total: number;
+        };
+        ListsListInput: {
+            limit?: number;
+            offset?: number;
+            query?: string;
+        };
+        ListsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ListsListData"] | null;
+            /** @constant */
+            tool?: "lists.list";
+        };
+        ListTargetRemoveData: {
+            list: components["schemas"]["SavedInstagramList"];
+            /** @constant */
+            present: false;
+            removed: boolean;
+            username: string;
+        };
+        ListTargetRemoveInput: {
+            expectedListUpdatedAt: components["schemas"]["ResourceVersion"];
+            listId: components["schemas"]["ResourceId"];
+            username: string;
+        };
+        ListTargetRemoveResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ListTargetRemoveData"] | null;
+            /** @constant */
+            tool?: "list.target.remove";
         };
         OptionalCampaignInput: {
             /** @description Omit to use the selected, active, or most recent campaign. */
@@ -1105,6 +1282,7 @@ export interface components {
         };
         /** @description A resource identifier returned by DM Faster. Never guess an identifier from a name. */
         ResourceId: string;
+        ResourceVersion: string;
         /** @description Server-issued identity from the exact audience preview. Echo this object unchanged when preparing a private list or campaign; clients must not derive it. */
         ReviewedAudience: {
             dataFreshness: {
@@ -1114,6 +1292,12 @@ export interface components {
             };
             excludePreviouslyContacted?: boolean;
             querySignature: string;
+        };
+        SavedInstagramList: {
+            listId: string;
+            name: string;
+            total: number;
+            updatedAt: string;
         };
         SendingInspectInput: components["schemas"]["OptionalCampaignInput"];
         SendingInspectOutput: {
@@ -1567,6 +1751,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    campaignDraftPrepare: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignDraftPrepareInput"];
+            };
+        };
+        responses: {
+            /** @description Prepare a campaign from a saved Instagram list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignDraftPrepareResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     campaignInspect: {
         parameters: {
             query?: never;
@@ -1910,6 +2124,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    listInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect a saved Instagram list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     listPrepare: {
         parameters: {
             query?: never;
@@ -1930,6 +2174,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListPrepareResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    listTargetRemove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListTargetRemoveInput"];
+            };
+        };
+        responses: {
+            /** @description Remove an Instagram target */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListTargetRemoveResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    listsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListsListInput"];
+            };
+        };
+        responses: {
+            /** @description Find saved target lists */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListsListResult"];
                 };
             };
             400: components["responses"]["BadRequest"];

@@ -3,11 +3,7 @@ import { createInterface } from "node:readline";
 import { PassThrough } from "node:stream";
 import test from "node:test";
 
-import type {
-  AgentToolInputMap,
-  AgentToolName,
-  AgentToolResult,
-} from "@dmfaster/sdk";
+import type { AgentToolInputMap, AgentToolName, AgentToolResult } from "@dmfaster/sdk";
 import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
 
 import { MCP_SERVER_INSTRUCTIONS, serveDmfasterStdio } from "../src/server.ts";
@@ -71,7 +67,7 @@ function createWire(client: AgentInvoker) {
 
 const modernEnvelope = {
   "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-  "io.modelcontextprotocol/clientInfo": { name: "dmfaster-test", version: "1.0.2" },
+  "io.modelcontextprotocol/clientInfo": { name: "dmfaster-test", version: "1.1.0" },
   "io.modelcontextprotocol/clientCapabilities": {},
 };
 
@@ -119,12 +115,14 @@ const campaignState = {
       timezone: "Europe/Helsinki",
       confirmed: true,
     },
-    outreachMessages: [{
-      channels: ["instagram" as const],
-      subject: "",
-      body: "Hi — would a quick revenue pipeline review be useful?",
-      origin: "user" as const,
-    }],
+    outreachMessages: [
+      {
+        channels: ["instagram" as const],
+        subject: "",
+        body: "Hi — would a quick revenue pipeline review be useful?",
+        origin: "user" as const,
+      },
+    ],
   },
 };
 
@@ -140,14 +138,8 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
     params: { _meta: modernEnvelope },
   });
   const discover = await wire.receive();
-  assert.deepEqual(
-    (discover.result as JsonObject).supportedVersions,
-    ["2026-07-28"],
-  );
-  assert.equal(
-    (discover.result as JsonObject).instructions,
-    MCP_SERVER_INSTRUCTIONS,
-  );
+  assert.deepEqual((discover.result as JsonObject).supportedVersions, ["2026-07-28"]);
+  assert.equal((discover.result as JsonObject).instructions, MCP_SERVER_INSTRUCTIONS);
 
   wire.send({
     jsonrpc: "2.0",
@@ -157,7 +149,10 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   });
   const listed = await wire.receive();
   const tools = (listed.result as JsonObject).tools as Array<JsonObject>;
-  assert.deepEqual(tools.map((tool) => tool.name), MCP_TOOL_NAMES);
+  assert.deepEqual(
+    tools.map((tool) => tool.name),
+    MCP_TOOL_NAMES,
+  );
   const workspaceTool = tools.find((tool) => tool.name === "campaign_workspace");
   assert.ok(workspaceTool);
   assert.equal(
@@ -191,7 +186,10 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   });
   const resourcesResponse = await wire.receive();
   const resources = (resourcesResponse.result as JsonObject).resources as Array<JsonObject>;
-  assert.deepEqual(resources.map((resource) => resource.uri), [CAMPAIGN_WORKSPACE_RESOURCE_URI]);
+  assert.deepEqual(
+    resources.map((resource) => resource.uri),
+    [CAMPAIGN_WORKSPACE_RESOURCE_URI],
+  );
   assert.equal(resources[0]?.mimeType, MCP_APP_RESOURCE_MIME_TYPE);
 
   wire.send({
@@ -234,18 +232,12 @@ test("rejects the 2025 initialize flow and remains available for stateless MCP",
     params: {
       protocolVersion: "2025-11-25",
       capabilities: {},
-      clientInfo: { name: "dmfaster-legacy-test", version: "1.0.2" },
+      clientInfo: { name: "dmfaster-legacy-test", version: "1.1.0" },
     },
   });
   const rejected = await wire.receive();
-  assert.match(
-    String((rejected.error as JsonObject).message),
-    /unsupported protocol version/i,
-  );
-  assert.deepEqual(
-    ((rejected.error as JsonObject).data as JsonObject).supported,
-    ["2026-07-28"],
-  );
+  assert.match(String((rejected.error as JsonObject).message), /unsupported protocol version/i);
+  assert.deepEqual(((rejected.error as JsonObject).data as JsonObject).supported, ["2026-07-28"]);
 
   wire.send({
     jsonrpc: "2.0",
@@ -254,8 +246,5 @@ test("rejects the 2025 initialize flow and remains available for stateless MCP",
     params: { _meta: modernEnvelope },
   });
   const discovered = await wire.receive();
-  assert.deepEqual(
-    (discovered.result as JsonObject).supportedVersions,
-    ["2026-07-28"],
-  );
+  assert.deepEqual((discovered.result as JsonObject).supportedVersions, ["2026-07-28"]);
 });

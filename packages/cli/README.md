@@ -8,24 +8,24 @@ through the focused DM Faster browser approval page.
 > authorized source checkout.
 
 ```bash
-npx --yes @dmfaster/cli@1.0.2 auth login --json
-npx --yes @dmfaster/cli@1.0.2 auth login --access plan --json
-npx --yes @dmfaster/cli@1.0.2 auth status --json
+npx --yes @dmfaster/cli@1.1.0 auth login --json
+npx --yes @dmfaster/cli@1.1.0 auth login --access plan --json
+npx --yes @dmfaster/cli@1.1.0 auth status --json
 
-npx --yes @dmfaster/cli@1.0.2 analytics summary --scope today --json
-npx --yes @dmfaster/cli@1.0.2 workspace briefing --json
-npx --yes @dmfaster/cli@1.0.2 campaigns list --status Running --limit 10 --json
-npx --yes @dmfaster/cli@1.0.2 replies list campaign_123 --limit 5 --query "Visio" --json
-npx --yes @dmfaster/cli@1.0.2 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.1.0 analytics summary --scope today --json
+npx --yes @dmfaster/cli@1.1.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.1.0 campaigns list --status Running --limit 10 --json
+npx --yes @dmfaster/cli@1.1.0 replies list campaign_123 --limit 5 --query "Visio" --json
+npx --yes @dmfaster/cli@1.1.0 company timeline campaign_123 outreach_456 --json
 
-npx --yes @dmfaster/cli@1.0.2 campaign validate --state campaign-state.json --json
-npx --yes @dmfaster/cli@1.0.2 audience preview --state campaign-state.json --json > audience-preview.json
+npx --yes @dmfaster/cli@1.1.0 campaign validate --state campaign-state.json --json
+npx --yes @dmfaster/cli@1.1.0 audience preview --state campaign-state.json --json > audience-preview.json
 # Review the exact count and sample in audience-preview.json before continuing.
-npx --yes @dmfaster/cli@1.0.2 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
-npx --yes @dmfaster/cli@1.0.2 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
-npx --yes @dmfaster/cli@1.0.2 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
+npx --yes @dmfaster/cli@1.1.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
+npx --yes @dmfaster/cli@1.1.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
+npx --yes @dmfaster/cli@1.1.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
 
-npx --yes @dmfaster/cli@1.0.2 auth logout --json
+npx --yes @dmfaster/cli@1.1.0 auth logout --json
 ```
 
 `auth login` creates a short-lived PKCE device request, prints a confirmation
@@ -123,3 +123,33 @@ idempotencyKey })`. It requires `campaigns:write` and owner access, and is avail
 A changed payload or an edited saved list returns `idempotency_conflict`.
 The list is selectable in the campaign builder; no campaign is created and
 nothing is sent. Import validates syntax, not live Instagram account existence.
+
+## Existing Instagram lists (1.1.0)
+
+Find a saved list, check the whole audience for an exact username, remove a
+requested target, and prepare an unstarted campaign through the same contract:
+
+```bash
+dmfaster lists list --query "Coaches" --json
+dmfaster list inspect LIST_ID --username pt.j.jylha --json
+dmfaster list target remove LIST_ID --username pt.j.jylha --expected-version INSPECTED_UPDATED_AT --json
+dmfaster campaign draft prepare --input draft.json --json
+```
+
+Draft JSON contains `listId`, `expectedListUpdatedAt`, `expectedTargetCount`,
+`name`, `messageVariants` (1–4 strings), `dailyCap`, `pacingSeconds`,
+`onlyNewChats`, `skipPreviouslyMessaged`, and `idempotencyKey`. Use the version
+and exact total from the latest inspection/removal. Preparation verifies the
+saved copy and settings and always returns a disabled `Draft`. It does not
+start or arm sending. Reusing a key with different settings or an edited audience
+fails without changing the original campaign.
+
+SDK operation names are `lists.list`, `list.inspect`, `list.target.remove`,
+and `campaign.draft.prepare`; MCP names replace dots with underscores. List
+reads require `campaigns:read`; removal requires owner `campaigns:write`;
+draft preparation requires both scopes. No company-search entitlement is needed
+for these Instagram lists. Existing campaign launch/pause approval is unchanged.
+
+Instagram campaigns always exclude known contacts: `onlyNewChats` and
+`skipPreviouslyMessaged` must both be `true`. Unsupported values are rejected
+before a draft is created.

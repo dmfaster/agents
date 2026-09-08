@@ -11,10 +11,7 @@ import {
   type CredentialStore,
 } from "@dmfaster/local-auth";
 import { McpServer } from "@modelcontextprotocol/server";
-import {
-  serveStdio,
-  type ServeStdioOptions,
-} from "@modelcontextprotocol/server/stdio";
+import { serveStdio, type ServeStdioOptions } from "@modelcontextprotocol/server/stdio";
 
 import {
   registerAgentToolDefinitions,
@@ -23,7 +20,7 @@ import {
 } from "./tools.ts";
 import { registerCampaignWorkspace } from "./campaign-workspace.ts";
 
-export const MCP_SERVER_VERSION = "1.0.2";
+export const MCP_SERVER_VERSION = "1.1.0";
 export const DEFAULT_MCP_API_URL = DEFAULT_DMFASTER_API_URL;
 export const MCP_SERVER_INSTRUCTIONS = [
   "DM Faster lets a user describe a sales campaign while you operate the bounded workflow for them; do not assume prior product knowledge.",
@@ -90,27 +87,30 @@ function registerWithMcpServer(server: McpServer, definition: AgentToolDefinitio
 }
 
 export function createDmfasterMcpServer(input: { client: AgentInvoker }) {
-  const server = new McpServer({
-    name: "dmfaster",
-    version: MCP_SERVER_VERSION,
-  }, {
-    instructions: MCP_SERVER_INSTRUCTIONS,
-  });
-  registerAgentToolDefinitions({
-    register(definition) {
-      registerWithMcpServer(server, definition);
+  const server = new McpServer(
+    {
+      name: "dmfaster",
+      version: MCP_SERVER_VERSION,
     },
-  }, input.client);
+    {
+      instructions: MCP_SERVER_INSTRUCTIONS,
+    },
+  );
+  registerAgentToolDefinitions(
+    {
+      register(definition) {
+        registerWithMcpServer(server, definition);
+      },
+    },
+    input.client,
+  );
   registerCampaignWorkspace(server);
   return server;
 }
 
 export type DmfasterStdioOptions = Omit<ServeStdioOptions, "legacy">;
 
-export function serveDmfasterStdio(
-  client: AgentInvoker,
-  options: DmfasterStdioOptions = {},
-) {
+export function serveDmfasterStdio(client: AgentInvoker, options: DmfasterStdioOptions = {}) {
   return serveStdio(() => createDmfasterMcpServer({ client }), {
     ...options,
     legacy: "reject",
@@ -128,8 +128,8 @@ export async function resolveMcpClientOptions(
   });
   if (!config.token) {
     throw new Error(
-      config.credentialStoreError
-        || "DM Faster is not signed in. Run `dmfaster auth login`, or set DMFASTER_TOKEN for headless CI.",
+      config.credentialStoreError ||
+        "DM Faster is not signed in. Run `dmfaster auth login`, or set DMFASTER_TOKEN for headless CI.",
     );
   }
   const timeoutSource = env.DMFASTER_TIMEOUT_MS?.trim();
