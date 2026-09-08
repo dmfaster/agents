@@ -95,8 +95,9 @@ replacement. Inspect it first and provide the returned `campaign.updatedAt`:
 }
 ```
 
-`updates` requires at least one of `name`, `messageVariants`, `dailyCap`, or
-`pacingSeconds`, with the same bounds as draft preparation. Omitted settings and
+`updates` requires at least one of `name`, `messageVariants`, `dailyCap`,
+`pacingSeconds`, or the automatic sending-window fields described below. Name,
+message, cap, and pacing bounds match draft preparation. Omitted settings and
 the audience are preserved. The owner can edit only disabled, unstarted,
 Instagram drafts. The result echoes the saved settings and new
 `campaignUpdatedAt`; it never launches or queues sending. Stale versions fail
