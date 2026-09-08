@@ -10,7 +10,7 @@ scoped, workspace-bound `dmf_pat_…` token.
 > authorized source checkout.
 
 ```bash
-npm install @dmfaster/sdk@1.3.0
+npm install @dmfaster/sdk@1.4.0
 ```
 
 Non-loopback endpoints must use HTTPS. The client also refuses HTTP redirects so
@@ -121,7 +121,7 @@ Send both endpoints when changing the interval. A saved window can be toggled
 on or off while the draft stays disabled; only the separate launch operation
 arms the schedule. Started campaigns cannot be edited with this draft tool.
 
-## Direct campaign control (1.3.0)
+## Direct campaign control (1.4.0)
 
 An owner can grant `campaigns:control` once when connecting an agent with the
 `full` profile. Explicit user instructions then suffice for launch or pause:

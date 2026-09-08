@@ -24,6 +24,14 @@ export type AgentToolInputMap = {
   "campaign.launch": operations["campaignLaunch"]["requestBody"]["content"]["application/json"];
   "campaign.pause.preflight": operations["campaignPausePreflight"]["requestBody"]["content"]["application/json"];
   "campaign.pause": operations["campaignPause"]["requestBody"]["content"]["application/json"];
+  "companies.filters": operations["companyFilters"]["requestBody"]["content"]["application/json"];
+  "companies.search": operations["companySearch"]["requestBody"]["content"]["application/json"];
+  "company.inspect": operations["companyInspect"]["requestBody"]["content"]["application/json"];
+  "companies.list.prepare": operations["companyListPrepare"]["requestBody"]["content"]["application/json"];
+  "companies.list.inspect": operations["companyListInspect"]["requestBody"]["content"]["application/json"];
+  "campaign.operation.inspect": operations["campaignOperationInspect"]["requestBody"]["content"]["application/json"];
+  "campaign.delivery.inspect": operations["campaignDeliveryInspect"]["requestBody"]["content"]["application/json"];
+  "campaign.delivery.update": operations["campaignDeliveryUpdate"]["requestBody"]["content"]["application/json"];
 };
 export type AgentToolDataMap = {
   "analytics.summary": NonNullable<
@@ -94,5 +102,29 @@ export type AgentToolDataMap = {
   >;
   "campaign.pause": NonNullable<
     operations["campaignPause"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.filters": NonNullable<
+    operations["companyFilters"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.search": NonNullable<
+    operations["companySearch"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "company.inspect": NonNullable<
+    operations["companyInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.list.prepare": NonNullable<
+    operations["companyListPrepare"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.list.inspect": NonNullable<
+    operations["companyListInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.operation.inspect": NonNullable<
+    operations["campaignOperationInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.delivery.inspect": NonNullable<
+    operations["campaignDeliveryInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.delivery.update": NonNullable<
+    operations["campaignDeliveryUpdate"]["responses"][200]["content"]["application/json"]["data"]
   >;
 };

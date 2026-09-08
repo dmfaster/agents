@@ -8,24 +8,24 @@ through the focused DM Faster browser approval page.
 > authorized source checkout.
 
 ```bash
-npx --yes @dmfaster/cli@1.3.0 auth login --json
-npx --yes @dmfaster/cli@1.3.0 auth login --access plan --json
-npx --yes @dmfaster/cli@1.3.0 auth status --json
+npx --yes @dmfaster/cli@1.4.0 auth login --json
+npx --yes @dmfaster/cli@1.4.0 auth login --access plan --json
+npx --yes @dmfaster/cli@1.4.0 auth status --json
 
-npx --yes @dmfaster/cli@1.3.0 analytics summary --scope today --json
-npx --yes @dmfaster/cli@1.3.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.3.0 campaigns list --status Running --limit 10 --json
-npx --yes @dmfaster/cli@1.3.0 replies list campaign_123 --limit 5 --query "Visio" --json
-npx --yes @dmfaster/cli@1.3.0 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.4.0 analytics summary --scope today --json
+npx --yes @dmfaster/cli@1.4.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.4.0 campaigns list --status Running --limit 10 --json
+npx --yes @dmfaster/cli@1.4.0 replies list campaign_123 --limit 5 --query "Visio" --json
+npx --yes @dmfaster/cli@1.4.0 company timeline campaign_123 outreach_456 --json
 
-npx --yes @dmfaster/cli@1.3.0 campaign validate --state campaign-state.json --json
-npx --yes @dmfaster/cli@1.3.0 audience preview --state campaign-state.json --json > audience-preview.json
+npx --yes @dmfaster/cli@1.4.0 campaign validate --state campaign-state.json --json
+npx --yes @dmfaster/cli@1.4.0 audience preview --state campaign-state.json --json > audience-preview.json
 # Review the exact count and sample in audience-preview.json before continuing.
-npx --yes @dmfaster/cli@1.3.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
-npx --yes @dmfaster/cli@1.3.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
-npx --yes @dmfaster/cli@1.3.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
+npx --yes @dmfaster/cli@1.4.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
+npx --yes @dmfaster/cli@1.4.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
+npx --yes @dmfaster/cli@1.4.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
 
-npx --yes @dmfaster/cli@1.3.0 auth logout --json
+npx --yes @dmfaster/cli@1.4.0 auth logout --json
 ```
 
 `auth login` creates a short-lived PKCE device request, prints a confirmation
@@ -174,3 +174,11 @@ in `settings`, alongside the current window, copy, pacing, and enabled state.
 Send both endpoints when changing the interval. A saved window can be toggled
 on or off while the draft stays disabled; only the separate launch operation
 arms the schedule. Started campaigns cannot be edited with this draft tool.
+
+Inspect an ongoing campaign with `campaign delivery inspect --input FILE`.
+Update cap, pace, or sending hours with `campaign delivery update --input FILE`,
+including the inspection revision and an idempotency key. This preserves the run
+and audience. Launch and pause return an operation reference; use
+`campaign operation inspect --input FILE --wait 30` to wait up to 30 seconds for
+its receipt. Pending operations can be inspected again with the same IDs.
+Browser acknowledgment and confirmed delivery are separate facts.

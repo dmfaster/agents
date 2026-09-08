@@ -1,6 +1,6 @@
 # DM Faster MCP server
 
-Local stdio MCP server for the 17 DM Faster Agent 1.0 domain tools plus one
+Local stdio MCP server for the 31 DM Faster Agent 1.0 domain tools plus one
 portable `campaign_workspace` presentation tool. It uses the MCP TypeScript SDK
 v2 serving entry in strict modern-only mode. MCP 2026-07-28 clients use the new
 per-request protocol; 2025-era initialization is explicitly rejected. The
@@ -21,7 +21,7 @@ or network access. It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 23 domain tools directly.
+continue to use all 31 domain tools directly.
 
 `audience_preview` returns a server-issued `reviewedAudience` identity with an
 exact, immutable search revision. The user must review that preview before a
@@ -42,13 +42,13 @@ server resolves the same operating-system stored credential.
 > from an authorized source checkout.
 
 ```bash
-npx --yes @dmfaster/cli@1.3.0 auth login --json
-npx --yes @dmfaster/mcp-server@1.3.0
+npx --yes @dmfaster/cli@1.4.0 auth login --json
+npx --yes @dmfaster/mcp-server@1.4.0
 ```
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
-smaller ceiling. The MCP server can expose all 23 domain schemas and the
+smaller ceiling. The MCP server can expose all 31 domain schemas and the
 read-only presentation schema while the DM Faster API independently rejects
 domain tools outside the stored credential's scopes.
 
@@ -57,7 +57,7 @@ go to stderr. Tool annotations accurately distinguish reads, private draft
 preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world.
 
-The MCP names are the 23 domain tools:
+The MCP names are the 31 domain tools:
 
 - `analytics_summary`
 - `workspace_briefing`
@@ -82,6 +82,14 @@ The MCP names are the 23 domain tools:
 - `campaign_launch`
 - `campaign_pause_preflight`
 - `campaign_pause`
+- `companies_filters`
+- `companies_search`
+- `company_inspect`
+- `companies_list_prepare`
+- `companies_list_inspect`
+- `campaign_operation_inspect`
+- `campaign_delivery_inspect`
+- `campaign_delivery_update`
 
 The additional presentation-only MCP tool is:
 
@@ -109,7 +117,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.3.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.4.0"]
     }
   }
 }
@@ -172,7 +180,7 @@ Send both endpoints when changing the interval. A saved window can be toggled
 on or off while the draft stays disabled; only the separate launch operation
 arms the schedule. Started campaigns cannot be edited with this draft tool.
 
-## Direct campaign control (1.3.0)
+## Direct campaign control (1.4.0)
 
 An owner can grant `campaigns:control` once when connecting an agent with the
 `full` profile. Explicit user instructions then suffice for launch or pause:

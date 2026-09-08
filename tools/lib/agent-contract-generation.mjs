@@ -254,6 +254,12 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     ],
     ["site/src/lib/agent-platform/public-contract.generated.ts", common],
   ]);
+  if (includeServer) {
+    artifacts.set(
+      "site/src/lib/agent-platform/public-input-schemas.generated.ts",
+      artifacts.get("packages/mcp-server/src/generated/input-schemas.ts"),
+    );
+  }
   if (!includeServer) artifacts.delete("site/src/lib/agent-platform/public-contract.generated.ts");
   return artifacts;
 }

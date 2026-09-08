@@ -86,6 +86,37 @@ test("prints useful help without requiring configuration", async () => {
   assert.match(stdout.read(), /DMFASTER_TOKEN/);
 });
 
+test("company-centric CLI commands forward the full filter and inspection inputs", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const filters = {
+    filters: {
+      countries: ["FI"],
+      technologies: ["shopify"],
+      fundingSources: ["business_finland"],
+      metaAdsMinimumEuReach: "10000",
+      hasWebsite: false,
+    },
+    pageSize: 100,
+  };
+  for (const [command, input] of [
+    [["companies", "search"], filters],
+    [["company", "inspect"], { country: "FI", businessId: "1234567-8" }],
+    [["companies", "filters"], { countries: ["FI"] }],
+  ] as const) {
+    const result = await runCli([...command, "--input", "input.json"], {
+      ...configuredContext(calls),
+      stdout: output().stream,
+      readTextFile: async () => JSON.stringify(input),
+    });
+    assert.equal(result, 0);
+  }
+  assert.deepEqual(
+    calls.map((call) => call.tool),
+    ["companies.search", "company.inspect", "companies.filters"],
+  );
+  assert.deepEqual(calls[0]!.input, filters);
+});
+
 test("reports local authentication status without printing the token", async () => {
   const stdout = output();
   const exitCode = await runCli(["auth", "status"], {
@@ -439,4 +470,53 @@ test("draft update CLI preserves the campaign ID and patch and rejects activatio
     );
   }
   assert.equal(calls.length, 1);
+});
+
+test("campaign operation wait returns the acknowledged result or a resumable timeout", async () => {
+  for (const finishes of [true, false]) {
+    const stdout = output(),
+      stderr = output();
+    const context = configuredContext([]);
+    let polls = 0;
+    context.createClient = () => ({
+      async invoke(tool) {
+        polls++;
+        return {
+          version: 1,
+          tool,
+          policy: AGENT_TOOL_POLICIES[tool],
+          ok: true,
+          generatedAt: new Date().toISOString(),
+          durationMs: 0,
+          evidence: [],
+          consistency: { status: "verified", checks: [] },
+          artifacts: [],
+          error: null,
+          data: {
+            campaignId: "campaign-a",
+            commandId: "launch-a",
+            state: finishes && polls > 1 ? "sender_acknowledged" : "awaiting_sender",
+          },
+        } as AgentToolResult;
+      },
+    });
+    const code = await runCli(
+      ["campaign", "operation", "inspect", "--input", "operation.json", "--wait", "2"],
+      {
+        ...context,
+        stdout: stdout.stream,
+        stderr: stderr.stream,
+        readTextFile: async () =>
+          JSON.stringify({ campaignId: "campaign-a", commandId: "launch-a" }),
+        sleep: async () => undefined,
+      },
+    );
+    assert.equal(code, finishes ? 0 : 1);
+    assert.equal(polls, 2);
+    assert.equal(
+      JSON.parse(stdout.read()).data.state,
+      finishes ? "sender_acknowledged" : "awaiting_sender",
+    );
+    if (!finishes) assert.match(stderr.read(), /same campaignId and commandId/);
+  }
 });

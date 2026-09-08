@@ -467,6 +467,141 @@ export const CampaignActionInputSchema = z
     authorizationId: z.string().regex(new RegExp("^agent_action_[a-f0-9]{32}$")),
   })
   .strict();
+export const CompanyFiltersInputSchema = z
+  .object({
+    countries: z.array(SupportedCountrySchema).min(1).max(32),
+    states: z.array(z.string().max(80)).max(32).optional(),
+    citySearch: z.string().max(120).optional(),
+  })
+  .strict();
+export const CompanySearchFiltersSchema = z
+  .object({
+    country: SupportedCountrySchema.optional(),
+    countries: z.array(SupportedCountrySchema).min(1).max(32),
+    q: z.string().max(120).optional(),
+    industryCodes: z.array(z.string().max(80)).max(8).optional(),
+    industryCodeSelections: z
+      .array(
+        z
+          .object({
+            classification: z.literal("TOL"),
+            version: z.union([z.literal("2008"), z.literal("2025")]),
+            codes: z.array(z.string().max(5)).max(64),
+          })
+          .strict(),
+      )
+      .max(2)
+      .optional(),
+    tolCodes: z.array(z.string().max(80)).max(8).optional(),
+    companyForm: z.string().max(4096).optional(),
+    states: z.array(z.string().max(80)).max(32).optional(),
+    cities: z.array(z.string().max(80)).max(32).optional(),
+    registrationDateEnabled: z.boolean().optional(),
+    registrationDateStart: z.string().max(10).optional(),
+    registrationDateEnd: z.string().max(10).optional(),
+    businessIdRegistrationStart: z.string().max(10).optional(),
+    businessIdRegistrationEnd: z.string().max(10).optional(),
+    revenueMinEur: z.string().max(16).optional(),
+    revenueMaxEur: z.string().max(16).optional(),
+    employeeRanges: z.array(z.string().max(80)).max(32).optional(),
+    employeeMin: z.string().max(10).optional(),
+    employeeMax: z.string().max(10).optional(),
+    technologies: z.array(z.string().max(80)).max(40).optional(),
+    hasExhibitionParticipation: z.boolean().optional(),
+    exhibitionEventKeys: z.array(z.string().max(160)).max(32).optional(),
+    exhibitionMinEditions: z.string().max(8).optional(),
+    hasPublicFunding: z.boolean().optional(),
+    fundingSources: z.array(z.string().max(40)).max(5).optional(),
+    fundingFromYear: z.string().max(4).optional(),
+    googleAdsActivityWindow: z
+      .union([
+        z.literal(null),
+        z.literal("last_30_days"),
+        z.literal("last_90_days"),
+        z.literal("last_12_months"),
+      ])
+      .optional(),
+    metaAdsActiveOnly: z.boolean().optional(),
+    metaAdsMinimumEuReach: z.string().max(10).optional(),
+    metaAdsTargetAge: z.string().max(3).optional(),
+    metaAdsTargetGender: z
+      .union([z.literal(""), z.literal("all"), z.literal("men"), z.literal("women")])
+      .optional(),
+    metaAdsTargetLocation: z.string().max(80).optional(),
+    metaAdsIncludeUncorroborated: z.boolean().optional(),
+    hasWebsite: z.boolean().optional(),
+    activeOnly: z.boolean().optional(),
+  })
+  .strict()
+  .describe(
+    "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+  );
+export const CompanySearchInputSchema = z
+  .object({
+    filters: CompanySearchFiltersSchema,
+    page: z.number().int().min(1).max(10000).optional(),
+    pageSize: z.number().int().min(1).max(100).optional(),
+    cursor: z.string().max(1000).optional(),
+    expectedRevision: z.string().max(200).optional(),
+    querySignature: z.string().max(200).optional(),
+  })
+  .strict();
+export const CompanyInspectInputSchema = z
+  .object({ country: SupportedCountrySchema, businessId: z.string().min(1).max(192) })
+  .strict();
+export const CompanyListPrepareInputSchema = z
+  .object({
+    name: z.string().min(1).max(120),
+    companies: z
+      .array(
+        z
+          .object({
+            country: SupportedCountrySchema,
+            businessId: z.string().min(1).max(192),
+            expectedRevision: z.string().min(64).max(64),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(50),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const CompanyListInspectInputSchema = z
+  .object({
+    listId: ResourceIdSchema,
+    offset: z.number().int().min(0).max(1000000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    expectedUpdatedAt: z.string().max(160).optional(),
+  })
+  .strict();
+export const CampaignOperationInspectInputSchema = z
+  .object({
+    campaignId: z.string().min(1).max(160),
+    commandId: z.string().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]+$")),
+  })
+  .strict();
+export const CampaignDeliveryInspectInputSchema = z
+  .object({ campaignId: z.string().min(1).max(160) })
+  .strict();
+export const CampaignDeliveryUpdateInputSchema = z
+  .object({
+    campaignId: z.string().min(1).max(160),
+    expectedRevision: z.string().regex(new RegExp("^[a-f0-9]{64}$")),
+    idempotencyKey: z.string().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]+$")),
+    patch: z
+      .object({
+        dailyCap: z.number().int().min(1).max(2147483647).optional(),
+        pacingSeconds: z.number().int().min(12).max(3600).optional(),
+        instagramSendingWindowEnabled: z.boolean().optional(),
+        instagramSendingWindowStartMinute: z.number().int().min(0).max(1380).optional(),
+        instagramSendingWindowEndMinute: z.number().int().min(60).max(1440).optional(),
+        instagramSendingWindowWeekdays: z.number().int().min(1).max(127).optional(),
+      })
+      .strict()
+      .refine((value) => Object.keys(value).length >= 1, "Provide at least 1 properties"),
+  })
+  .strict();
 export const AGENT_INPUT_SCHEMAS = {
   "analytics.summary": AnalyticsSummaryInputSchema,
   "workspace.briefing": WorkspaceBriefingInputSchema,
@@ -491,4 +626,12 @@ export const AGENT_INPUT_SCHEMAS = {
   "campaign.launch": CampaignActionInputSchema,
   "campaign.pause.preflight": CampaignActionPreflightInputSchema,
   "campaign.pause": CampaignActionInputSchema,
+  "companies.filters": CompanyFiltersInputSchema,
+  "companies.search": CompanySearchInputSchema,
+  "company.inspect": CompanyInspectInputSchema,
+  "companies.list.prepare": CompanyListPrepareInputSchema,
+  "companies.list.inspect": CompanyListInspectInputSchema,
+  "campaign.operation.inspect": CampaignOperationInspectInputSchema,
+  "campaign.delivery.inspect": CampaignDeliveryInspectInputSchema,
+  "campaign.delivery.update": CampaignDeliveryUpdateInputSchema,
 } as const;

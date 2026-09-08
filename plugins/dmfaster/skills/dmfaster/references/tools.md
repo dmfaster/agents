@@ -1,6 +1,6 @@
 # DM Faster Agent 1.0 tools
 
-Agent 1.0 exposes exactly 23 bounded domain tools. Each credential is bound to one
+Agent 1.0 exposes exactly 31 bounded domain tools. Each credential is bound to one
 workspace, and every tool requires the exact scopes shown below; scopes are not
 inherited from `workspace:read`. MCP names use underscores and HTTP contract
 names use dots.
@@ -15,7 +15,7 @@ authorizes launch or pause.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@1.3.0
+npx --yes @dmfaster/cli@1.4.0
 ```
 
 | MCP tool                    | HTTP tool                   | CLI suffix                                                                         | Required scope                      | Effect                            |
@@ -224,3 +224,19 @@ in `settings`, alongside the current window, copy, pacing, and enabled state.
 Send both endpoints when changing the interval. A saved window can be toggled
 on or off while the draft stays disabled; only the separate launch operation
 arms the schedule. Started campaigns cannot be edited with this draft tool.
+
+## Ongoing campaign delivery and operation receipts
+
+- `campaign_operation_inspect`: pass `campaignId` and `commandId` from the launch
+  or pause operation reference. Acknowledged means the browser accepted Start;
+  it is not a delivery count. CLI supports `--input FILE --wait SECONDS` (1–60).
+- `campaign_delivery_inspect`: pass `campaignId` to read settings, their revision,
+  the window state and configured daily usage. Provider/account limits also apply.
+- `campaign_delivery_update`: pass `campaignId`, `expectedRevision`,
+  `idempotencyKey`, and `patch`. Allowed fields are `dailyCap`, `pacingSeconds`,
+  `instagramSendingWindowEnabled`, `instagramSendingWindowStartMinute`,
+  `instagramSendingWindowEndMinute`, and `instagramSendingWindowWeekdays`.
+  The window uses minutes from midnight and a Monday-first bitmask (Monday=1,
+  Sunday=64); use the returned workspace timezone. Only the owner with
+  campaigns:read and campaigns:write can edit. These edits do not launch a
+  stopped campaign. All three tools accept the same JSON through CLI `--input FILE`.

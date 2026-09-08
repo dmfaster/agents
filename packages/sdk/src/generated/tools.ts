@@ -23,6 +23,14 @@ export const AGENT_TOOL_NAMES = [
   "campaign.launch",
   "campaign.pause.preflight",
   "campaign.pause",
+  "companies.filters",
+  "companies.search",
+  "company.inspect",
+  "companies.list.prepare",
+  "companies.list.inspect",
+  "campaign.operation.inspect",
+  "campaign.delivery.inspect",
+  "campaign.delivery.update",
 ] as const;
 export const AGENT_TOOL_POLICIES = Object.freeze({
   "analytics.summary": {
@@ -140,6 +148,46 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "human_confirmation",
     exposure: "public_api",
   },
+  "companies.filters": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.search": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "company.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.list.prepare": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.list.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.operation.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.delivery.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.delivery.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
 } as const);
 export const AGENT_TOOL_SCOPES = {
   "analytics.summary": ["workspace:read"],
@@ -165,6 +213,14 @@ export const AGENT_TOOL_SCOPES = {
   "campaign.launch": ["campaigns:launch"],
   "campaign.pause.preflight": ["campaigns:write"],
   "campaign.pause": ["campaigns:write"],
+  "companies.filters": ["audiences:read"],
+  "companies.search": ["audiences:read"],
+  "company.inspect": ["audiences:read"],
+  "companies.list.prepare": ["audiences:read", "campaigns:write"],
+  "companies.list.inspect": ["campaigns:read", "audiences:read"],
+  "campaign.operation.inspect": ["campaigns:read"],
+  "campaign.delivery.inspect": ["campaigns:read"],
+  "campaign.delivery.update": ["campaigns:read", "campaigns:write"],
 } as const;
 export const AGENT_OWNER_ONLY_TOOLS = [
   "list.target.remove",
@@ -177,6 +233,8 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "campaign.launch",
   "campaign.pause.preflight",
   "campaign.pause",
+  "companies.list.prepare",
+  "campaign.delivery.update",
 ] as const;
 export const AGENT_TOOL_DEFINITIONS = {
   "analytics.summary": {
@@ -614,6 +672,158 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "Campaign controls",
       usage: "campaign pause CAMPAIGN_ID --idempotency-key KEY --authorization-id ID",
       command: ["campaign", "pause"],
+    },
+  },
+  "companies.filters": {
+    mcp: {
+      name: "companies_filters",
+      title: "Discover company filters",
+      description:
+        "Read all live Companies filter fields, country-specific options and restrictions. No campaign state required.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies filters --input FILE",
+      command: ["companies", "filters"],
+    },
+  },
+  "companies.search": {
+    mcp: {
+      name: "companies_search",
+      title: "Search companies",
+      description:
+        "Search the same company inventory and filters as the live app. Returns full rows, exact total and pagination. Echo querySignature and expectedRevision on subsequent pages.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies search --input FILE",
+      command: ["companies", "search"],
+    },
+  },
+  "company.inspect": {
+    mcp: {
+      name: "company_inspect",
+      title: "Inspect company",
+      description:
+        "Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "company inspect --input FILE",
+      command: ["company", "inspect"],
+    },
+  },
+  "companies.list.prepare": {
+    mcp: {
+      name: "companies_list_prepare",
+      title: "Save company shortlist",
+      description:
+        "Save explicitly inspected companies as a private company list. Echo each company.inspect revision. No campaign is created or started. Retry using the same key.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies list prepare --input FILE",
+      command: ["companies", "list", "prepare"],
+    },
+  },
+  "companies.list.inspect": {
+    mcp: {
+      name: "companies_list_inspect",
+      title: "Inspect company shortlist",
+      description:
+        "Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies list inspect --input FILE",
+      command: ["companies", "list", "inspect"],
+    },
+  },
+  "campaign.operation.inspect": {
+    mcp: {
+      name: "campaign_operation_inspect",
+      title: "Inspect campaign command progress",
+      description:
+        "Read the durable result of a launch or pause command. Queue preparation and sender acknowledgment are distinct from delivered messages.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign operation and delivery",
+      usage: "campaign operation inspect --input FILE [--wait SECONDS]",
+      command: ["campaign", "operation", "inspect"],
+    },
+  },
+  "campaign.delivery.inspect": {
+    mcp: {
+      name: "campaign_delivery_inspect",
+      title: "Inspect campaign delivery settings",
+      description:
+        "Read delivery configuration, configuration revision and known sending eligibility for a campaign, including running and paused campaigns.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign operation and delivery",
+      usage: "campaign delivery inspect --input FILE",
+      command: ["campaign", "delivery", "inspect"],
+    },
+  },
+  "campaign.delivery.update": {
+    mcp: {
+      name: "campaign_delivery_update",
+      title: "Update ongoing campaign delivery",
+      description:
+        "Change pacing, daily cap or automatic window on a running, paused or draft campaign. An in-progress attempt finishes; the new configuration applies to following attempts. Does not start a campaign or change its audience, content, run identity or terminal outcomes.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign operation and delivery",
+      usage: "campaign delivery update --input FILE",
+      command: ["campaign", "delivery", "update"],
     },
   },
 } as const;

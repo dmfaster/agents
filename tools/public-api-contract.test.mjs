@@ -37,6 +37,14 @@ const EXPECTED_TOOLS = new Map([
   ["campaign.launch", { effect: "external", scopes: ["campaigns:launch"] }],
   ["campaign.pause.preflight", { effect: "write", scopes: ["campaigns:write"] }],
   ["campaign.pause", { effect: "write", scopes: ["campaigns:write"] }],
+  ["companies.filters", { effect: "read", scopes: ["audiences:read"] }],
+  ["companies.search", { effect: "read", scopes: ["audiences:read"] }],
+  ["company.inspect", { effect: "read", scopes: ["audiences:read"] }],
+  ["companies.list.prepare", { effect: "draft", scopes: ["audiences:read", "campaigns:write"] }],
+  ["companies.list.inspect", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
+  ["campaign.operation.inspect", { effect: "read", scopes: ["campaigns:read"] }],
+  ["campaign.delivery.inspect", { effect: "read", scopes: ["campaigns:read"] }],
+  ["campaign.delivery.update", { effect: "write", scopes: ["campaigns:read", "campaigns:write"] }],
 ]);
 
 const EXPECTED_AUTH_METHODS = new Map([

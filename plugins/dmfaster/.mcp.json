@@ -2,7 +2,7 @@
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.3.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.4.0"]
     }
   }
 }

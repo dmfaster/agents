@@ -121,6 +121,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/campaign.delivery.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect campaign delivery settings
+         * @description Read delivery configuration, configuration revision and known sending eligibility for a campaign, including running and paused campaigns.
+         */
+        post: operations["campaignDeliveryInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/campaign.delivery.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update ongoing campaign delivery
+         * @description Change pacing, daily cap or automatic window on a running, paused or draft campaign. An in-progress attempt finishes; the new configuration applies to following attempts. Does not start a campaign or change its audience, content, run identity or terminal outcomes.
+         */
+        post: operations["campaignDeliveryUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/campaign.draft.prepare": {
         parameters: {
             query?: never;
@@ -222,6 +262,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/campaign.operation.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect campaign command progress
+         * @description Read the durable result of a launch or pause command. Queue preparation and sender acknowledgment are distinct from delivered messages.
+         */
+        post: operations["campaignOperationInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/campaign.pause": {
         parameters: {
             query?: never;
@@ -316,6 +376,106 @@ export interface paths {
          * @description Lists the most recently updated campaigns, optionally filtered by status. Read-only.
          */
         post: operations["campaignsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.filters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Discover company filters
+         * @description Read all live Companies filter fields, country-specific options and restrictions. No campaign state required.
+         */
+        post: operations["companyFilters"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.list.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect company shortlist
+         * @description Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile.
+         */
+        post: operations["companyListInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.list.prepare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Save company shortlist
+         * @description Save explicitly inspected companies as a private company list. Echo each company.inspect revision. No campaign is created or started. Retry using the same key.
+         */
+        post: operations["companyListPrepare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Search companies
+         * @description Search the same company inventory and filters as the live app. Returns full rows, exact total and pagination. Echo querySignature and expectedRevision on subsequent pages.
+         */
+        post: operations["companySearch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/company.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect company
+         * @description Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown.
+         */
+        post: operations["companyInspect"];
         delete?: never;
         options?: never;
         head?: never;
@@ -814,7 +974,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.list.prepare" | "companies.list.inspect" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -958,6 +1118,11 @@ export interface components {
             authorizationId: string;
             campaign: components["schemas"]["AgentActionSnapshot"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            operation?: {
+                input: components["schemas"]["CampaignOperationInspectInput"];
+                /** @constant */
+                tool: "campaign.operation.inspect";
+            };
             replayed: boolean;
         };
         CampaignActionPreflightInput: {
@@ -980,6 +1145,59 @@ export interface components {
             Paused: number;
             Queued: number;
             Running: number;
+        };
+        CampaignDeliveryInspectInput: {
+            campaignId: string;
+        };
+        CampaignDeliveryInspectOutput: {
+            campaignId: string;
+            eligibility?: {
+                [key: string]: unknown;
+            };
+            revision: string;
+            settings: {
+                [key: string]: unknown;
+            };
+        } & {
+            [key: string]: unknown;
+        };
+        CampaignDeliveryInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignDeliveryInspectOutput"] | null;
+            /** @constant */
+            tool?: "campaign.delivery.inspect";
+        };
+        CampaignDeliveryUpdateInput: {
+            campaignId: string;
+            expectedRevision: string;
+            idempotencyKey: string;
+            patch: {
+                dailyCap?: number;
+                instagramSendingWindowEnabled?: boolean;
+                instagramSendingWindowEndMinute?: number;
+                instagramSendingWindowStartMinute?: number;
+                instagramSendingWindowWeekdays?: number;
+                pacingSeconds?: number;
+            };
+        };
+        CampaignDeliveryUpdateOutput: {
+            campaignId: string;
+            /** @constant */
+            effectiveAt: "next_attempt";
+            previous: {
+                [key: string]: unknown;
+            };
+            replayed: boolean;
+            revision: string;
+            settings: {
+                [key: string]: unknown;
+            };
+        } & {
+            [key: string]: unknown;
+        };
+        CampaignDeliveryUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignDeliveryUpdateOutput"] | null;
+            /** @constant */
+            tool?: "campaign.delivery.update";
         };
         CampaignDraftPrepareData: {
             audienceCount: number;
@@ -1124,6 +1342,29 @@ export interface components {
              */
             status: "setup_required";
         };
+        CampaignOperationInspectInput: {
+            campaignId: string;
+            commandId: string;
+        };
+        CampaignOperationInspectOutput: {
+            /** @enum {string} */
+            action: "start" | "stop";
+            campaignId: string;
+            commandId: string;
+            commandSequence: number;
+            createdAt: string;
+            observedAt: string;
+            reason: string;
+            runId: string;
+            senderAcknowledgedAt: string | null;
+            /** @enum {string} */
+            state: "preparing_queue" | "superseded" | "blocked" | "stopped" | "sender_acknowledged" | "awaiting_sender" | "queue_prepared";
+        };
+        CampaignOperationInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignOperationInspectOutput"] | null;
+            /** @constant */
+            tool?: "campaign.operation.inspect";
+        };
         CampaignPausePreflightResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CampaignActionApprovalRequiredOutput"] | components["schemas"]["CampaignActionReadyOutput"] | null;
             /** @constant */
@@ -1174,6 +1415,223 @@ export interface components {
             data?: components["schemas"]["AgentHarnessResult"] | null;
             /** @constant */
             tool?: "campaign.validate";
+        };
+        /** @description Read all live Companies filter fields, country-specific options and restrictions. No campaign state required. */
+        CompanyFiltersData: {
+            availability: {
+                [key: string]: boolean;
+            };
+            defaults: components["schemas"]["CompanySearchFilters"];
+            filterFields: string[];
+            fundingSources: ({
+                label?: string;
+                value?: string;
+            } & {
+                [key: string]: unknown;
+            })[];
+            metadata: {
+                [key: string]: unknown;
+            };
+            restrictions: string[];
+            technologies: ({
+                label?: string;
+                value?: string;
+            } & {
+                [key: string]: unknown;
+            })[];
+        } & {
+            [key: string]: unknown;
+        };
+        CompanyFiltersInput: {
+            citySearch?: string;
+            countries: components["schemas"]["SupportedCountry"][];
+            states?: string[];
+        };
+        CompanyFiltersResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyFiltersData"] | null;
+            /** @constant */
+            tool?: "companies.filters";
+        };
+        /** @description Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown. */
+        CompanyInspectData: {
+            /** @description The complete current Companies drawer profile. Additional properties preserve all app profile sections as they evolve. */
+            profile: {
+                advertising: {
+                    [key: string]: unknown;
+                };
+                businessId: string;
+                country: string;
+                decisionMakers: {
+                    [key: string]: unknown;
+                }[];
+                exhibitions?: {
+                    [key: string]: unknown;
+                }[];
+                financials: {
+                    [key: string]: unknown;
+                }[];
+                funding?: {
+                    [key: string]: unknown;
+                } | null;
+                hiring?: {
+                    [key: string]: unknown;
+                } | null;
+                name: string;
+                publicFunding?: {
+                    [key: string]: unknown;
+                } | null;
+                technologies: string[];
+            } & {
+                [key: string]: unknown;
+            };
+            revision: string;
+        } & {
+            [key: string]: unknown;
+        };
+        CompanyInspectInput: {
+            businessId: string;
+            country: components["schemas"]["SupportedCountry"];
+        };
+        CompanyInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyInspectData"] | null;
+            /** @constant */
+            tool?: "company.inspect";
+        };
+        /** @description Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile. */
+        CompanyListInspectData: {
+            companies: {
+                [key: string]: unknown;
+            }[];
+            expectedUpdatedAt?: string;
+            listId: string;
+            name: string;
+            nextOffset: number | null;
+            total: number;
+        } & {
+            [key: string]: unknown;
+        };
+        CompanyListInspectInput: {
+            expectedUpdatedAt?: string;
+            limit?: number;
+            listId: components["schemas"]["ResourceId"];
+            offset?: number;
+        };
+        CompanyListInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyListInspectData"] | null;
+            /** @constant */
+            tool?: "companies.list.inspect";
+        };
+        /** @description Save explicitly inspected companies as a private company list. Echo each company.inspect revision. No campaign is created or started. Retry using the same key. */
+        CompanyListPrepareData: {
+            companies: {
+                [key: string]: unknown;
+            }[];
+            created: boolean;
+            expectedUpdatedAt?: string;
+            listId: string;
+            name: string;
+            replayed: boolean;
+            total: number;
+        } & {
+            [key: string]: unknown;
+        };
+        CompanyListPrepareInput: {
+            companies: {
+                businessId: string;
+                country: components["schemas"]["SupportedCountry"];
+                expectedRevision: string;
+            }[];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            name: string;
+        };
+        CompanyListPrepareResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyListPrepareData"] | null;
+            /** @constant */
+            tool?: "companies.list.prepare";
+        };
+        /** @description Search the same company inventory and filters as the live app. Returns full rows, exact total and pagination. Echo querySignature and expectedRevision on subsequent pages. */
+        CompanySearchData: {
+            companies: ({
+                businessId: string;
+                country: components["schemas"]["SupportedCountry"];
+                name: string;
+            } & {
+                [key: string]: unknown;
+            })[];
+            dataFreshness?: {
+                [key: string]: unknown;
+            };
+            expectedRevision: string;
+            filters: components["schemas"]["CompanySearchFilters"];
+            hasNextPage: boolean;
+            nextCursor?: string;
+            page: number;
+            pageSize: number;
+            querySignature: string;
+            total: number;
+            /** @constant */
+            totalExact: true;
+        } & {
+            [key: string]: unknown;
+        };
+        /** @description Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected. */
+        CompanySearchFilters: {
+            activeOnly?: boolean;
+            businessIdRegistrationEnd?: string;
+            businessIdRegistrationStart?: string;
+            cities?: string[];
+            companyForm?: string;
+            countries: components["schemas"]["SupportedCountry"][];
+            country?: components["schemas"]["SupportedCountry"];
+            employeeMax?: string;
+            employeeMin?: string;
+            employeeRanges?: string[];
+            exhibitionEventKeys?: string[];
+            exhibitionMinEditions?: string;
+            fundingFromYear?: string;
+            fundingSources?: string[];
+            /** @enum {unknown} */
+            googleAdsActivityWindow?: null | "last_30_days" | "last_90_days" | "last_12_months";
+            hasExhibitionParticipation?: boolean;
+            hasPublicFunding?: boolean;
+            hasWebsite?: boolean;
+            industryCodes?: string[];
+            industryCodeSelections?: {
+                /** @constant */
+                classification: "TOL";
+                codes: string[];
+                /** @enum {unknown} */
+                version: "2008" | "2025";
+            }[];
+            metaAdsActiveOnly?: boolean;
+            metaAdsIncludeUncorroborated?: boolean;
+            metaAdsMinimumEuReach?: string;
+            metaAdsTargetAge?: string;
+            /** @enum {unknown} */
+            metaAdsTargetGender?: "" | "all" | "men" | "women";
+            metaAdsTargetLocation?: string;
+            q?: string;
+            registrationDateEnabled?: boolean;
+            registrationDateEnd?: string;
+            registrationDateStart?: string;
+            revenueMaxEur?: string;
+            revenueMinEur?: string;
+            states?: string[];
+            technologies?: string[];
+            tolCodes?: string[];
+        };
+        CompanySearchInput: {
+            cursor?: string;
+            expectedRevision?: string;
+            filters: components["schemas"]["CompanySearchFilters"];
+            page?: number;
+            pageSize?: number;
+            querySignature?: string;
+        };
+        CompanySearchResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanySearchData"] | null;
+            /** @constant */
+            tool?: "companies.search";
         };
         CompanyTimelineEvent: {
             channel?: components["schemas"]["TargetChannel"];
@@ -1386,14 +1844,27 @@ export interface components {
         };
         SendingInspectInput: components["schemas"]["OptionalCampaignInput"];
         SendingInspectOutput: {
+            assessment?: {
+                nextAction: string;
+                reason: string;
+                /** @enum {string} */
+                scope: "campaign" | "workspace";
+            };
             campaignId: string;
             campaignName: string;
+            /** @description Campaign-only execution counts, or null when unavailable. Excludes passive reply checks and tracking jobs. */
+            campaignSending?: {
+                queuedJobs: number;
+                runningJobs: number;
+            } | null;
+            campaignStatus?: components["schemas"]["CampaignStatus"] | null;
             /** Format: date-time */
             generatedAt: string;
             issues: components["schemas"]["SendingIssue"][];
+            /** @description Workspace-wide counters; do not attribute these to campaignId. */
             sending: components["schemas"]["SendingSummary"];
             /** @enum {string} */
-            status: "healthy" | "attention" | "blocked" | "idle";
+            status: "healthy" | "waiting" | "attention" | "blocked" | "idle";
             summary: string;
         };
         SendingInspectResult: components["schemas"]["AgentToolResultBase"] & {
@@ -1836,6 +2307,66 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    campaignDeliveryInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignDeliveryInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect campaign delivery settings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignDeliveryInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    campaignDeliveryUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignDeliveryUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Update ongoing campaign delivery */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignDeliveryUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     campaignDraftPrepare: {
         parameters: {
             query?: never;
@@ -1991,6 +2522,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    campaignOperationInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignOperationInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect campaign command progress */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignOperationInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     campaignPause: {
         parameters: {
             query?: never;
@@ -2141,6 +2702,156 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyFilters: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyFiltersInput"];
+            };
+        };
+        responses: {
+            /** @description Discover company filters */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyFiltersResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyListInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyListInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect company shortlist */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyListInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyListPrepare: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyListPrepareInput"];
+            };
+        };
+        responses: {
+            /** @description Save company shortlist */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyListPrepareResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companySearch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanySearchInput"];
+            };
+        };
+        responses: {
+            /** @description Search companies */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanySearchResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect company */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];
