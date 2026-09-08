@@ -1183,6 +1183,421 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
         "503": { $ref: "#/components/responses/ServiceUnavailable" }
 
+  /api/v1/agent/tools/companies.filters:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyFilters
+      summary: Discover company filters
+      description: Read all live Companies filter fields, country-specific options and restrictions. No campaign state required.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - audiences:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_filters
+        title: Discover company filters
+        description: Read all live Companies filter fields, country-specific options and restrictions. No campaign state required.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: B2B company prospecting
+        usage: companies filters --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyFiltersInput"
+      responses:
+        "200":
+          description: Discover company filters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyFiltersResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/companies.search:
+    post:
+      tags:
+        - Agent tools
+      operationId: companySearch
+      summary: Search companies
+      description: Search the same company inventory and filters as the live app. Returns full rows, exact total and pagination. Echo querySignature and expectedRevision on subsequent pages.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - audiences:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_search
+        title: Search companies
+        description: Search the same company inventory and filters as the live app. Returns full rows, exact total and pagination. Echo querySignature and expectedRevision on subsequent pages.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: B2B company prospecting
+        usage: companies search --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanySearchInput"
+      responses:
+        "200":
+          description: Search companies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanySearchResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/company.inspect:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyInspect
+      summary: Inspect company
+      description: Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - audiences:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: company_inspect
+        title: Inspect company
+        description: Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: B2B company prospecting
+        usage: company inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyInspectInput"
+      responses:
+        "200":
+          description: Inspect company
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyInspectResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/companies.list.prepare:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyListPrepare
+      summary: Save company shortlist
+      description: Save explicitly inspected companies as a private company list. Echo each company.inspect revision. No campaign is created or started. Retry using the same key.
+      x-dmfaster-effect: draft
+      x-dmfaster-required-scopes:
+        - audiences:read
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: companies_list_prepare
+        title: Save company shortlist
+        description: Save explicitly inspected companies as a private company list. Echo each company.inspect revision. No campaign is created or started. Retry using the same key.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: B2B company prospecting
+        usage: companies list prepare --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyListPrepareInput"
+      responses:
+        "200":
+          description: Save company shortlist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyListPrepareResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/companies.list.inspect:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyListInspect
+      summary: Inspect company shortlist
+      description: Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - audiences:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_list_inspect
+        title: Inspect company shortlist
+        description: Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: B2B company prospecting
+        usage: companies list inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyListInspectInput"
+      responses:
+        "200":
+          description: Inspect company shortlist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyListInspectResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/campaign.operation.inspect:
+    post:
+      tags:
+        - Agent tools
+      operationId: campaignOperationInspect
+      summary: Inspect campaign command progress
+      description: Read the durable result of a launch or pause command. Queue
+        preparation and sender acknowledgment are distinct from delivered
+        messages.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - campaigns:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: campaign_operation_inspect
+        title: Inspect campaign command progress
+        description: Read the durable result of a launch or pause command. Queue
+          preparation and sender acknowledgment are distinct from delivered
+          messages.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign operation and delivery
+        usage: campaign operation inspect --input FILE [--wait SECONDS]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignOperationInspectInput"
+      responses:
+        "200":
+          description: Inspect campaign command progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignOperationInspectResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/campaign.delivery.inspect:
+    post:
+      tags:
+        - Agent tools
+      operationId: campaignDeliveryInspect
+      summary: Inspect campaign delivery settings
+      description: Read delivery configuration, configuration revision and known
+        sending eligibility for a campaign, including running and paused
+        campaigns.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - campaigns:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: campaign_delivery_inspect
+        title: Inspect campaign delivery settings
+        description: Read delivery configuration, configuration revision and known
+          sending eligibility for a campaign, including running and paused
+          campaigns.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign operation and delivery
+        usage: campaign delivery inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignDeliveryInspectInput"
+      responses:
+        "200":
+          description: Inspect campaign delivery settings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignDeliveryInspectResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/campaign.delivery.update:
+    post:
+      tags:
+        - Agent tools
+      operationId: campaignDeliveryUpdate
+      summary: Update ongoing campaign delivery
+      description: Change pacing, daily cap or automatic window on a running, paused
+        or draft campaign. An in-progress attempt finishes; the new configuration
+        applies to following attempts. Does not start a campaign or change its
+        audience, content, run identity or terminal outcomes.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_delivery_update
+        title: Update ongoing campaign delivery
+        description: Change pacing, daily cap or automatic window on a running, paused
+          or draft campaign. An in-progress attempt finishes; the new
+          configuration applies to following attempts. Does not start a campaign
+          or change its audience, content, run identity or terminal outcomes.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign operation and delivery
+        usage: campaign delivery update --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignDeliveryUpdateInput"
+      responses:
+        "200":
+          description: Update ongoing campaign delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignDeliveryUpdateResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -1618,6 +2033,14 @@ components:
         - campaign.launch
         - campaign.pause.preflight
         - campaign.pause
+        - companies.filters
+        - companies.search
+        - company.inspect
+        - companies.list.prepare
+        - companies.list.inspect
+        - campaign.operation.inspect
+        - campaign.delivery.inspect
+        - campaign.delivery.update
 
     AgentToolPolicy:
       type: object
@@ -3162,6 +3585,13 @@ components:
         campaign: { $ref: "#/components/schemas/AgentActionSnapshot" }
         authorizationId: { type: string, pattern: "^agent_action_[a-f0-9]{32}$" }
         idempotencyKey: { $ref: "#/components/schemas/IdempotencyKey" }
+        operation:
+          type: object
+          additionalProperties: false
+          required: [tool, input]
+          properties:
+            tool: { type: string, const: campaign.operation.inspect }
+            input: { $ref: "#/components/schemas/CampaignOperationInspectInput" }
         replayed: { type: boolean }
 
     ErrorResponse:
@@ -3587,16 +4017,40 @@ components:
           format: date-time
         campaignId: { type: string }
         campaignName: { type: string }
+        campaignStatus:
+          oneOf:
+            - $ref: "#/components/schemas/CampaignStatus"
+            - type: "null"
         status:
           type: string
-          enum: [healthy, attention, blocked, idle]
+          enum: [healthy, waiting, attention, blocked, idle]
         summary: { type: string }
         issues:
           type: array
           items:
             $ref: "#/components/schemas/SendingIssue"
         sending:
+          description: Workspace-wide counters; do not attribute these to campaignId.
           $ref: "#/components/schemas/SendingSummary"
+
+        campaignSending:
+          description: Campaign-only execution counts, or null when unavailable. Excludes passive reply checks and tracking jobs.
+          oneOf:
+            - type: object
+              additionalProperties: false
+              required: [queuedJobs, runningJobs]
+              properties:
+                queuedJobs: { type: integer, minimum: 0 }
+                runningJobs: { type: integer, minimum: 0 }
+            - type: "null"
+        assessment:
+          type: object
+          additionalProperties: false
+          required: [scope, reason, nextAction]
+          properties:
+            scope: { type: string, enum: [campaign, workspace] }
+            reason: { type: string }
+            nextAction: { type: string }
 
     AgentLead:
       type: object
@@ -3709,3 +4163,653 @@ components:
         channel:
           $ref: "#/components/schemas/TargetChannel"
         targetName: { type: string }
+
+    CompanySearchFilters:
+      type: object
+      additionalProperties: false
+      properties:
+        country:
+          $ref: "#/components/schemas/SupportedCountry"
+        countries:
+          type: array
+          items:
+            $ref: "#/components/schemas/SupportedCountry"
+          maxItems: 32
+          minItems: 1
+        q:
+          type: string
+          maxLength: 120
+        industryCodes:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+          maxItems: 8
+        industryCodeSelections:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              classification:
+                const: TOL
+              version:
+                enum:
+                  - "2008"
+                  - "2025"
+              codes:
+                type: array
+                items:
+                  type: string
+                  maxLength: 5
+                maxItems: 64
+            required:
+              - classification
+              - version
+              - codes
+          maxItems: 2
+        tolCodes:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+          maxItems: 8
+        companyForm:
+          type: string
+          maxLength: 4096
+        states:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+          maxItems: 32
+        cities:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+          maxItems: 32
+        registrationDateEnabled:
+          type: boolean
+        registrationDateStart:
+          type: string
+          maxLength: 10
+        registrationDateEnd:
+          type: string
+          maxLength: 10
+        businessIdRegistrationStart:
+          type: string
+          maxLength: 10
+        businessIdRegistrationEnd:
+          type: string
+          maxLength: 10
+        revenueMinEur:
+          type: string
+          maxLength: 16
+        revenueMaxEur:
+          type: string
+          maxLength: 16
+        employeeRanges:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+          maxItems: 32
+        employeeMin:
+          type: string
+          maxLength: 10
+        employeeMax:
+          type: string
+          maxLength: 10
+        technologies:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+          maxItems: 40
+        hasExhibitionParticipation:
+          type: boolean
+        exhibitionEventKeys:
+          type: array
+          items:
+            type: string
+            maxLength: 160
+          maxItems: 32
+        exhibitionMinEditions:
+          type: string
+          maxLength: 8
+        hasPublicFunding:
+          type: boolean
+        fundingSources:
+          type: array
+          items:
+            type: string
+            maxLength: 40
+          maxItems: 5
+        fundingFromYear:
+          type: string
+          maxLength: 4
+        googleAdsActivityWindow:
+          enum:
+            - null
+            - last_30_days
+            - last_90_days
+            - last_12_months
+        metaAdsActiveOnly:
+          type: boolean
+        metaAdsMinimumEuReach:
+          type: string
+          maxLength: 10
+        metaAdsTargetAge:
+          type: string
+          maxLength: 3
+        metaAdsTargetGender:
+          enum:
+            - ""
+            - all
+            - men
+            - women
+        metaAdsTargetLocation:
+          type: string
+          maxLength: 80
+        metaAdsIncludeUncorroborated:
+          type: boolean
+        hasWebsite:
+          type: boolean
+        activeOnly:
+          type: boolean
+      required:
+        - countries
+      description: Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.
+    CompanyFiltersInput:
+      type: object
+      additionalProperties: false
+      properties:
+        countries:
+          type: array
+          items:
+            $ref: "#/components/schemas/SupportedCountry"
+          maxItems: 32
+          minItems: 1
+        states:
+          type: array
+          items:
+            type: string
+            maxLength: 80
+          maxItems: 32
+        citySearch:
+          type: string
+          maxLength: 120
+      required:
+        - countries
+    CompanyFiltersData:
+      type: object
+      additionalProperties: true
+      required:
+        [metadata, filterFields, defaults, technologies, fundingSources, availability, restrictions]
+      properties:
+        metadata: { type: object, additionalProperties: true }
+        filterFields: { type: array, items: { type: string } }
+        defaults: { $ref: "#/components/schemas/CompanySearchFilters" }
+        technologies:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                additionalProperties: true,
+                properties: { value: { type: string }, label: { type: string } },
+              },
+          }
+        fundingSources:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                additionalProperties: true,
+                properties: { value: { type: string }, label: { type: string } },
+              },
+          }
+        availability: { type: object, additionalProperties: { type: boolean } }
+        restrictions: { type: array, items: { type: string } }
+      description: Read all live Companies filter fields, country-specific options and restrictions. No campaign state required.
+    CompanyFiltersResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: companies.filters
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyFiltersData"
+                - type: "null"
+    CompanySearchInput:
+      type: object
+      additionalProperties: false
+      properties:
+        filters:
+          $ref: "#/components/schemas/CompanySearchFilters"
+        page:
+          type: integer
+          minimum: 1
+          maximum: 10000
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 100
+        cursor:
+          type: string
+          maxLength: 1000
+        expectedRevision:
+          type: string
+          maxLength: 200
+        querySignature:
+          type: string
+          maxLength: 200
+      required:
+        - filters
+    CompanySearchData:
+      type: object
+      additionalProperties: true
+      required:
+        [
+          companies,
+          filters,
+          total,
+          totalExact,
+          page,
+          pageSize,
+          hasNextPage,
+          querySignature,
+          expectedRevision,
+        ]
+      properties:
+        companies:
+          {
+            type: array,
+            items:
+              {
+                type: object,
+                additionalProperties: true,
+                required: [country, businessId, name],
+                properties:
+                  {
+                    country: { $ref: "#/components/schemas/SupportedCountry" },
+                    businessId: { type: string },
+                    name: { type: string },
+                  },
+              },
+          }
+        filters: { $ref: "#/components/schemas/CompanySearchFilters" }
+        total: { type: integer, minimum: 0 }
+        totalExact: { type: boolean, const: true }
+        page: { type: integer }
+        pageSize: { type: integer }
+        hasNextPage: { type: boolean }
+        nextCursor: { type: string }
+        dataFreshness: { type: object, additionalProperties: true }
+        querySignature: { type: string }
+        expectedRevision: { type: string }
+      description: Search the same company inventory and filters as the live app. Returns full rows, exact total and pagination. Echo querySignature and expectedRevision on subsequent pages.
+    CompanySearchResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: companies.search
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanySearchData"
+                - type: "null"
+    CompanyInspectInput:
+      type: object
+      additionalProperties: false
+      properties:
+        country:
+          $ref: "#/components/schemas/SupportedCountry"
+        businessId:
+          type: string
+          maxLength: 192
+          minLength: 1
+      required:
+        - country
+        - businessId
+    CompanyInspectData:
+      type: object
+      additionalProperties: true
+      required: [profile, revision]
+      properties:
+        revision: { type: string }
+        profile:
+          type: object
+          additionalProperties: true
+          description: The complete current Companies drawer profile. Additional properties preserve all app profile sections as they evolve.
+          required:
+            [country, businessId, name, financials, decisionMakers, technologies, advertising]
+          properties:
+            country: { type: string }
+            businessId: { type: string }
+            name: { type: string }
+            financials: { type: array, items: { type: object, additionalProperties: true } }
+            decisionMakers: { type: array, items: { type: object, additionalProperties: true } }
+            technologies: { type: array, items: { type: string } }
+            advertising: { type: object, additionalProperties: true }
+            exhibitions: { type: array, items: { type: object, additionalProperties: true } }
+            publicFunding: { type: [object, "null"], additionalProperties: true }
+            funding: { type: [object, "null"], additionalProperties: true }
+            hiring: { type: [object, "null"], additionalProperties: true }
+      description: Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown.
+    CompanyInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: company.inspect
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyInspectData"
+                - type: "null"
+    CompanyListPrepareInput:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          maxLength: 120
+          minLength: 1
+        companies:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              country:
+                $ref: "#/components/schemas/SupportedCountry"
+              businessId:
+                type: string
+                maxLength: 192
+                minLength: 1
+              expectedRevision:
+                type: string
+                maxLength: 64
+                minLength: 64
+            required:
+              - country
+              - businessId
+              - expectedRevision
+          maxItems: 50
+          minItems: 1
+        idempotencyKey:
+          $ref: "#/components/schemas/IdempotencyKey"
+      required:
+        - name
+        - companies
+        - idempotencyKey
+    CompanyListPrepareData:
+      type: object
+      additionalProperties: true
+      required: [listId, name, total, created, replayed, companies]
+      properties:
+        listId: { type: string }
+        name: { type: string }
+        total: { type: integer, minimum: 0 }
+        created: { type: boolean }
+        replayed: { type: boolean }
+        expectedUpdatedAt: { type: string }
+        companies: { type: array, items: { type: object, additionalProperties: true } }
+      description: Save explicitly inspected companies as a private company list. Echo each company.inspect revision. No campaign is created or started. Retry using the same key.
+    CompanyListPrepareResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: companies.list.prepare
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyListPrepareData"
+                - type: "null"
+    CompanyListInspectInput:
+      type: object
+      additionalProperties: false
+      properties:
+        listId:
+          $ref: "#/components/schemas/ResourceId"
+        offset:
+          type: integer
+          minimum: 0
+          maximum: 1000000
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        expectedUpdatedAt:
+          type: string
+          maxLength: 160
+      required:
+        - listId
+    CompanyListInspectData:
+      type: object
+      additionalProperties: true
+      required: [listId, name, total, companies, nextOffset]
+      properties:
+        listId: { type: string }
+        name: { type: string }
+        total: { type: integer, minimum: 0 }
+        expectedUpdatedAt: { type: string }
+        companies: { type: array, items: { type: object, additionalProperties: true } }
+        nextOffset: { type: [integer, "null"] }
+      description: Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile.
+    CompanyListInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: companies.list.inspect
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyListInspectData"
+                - type: "null"
+
+    CampaignOperationInspectInput:
+      type: object
+      additionalProperties: false
+      required:
+        - campaignId
+        - commandId
+      properties:
+        campaignId: &a1
+          type: string
+          minLength: 1
+          maxLength: 160
+        commandId:
+          type: string
+          minLength: 1
+          maxLength: 160
+          pattern: ^[A-Za-z0-9._:-]+$
+    CampaignOperationInspectOutput:
+      type: object
+      additionalProperties: false
+      required:
+        - campaignId
+        - commandId
+        - runId
+        - commandSequence
+        - action
+        - state
+        - reason
+        - senderAcknowledgedAt
+        - createdAt
+        - observedAt
+      properties:
+        campaignId: *a1
+        commandId: *a1
+        runId:
+          type: string
+        commandSequence:
+          type: integer
+        action:
+          type: string
+          enum:
+            - start
+            - stop
+        state:
+          type: string
+          enum:
+            - preparing_queue
+            - superseded
+            - blocked
+            - stopped
+            - sender_acknowledged
+            - awaiting_sender
+            - queue_prepared
+        reason:
+          type: string
+        senderAcknowledgedAt:
+          type:
+            - string
+            - "null"
+        createdAt:
+          type: string
+        observedAt:
+          type: string
+    CampaignOperationInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: campaign.operation.inspect
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignOperationInspectOutput"
+                - type: "null"
+    CampaignDeliveryInspectInput:
+      type: object
+      additionalProperties: false
+      required:
+        - campaignId
+      properties:
+        campaignId: *a1
+    CampaignDeliveryInspectOutput:
+      type: object
+      additionalProperties: true
+      required:
+        - campaignId
+        - revision
+        - settings
+      properties:
+        campaignId: *a1
+        revision:
+          type: string
+        settings:
+          type: object
+          additionalProperties: true
+        eligibility:
+          type: object
+          additionalProperties: true
+    CampaignDeliveryInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: campaign.delivery.inspect
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignDeliveryInspectOutput"
+                - type: "null"
+    CampaignDeliveryUpdateInput:
+      type: object
+      additionalProperties: false
+      required:
+        - campaignId
+        - expectedRevision
+        - idempotencyKey
+        - patch
+      properties:
+        campaignId: *a1
+        expectedRevision:
+          type: string
+          pattern: ^[a-f0-9]{64}$
+        idempotencyKey:
+          type: string
+          minLength: 1
+          maxLength: 160
+          pattern: ^[A-Za-z0-9._:-]+$
+        patch:
+          type: object
+          additionalProperties: false
+          properties:
+            dailyCap:
+              type: integer
+              minimum: 1
+              maximum: 2147483647
+            pacingSeconds:
+              type: integer
+              minimum: 12
+              maximum: 3600
+            instagramSendingWindowEnabled:
+              type: boolean
+            instagramSendingWindowStartMinute:
+              type: integer
+              minimum: 0
+              maximum: 1380
+            instagramSendingWindowEndMinute:
+              type: integer
+              minimum: 60
+              maximum: 1440
+            instagramSendingWindowWeekdays:
+              type: integer
+              minimum: 1
+              maximum: 127
+          minProperties: 1
+    CampaignDeliveryUpdateOutput:
+      type: object
+      additionalProperties: true
+      required:
+        - campaignId
+        - revision
+        - previous
+        - settings
+        - effectiveAt
+        - replayed
+      properties:
+        campaignId: *a1
+        revision:
+          type: string
+        previous:
+          type: object
+          additionalProperties: true
+        settings:
+          type: object
+          additionalProperties: true
+        effectiveAt:
+          type: string
+          const: next_attempt
+        replayed:
+          type: boolean
+    CampaignDeliveryUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: campaign.delivery.update
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignDeliveryUpdateOutput"
+                - type: "null"

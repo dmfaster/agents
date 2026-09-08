@@ -33,7 +33,7 @@ import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "1.3.0";
+export const CLI_VERSION = "1.4.0";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();
@@ -89,6 +89,7 @@ type AgentInvoker = {
   invoke<Name extends AgentToolName>(
     tool: Name,
     input: AgentToolInputMap[Name],
+    options?: { signal?: AbortSignal },
   ): Promise<AgentToolResult>;
 };
 
@@ -105,6 +106,7 @@ export type CliContext = {
   deviceAuthAdapters?: Omit<DeviceAuthAdapters, "fetch">;
   acquireLoginLock?: AcquireLoginLock;
   readTextFile?: (path: string) => Promise<string>;
+  sleep?: (milliseconds: number) => Promise<void>;
 };
 
 class UsageError extends Error {}
@@ -512,6 +514,30 @@ async function commandFromArgs(
   if (!tool)
     throw new UsageError(`Unknown command: ${args.join(" ") || "(none)"}. Run dmfaster --help.`);
   const rest = args.slice(AGENT_TOOL_DEFINITIONS[tool].cli.command.length);
+  if (
+    tool === "campaign.operation.inspect" ||
+    tool === "campaign.delivery.inspect" ||
+    tool === "campaign.delivery.update" ||
+    tool === "companies.filters" ||
+    tool === "companies.search" ||
+    tool === "company.inspect" ||
+    tool === "companies.list.prepare" ||
+    tool === "companies.list.inspect"
+  ) {
+    if (rest.length !== 2 || rest[0] !== "--input" || !rest[1] || rest[1].startsWith("--"))
+      throw new UsageError(`Use ${tool.replaceAll(".", " ")} --input FILE.`);
+    const source = await (context.readTextFile ?? ((file) => readFile(file, "utf8")))(rest[1]);
+    if (source.length > 64_000)
+      throw new UsageError("Tool input must not exceed 64,000 characters.");
+    try {
+      const value: unknown = JSON.parse(source);
+      if (!value || typeof value !== "object" || Array.isArray(value))
+        throw new Error("Expected a JSON object.");
+      return { tool, input: value as AgentToolInputMap[typeof tool] };
+    } catch {
+      throw new UsageError("Tool input must contain a JSON object.");
+    }
+  }
   if (
     tool === "lists.list" ||
     tool === "list.inspect" ||
@@ -1134,12 +1160,57 @@ export async function runCli(argv: string[], context: CliContext = {}) {
       });
     }
 
-    const command = await commandFromArgs(args, context);
+    let waitSeconds = 0;
+    let commandArgs = args;
+    if (args.slice(0, 3).join(" ") === "campaign operation inspect" && args.includes("--wait")) {
+      const waitIndex = args.indexOf("--wait");
+      if (waitIndex !== args.length - 2)
+        throw new UsageError("Use campaign operation inspect --input FILE --wait SECONDS (1–60).");
+      waitSeconds = parseInteger(args[waitIndex + 1], "--wait", 60);
+      commandArgs = args.slice(0, waitIndex);
+    }
+    const command = await commandFromArgs(commandArgs, context);
     if (!config.token) throw new UsageError(missingTokenMessage(config));
     const createClient = context.createClient ?? createDmfasterClient;
     const client = createClient({ baseUrl: config.baseUrl, token: config.token });
-    const result = await client.invoke(command.tool, command.input as never);
+    const waitDeadline = Date.now() + waitSeconds * 1000;
+    const waitSignal = waitSeconds ? AbortSignal.timeout(waitSeconds * 1000) : undefined;
+    let result = await client.invoke(
+      command.tool,
+      command.input as never,
+      waitSignal ? { signal: waitSignal } : undefined,
+    );
+    const operationState = () =>
+      result.data && typeof result.data === "object" && "state" in result.data
+        ? String(result.data.state)
+        : "";
+    const pending = () =>
+      result.ok && ["preparing_queue", "awaiting_sender"].includes(operationState());
+    for (let remaining = waitSeconds * 1000; waitSeconds && pending() && remaining > 0;) {
+      const delay = Math.max(0, Math.min(2000, remaining, waitDeadline - Date.now()));
+      await (context.sleep ?? ((ms) => new Promise((resolve) => setTimeout(resolve, ms))))(delay);
+      remaining -= delay;
+      if (waitSignal?.aborted || Date.now() >= waitDeadline) break;
+      try {
+        result = await client.invoke(
+          command.tool,
+          command.input as never,
+          waitSignal ? { signal: waitSignal } : undefined,
+        );
+      } catch (error) {
+        if (waitSignal?.aborted) break;
+        throw error;
+      }
+    }
     line(stdout, JSON.stringify(result, null, 2));
+    if (waitSeconds && pending()) {
+      line(
+        stderr,
+        "Operation is still pending. Repeat this inspection with the same campaignId and commandId.",
+      );
+      return 1;
+    }
+    if (waitSeconds && ["blocked", "superseded"].includes(operationState())) return 1;
     return result.ok ? 0 : 1;
   } catch (error) {
     if (error instanceof UsageError) {

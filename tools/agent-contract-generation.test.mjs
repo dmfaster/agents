@@ -13,7 +13,13 @@ test("generation is deterministic and includes every adapter without private cod
     second = compileAgentContract(contract());
   assert.deepEqual(first, second);
   assert.equal(first.size, 3);
-  assert.equal(compileAgentContract(contract(), { includeServer: true }).size, 4);
+  assert.equal(compileAgentContract(contract(), { includeServer: true }).size, 5);
+  assert.equal(
+    compileAgentContract(contract(), { includeServer: true }).get(
+      "site/src/lib/agent-platform/public-input-schemas.generated.ts",
+    ),
+    first.get("packages/mcp-server/src/generated/input-schemas.ts"),
+  );
   for (const source of first.values()) {
     assert.match(source, /Generated from packages\/public-api\/openapi.yaml/);
     assert.doesNotMatch(source, /DATABASE_URL|browser_worker_token|site\/src\/lib\/server/);

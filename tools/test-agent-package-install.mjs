@@ -48,6 +48,14 @@ const expectedTools = [
   "replies_list",
   "sending_inspect",
   "workspace_briefing",
+  "companies_filters",
+  "companies_search",
+  "company_inspect",
+  "companies_list_prepare",
+  "companies_list_inspect",
+  "campaign_operation_inspect",
+  "campaign_delivery_inspect",
+  "campaign_delivery_update",
 ];
 const temporaryRoot = mkdtempSync(path.join(tmpdir(), "dmfaster-agent-packages-"));
 const artifactDirectory = path.join(temporaryRoot, "artifacts");
@@ -344,7 +352,7 @@ try {
     assert.deepEqual(
       listed.tools.map((tool) => tool.name).sort(),
       [...expectedTools].sort(),
-      "the packed MCP server must expose 23 Agent 1.0 domain tools and the campaign workspace",
+      "the packed MCP server must expose 31 domain tools and the campaign workspace",
     );
     const workspaceTool = listed.tools.find((tool) => tool.name === "campaign_workspace");
     assert.equal(workspaceTool?._meta?.ui?.resourceUri, campaignWorkspaceUri);
