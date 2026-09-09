@@ -20,7 +20,7 @@ screens or tool names. The agent carries the plan through validation, exact
 audience preview, and private draft preparation. If browser-based sending is not
 ready, launch preflight returns one machine-readable setup link and an exact
 resume call; the user only completes the browser-store installation/link and
-the final campaign approval that browsers and DM Faster must keep human-owned.
+any approval explicitly required by the returned connection or action state.
 
 Compliant MCP Apps hosts can render the campaign workspace inline. Modern
 headless hosts use the same complete campaign state and 31 domain tools without
@@ -61,8 +61,10 @@ credential. Tool availability never replaces server-side scope enforcement.
 The human signs in with their normal DM Faster account, compares the browser and
 CLI confirmation codes, reviews the workspace and exact permissions, and
 personally approves or denies the request. The CLI and MCP server then share the
-operating-system credential. Launch and pause require another, action-specific
-approval; login permission alone never authorizes either action.
+operating-system credential. With owner-granted `campaigns:control`, an explicit
+launch or pause instruction is enough: run preflight and use its returned
+authorization when ready. Older connections retain per-action browser approval;
+they do not gain control permission automatically.
 
 ## Development validation
 
@@ -79,3 +81,19 @@ locally built MCP server and nested `skills/dmfaster/` directory so validation
 does not accidentally exercise an already-published package. Test the complete
 plugin directory in clean Codex, Claude, and Cursor profiles before a separately
 approved public release.
+
+## Saved company contact details
+
+Company search supports the current Companies app filters, including
+`technologies: ["shopify"]` together with `metaAdsActiveOnly: true`. Discover
+country-specific options first, then inspect the returned company identities
+before preparing a private shortlist.
+
+Saved company lists preserve available real email, LinkedIn, phone, Instagram,
+and Facebook routes. Names and roles stay with the selected contact for each
+channel; inspect the full company profile for all decision-makers. Generated
+`company.…` identities are never Instagram targets, and contactless companies
+remain research rows. Saved routes are snapshots, not verified deliverability.
+Older lists are not automatically backfilled with contacts previously lost.
+This server behavior is available with the published 1.4.0 CLI and MCP server;
+saving a research list creates no campaign and sends nothing.

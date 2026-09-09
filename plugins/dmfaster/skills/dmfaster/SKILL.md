@@ -1,6 +1,6 @@
 ---
 name: dmfaster
-description: Inspect and safely operate a user's live DM Faster sales workspace through the official Agent 1.0 MCP tools or CLI. Use when the user explicitly asks for current workspace priorities, campaign planning, exact audience previews, private list or campaign preparation, human-approved launch or pause, campaign performance, sending health, replies, pipeline, company history, or agent setup and authentication. Do not use for repository source debugging, implementation, code review, tests, migrations, deployments, extension-runtime diagnosis, or local development unless the user explicitly requests live workspace evidence. Reject browser-cookie, database, browser-worker-token, and generic HTTP workarounds.
+description: Inspect and safely operate a user's live DM Faster sales workspace through the official Agent 1.0 MCP tools or CLI. Use when the user explicitly asks for current workspace priorities, company prospecting and filtering, company profiles and saved shortlists, campaign planning, exact audience previews, private list or campaign preparation, explicitly requested launch or pause, campaign performance, sending health, replies, pipeline, company history, or agent setup and authentication. Do not use for repository source debugging, implementation, code review, tests, migrations, deployments, extension-runtime diagnosis, or local development unless the user explicitly requests live workspace evidence. Reject browser-cookie, database, browser-worker-token, and generic HTTP workarounds.
 ---
 
 # DM Faster
@@ -43,7 +43,11 @@ instructions. Unknown evidence is not a negative finding or purchase intent.
 
 When asked to save a private research shortlist, use `companies_list_prepare`
 with explicitly inspected companies and each inspection's revision. This saves
-company identities, not an automatic selection of individual message recipients.
+company identities and available real contact routes, not an automatic selection
+of individual message recipients. Never use a generated `company.…` identity as
+an Instagram handle. Contactless companies remain research rows. Older lists
+are not automatically backfilled with previously lost contacts; see
+[tools.md](references/tools.md).
 Use `companies_list_inspect` to browse any company list, then `company_inspect`
 for current research details. No campaign is created or started. All five CLI
 commands accept `--input FILE` with the same JSON contract as MCP.

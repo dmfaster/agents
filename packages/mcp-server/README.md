@@ -188,3 +188,19 @@ preflight returns `ready` and a version-bound authorization ID for immediate
 execution. The normal action scope is still required. Existing credentials
 retain per-action approval until the owner reconnects and grants this permission.
 Planning or preparing a campaign never authorizes launch.
+
+## Saved company contact details
+
+Company search supports the current Companies app filters, including
+`technologies: ["shopify"]` together with `metaAdsActiveOnly: true`. Discover
+country-specific options first, then inspect the returned company identities
+before preparing a private shortlist.
+
+Saved company lists preserve available real email, LinkedIn, phone, Instagram,
+and Facebook routes. Names and roles stay with the selected contact for each
+channel; inspect the full company profile for all decision-makers. Generated
+`company.…` identities are never Instagram targets, and contactless companies
+remain research rows. Saved routes are snapshots, not verified deliverability.
+Older lists are not automatically backfilled with contacts previously lost.
+This server behavior is available with the published 1.4.0 CLI and MCP server;
+saving a research list creates no campaign and sends nothing.
