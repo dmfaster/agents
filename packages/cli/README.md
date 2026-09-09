@@ -3,9 +3,8 @@
 CLI for DM Faster Agent 1.0. Run the version-pinned package, then authenticate
 through the focused DM Faster browser approval page.
 
-> Distribution note: the registry commands below work only after this exact
-> release is published. Before then, maintainers use the built CLI from an
-> authorized source checkout.
+The version-pinned 1.4.0 runtime is published. These instructions include the
+September 9, 2026 server update for saved company contact details.
 
 ```bash
 npx --yes @dmfaster/cli@1.4.0 auth login --json
@@ -182,3 +181,19 @@ and audience. Launch and pause return an operation reference; use
 `campaign operation inspect --input FILE --wait 30` to wait up to 30 seconds for
 its receipt. Pending operations can be inspected again with the same IDs.
 Browser acknowledgment and confirmed delivery are separate facts.
+
+## Saved company contact details
+
+Company search supports the current Companies app filters, including
+`technologies: ["shopify"]` together with `metaAdsActiveOnly: true`. Discover
+country-specific options first, then inspect the returned company identities
+before preparing a private shortlist.
+
+Saved company lists preserve available real email, LinkedIn, phone, Instagram,
+and Facebook routes. Names and roles stay with the selected contact for each
+channel; inspect the full company profile for all decision-makers. Generated
+`company.…` identities are never Instagram targets, and contactless companies
+remain research rows. Saved routes are snapshots, not verified deliverability.
+Older lists are not automatically backfilled with contacts previously lost.
+This server behavior is available with the published 1.4.0 CLI and MCP server;
+saving a research list creates no campaign and sends nothing.

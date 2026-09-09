@@ -18,7 +18,8 @@ Agent 1.0 exposes 31 bounded domain tools, including company-centric prospecting
 resolve industries, validate complete campaign plans, preview exact audiences,
 inspect saved lists, remove an exact Instagram username, prepare private lists and
 disabled campaign drafts idempotently, and launch or
-pause only after the owner approves the exact campaign version in DM Faster.
+pause on explicit user instructions after a one-time owner grant of campaign
+control, or per-action approval for older connections.
 It cannot send replies, book meetings, expose provider credentials, or bypass
 the browser extension's execution boundary.
 
@@ -150,3 +151,23 @@ campaign. `campaign.inspect` reports current copy, delivery settings, window,
 and workspace timezone. Edits preserve omitted settings and reject stale
 versions or started campaigns. Saving or toggling a draft window leaves it
 disabled; an explicitly instructed, authorized launch arms the schedule.
+
+## September 9 documentation update
+
+The published runtime remains 1.4.0. The [agent guide](https://dmfaster.com/docs/agents)
+and bundled skill cover all 31 domain tools, company-centric filtering (including
+Shopify with active Meta ads), ongoing delivery controls, and operation status.
+Saved company shortlists now preserve available real contact routes; generated
+company identities are never Instagram targets. Older lost contacts are not
+backfilled automatically. See the [tool reference](plugins/dmfaster/skills/dmfaster/references/tools.md)
+for current behavior and limits. Full live-app parity remains in progress.
+
+Refresh a Codex installation after this documentation update:
+
+```bash
+codex plugin marketplace upgrade dmfaster-agents
+codex plugin add dmfaster@dmfaster-agents
+```
+
+Start a new session to load the refreshed skill and MCP configuration. Updating
+plugin files does not change the permissions of an existing DM Faster connection.

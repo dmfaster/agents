@@ -44,6 +44,51 @@ npx --yes @dmfaster/cli@1.4.0
 | `campaign_pause_preflight`  | `campaign.pause.preflight`  | `campaign pause preflight <campaign-id> --idempotency-key KEY --json`              | `campaigns:write`                   | eligibility and approval request  |
 | `campaign_pause`            | `campaign.pause`            | `campaign pause <campaign-id> --idempotency-key KEY --authorization-id ID --json`  | `campaigns:write`                   | approved workspace action         |
 
+| `companies_filters` | `companies.filters` | `companies filters --input FILE --json` | `audiences:read` | country-specific company filter options |
+| `companies_search` | `companies.search` | `companies search --input FILE --json` | `audiences:read` | company search with app filters |
+| `company_inspect` | `company.inspect` | `company inspect --input FILE --json` | `audiences:read` | full research and contact profile |
+| `companies_list_prepare` | `companies.list.prepare` | `companies list prepare --input FILE --json` | `audiences:read`, `campaigns:write` | private company shortlist with contact routes |
+| `companies_list_inspect` | `companies.list.inspect` | `companies list inspect --input FILE --json` | `campaigns:read`, `audiences:read` | saved company list inspection |
+| `campaign_operation_inspect` | `campaign.operation.inspect` | `campaign operation inspect --input FILE --json` | `campaigns:read` | browser operation receipt |
+| `campaign_delivery_inspect` | `campaign.delivery.inspect` | `campaign delivery inspect --input FILE --json` | `campaigns:read` | current delivery settings and revision |
+| `campaign_delivery_update` | `campaign.delivery.update` | `campaign delivery update --input FILE --json` | `campaigns:read`, `campaigns:write` | ongoing Instagram delivery settings |
+
+## Company research and saved contacts
+
+Use `companies_filters` to discover the current Companies app filter options,
+then `companies_search` with the exact requested criteria. For example:
+
+```json
+{
+  "filters": { "technologies": ["shopify"], "metaAdsActiveOnly": true },
+  "pageSize": 50
+}
+```
+
+All five company tools accept a JSON file through CLI `--input FILE`. Search
+pages contain at most 100 companies. Echo the returned `querySignature` and
+`expectedRevision` when paging; do not present the sample size as an exact total.
+Call `company_inspect` with returned country/businessId identities for full
+research details, decision-makers, contact routes, and freshness evidence.
+Filters on company search are not interchangeable with the campaign-state
+schema: validate a campaign separately and report unsupported criteria.
+
+`companies_list_prepare` saves up to 50 inspected companies with each profile's
+revision and a stable idempotency key. It preserves available website, description,
+logo, and real Instagram/Facebook routes. For email, LinkedIn, and phone it saves
+the first valid contact for that channel with that person's name and role;
+LinkedIn and phone can fall back to the company route. Different channels may
+belong to different people. Use full company inspection for all decision-makers.
+
+A generated `company.…` identity is an internal research key, never an Instagram
+handle. Contactless companies remain research rows and do not become Instagram
+targets. Stored routes are snapshots, not proof of deliverability or consent.
+Saving a list creates no campaign and sends nothing. Existing lists are not
+automatically backfilled with real contacts lost before the September 9 fix;
+inspect current company profiles and prepare a fresh reviewed shortlist when
+requested. Use `companies_list_inspect` for saved-list membership and
+`company_inspect` for current complete profiles.
+
 ## Saved-list workflow
 
 `lists_list` returns at most 25 list summaries, the exact matching-list `total`,
