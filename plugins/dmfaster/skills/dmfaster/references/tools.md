@@ -43,7 +43,6 @@ npx --yes @dmfaster/cli@1.4.0
 | `campaign_launch`           | `campaign.launch`           | `campaign launch <campaign-id> --idempotency-key KEY --authorization-id ID --json` | `campaigns:launch`                  | approved external action          |
 | `campaign_pause_preflight`  | `campaign.pause.preflight`  | `campaign pause preflight <campaign-id> --idempotency-key KEY --json`              | `campaigns:write`                   | eligibility and approval request  |
 | `campaign_pause`            | `campaign.pause`            | `campaign pause <campaign-id> --idempotency-key KEY --authorization-id ID --json`  | `campaigns:write`                   | approved workspace action         |
-
 | `companies_filters` | `companies.filters` | `companies filters --input FILE --json` | `audiences:read` | country-specific company filter options |
 | `companies_search` | `companies.search` | `companies search --input FILE --json` | `audiences:read` | company search with app filters |
 | `company_inspect` | `company.inspect` | `company inspect --input FILE --json` | `audiences:read` | full research and contact profile |
