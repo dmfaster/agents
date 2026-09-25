@@ -14,12 +14,14 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-Agent 1.0 exposes 31 bounded domain tools, including company-centric prospecting and ongoing campaign delivery controls. It can inspect a live workspace,
-resolve industries, validate complete campaign plans, preview exact audiences,
-inspect saved lists, remove an exact Instagram username, prepare private lists and
-disabled campaign drafts idempotently, and launch or
-pause on explicit user instructions after a one-time owner grant of campaign
-control, or per-action approval for older connections.
+Agent 1.0 exposes 33 bounded domain tools, including company-centric prospecting,
+read-only inbox conversation reads, and ongoing campaign delivery controls. It
+can inspect a live workspace, resolve industries, validate complete campaign
+plans, preview exact audiences, inspect saved lists, read conversations and
+messages, remove an exact Instagram username, prepare private lists and disabled
+campaign drafts idempotently, and launch or pause on explicit user instructions
+after a one-time owner grant of campaign control, or per-action approval for
+older connections.
 It cannot send replies, book meetings, expose provider credentials, or bypass
 the browser extension's execution boundary.
 
@@ -60,7 +62,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.4.0 auth login --json
+npx --yes @dmfaster/cli@1.5.0 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -82,13 +84,14 @@ approve the new connection. Credentials are never upgraded silently.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.4.0 workspace briefing --json
-npx --yes @dmfaster/mcp-server@1.4.0
+npx --yes @dmfaster/cli@1.5.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.5.0 conversations list --filter unread --limit 25 --json
+npx --yes @dmfaster/mcp-server@1.5.0
 ```
 
-The 31 MCP domain tools cover workspace, campaign, sending, reply, pipeline,
-company-history, industry, validation, exact-audience preview, private draft,
-launch, and pause workflows. Compliant MCP Apps hosts can also render the
+The 33 MCP domain tools cover workspace, campaign, sending, reply, inbox,
+pipeline, company-history, industry, validation, exact-audience preview,
+private draft, launch, and pause workflows. Compliant MCP Apps hosts can also render the
 read-only `campaign_workspace` presentation tool inline. Headless hosts receive
 the same complete state and keep every domain capability.
 
@@ -134,7 +137,7 @@ private product source or trademarks.
 All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
 
 ```bash
-npx --yes @dmfaster/cli@1.4.0 list import --name "My prospects" --file usernames.csv --json
+npx --yes @dmfaster/cli@1.5.0 list import --name "My prospects" --file usernames.csv --json
 ```
 
 The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
@@ -152,14 +155,16 @@ and workspace timezone. Edits preserve omitted settings and reject stale
 versions or started campaigns. Saving or toggling a draft window leaves it
 disabled; an explicitly instructed, authorized launch arms the schedule.
 
-## September 9 documentation update
+## Agent 1.5.0 release
 
-The published runtime remains 1.4.0. The [agent guide](https://dmfaster.com/docs/agents)
-and bundled skill cover all 31 domain tools, company-centric filtering (including
-Shopify with active Meta ads), ongoing delivery controls, and operation status.
-Saved company shortlists now preserve available real contact routes; generated
-company identities are never Instagram targets. Older lost contacts are not
-backfilled automatically. See the [tool reference](plugins/dmfaster/skills/dmfaster/references/tools.md)
+Version 1.5.0 adds CLI setup diagnostics with `doctor`, per-command discovery
+with `describe`, and paginated inbox conversation reads across the SDK, CLI, and
+MCP server. The [agent guide](https://dmfaster.com/docs/agents) and bundled skill
+cover all 33 domain tools, company-centric filtering (including Shopify with
+active Meta ads), ongoing delivery controls, and operation status. Saved
+company shortlists preserve available real contact routes; generated company
+identities are never Instagram targets. Older lost contacts are not backfilled
+automatically. See the [tool reference](plugins/dmfaster/skills/dmfaster/references/tools.md)
 for current behavior and limits. Full live-app parity remains in progress.
 
 Refresh a Codex installation after this documentation update:

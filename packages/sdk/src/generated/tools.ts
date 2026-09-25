@@ -6,6 +6,8 @@ export const AGENT_TOOL_NAMES = [
   "campaign.inspect",
   "sending.inspect",
   "replies.list",
+  "conversations.list",
+  "conversation.inspect",
   "pipeline.inspect",
   "company.timeline",
   "industry.lookup",
@@ -59,6 +61,16 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     exposure: "public_api",
   },
   "replies.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "conversations.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "conversation.inspect": {
     effect: "read",
     approval: "none",
     exposure: "public_api",
@@ -196,6 +208,8 @@ export const AGENT_TOOL_SCOPES = {
   "campaign.inspect": ["campaigns:read"],
   "sending.inspect": ["sending:read"],
   "replies.list": ["inbox:read"],
+  "conversations.list": ["inbox:read"],
+  "conversation.inspect": ["inbox:read"],
   "pipeline.inspect": ["pipeline:read"],
   "company.timeline": ["campaigns:read", "pipeline:read"],
   "industry.lookup": ["audiences:read"],
@@ -280,7 +294,8 @@ export const AGENT_TOOL_DEFINITIONS = {
     mcp: {
       name: "campaigns_list",
       title: "List campaigns",
-      description: "List campaigns in the current workspace, optionally filtered by status.",
+      description:
+        "Search and page through campaigns in the current workspace. Reuse nextCursor until hasMore is false; restart if the collection changes.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -290,7 +305,8 @@ export const AGENT_TOOL_DEFINITIONS = {
     },
     cli: {
       section: "Workspace reads",
-      usage: "campaigns list [--status STATUS] [--limit N]",
+      usage:
+        "campaigns list [--status STATUS] [--query TEXT] [--channel CHANNEL] [--limit N] [--cursor CURSOR]",
       command: ["campaigns", "list"],
     },
   },
@@ -349,6 +365,45 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "Workspace reads",
       usage: "replies list [CAMPAIGN_ID] [--limit N] [--query TEXT]",
       command: ["replies", "list"],
+    },
+  },
+  "conversations.list": {
+    mcp: {
+      name: "conversations_list",
+      title: "List inbox conversations",
+      description:
+        "Find actual inbox conversations by status, campaign, channel, and text. Page with the returned cursor; listing never marks a conversation read.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Inbox",
+      usage:
+        "conversations list [--filter FILTER] [--channel CHANNEL] [--campaign-id ID] [--query TEXT] [--limit N] [--cursor CURSOR] [--input FILE]",
+      command: ["conversations", "list"],
+    },
+  },
+  "conversation.inspect": {
+    mcp: {
+      name: "conversation_inspect",
+      title: "Read inbox conversation",
+      description:
+        "Read an exact conversation's inbound and outbound message page. Pass nextCursor with the same conversation ID to continue.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Inbox",
+      usage: "conversation inspect CONVERSATION_ID [--limit N] [--cursor CURSOR] [--input FILE]",
+      command: ["conversation", "inspect"],
     },
   },
   "pipeline.inspect": {
@@ -824,6 +879,1667 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "Campaign operation and delivery",
       usage: "campaign delivery update --input FILE",
       command: ["campaign", "delivery", "update"],
+    },
+  },
+} as const;
+export const AGENT_TOOL_INPUT_SCHEMAS = {
+  "analytics.summary": {
+    $ref: "#/components/schemas/AnalyticsSummaryInput",
+  },
+  "workspace.briefing": {
+    $ref: "#/components/schemas/WorkspaceBriefingInput",
+  },
+  "campaigns.list": {
+    $ref: "#/components/schemas/CampaignsListInput",
+  },
+  "campaign.inspect": {
+    $ref: "#/components/schemas/CampaignInspectInput",
+  },
+  "sending.inspect": {
+    $ref: "#/components/schemas/SendingInspectInput",
+  },
+  "replies.list": {
+    $ref: "#/components/schemas/RepliesListInput",
+  },
+  "conversations.list": {
+    $ref: "#/components/schemas/ConversationsListInput",
+  },
+  "conversation.inspect": {
+    $ref: "#/components/schemas/ConversationInspectInput",
+  },
+  "pipeline.inspect": {
+    $ref: "#/components/schemas/PipelineInspectInput",
+  },
+  "company.timeline": {
+    $ref: "#/components/schemas/CompanyTimelineInput",
+  },
+  "industry.lookup": {
+    $ref: "#/components/schemas/IndustryLookupInput",
+  },
+  "campaign.validate": {
+    $ref: "#/components/schemas/CampaignValidateInput",
+  },
+  "audience.preview": {
+    $ref: "#/components/schemas/AudiencePreviewInput",
+  },
+  "lists.list": {
+    $ref: "#/components/schemas/ListsListInput",
+  },
+  "list.inspect": {
+    $ref: "#/components/schemas/ListInspectInput",
+  },
+  "list.target.remove": {
+    $ref: "#/components/schemas/ListTargetRemoveInput",
+  },
+  "campaign.draft.prepare": {
+    $ref: "#/components/schemas/CampaignDraftPrepareInput",
+  },
+  "campaign.draft.update": {
+    $ref: "#/components/schemas/CampaignDraftUpdateInput",
+  },
+  "list.import": {
+    $ref: "#/components/schemas/ListImportInput",
+  },
+  "list.prepare": {
+    $ref: "#/components/schemas/ListPrepareInput",
+  },
+  "campaign.prepare": {
+    $ref: "#/components/schemas/CampaignPrepareInput",
+  },
+  "campaign.launch.preflight": {
+    $ref: "#/components/schemas/CampaignActionPreflightInput",
+  },
+  "campaign.launch": {
+    $ref: "#/components/schemas/CampaignActionInput",
+  },
+  "campaign.pause.preflight": {
+    $ref: "#/components/schemas/CampaignActionPreflightInput",
+  },
+  "campaign.pause": {
+    $ref: "#/components/schemas/CampaignActionInput",
+  },
+  "companies.filters": {
+    $ref: "#/components/schemas/CompanyFiltersInput",
+  },
+  "companies.search": {
+    $ref: "#/components/schemas/CompanySearchInput",
+  },
+  "company.inspect": {
+    $ref: "#/components/schemas/CompanyInspectInput",
+  },
+  "companies.list.prepare": {
+    $ref: "#/components/schemas/CompanyListPrepareInput",
+  },
+  "companies.list.inspect": {
+    $ref: "#/components/schemas/CompanyListInspectInput",
+  },
+  "campaign.operation.inspect": {
+    $ref: "#/components/schemas/CampaignOperationInspectInput",
+  },
+  "campaign.delivery.inspect": {
+    $ref: "#/components/schemas/CampaignDeliveryInspectInput",
+  },
+  "campaign.delivery.update": {
+    $ref: "#/components/schemas/CampaignDeliveryUpdateInput",
+  },
+} as const;
+export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
+  AnalyticsSummaryInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["scope"],
+    properties: {
+      scope: {
+        type: "string",
+        enum: ["today", "last_24_hours", "campaign_to_date"],
+      },
+      campaign: {
+        allOf: [
+          {
+            $ref: "#/components/schemas/ResourceId",
+          },
+        ],
+        description: "Optional campaign identifier or exact campaign name.",
+      },
+    },
+  },
+  ResourceId: {
+    description:
+      "A resource identifier returned by DM Faster. Never guess an identifier from a name.",
+    "x-dmfaster-trim": true,
+    type: "string",
+    minLength: 1,
+    maxLength: 160,
+    pattern: ".*\\S.*",
+  },
+  WorkspaceBriefingInput: {
+    type: "object",
+    additionalProperties: false,
+  },
+  CampaignsListInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      status: {
+        $ref: "#/components/schemas/CampaignStatus",
+      },
+      query: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+        description: "Case-insensitive campaign name search.",
+      },
+      channel: {
+        $ref: "#/components/schemas/TargetChannel",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 25,
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 500,
+        description: "Opaque nextCursor returned by the preceding page.",
+      },
+    },
+  },
+  CampaignStatus: {
+    type: "string",
+    enum: ["Draft", "Queued", "Running", "Paused", "Cooldown", "Completed"],
+  },
+  TargetChannel: {
+    type: "string",
+    enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+  },
+  CampaignInspectInput: {
+    $ref: "#/components/schemas/OptionalCampaignInput",
+  },
+  OptionalCampaignInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      campaignId: {
+        allOf: [
+          {
+            $ref: "#/components/schemas/ResourceId",
+          },
+        ],
+        description: "Omit to use the selected, active, or most recent campaign.",
+      },
+    },
+  },
+  SendingInspectInput: {
+    $ref: "#/components/schemas/OptionalCampaignInput",
+  },
+  RepliesListInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 20,
+      },
+      query: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+        pattern: ".*\\S.*",
+        description: "Optional case-insensitive reply search text.",
+      },
+    },
+  },
+  ConversationsListInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      filter: {
+        type: "string",
+        enum: ["all", "needs_reply", "waiting", "unread", "snoozed", "closed"],
+      },
+      interest: {
+        type: "string",
+        enum: ["positive", "neutral", "negative", "needs_review"],
+      },
+      intent: {
+        type: "string",
+        enum: [
+          "interested",
+          "information_requested",
+          "meeting_intent",
+          "not_now",
+          "wrong_person",
+          "not_interested",
+          "opt_out",
+          "acknowledgement",
+          "unclear",
+        ],
+      },
+      channel: {
+        $ref: "#/components/schemas/InboxChannel",
+      },
+      mailboxId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      query: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+      },
+      includeAutomaticResponses: {
+        type: "boolean",
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 2000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 60,
+      },
+    },
+  },
+  InboxChannel: {
+    type: "string",
+    enum: ["instagram", "facebook", "linkedin", "gmail", "outlook", "email", "sms"],
+  },
+  ConversationInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["conversationId"],
+    properties: {
+      conversationId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 2000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+  },
+  PipelineInspectInput: {
+    $ref: "#/components/schemas/OptionalCampaignInput",
+  },
+  CompanyTimelineInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "companyOutreachId"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      companyOutreachId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
+  },
+  IndustryLookupInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["query"],
+    properties: {
+      query: {
+        type: "string",
+        minLength: 1,
+        maxLength: 800,
+        pattern: ".*\\S.*",
+      },
+      version: {
+        oneOf: [
+          {
+            $ref: "#/components/schemas/TolVersion",
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+      language: {
+        type: "string",
+        enum: ["en", "fi"],
+      },
+    },
+  },
+  TolVersion: {
+    type: "string",
+    enum: ["2008", "2025"],
+  },
+  CampaignValidateInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["state"],
+    properties: {
+      state: {
+        $ref: "#/components/schemas/AgentCampaignState",
+      },
+    },
+  },
+  AgentCampaignState: {
+    description:
+      "Complete stateless campaign state. Send the latest returned or user-confirmed state on every planning call.",
+    "x-dmfaster-max-serialized-chars": 32000,
+    type: "object",
+    additionalProperties: false,
+    required: ["profile", "brief"],
+    properties: {
+      profile: {
+        $ref: "#/components/schemas/AgentBusinessProfile",
+      },
+      brief: {
+        $ref: "#/components/schemas/AgentCampaignBrief",
+      },
+    },
+  },
+  AgentBusinessProfile: {
+    type: "object",
+    additionalProperties: false,
+    required: [
+      "version",
+      "businessName",
+      "websiteUrl",
+      "businessDescription",
+      "offer",
+      "customerOutcome",
+      "differentiators",
+      "proofPoints",
+      "preferredTone",
+      "preferredLanguages",
+      "defaultCountries",
+      "excludedCompanyTraits",
+    ],
+    properties: {
+      version: {
+        type: "integer",
+        const: 1,
+      },
+      businessName: {
+        type: "string",
+      },
+      websiteUrl: {
+        type: "string",
+      },
+      businessDescription: {
+        type: "string",
+      },
+      offer: {
+        type: "string",
+      },
+      customerOutcome: {
+        type: "string",
+      },
+      differentiators: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      },
+      proofPoints: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      },
+      preferredTone: {
+        type: "string",
+      },
+      preferredLanguages: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      },
+      defaultCountries: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/SupportedCountry",
+        },
+      },
+      excludedCompanyTraits: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      },
+    },
+  },
+  SupportedCountry: {
+    type: "string",
+    enum: [
+      "FI",
+      "NO",
+      "EE",
+      "SE",
+      "DK",
+      "UK",
+      "IE",
+      "AE",
+      "AT",
+      "BE",
+      "CA",
+      "NL",
+      "NZ",
+      "ES",
+      "FR",
+      "HK",
+      "IL",
+      "LV",
+      "LT",
+      "IT",
+      "CH",
+      "PT",
+      "SA",
+      "SG",
+      "IS",
+      "AU",
+      "DE",
+      "US",
+      "ZA",
+    ],
+  },
+  AgentCampaignBrief: {
+    type: "object",
+    additionalProperties: false,
+    required: [
+      "version",
+      "objective",
+      "offer",
+      "targetDescription",
+      "countries",
+      "industryCodes",
+      "decisionMakerRoles",
+      "companySize",
+      "requestedSignals",
+      "exclusions",
+      "callToAction",
+      "requestedChannels",
+      "messageLanguage",
+      "tone",
+      "dailyVolume",
+      "deliverySettings",
+      "outreachMessages",
+    ],
+    properties: {
+      version: {
+        type: "integer",
+        const: 1,
+      },
+      objective: {
+        type: "string",
+      },
+      offer: {
+        type: "string",
+      },
+      targetDescription: {
+        type: "string",
+      },
+      countries: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/SupportedCountry",
+        },
+      },
+      cities: {
+        type: "array",
+        maxItems: 32,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 80,
+        },
+      },
+      industryCodes: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      },
+      industryResolution: {
+        $ref: "#/components/schemas/AgentIndustryResolution",
+      },
+      decisionMakerRoles: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      },
+      companySize: {
+        $ref: "#/components/schemas/AgentCompanySize",
+      },
+      googleAdsActivityWindow: {
+        oneOf: [
+          {
+            type: "string",
+            enum: ["last_30_days", "last_90_days", "last_12_months"],
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+      metaAdsFilter: {
+        oneOf: [
+          {
+            $ref: "#/components/schemas/AgentMetaAdsFilter",
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+      requestedSignals: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/AgentSignalCriterion",
+        },
+      },
+      exclusions: {
+        type: "array",
+        items: {
+          type: "string",
+        },
+      },
+      excludePreviouslyContacted: {
+        type: "boolean",
+        description:
+          "Exclude companies already contacted in this workspace. The exact preview and prepare call must use the same setting.",
+      },
+      unsupportedCriteria: {
+        type: "array",
+        maxItems: 8,
+        items: {
+          type: "string",
+          maxLength: 160,
+        },
+      },
+      callToAction: {
+        type: "string",
+      },
+      requestedChannels: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/TargetChannel",
+        },
+      },
+      messageLanguage: {
+        type: "string",
+      },
+      tone: {
+        type: "string",
+      },
+      dailyVolume: {
+        oneOf: [
+          {
+            type: "number",
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+      deliverySettings: {
+        $ref: "#/components/schemas/AgentCampaignDeliverySettings",
+      },
+      outreachMessages: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/AgentOutreachMessage",
+        },
+      },
+    },
+  },
+  AgentIndustryResolution: {
+    type: "object",
+    additionalProperties: false,
+    required: [
+      "status",
+      "sourceText",
+      "resolvedLabel",
+      "primaryVersion",
+      "selections",
+      "question",
+      "options",
+      "evidence",
+    ],
+    properties: {
+      status: {
+        type: "string",
+        enum: ["resolved", "needs_clarification", "unsupported"],
+      },
+      sourceText: {
+        type: "string",
+        maxLength: 800,
+      },
+      resolvedLabel: {
+        type: "string",
+        maxLength: 240,
+      },
+      primaryVersion: {
+        $ref: "#/components/schemas/TolVersion",
+      },
+      selections: {
+        type: "array",
+        maxItems: 2,
+        items: {
+          $ref: "#/components/schemas/AgentIndustryCodeSelection",
+        },
+      },
+      question: {
+        type: "string",
+        maxLength: 500,
+      },
+      options: {
+        type: "array",
+        maxItems: 3,
+        items: {
+          $ref: "#/components/schemas/AgentIndustryClarificationOption",
+        },
+      },
+      evidence: {
+        type: "array",
+        maxItems: 12,
+        items: {
+          type: "string",
+          maxLength: 120,
+        },
+      },
+    },
+  },
+  AgentIndustryCodeSelection: {
+    type: "object",
+    additionalProperties: false,
+    required: ["classification", "version", "codes"],
+    properties: {
+      classification: {
+        type: "string",
+        const: "TOL",
+      },
+      version: {
+        $ref: "#/components/schemas/TolVersion",
+      },
+      codes: {
+        type: "array",
+        maxItems: 64,
+        items: {
+          type: "string",
+          maxLength: 5,
+        },
+      },
+    },
+  },
+  AgentIndustryClarificationOption: {
+    type: "object",
+    additionalProperties: false,
+    required: ["id", "label", "selections"],
+    properties: {
+      id: {
+        type: "string",
+        maxLength: 80,
+      },
+      label: {
+        type: "string",
+        maxLength: 180,
+      },
+      selections: {
+        type: "array",
+        maxItems: 2,
+        items: {
+          $ref: "#/components/schemas/AgentIndustryCodeSelection",
+        },
+      },
+    },
+  },
+  AgentCompanySize: {
+    type: "object",
+    additionalProperties: false,
+    required: ["employeeMin", "employeeMax", "revenueMinEur", "revenueMaxEur"],
+    properties: {
+      employeeMin: {
+        oneOf: [
+          {
+            type: "number",
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+      employeeMax: {
+        oneOf: [
+          {
+            type: "number",
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+      revenueMinEur: {
+        oneOf: [
+          {
+            type: "number",
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+      revenueMaxEur: {
+        oneOf: [
+          {
+            type: "number",
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+    },
+  },
+  AgentMetaAdsFilter: {
+    type: "object",
+    additionalProperties: false,
+    required: [
+      "minimumEuReach",
+      "targetAge",
+      "targetGender",
+      "targetLocation",
+      "includeUncorroborated",
+    ],
+    properties: {
+      minimumEuReach: {
+        oneOf: [
+          {
+            type: "integer",
+            minimum: 0,
+            maximum: 100000000,
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+      targetAge: {
+        oneOf: [
+          {
+            type: "integer",
+            minimum: 13,
+            maximum: 65,
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+      targetGender: {
+        oneOf: [
+          {
+            type: "string",
+            enum: ["all", "men", "women"],
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+      targetLocation: {
+        type: "string",
+        maxLength: 80,
+      },
+      includeUncorroborated: {
+        type: "boolean",
+      },
+    },
+  },
+  AgentSignalCriterion: {
+    type: "object",
+    additionalProperties: false,
+    required: ["key", "required", "description"],
+    properties: {
+      key: {
+        type: "string",
+        enum: [
+          "recent_funding",
+          "active_hiring",
+          "leadership_change",
+          "technology_usage",
+          "content_activity",
+          "purchase_intent",
+        ],
+      },
+      required: {
+        type: "boolean",
+      },
+      description: {
+        type: "string",
+      },
+    },
+  },
+  AgentCampaignDeliverySettings: {
+    type: "object",
+    additionalProperties: false,
+    required: ["dailyCap", "windowStart", "windowEnd", "weekdays", "timezone", "confirmed"],
+    properties: {
+      dailyCap: {
+        oneOf: [
+          {
+            type: "number",
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+      windowStart: {
+        type: "string",
+      },
+      windowEnd: {
+        type: "string",
+      },
+      weekdays: {
+        type: "integer",
+        minimum: 1,
+        maximum: 127,
+      },
+      timezone: {
+        type: "string",
+      },
+      confirmed: {
+        type: "boolean",
+      },
+    },
+  },
+  AgentOutreachMessage: {
+    type: "object",
+    additionalProperties: false,
+    required: ["channels", "subject", "body", "origin"],
+    properties: {
+      channels: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/TargetChannel",
+        },
+      },
+      subject: {
+        type: "string",
+      },
+      body: {
+        type: "string",
+      },
+      origin: {
+        type: "string",
+        enum: ["user", "user_requested_generation", "agent_draft", "user_approved_generation"],
+      },
+    },
+  },
+  AudiencePreviewInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["state"],
+    properties: {
+      state: {
+        $ref: "#/components/schemas/AgentCampaignState",
+      },
+      sampleSize: {
+        type: "integer",
+        minimum: 1,
+        maximum: 25,
+      },
+    },
+  },
+  ListsListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [],
+    properties: {
+      query: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 25,
+      },
+      offset: {
+        type: "integer",
+        minimum: 0,
+        maximum: 1000000,
+      },
+    },
+  },
+  ListInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["listId"],
+    properties: {
+      listId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      username: {
+        type: "string",
+        minLength: 1,
+        maxLength: 64,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+      offset: {
+        type: "integer",
+        minimum: 0,
+        maximum: 1000000,
+      },
+    },
+  },
+  ListTargetRemoveInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["listId", "username", "expectedListUpdatedAt"],
+    properties: {
+      listId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      username: {
+        type: "string",
+        minLength: 1,
+        maxLength: 64,
+      },
+      expectedListUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+    },
+  },
+  ResourceVersion: {
+    type: "string",
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+    minLength: 20,
+    maxLength: 27,
+  },
+  CampaignDraftPrepareInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [
+      "listId",
+      "expectedListUpdatedAt",
+      "expectedTargetCount",
+      "name",
+      "messageVariants",
+      "dailyCap",
+      "pacingSeconds",
+      "onlyNewChats",
+      "skipPreviouslyMessaged",
+      "idempotencyKey",
+    ],
+    properties: {
+      listId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedListUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      expectedTargetCount: {
+        type: "integer",
+        minimum: 1,
+      },
+      name: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+      },
+      messageVariants: {
+        type: "array",
+        minItems: 1,
+        maxItems: 4,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 1000,
+        },
+      },
+      dailyCap: {
+        type: "integer",
+        minimum: 1,
+        maximum: 60,
+      },
+      pacingSeconds: {
+        type: "integer",
+        minimum: 12,
+        maximum: 3600,
+      },
+      onlyNewChats: {
+        const: true,
+      },
+      skipPreviouslyMessaged: {
+        const: true,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+  },
+  IdempotencyKey: {
+    "x-dmfaster-trim": true,
+    type: "string",
+    minLength: 1,
+    maxLength: 160,
+    pattern: "^[A-Za-z0-9._:-]{1,160}$",
+  },
+  CampaignDraftUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "expectedCampaignUpdatedAt", "updates"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedCampaignUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      updates: {
+        type: "object",
+        additionalProperties: false,
+        minProperties: 1,
+        properties: {
+          name: {
+            type: "string",
+            minLength: 1,
+            maxLength: 120,
+          },
+          messageVariants: {
+            type: "array",
+            minItems: 1,
+            maxItems: 4,
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 1000,
+            },
+          },
+          dailyCap: {
+            type: "integer",
+            minimum: 1,
+            maximum: 60,
+          },
+          pacingSeconds: {
+            type: "integer",
+            minimum: 12,
+            maximum: 3600,
+          },
+          instagramSendingWindowEnabled: {
+            type: "boolean",
+          },
+          instagramSendingWindowStartMinute: {
+            type: "integer",
+            minimum: 0,
+            maximum: 1380,
+          },
+          instagramSendingWindowEndMinute: {
+            type: "integer",
+            minimum: 60,
+            maximum: 1440,
+          },
+          instagramSendingWindowWeekdays: {
+            type: "integer",
+            minimum: 1,
+            maximum: 127,
+          },
+        },
+      },
+    },
+  },
+  ListImportInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["name", "usernames", "idempotencyKey"],
+    properties: {
+      name: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+      },
+      usernames: {
+        type: "array",
+        minItems: 1,
+        maxItems: 1000,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 64,
+        },
+        description:
+          "Instagram handles; whitespace and a leading @ are removed and case is normalized. Invalid handles reject the whole import.",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+  },
+  ListPrepareInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["state", "reviewedAudience"],
+    properties: {
+      state: {
+        $ref: "#/components/schemas/AgentCampaignState",
+      },
+      sampleSize: {
+        type: "integer",
+        minimum: 1,
+        maximum: 25,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      reviewedAudience: {
+        $ref: "#/components/schemas/ReviewedAudience",
+      },
+    },
+  },
+  ReviewedAudience: {
+    type: "object",
+    additionalProperties: false,
+    description:
+      "Server-issued identity from the exact audience preview. Echo this object unchanged when preparing a private list or campaign; clients must not derive it.",
+    required: ["querySignature", "dataFreshness"],
+    properties: {
+      querySignature: {
+        type: "string",
+        minLength: 1,
+        maxLength: 200,
+        pattern: ".*\\S.*",
+      },
+      dataFreshness: {
+        type: "object",
+        additionalProperties: false,
+        required: ["engine", "revision"],
+        properties: {
+          engine: {
+            type: "string",
+            const: "search_facts",
+          },
+          revision: {
+            type: "string",
+            minLength: 1,
+            maxLength: 200,
+            pattern: ".*\\S.*",
+          },
+        },
+      },
+      excludePreviouslyContacted: {
+        type: "boolean",
+      },
+    },
+  },
+  CampaignPrepareInput: {
+    $ref: "#/components/schemas/ListPrepareInput",
+  },
+  CampaignActionPreflightInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "idempotencyKey"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+  },
+  CampaignActionInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "idempotencyKey", "authorizationId"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      authorizationId: {
+        type: "string",
+        pattern: "^agent_action_[a-f0-9]{32}$",
+      },
+    },
+  },
+  CompanyFiltersInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      countries: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/SupportedCountry",
+        },
+        maxItems: 32,
+        minItems: 1,
+      },
+      states: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 32,
+      },
+      citySearch: {
+        type: "string",
+        maxLength: 120,
+      },
+    },
+    required: ["countries"],
+  },
+  CompanySearchInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      filters: {
+        $ref: "#/components/schemas/CompanySearchFilters",
+      },
+      page: {
+        type: "integer",
+        minimum: 1,
+        maximum: 10000,
+      },
+      pageSize: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+      cursor: {
+        type: "string",
+        maxLength: 1000,
+      },
+      expectedRevision: {
+        type: "string",
+        maxLength: 200,
+      },
+      querySignature: {
+        type: "string",
+        maxLength: 200,
+      },
+    },
+    required: ["filters"],
+  },
+  CompanySearchFilters: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      country: {
+        $ref: "#/components/schemas/SupportedCountry",
+      },
+      countries: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/SupportedCountry",
+        },
+        maxItems: 32,
+        minItems: 1,
+      },
+      q: {
+        type: "string",
+        maxLength: 120,
+      },
+      industryCodes: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 8,
+      },
+      industryCodeSelections: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            classification: {
+              const: "TOL",
+            },
+            version: {
+              enum: ["2008", "2025"],
+            },
+            codes: {
+              type: "array",
+              items: {
+                type: "string",
+                maxLength: 5,
+              },
+              maxItems: 64,
+            },
+          },
+          required: ["classification", "version", "codes"],
+        },
+        maxItems: 2,
+      },
+      tolCodes: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 8,
+      },
+      companyForm: {
+        type: "string",
+        maxLength: 4096,
+      },
+      states: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 32,
+      },
+      cities: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 32,
+      },
+      registrationDateEnabled: {
+        type: "boolean",
+      },
+      registrationDateStart: {
+        type: "string",
+        maxLength: 10,
+      },
+      registrationDateEnd: {
+        type: "string",
+        maxLength: 10,
+      },
+      businessIdRegistrationStart: {
+        type: "string",
+        maxLength: 10,
+      },
+      businessIdRegistrationEnd: {
+        type: "string",
+        maxLength: 10,
+      },
+      revenueMinEur: {
+        type: "string",
+        maxLength: 16,
+      },
+      revenueMaxEur: {
+        type: "string",
+        maxLength: 16,
+      },
+      employeeRanges: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 32,
+      },
+      employeeMin: {
+        type: "string",
+        maxLength: 10,
+      },
+      employeeMax: {
+        type: "string",
+        maxLength: 10,
+      },
+      technologies: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 40,
+      },
+      hasExhibitionParticipation: {
+        type: "boolean",
+      },
+      exhibitionEventKeys: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 160,
+        },
+        maxItems: 32,
+      },
+      exhibitionMinEditions: {
+        type: "string",
+        maxLength: 8,
+      },
+      hasPublicFunding: {
+        type: "boolean",
+      },
+      fundingSources: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 40,
+        },
+        maxItems: 5,
+      },
+      fundingFromYear: {
+        type: "string",
+        maxLength: 4,
+      },
+      googleAdsActivityWindow: {
+        enum: [null, "last_30_days", "last_90_days", "last_12_months"],
+      },
+      metaAdsActiveOnly: {
+        type: "boolean",
+      },
+      metaAdsMinimumEuReach: {
+        type: "string",
+        maxLength: 10,
+      },
+      metaAdsTargetAge: {
+        type: "string",
+        maxLength: 3,
+      },
+      metaAdsTargetGender: {
+        enum: ["", "all", "men", "women"],
+      },
+      metaAdsTargetLocation: {
+        type: "string",
+        maxLength: 80,
+      },
+      metaAdsIncludeUncorroborated: {
+        type: "boolean",
+      },
+      hasWebsite: {
+        type: "boolean",
+      },
+      activeOnly: {
+        type: "boolean",
+      },
+    },
+    required: ["countries"],
+    description:
+      "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+  },
+  CompanyInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      country: {
+        $ref: "#/components/schemas/SupportedCountry",
+      },
+      businessId: {
+        type: "string",
+        maxLength: 192,
+        minLength: 1,
+      },
+    },
+    required: ["country", "businessId"],
+  },
+  CompanyListPrepareInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      name: {
+        type: "string",
+        maxLength: 120,
+        minLength: 1,
+      },
+      companies: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            country: {
+              $ref: "#/components/schemas/SupportedCountry",
+            },
+            businessId: {
+              type: "string",
+              maxLength: 192,
+              minLength: 1,
+            },
+            expectedRevision: {
+              type: "string",
+              maxLength: 64,
+              minLength: 64,
+            },
+          },
+          required: ["country", "businessId", "expectedRevision"],
+        },
+        maxItems: 50,
+        minItems: 1,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["name", "companies", "idempotencyKey"],
+  },
+  CompanyListInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      listId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      offset: {
+        type: "integer",
+        minimum: 0,
+        maximum: 1000000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+      expectedUpdatedAt: {
+        type: "string",
+        maxLength: 160,
+      },
+    },
+    required: ["listId"],
+  },
+  CampaignOperationInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "commandId"],
+    properties: {
+      campaignId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      commandId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+        pattern: "^[A-Za-z0-9._:-]+$",
+      },
+    },
+  },
+  CampaignDeliveryInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId"],
+    properties: {
+      campaignId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+    },
+  },
+  CampaignDeliveryUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "expectedRevision", "idempotencyKey", "patch"],
+    properties: {
+      campaignId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      expectedRevision: {
+        type: "string",
+        pattern: "^[a-f0-9]{64}$",
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+        pattern: "^[A-Za-z0-9._:-]+$",
+      },
+      patch: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          dailyCap: {
+            type: "integer",
+            minimum: 1,
+            maximum: 2147483647,
+          },
+          pacingSeconds: {
+            type: "integer",
+            minimum: 12,
+            maximum: 3600,
+          },
+          instagramSendingWindowEnabled: {
+            type: "boolean",
+          },
+          instagramSendingWindowStartMinute: {
+            type: "integer",
+            minimum: 0,
+            maximum: 1380,
+          },
+          instagramSendingWindowEndMinute: {
+            type: "integer",
+            minimum: 60,
+            maximum: 1440,
+          },
+          instagramSendingWindowWeekdays: {
+            type: "integer",
+            minimum: 1,
+            maximum: 127,
+          },
+        },
+        minProperties: 1,
+      },
     },
   },
 } as const;

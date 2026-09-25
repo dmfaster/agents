@@ -86,6 +86,163 @@ test("prints useful help without requiring configuration", async () => {
   assert.match(stdout.read(), /DMFASTER_TOKEN/);
 });
 
+test("describes one command with its generated input schema without authentication", async () => {
+  const stdout = output();
+  assert.equal(await runCli(["describe", "companies", "search"], { stdout: stdout.stream }), 0);
+  const description = JSON.parse(stdout.read());
+  assert.equal(description.tool, "companies.search");
+  assert.equal(description.mcpTool, "companies_search");
+  assert.deepEqual(description.scopes, ["audiences:read"]);
+  assert.equal(description.inputSchema.$ref, "#/$defs/CompanySearchInput");
+  assert.equal(description.inputSchema.$defs.CompanySearchInput.type, "object");
+
+  const help = output();
+  assert.equal(await runCli(["companies", "search", "--help"], { stdout: help.stream }), 0);
+  assert.match(help.read(), /companies search --input FILE/);
+  assert.match(help.read(), /Required scopes: audiences:read/);
+});
+
+test("doctor reports runtime, workspace scope eligibility, and setup actions without exposing tokens", async () => {
+  const ready = output();
+  const context = configuredContext([]);
+  assert.equal(await runCli(["doctor", "--json"], { ...context, stdout: ready.stream }), 0);
+  const report = JSON.parse(ready.read());
+  assert.equal(report.status, "ready");
+  assert.equal(report.supportedMcpProtocol, "2026-07-28");
+  assert.ok(report.authentication.scopeEligibleTools.includes("workspace.briefing"));
+  assert.ok(!report.authentication.scopeEligibleTools.includes("campaign.launch"));
+  const token = (await context.resolveConfig!()).token;
+  assert.ok(token);
+  assert.equal(ready.read().includes(token), false);
+
+  const disconnected = output();
+  const noTokenContext: CliContext = {
+    resolveConfig: async () => ({
+      baseUrl: "https://app.dmfaster.test",
+      baseUrlSource: "default",
+      token: null,
+      tokenSource: null,
+      credentialStoreError: "Unlock the secure keyring.",
+      configPath: "/tmp/dmfaster-test-config.json",
+    }),
+    stdout: disconnected.stream,
+  };
+  assert.equal(await runCli(["doctor"], noTokenContext), 1);
+  const setup = JSON.parse(disconnected.read());
+  assert.equal(setup.status, "action_required");
+  assert.ok(setup.actions.some((action: string) => action.includes("auth login")));
+  assert.ok(setup.actions.some((action: string) => action.includes("keyring")));
+});
+
+test("JSON mode reports usage failures with a stable error code and exit status", async () => {
+  const stderr = output();
+  const exitCode = await runCli(["campaigns", "list", "--limit", "0", "--json"], {
+    ...configuredContext([]),
+    stderr: stderr.stream,
+  });
+  assert.equal(exitCode, 2);
+  assert.deepEqual(JSON.parse(stderr.read()), {
+    error: { code: "usage_error", message: "--limit must be from 1 to 25." },
+  });
+});
+
+test("reads a bounded tool input from standard input", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const stdin = async function* () {
+    yield '{"countries":';
+    yield '["FI"]}';
+  };
+  assert.equal(
+    await runCli(["companies", "filters", "--input", "-"], {
+      ...configuredContext(calls),
+      stdin: stdin(),
+      stdout: output().stream,
+    }),
+    0,
+  );
+  assert.deepEqual(calls, [{ tool: "companies.filters", input: { countries: ["FI"] } }]);
+
+  const stderr = output();
+  assert.equal(
+    await runCli(["companies", "filters", "--input", "-"], {
+      ...configuredContext([]),
+      stdin: (async function* () {
+        yield "x".repeat(64_001);
+      })(),
+      stderr: stderr.stream,
+    }),
+    2,
+  );
+  assert.match(stderr.read(), /Standard input cannot exceed 64000 bytes/);
+});
+
+test("inbox CLI commands forward exact conversation filters and message cursors", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const inputs = [
+    { command: ["conversations", "list"], input: { filter: "needs_reply", limit: 20 } },
+    {
+      command: ["conversation", "inspect"],
+      input: { conversationId: "conversation-1", cursor: "opaque-page" },
+    },
+  ];
+  for (const item of inputs) {
+    assert.equal(
+      await runCli([...item.command, "--input", "-"], {
+        ...configuredContext(calls),
+        stdout: output().stream,
+        stdin: (async function* () {
+          yield JSON.stringify(item.input);
+        })(),
+      }),
+      0,
+    );
+  }
+  assert.equal(
+    await runCli(
+      [
+        "conversations",
+        "list",
+        "--filter",
+        "unread",
+        "--channel",
+        "linkedin",
+        "--campaign-id",
+        "campaign_1",
+        "--limit",
+        "25",
+        "--include-automatic-responses",
+      ],
+      { ...configuredContext(calls), stdout: output().stream },
+    ),
+    0,
+  );
+  assert.equal(
+    await runCli(
+      ["conversation", "inspect", "conversation_1", "--cursor", "next_page", "--limit", "40"],
+      { ...configuredContext(calls), stdout: output().stream },
+    ),
+    0,
+  );
+  assert.deepEqual(calls.at(-2), {
+    tool: "conversations.list",
+    input: {
+      filter: "unread",
+      channel: "linkedin",
+      campaignId: "campaign_1",
+      limit: 25,
+      includeAutomaticResponses: true,
+    },
+  });
+  assert.deepEqual(calls.at(-1), {
+    tool: "conversation.inspect",
+    input: { conversationId: "conversation_1", cursor: "next_page", limit: 40 },
+  });
+  assert.deepEqual(calls.slice(0, 2), [
+    { tool: "conversations.list", input: inputs[0]!.input },
+    { tool: "conversation.inspect", input: inputs[1]!.input },
+  ]);
+});
+
 test("company-centric CLI commands forward the full filter and inspection inputs", async () => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   const filters = {
@@ -162,6 +319,37 @@ test("maps workspace-read CLI arguments to the public tool contract", async () =
     },
   ]);
   assert.match(stdout.read(), /"tool": "replies.list"/);
+
+  assert.equal(
+    await runCli(
+      [
+        "campaigns",
+        "list",
+        "--status",
+        "running",
+        "--query",
+        "Spring",
+        "--channel",
+        "INSTAGRAM",
+        "--limit",
+        "25",
+        "--cursor",
+        "abc_123",
+      ],
+      configuredContext(calls),
+    ),
+    0,
+  );
+  assert.deepEqual(calls[1], {
+    tool: "campaigns.list",
+    input: {
+      status: "Running",
+      query: "Spring",
+      channel: "instagram",
+      limit: 25,
+      cursor: "abc_123",
+    },
+  });
 });
 
 test("requires an explicit analytics scope and forwards an optional campaign", async () => {
@@ -228,6 +416,32 @@ test("loads stateless campaign input from a bounded JSON file", async () => {
       input: { state, idempotencyKey: "campaign:prepare:1", reviewedAudience },
     },
   ]);
+});
+
+test("accepts campaign state from standard input and rejects two stdin sources", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const state = { profile: { version: 1 }, brief: { version: 1 } };
+  assert.equal(
+    await runCli(["campaign", "validate", "--state", "-"], {
+      ...configuredContext(calls),
+      stdin: (async function* () {
+        yield JSON.stringify({ state });
+      })(),
+      stdout: output().stream,
+    }),
+    0,
+  );
+  assert.deepEqual(calls, [{ tool: "campaign.validate", input: { state } }]);
+
+  const stderr = output();
+  assert.equal(
+    await runCli(["campaign", "prepare", "--state", "-", "--reviewed-audience", "-"], {
+      ...configuredContext([]),
+      stderr: stderr.stream,
+    }),
+    2,
+  );
+  assert.match(stderr.read(), /either --state or --reviewed-audience/);
 });
 
 test("requires an explicitly saved and reviewed audience preview before preparation", async () => {
@@ -472,7 +686,8 @@ test("draft update CLI preserves the campaign ID and patch and rejects activatio
   assert.equal(calls.length, 1);
 });
 
-test("campaign operation wait returns the acknowledged result or a resumable timeout", async () => {
+test("campaign operation wait returns the acknowledged result or a resumable timeout", async (t) => {
+  t.mock.timers.enable({ apis: ["Date"], now: 1_000_000 });
   for (const finishes of [true, false]) {
     const stdout = output(),
       stderr = output();

@@ -157,7 +157,45 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     ownerOnly = [],
     inputs = [],
     data = [],
-    mcpSchemas = [];
+    mcpSchemas = [],
+    mcpOutputSchemas = [],
+    inputSchemaDocuments = {},
+    inputSchemaDefinitions = {};
+  function bundledOutputSchema(schema) {
+    const definitions = {};
+    function convert(value) {
+      if (Array.isArray(value)) return value.map(convert);
+      if (!value || typeof value !== "object") return value;
+      if (typeof value.$ref === "string") {
+        if (!/^#\/components\/schemas\/[A-Za-z][A-Za-z0-9]*$/.test(value.$ref))
+          throw Error(`Unsupported output schema reference: ${value.$ref}`);
+        const name = value.$ref.split("/").at(-1);
+        if (!schemas[name]) throw Error(`Missing output schema: ${name}`);
+        if (!Object.hasOwn(definitions, name)) {
+          definitions[name] = null;
+          definitions[name] = convert(schemas[name]);
+        }
+        return { ...value, $ref: `#/$defs/${name}` };
+      }
+      return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, convert(child)]));
+    }
+    return { ...convert(schema), $defs: definitions };
+  }
+  function collectInputReferences(value) {
+    if (Array.isArray(value)) {
+      for (const item of value) collectInputReferences(item);
+      return;
+    }
+    if (!value || typeof value !== "object") return;
+    if (value.$ref) {
+      const name = value.$ref.split("/").at(-1);
+      if (!Object.hasOwn(inputSchemaDefinitions, name)) {
+        inputSchemaDefinitions[name] = schemas[name];
+        collectInputReferences(schemas[name]);
+      }
+    }
+    for (const child of Object.values(value)) collectInputReferences(child);
+  }
   const seenAliases = new Set();
   for (const [path, methods] of Object.entries(document.paths)) {
     if (!path.startsWith("/api/v1/agent/tools/")) continue;
@@ -228,6 +266,13 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     mcpSchemas.push(
       `${json(name)}: ${compile(operation.requestBody.content["application/json"].schema)}`,
     );
+    const resultSchema = operation.responses?.["200"]?.content?.["application/json"]?.schema;
+    if (!resultSchema) throw Error(`Missing output schema: ${name}`);
+    mcpOutputSchemas.push(
+      `${json(name)}: z.fromJSONSchema(${json(bundledOutputSchema(resultSchema))})`,
+    );
+    inputSchemaDocuments[name] = operation.requestBody.content["application/json"].schema;
+    collectInputReferences(inputSchemaDocuments[name]);
   }
   if (json(names) !== json(document.components.schemas.AgentToolName.enum))
     throw Error("AgentToolName enum differs from operations");
@@ -238,7 +283,10 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
   const artifacts = new Map([
     [
       "packages/sdk/src/generated/tools.ts",
-      common + `export const AGENT_TOOL_DEFINITIONS = ${json(definitions)} as const;\n`,
+      common +
+        `export const AGENT_TOOL_DEFINITIONS = ${json(definitions)} as const;\n` +
+        `export const AGENT_TOOL_INPUT_SCHEMAS = ${json(inputSchemaDocuments)} as const;\n` +
+        `export const AGENT_INPUT_SCHEMA_DEFINITIONS = ${json(inputSchemaDefinitions)} as const;\n`,
     ],
     [
       "packages/sdk/src/generated/tool-types.ts",
@@ -251,6 +299,12 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
         'import { z } from "zod";\n' +
         [...declarations.values()].join("\n") +
         `\nexport const AGENT_INPUT_SCHEMAS = {${mcpSchemas.join(",\n")}} as const;\n`,
+    ],
+    [
+      "packages/mcp-server/src/generated/output-schemas.ts",
+      header +
+        'import { z } from "zod";\n' +
+        `export const AGENT_OUTPUT_SCHEMAS = {${mcpOutputSchemas.join(",\n")}} as const;\n`,
     ],
     ["site/src/lib/agent-platform/public-contract.generated.ts", common],
   ]);

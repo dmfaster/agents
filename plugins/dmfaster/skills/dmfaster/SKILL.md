@@ -11,14 +11,15 @@ implementation, review, tests, migrations, or deployments, follow the
 repository's own development guidance unless the user explicitly asks for live
 workspace evidence.
 
-The suite has 31 narrow domain tools, including company-centric search,
+The suite has 33 narrow domain tools, including company-centric search,
 complete company research, private shortlists, operational reads, campaign
 planning, live delivery settings, and authorized campaign controls. It does not expose generic mutation,
 provider execution, reply sending, meeting booking, browser-worker credentials,
 or database access.
 
-The MCP server may additionally offer the read-only `campaign_workspace`
-presentation tool. When the host supports MCP Apps, use it after assembling or
+The MCP server also offers `connection_status` for local authentication and
+workspace identity, plus the read-only `campaign_workspace` presentation tool.
+When the host supports MCP Apps, use the campaign view after assembling or
 revising a complete campaign state when an inline editor would help the user
 review audience, delivery, and messages. Never require it: Codex and other
 headless hosts should continue with the domain tools and the same complete
@@ -59,7 +60,9 @@ The MCP server requires the stateless MCP 2026-07-28 protocol and rejects the
 use the CLI fallback below; do not attempt to force a legacy MCP session.
 
 1. Prefer the official DM Faster MCP tools. Call the narrowest useful tool
-   directly; do not require a separate CLI status check when MCP already works.
+   directly; use `connection_status` when connection or workspace identity is
+   unclear. The MCP server remains discoverable before login and picks up a
+   newly approved credential on the next call.
 2. If MCP reports missing or invalid authentication, read
    [references/authentication.md](references/authentication.md) and use its
    version-pinned CLI login flow. Show the CLI confirmation code, then let the
@@ -87,8 +90,12 @@ Choose the narrowest read workflow that answers the request:
 - Use `campaign_inspect` for delivery and outcome facts about one campaign.
 - Use `sending_inspect` for queue, extension, browser-worker, or failed-send
   concerns.
-- Use `replies_list` for conversations needing attention. Reply count is not
-  sent-message count.
+- Use `replies_list` for the older campaign reply-stage summary. It does not
+  contain the actual conversation thread.
+- Use `conversations_list` for inbox attention and `conversation_inspect` for
+  actual inbound and outbound messages. Follow the returned cursors before
+  claiming a collection or thread is complete. Reading does not mark messages
+  read or authorize a reply.
 - Use `pipeline_inspect` for contacted, replied, booked-call, and closed counts.
 - Use `company_timeline` only with campaign and outreach identifiers returned by
   DM Faster.
@@ -228,7 +235,7 @@ existing connections without it keep per-action browser approval.
      browser extension, repeat the exact tool and input in `setup.resume`.
    - `approval_required`: this connection has no direct-control grant. For
      ongoing conversational control, follow the secure login reference to
-     reconnect once with the `full` profile and grant `campaigns:control`.
+     upgrade once to the `full` profile and grant `campaigns:control`.
      Otherwise show the returned approval URL and confirmation code for this
      action. The human must personally inspect and approve that DM Faster page.
      Never open, click, or operate it on the human's behalf. Repeat the same

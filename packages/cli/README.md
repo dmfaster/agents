@@ -3,28 +3,33 @@
 CLI for DM Faster Agent 1.0. Run the version-pinned package, then authenticate
 through the focused DM Faster browser approval page.
 
-The version-pinned 1.4.0 runtime is published. These instructions include the
-September 9, 2026 server update for saved company contact details.
+These examples are pinned to the 1.5.0 runtime to avoid silently installing a
+different client release. They include the September 9, 2026 server update for
+saved company contact details.
 
 ```bash
-npx --yes @dmfaster/cli@1.4.0 auth login --json
-npx --yes @dmfaster/cli@1.4.0 auth login --access plan --json
-npx --yes @dmfaster/cli@1.4.0 auth status --json
+npx --yes @dmfaster/cli@1.5.0 auth login --json
+npx --yes @dmfaster/cli@1.5.0 auth login --access plan --json
+npx --yes @dmfaster/cli@1.5.0 auth status --json
+npx --yes @dmfaster/cli@1.5.0 doctor --json
+npx --yes @dmfaster/cli@1.5.0 describe companies search
 
-npx --yes @dmfaster/cli@1.4.0 analytics summary --scope today --json
-npx --yes @dmfaster/cli@1.4.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.4.0 campaigns list --status Running --limit 10 --json
-npx --yes @dmfaster/cli@1.4.0 replies list campaign_123 --limit 5 --query "Visio" --json
-npx --yes @dmfaster/cli@1.4.0 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.5.0 analytics summary --scope today --json
+npx --yes @dmfaster/cli@1.5.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.5.0 campaigns list --status Running --limit 10 --json
+npx --yes @dmfaster/cli@1.5.0 conversations list --filter unread --channel linkedin --limit 25 --json
+npx --yes @dmfaster/cli@1.5.0 conversation inspect conversation_123 --limit 40 --json
+npx --yes @dmfaster/cli@1.5.0 replies list campaign_123 --limit 5 --query "Visio" --json
+npx --yes @dmfaster/cli@1.5.0 company timeline campaign_123 outreach_456 --json
 
-npx --yes @dmfaster/cli@1.4.0 campaign validate --state campaign-state.json --json
-npx --yes @dmfaster/cli@1.4.0 audience preview --state campaign-state.json --json > audience-preview.json
+npx --yes @dmfaster/cli@1.5.0 campaign validate --state campaign-state.json --json
+npx --yes @dmfaster/cli@1.5.0 audience preview --state campaign-state.json --json > audience-preview.json
 # Review the exact count and sample in audience-preview.json before continuing.
-npx --yes @dmfaster/cli@1.4.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
-npx --yes @dmfaster/cli@1.4.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
-npx --yes @dmfaster/cli@1.4.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
+npx --yes @dmfaster/cli@1.5.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
+npx --yes @dmfaster/cli@1.5.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
+npx --yes @dmfaster/cli@1.5.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
 
-npx --yes @dmfaster/cli@1.4.0 auth logout --json
+npx --yes @dmfaster/cli@1.5.0 auth logout --json
 ```
 
 `auth login` creates a short-lived PKCE device request, prints a confirmation
@@ -47,10 +52,27 @@ The server still checks every exact scope, workspace membership, owner-only
 rule, and action authorization. An access profile is a credential ceiling, not
 an action approval.
 
+`campaigns list` accepts `--query`, `--channel`, and `--cursor` alongside status
+and limit. Its result includes an exact filtered total and `nextCursor`. Keep
+the same filters on subsequent pages. If the collection changes during paging,
+restart with no cursor; a partial set is never reported as complete.
+
+`conversations list` accepts inbox filters and a cursor as flags. The
+`conversation inspect` command takes the exact conversation ID and optional
+message cursor. Both also accept `--input FILE` for the complete typed input.
+
 Login emits two newline-delimited JSON events on stdout: first
 `authorization_required`, then `authenticated` after a successful exchange.
 Human instructions and warnings go to stderr, so scripts can parse stdout
 without scraping prose.
+
+Use `auth upgrade --access full` when an existing credential needs broader
+permissions. The old credential remains stored during browser approval. A denied
+or expired request keeps it; after secure storage confirms the replacement, the
+CLI revokes the old credential. If old remote revocation fails, the CLI reports
+that separately while retaining the new working connection. The final JSON
+event includes `priorCredentialRevoked` so scripts can tell whether cleanup
+finished.
 
 Approved credentials are stored in macOS Keychain or Linux Secret Service
 (`secret-tool`). Unsupported credential stores fail closed and never write a
@@ -78,13 +100,23 @@ authorization ID and the same campaign ID and idempotency key. The authorization
 remains short-lived and bound to the exact campaign version.
 
 Older connections keep per-action browser approval. Reconnect once with
-`dmfaster auth logout` followed by `dmfaster auth login --access full` to enable conversational controls, or follow
+`dmfaster auth upgrade --access full` to enable conversational controls, or follow
 the returned `approval_required` URL for a single action. Only the human operates
 connection and action approval pages. If launch returns `setup_required`, show
 `setup.setupUrl` and repeat `setup.resume` after the extension reconnects.
 
 `--json` is accepted anywhere and JSON is the default for every API command.
-Run `dmfaster --help` for the complete Agent 1.0 command list. The production
+`dmfaster doctor` checks the Node runtime, secure-store availability, remote
+authentication, workspace identity, granted scopes, and scope-eligible tools.
+It prints actions to restore a broken connection without exposing the token.
+Scope eligibility does not bypass workspace role, plan, or action checks.
+Run `dmfaster --help` for the complete Agent 1.0 command list, or
+`dmfaster COMMAND --help` for a focused description. `dmfaster describe COMMAND`
+returns the exact input schema, required scopes, and effect without signing in.
+Commands that accept `--input FILE`, `--state FILE`, `--reviewed-audience FILE`,
+or `--file FILE` also accept `-` to read one input from standard input. Keep the
+reviewed audience preview as the server-issued result; standard input does not
+remove its review requirement. The production
 API URL defaults to `https://app.dmfaster.com`.
 
 The CLI also reads `$XDG_CONFIG_HOME/dmfaster/config.json` (or
@@ -195,5 +227,5 @@ channel; inspect the full company profile for all decision-makers. Generated
 `company.…` identities are never Instagram targets, and contactless companies
 remain research rows. Saved routes are snapshots, not verified deliverability.
 Older lists are not automatically backfilled with contacts previously lost.
-This server behavior is available with the published 1.4.0 CLI and MCP server;
+This server behavior was available with the published 1.4.0 CLI and MCP server;
 saving a research list creates no campaign and sends nothing.
