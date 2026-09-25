@@ -686,6 +686,104 @@ test("draft update CLI preserves the campaign ID and patch and rejects activatio
   assert.equal(calls.length, 1);
 });
 
+test("history export writes all confirmed sends only after every page succeeds", async () => {
+  const stdout = output(),
+    stderr = output();
+  const calls: unknown[] = [];
+  const context = configuredContext([]);
+  context.createClient = () => ({
+    async invoke(tool, input) {
+      assert.equal(tool, "history.list");
+      calls.push(input);
+      const cursor = (input as { cursor?: string }).cursor;
+      return {
+        version: 1,
+        tool,
+        policy: AGENT_TOOL_POLICIES[tool],
+        ok: true,
+        generatedAt: "2026-09-25T12:00:00.000Z",
+        durationMs: 1,
+        evidence: [],
+        consistency: { status: "verified", checks: [] },
+        data: cursor
+          ? {
+              campaignId: "campaign-1",
+              entries: [{ id: "send-2", state: "Sent" }],
+              hasMore: false,
+              nextCursor: null,
+            }
+          : {
+              campaignId: "campaign-1",
+              entries: [{ id: "send-1", state: "Sent" }],
+              hasMore: true,
+              nextCursor: "page-2",
+            },
+        artifacts: [],
+        error: null,
+      } as AgentToolResult;
+    },
+  });
+  assert.equal(
+    await runCli(["history", "export", "campaign-1"], {
+      ...context,
+      stdout: stdout.stream,
+      stderr: stderr.stream,
+    }),
+    0,
+  );
+  assert.deepEqual(calls, [
+    { campaignId: "campaign-1", limit: 100 },
+    { campaignId: "campaign-1", cursor: "page-2", limit: 100 },
+  ]);
+  assert.deepEqual(
+    stdout
+      .read()
+      .trim()
+      .split("\n")
+      .map((row) => JSON.parse(row).id),
+    ["send-1", "send-2"],
+  );
+  assert.equal(stderr.read(), "");
+});
+
+test("history export does not write a partial file when the cursor stalls", async () => {
+  const stdout = output(),
+    stderr = output();
+  const context = configuredContext([]);
+  context.createClient = () => ({
+    async invoke(tool) {
+      return {
+        version: 1,
+        tool,
+        policy: AGENT_TOOL_POLICIES[tool],
+        ok: true,
+        generatedAt: "2026-09-25T12:00:00.000Z",
+        durationMs: 1,
+        evidence: [],
+        consistency: { status: "verified", checks: [] },
+        data: {
+          campaignId: "campaign-1",
+          entries: [{ id: "send-1" }],
+          hasMore: true,
+          nextCursor: "",
+        },
+        artifacts: [],
+        error: null,
+      } as AgentToolResult;
+    },
+  });
+  assert.equal(
+    await runCli(["history", "export", "campaign-1"], {
+      ...context,
+      stdout: stdout.stream,
+      stderr: stderr.stream,
+    }),
+    1,
+  );
+  assert.equal(stdout.read(), "");
+  assert.match(stderr.read(), /cursor stalled/);
+});
+
 test("campaign operation wait returns the acknowledged result or a resumable timeout", async (t) => {
   t.mock.timers.enable({ apis: ["Date"], now: 1_000_000 });
   for (const finishes of [true, false]) {

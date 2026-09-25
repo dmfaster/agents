@@ -51,8 +51,17 @@ shared Codex, Claude, and Cursor plugin.
   `campaigns:control` once during browser connection so preflight returns `ready`
   without per-action approval. Existing connections retain their original
   per-action browser approval contract; never upgrade credentials silently.
-- Never add reply sending, meeting booking, provider-credential access,
-  approval bypasses, or arbitrary workspace mutations.
+- Inbox replies require the user's explicit instruction for the exact text and
+  inspected conversation. Use a durable idempotency key, retain the app's
+  provider/role checks, and report queued delivery separately from confirmed
+  sending. A previously granted connection permission plus that instruction
+  must not acquire a second approval screen solely because an agent calls it.
+- Pipeline stage and note writes, and follow-up cancellation, require exact
+  inspected identities and conflict checks. Never infer a booked meeting from
+  a queued message or a positive reply alone.
+- Never expose provider credentials, bypass consent, or add arbitrary workspace
+  mutations. New controls must have typed, bounded contracts and matching
+  Product implementation.
 - Exact audience totals are invariant. Never substitute a lower bound, sample,
   estimate, or guessed count.
 

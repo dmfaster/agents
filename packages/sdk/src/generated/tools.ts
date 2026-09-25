@@ -8,7 +8,19 @@ export const AGENT_TOOL_NAMES = [
   "replies.list",
   "conversations.list",
   "conversation.inspect",
+  "conversation.update",
+  "conversation.reply",
+  "conversation.reply.inspect",
+  "campaign.followups.list",
+  "campaign.followups.cancel",
+  "campaign.outcomes.list",
+  "senders.inspect",
+  "history.list",
   "pipeline.inspect",
+  "pipeline.cards.list",
+  "pipeline.stage.update",
+  "pipeline.note.list",
+  "pipeline.note.add",
   "company.timeline",
   "industry.lookup",
   "campaign.validate",
@@ -76,8 +88,68 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "conversation.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "conversation.reply": {
+    effect: "external",
+    approval: "human_confirmation",
+    exposure: "public_api",
+  },
+  "conversation.reply.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.followups.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.followups.cancel": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.outcomes.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "senders.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "history.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
   "pipeline.inspect": {
     effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "pipeline.cards.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "pipeline.stage.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "pipeline.note.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "pipeline.note.add": {
+    effect: "write",
     approval: "none",
     exposure: "public_api",
   },
@@ -216,7 +288,19 @@ export const AGENT_TOOL_SCOPES = {
   "replies.list": ["inbox:read"],
   "conversations.list": ["inbox:read"],
   "conversation.inspect": ["inbox:read"],
+  "conversation.update": ["inbox:read", "inbox:write"],
+  "conversation.reply": ["inbox:read", "inbox:write"],
+  "conversation.reply.inspect": ["inbox:read"],
+  "campaign.followups.list": ["sending:read"],
+  "campaign.followups.cancel": ["campaigns:write"],
+  "campaign.outcomes.list": ["sending:read"],
+  "senders.inspect": ["sending:read"],
+  "history.list": ["campaigns:read", "sending:read"],
   "pipeline.inspect": ["pipeline:read"],
+  "pipeline.cards.list": ["pipeline:read"],
+  "pipeline.stage.update": ["pipeline:read", "pipeline:write"],
+  "pipeline.note.list": ["pipeline:read"],
+  "pipeline.note.add": ["pipeline:read", "pipeline:write"],
   "company.timeline": ["campaigns:read", "pipeline:read"],
   "industry.lookup": ["audiences:read"],
   "campaign.validate": ["audiences:read"],
@@ -244,6 +328,12 @@ export const AGENT_TOOL_SCOPES = {
   "campaign.delivery.update": ["campaigns:read", "campaigns:write"],
 } as const;
 export const AGENT_OWNER_ONLY_TOOLS = [
+  "conversation.update",
+  "conversation.reply",
+  "campaign.followups.cancel",
+  "senders.inspect",
+  "pipeline.stage.update",
+  "pipeline.note.add",
   "list.target.remove",
   "campaign.draft.prepare",
   "campaign.draft.update",
@@ -414,6 +504,154 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["conversation", "inspect"],
     },
   },
+  "conversation.update": {
+    mcp: {
+      name: "conversation_update",
+      title: "Update inbox conversation",
+      description:
+        "Mark read or unread, close or reopen, snooze, assign, or set interest on one inspected conversation. Echo its updatedAt.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Inbox",
+      usage: "conversation update --input FILE",
+      command: ["conversation", "update"],
+    },
+  },
+  "conversation.reply": {
+    mcp: {
+      name: "conversation_reply",
+      title: "Send conversation reply",
+      description:
+        "Send only text explicitly approved by the user for this exact conversation. Echo lastInboundAt and lastMessageAt from inspection, and use a stable idempotency key. Inspect delivery afterward.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
+    },
+    cli: {
+      section: "Inbox",
+      usage: "conversation reply --input FILE",
+      command: ["conversation", "reply"],
+    },
+  },
+  "conversation.reply.inspect": {
+    mcp: {
+      name: "conversation_reply_inspect",
+      title: "Inspect reply delivery",
+      description: "Check the durable state of a reply by its idempotency key; queued is not sent.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Inbox",
+      usage: "conversation reply inspect --input FILE",
+      command: ["conversation", "reply", "inspect"],
+    },
+  },
+  "campaign.followups.list": {
+    mcp: {
+      name: "campaign_followups_list",
+      title: "List campaign follow-ups",
+      description: "Read upcoming, completed, skipped, or failed follow-ups for one campaign.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "campaign followups list --input FILE",
+      command: ["campaign", "followups", "list"],
+    },
+  },
+  "campaign.followups.cancel": {
+    mcp: {
+      name: "campaign_followups_cancel",
+      title: "Cancel queued follow-ups",
+      description:
+        "Stop exact queued follow-up chains using inspected job IDs, campaign version, and a stable idempotency key.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "campaign followups cancel --input FILE",
+      command: ["campaign", "followups", "cancel"],
+    },
+  },
+  "campaign.outcomes.list": {
+    mcp: {
+      name: "campaign_outcomes_list",
+      title: "List campaign outcomes",
+      description: "Read the execution event timeline with reasons and cursor pagination.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "campaign outcomes list --input FILE",
+      command: ["campaign", "outcomes", "list"],
+    },
+  },
+  "senders.inspect": {
+    mcp: {
+      name: "senders_inspect",
+      title: "Inspect senders",
+      description:
+        "Read browser and email sender status, health, and the setup URL for manual reconnection.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "senders inspect",
+      command: ["senders", "inspect"],
+    },
+  },
+  "history.list": {
+    mcp: {
+      name: "history_list",
+      title: "List sent history",
+      description: "Page the confirmed sends for one campaign, including channel and target.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "history list --input FILE",
+      command: ["history", "list"],
+    },
+  },
   "pipeline.inspect": {
     mcp: {
       name: "pipeline_inspect",
@@ -431,6 +669,78 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "Workspace reads",
       usage: "pipeline inspect [CAMPAIGN_ID]",
       command: ["pipeline", "inspect"],
+    },
+  },
+  "pipeline.cards.list": {
+    mcp: {
+      name: "pipeline_cards_list",
+      title: "List pipeline cards",
+      description: "Page campaign pipeline cards by stage, search, or exact entity key.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Pipeline",
+      usage: "pipeline cards list --input FILE",
+      command: ["pipeline", "cards", "list"],
+    },
+  },
+  "pipeline.stage.update": {
+    mcp: {
+      name: "pipeline_stage_update",
+      title: "Update pipeline stage",
+      description: "Change one inspected card using its exact stageKey and expectedStage.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Pipeline",
+      usage: "pipeline stage update --input FILE",
+      command: ["pipeline", "stage", "update"],
+    },
+  },
+  "pipeline.note.list": {
+    mcp: {
+      name: "pipeline_note_list",
+      title: "List pipeline notes",
+      description: "Read up to 100 notes for an exact campaign and pipeline entity.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Pipeline",
+      usage: "pipeline note list --input FILE",
+      command: ["pipeline", "note", "list"],
+    },
+  },
+  "pipeline.note.add": {
+    mcp: {
+      name: "pipeline_note_add",
+      title: "Add pipeline note",
+      description: "Add a note to an exact existing card with a durable idempotency key.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Pipeline",
+      usage: "pipeline note add --input FILE",
+      command: ["pipeline", "note", "add"],
     },
   },
   "company.timeline": {
@@ -934,8 +1244,44 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   "conversation.inspect": {
     $ref: "#/components/schemas/ConversationInspectInput",
   },
+  "conversation.update": {
+    $ref: "#/components/schemas/ConversationUpdateInput",
+  },
+  "conversation.reply": {
+    $ref: "#/components/schemas/ConversationReplyInput",
+  },
+  "conversation.reply.inspect": {
+    $ref: "#/components/schemas/ConversationReplyInspectInput",
+  },
+  "campaign.followups.list": {
+    $ref: "#/components/schemas/CampaignFollowupsListInput",
+  },
+  "campaign.followups.cancel": {
+    $ref: "#/components/schemas/CampaignFollowupsCancelInput",
+  },
+  "campaign.outcomes.list": {
+    $ref: "#/components/schemas/CampaignOutcomesListInput",
+  },
+  "senders.inspect": {
+    $ref: "#/components/schemas/WorkspaceBriefingInput",
+  },
+  "history.list": {
+    $ref: "#/components/schemas/HistoryListInput",
+  },
   "pipeline.inspect": {
     $ref: "#/components/schemas/PipelineInspectInput",
+  },
+  "pipeline.cards.list": {
+    $ref: "#/components/schemas/PipelineCardsListInput",
+  },
+  "pipeline.stage.update": {
+    $ref: "#/components/schemas/PipelineStageUpdateInput",
+  },
+  "pipeline.note.list": {
+    $ref: "#/components/schemas/PipelineNoteListInput",
+  },
+  "pipeline.note.add": {
+    $ref: "#/components/schemas/PipelineNoteAddInput",
   },
   "company.timeline": {
     $ref: "#/components/schemas/CompanyTimelineInput",
@@ -1203,8 +1549,303 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
   },
+  ConversationUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["conversationId", "expectedUpdatedAt", "action"],
+    properties: {
+      conversationId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      action: {
+        type: "string",
+        enum: [
+          "mark_read",
+          "mark_unread",
+          "close",
+          "reopen",
+          "snooze",
+          "unsnooze",
+          "assign_to_me",
+          "unassign",
+          "set_interest",
+        ],
+      },
+      snoozedUntil: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      interestLevel: {
+        type: "string",
+        enum: ["positive", "neutral", "negative"],
+      },
+      interestIntent: {
+        type: "string",
+        enum: [
+          "interested",
+          "information_requested",
+          "meeting_intent",
+          "not_now",
+          "wrong_person",
+          "not_interested",
+          "opt_out",
+          "acknowledgement",
+          "unclear",
+        ],
+      },
+    },
+  },
+  ResourceVersion: {
+    type: "string",
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+    minLength: 20,
+    maxLength: 27,
+  },
+  ConversationReplyInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [
+      "conversationId",
+      "expectedLastInboundAt",
+      "expectedLastMessageAt",
+      "text",
+      "idempotencyKey",
+    ],
+    properties: {
+      conversationId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedLastInboundAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      expectedLastMessageAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      text: {
+        type: "string",
+        minLength: 1,
+        maxLength: 10000,
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 8,
+        maxLength: 160,
+        pattern: "^[a-zA-Z0-9_-]+$",
+      },
+    },
+  },
+  ConversationReplyInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["idempotencyKey"],
+    properties: {
+      idempotencyKey: {
+        type: "string",
+        minLength: 8,
+        maxLength: 160,
+        pattern: "^[a-zA-Z0-9_-]+$",
+      },
+    },
+  },
+  CampaignFollowupsListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      view: {
+        type: "string",
+        enum: ["upcoming", "done"],
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 512,
+      },
+    },
+  },
+  CampaignFollowupsCancelInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "expectedCampaignUpdatedAt", "jobIds", "idempotencyKey"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedCampaignUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      jobIds: {
+        type: "array",
+        minItems: 1,
+        maxItems: 50,
+        items: {
+          $ref: "#/components/schemas/ResourceId",
+        },
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 8,
+        maxLength: 160,
+        pattern: "^[a-zA-Z0-9._:-]+$",
+      },
+    },
+  },
+  CampaignOutcomesListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 512,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+  },
+  HistoryListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 512,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+      search: {
+        type: "string",
+        minLength: 3,
+        maxLength: 120,
+      },
+    },
+  },
   PipelineInspectInput: {
     $ref: "#/components/schemas/OptionalCampaignInput",
+  },
+  PipelineCardsListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "stage"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      stage: {
+        $ref: "#/components/schemas/PipelineStage",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 15,
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 4000,
+      },
+      query: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+      },
+      entityKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 320,
+      },
+    },
+  },
+  PipelineStage: {
+    type: "string",
+    enum: ["contacted", "replied", "call_booked", "closed"],
+  },
+  PipelineStageUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "entityKey", "stageKey", "expectedStage", "stage"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      entityKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 320,
+      },
+      stageKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 500,
+      },
+      expectedStage: {
+        $ref: "#/components/schemas/PipelineStage",
+      },
+      stage: {
+        $ref: "#/components/schemas/PipelineStage",
+      },
+    },
+  },
+  PipelineNoteListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "entityKey"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      entityKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 320,
+      },
+    },
+  },
+  PipelineNoteAddInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "entityKey", "body", "idempotencyKey"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      entityKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 320,
+      },
+      body: {
+        type: "string",
+        minLength: 1,
+        maxLength: 2000,
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 8,
+        maxLength: 160,
+        pattern: "^[a-zA-Z0-9._:-]+$",
+      },
+    },
   },
   CompanyTimelineInput: {
     type: "object",
@@ -1897,12 +2538,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
   },
-  ResourceVersion: {
-    type: "string",
-    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
-    minLength: 20,
-    maxLength: 27,
-  },
   CampaignDraftPrepareInput: {
     type: "object",
     additionalProperties: false,
@@ -1993,6 +2628,10 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
             minLength: 1,
             maxLength: 120,
           },
+          description: {
+            type: "string",
+            maxLength: 1000,
+          },
           messageVariants: {
             type: "array",
             minItems: 1,
@@ -2002,6 +2641,29 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
               minLength: 1,
               maxLength: 1000,
             },
+          },
+          instagramEnabled: {
+            type: "boolean",
+          },
+          facebookEnabled: {
+            type: "boolean",
+          },
+          linkedinEnabled: {
+            type: "boolean",
+          },
+          linkedinInviteMode: {
+            type: "string",
+            enum: ["invite_only", "invite_with_note"],
+          },
+          linkedinInviteNote: {
+            type: "string",
+            maxLength: 300,
+          },
+          followUpSequence: {
+            $ref: "#/components/schemas/CampaignFollowUpSequenceInput",
+          },
+          linkedinFollowUpSequence: {
+            $ref: "#/components/schemas/LinkedinFollowUpSequenceInput",
           },
           dailyCap: {
             type: "integer",
@@ -2031,6 +2693,74 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
             minimum: 1,
             maximum: 127,
           },
+        },
+      },
+    },
+  },
+  CampaignFollowUpSequenceInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["enabled", "steps"],
+    properties: {
+      enabled: {
+        type: "boolean",
+      },
+      steps: {
+        type: "array",
+        maxItems: 3,
+        items: {
+          $ref: "#/components/schemas/CampaignFollowUpStepInput",
+        },
+      },
+    },
+  },
+  CampaignFollowUpStepInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["delayDays", "channel", "variants"],
+    properties: {
+      delayDays: {
+        type: "integer",
+        minimum: 1,
+        maximum: 30,
+      },
+      channel: {
+        type: "string",
+        enum: ["inherit", "instagram", "facebook", "linkedin", "gmail"],
+      },
+      fallbackChannel: {
+        type: "string",
+        enum: ["none", "instagram", "facebook", "linkedin", "gmail"],
+      },
+      subject: {
+        type: "string",
+        maxLength: 500,
+      },
+      variants: {
+        type: "array",
+        minItems: 1,
+        maxItems: 4,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 1000,
+        },
+      },
+    },
+  },
+  LinkedinFollowUpSequenceInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["enabled", "steps"],
+    properties: {
+      enabled: {
+        type: "boolean",
+      },
+      steps: {
+        type: "array",
+        maxItems: 2,
+        items: {
+          $ref: "#/components/schemas/CampaignFollowUpStepInput",
         },
       },
     },
@@ -2449,6 +3179,21 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
               maxLength: 64,
               minLength: 64,
             },
+            selectedLinkedinUrl: {
+              type: "string",
+              minLength: 1,
+              maxLength: 500,
+            },
+            selectedEmailAddress: {
+              type: "string",
+              minLength: 1,
+              maxLength: 320,
+            },
+            selectedPhoneNumber: {
+              type: "string",
+              minLength: 1,
+              maxLength: 80,
+            },
           },
           required: ["country", "businessId", "expectedRevision"],
         },
@@ -2530,7 +3275,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
       excludeCompanies: {
         type: "array",
-        minItems: 1,
+        minItems: 0,
         maxItems: 1000,
         items: {
           type: "object",
@@ -2544,6 +3289,48 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
               type: "string",
               minLength: 1,
               maxLength: 192,
+            },
+          },
+        },
+      },
+      includeCompanies: {
+        type: "array",
+        minItems: 1,
+        maxItems: 50,
+        description:
+          "Inspected companies to add or refresh. Existing identities are refreshed with the selected decision-maker routes.",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: ["country", "businessId", "expectedRevision"],
+          properties: {
+            country: {
+              $ref: "#/components/schemas/SupportedCountry",
+            },
+            businessId: {
+              type: "string",
+              minLength: 1,
+              maxLength: 192,
+            },
+            expectedRevision: {
+              type: "string",
+              minLength: 64,
+              maxLength: 64,
+            },
+            selectedLinkedinUrl: {
+              type: "string",
+              minLength: 1,
+              maxLength: 500,
+            },
+            selectedEmailAddress: {
+              type: "string",
+              minLength: 1,
+              maxLength: 320,
+            },
+            selectedPhoneNumber: {
+              type: "string",
+              minLength: 1,
+              maxLength: 80,
             },
           },
         },

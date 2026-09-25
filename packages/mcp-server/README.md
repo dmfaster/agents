@@ -21,7 +21,7 @@ or network access. It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 34 domain tools directly.
+continue to use all 46 domain tools directly.
 
 `audience_preview` returns a server-issued `reviewedAudience` identity with an
 exact, immutable search revision. The user must review that preview before a
@@ -49,7 +49,7 @@ npx --yes @dmfaster/mcp-server@1.6.0
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
-smaller ceiling. The MCP server can expose all 34 domain schemas and the
+smaller ceiling. The MCP server can expose all 46 domain schemas and the
 local connection and presentation schemas while the DM Faster API independently rejects
 domain tools outside the stored credential's scopes.
 
@@ -59,7 +59,7 @@ preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world. Domain tools also
 advertise output schemas generated from the public Agent API contract.
 
-The MCP names are the 34 domain tools:
+The MCP names are the 46 domain tools:
 
 - `analytics_summary`
 - `workspace_briefing`
@@ -69,7 +69,19 @@ The MCP names are the 34 domain tools:
 - `replies_list`
 - `conversations_list`
 - `conversation_inspect`
+- `conversation_update`
+- `conversation_reply`
+- `conversation_reply_inspect`
+- `campaign_followups_list`
+- `campaign_followups_cancel`
+- `campaign_outcomes_list`
+- `senders_inspect`
+- `history_list`
 - `pipeline_inspect`
+- `pipeline_cards_list`
+- `pipeline_stage_update`
+- `pipeline_note_list`
+- `pipeline_note_add`
 - `company_timeline`
 - `industry_lookup`
 - `campaign_validate`
@@ -166,11 +178,13 @@ Instagram campaigns always exclude known contacts: `onlyNewChats` and
 `skipPreviouslyMessaged` must both be `true`. Unsupported values are rejected
 before a draft is created.
 
-To change an existing disabled Instagram draft, use
+To change an existing disabled, unstarted social campaign draft, use
 `dmfaster campaign draft update --input update.json --json`. Supply `campaignId`,
 `expectedCampaignUpdatedAt` from campaign inspection, and a nonempty `updates`
-object containing any of `name`, `messageVariants`, `dailyCap` (1–60), or
-`pacingSeconds` (12–3,600). Omitted settings and the audience are preserved.
+object containing any supported setting: social channel toggles, LinkedIn invite
+mode and note, follow-up sequences, description, `name`, `messageVariants`,
+`dailyCap` (1–60), `pacingSeconds` (12–3,600), or sending-window fields.
+Omitted settings and the audience are preserved.
 Stale versions and started campaigns are rejected. After an uncertain
 response, inspect the campaign before retrying. No launch approval is needed to
 edit a disabled draft.

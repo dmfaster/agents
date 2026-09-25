@@ -201,6 +201,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/campaign.followups.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel queued follow-ups for selected prospects
+         * @description Stops the selected queued, unsubmitted follow-up chains and skips their remaining queued follow-up jobs. Running or submitted attempts block the action. Requires the owner's explicit instruction for these prospects.
+         */
+        post: operations["campaignFollowupsCancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/campaign.followups.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect upcoming or completed follow-up jobs
+         * @description Returns the authoritative follow-up queue, including failed and skipped jobs, with cursor pagination.
+         */
+        post: operations["campaignFollowupsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/campaign.inspect": {
         parameters: {
             query?: never;
@@ -276,6 +316,26 @@ export interface paths {
          * @description Read the durable result of a launch or pause command. Queue preparation and sender acknowledgment are distinct from delivered messages.
          */
         post: operations["campaignOperationInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/campaign.outcomes.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Page through actual campaign execution events
+         * @description Reads recorded worker events for a campaign, including send, skip, and failure reasons. A queued job is not a sent message.
+         */
+        post: operations["campaignOutcomesList"];
         delete?: never;
         options?: never;
         head?: never;
@@ -542,6 +602,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/conversation.reply": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send an instructed reply to one conversation
+         * @description Queue or send the exact user-approved text only when the inspected conversation still has the same inbound and latest message. A durable idempotency key prevents duplicate replies. A queued receipt does not prove delivery.
+         */
+        post: operations["conversationReply"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/conversation.reply.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect actual reply delivery state
+         * @description Reads the durable action created by conversation.reply, including queued, sent, failed, or delivery unknown state.
+         */
+        post: operations["conversationReplyInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/conversation.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update one inbox conversation
+         * @description Applies one bounded inbox action to the exact inspected conversation version. Never sends a message.
+         */
+        post: operations["conversationUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/conversations.list": {
         parameters: {
             query?: never;
@@ -556,6 +676,26 @@ export interface paths {
          * @description Lists actual inbox conversations with app filters and a continuation cursor. Read-only; listing does not mark messages read.
          */
         post: operations["conversationsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/history.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Page through confirmed sent-message history
+         * @description Reads confirmed sends for one campaign. Cursor pages can be used to build an export; failed and skipped attempts are in campaign.outcomes.list.
+         */
+        post: operations["historyList"];
         delete?: never;
         options?: never;
         head?: never;
@@ -682,6 +822,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/pipeline.cards.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Page through exact pipeline cards
+         * @description Returns a bounded, cursor-paginated pipeline card page with stable stage keys for follow-up actions.
+         */
+        post: operations["pipelineCardsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/pipeline.inspect": {
         parameters: {
             query?: never;
@@ -703,6 +863,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/pipeline.note.add": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add an idempotent note to one pipeline card */
+        post: operations["pipelineNoteAdd"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/pipeline.note.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Read notes on one pipeline card */
+        post: operations["pipelineNoteList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/pipeline.stage.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update an inspected pipeline card stage
+         * @description Changes one existing card only when its stage still matches the inspected stage. Marking a meeting booked requires recorded evidence or the user's explicit instruction.
+         */
+        post: operations["pipelineStageUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/replies.list": {
         parameters: {
             query?: never;
@@ -718,6 +932,26 @@ export interface paths {
          *     is omitted, the selected, active, or most recent campaign is used. Read-only.
          */
         post: operations["repliesList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/senders.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect connected sender accounts and recovery status
+         * @description Returns safe browser and mailbox status. Connection repair remains an owner handoff through the app; this tool does not expose credentials.
+         */
+        post: operations["sendersInspect"];
         delete?: never;
         options?: never;
         head?: never;
@@ -800,7 +1034,7 @@ export interface components {
             targetListId: string;
         };
         /** @enum {string} */
-        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control";
+        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "inbox:write" | "pipeline:write";
         AgentAuthenticatedParty: {
             /** Format: email */
             email: string;
@@ -1042,7 +1276,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -1311,15 +1545,26 @@ export interface components {
         CampaignDraftUpdateData: {
             campaignId: string;
             campaignUpdatedAt: string;
-            /** @constant */
-            channel: "instagram";
+            /** @enum {string} */
+            channel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms" | "multichannel";
+            channels: ("instagram" | "facebook" | "linkedin" | "gmail" | "sms")[];
             dailyCap: number;
+            description?: string;
             /** @constant */
             enabled: false;
+            followUpSequence?: {
+                [key: string]: unknown;
+            } | null;
             instagramSendingWindowEnabled: boolean;
             instagramSendingWindowEndMinute: number;
             instagramSendingWindowStartMinute: number;
             instagramSendingWindowWeekdays: number;
+            linkedinFollowUpSequence?: {
+                [key: string]: unknown;
+            } | null;
+            /** @enum {string} */
+            linkedinInviteMode?: "invite_only" | "invite_with_note";
+            linkedinInviteNote?: string;
             listId: string;
             messageVariants: string[];
             name: string;
@@ -1336,10 +1581,19 @@ export interface components {
             expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
             updates: {
                 dailyCap?: number;
+                description?: string;
+                facebookEnabled?: boolean;
+                followUpSequence?: components["schemas"]["CampaignFollowUpSequenceInput"];
+                instagramEnabled?: boolean;
                 instagramSendingWindowEnabled?: boolean;
                 instagramSendingWindowEndMinute?: number;
                 instagramSendingWindowStartMinute?: number;
                 instagramSendingWindowWeekdays?: number;
+                linkedinEnabled?: boolean;
+                linkedinFollowUpSequence?: components["schemas"]["LinkedinFollowUpSequenceInput"];
+                /** @enum {string} */
+                linkedinInviteMode?: "invite_only" | "invite_with_note";
+                linkedinInviteNote?: string;
                 messageVariants?: string[];
                 name?: string;
                 pacingSeconds?: number;
@@ -1349,6 +1603,75 @@ export interface components {
             data?: components["schemas"]["CampaignDraftUpdateData"] | null;
             /** @constant */
             tool?: "campaign.draft.update";
+        };
+        CampaignFollowupsCancelInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: string;
+            jobIds: components["schemas"]["ResourceId"][];
+        };
+        CampaignFollowupsCancelOutput: {
+            campaignId: string;
+            cancelledJobIds: string[];
+            replayed: boolean;
+            stoppedChainCount: number;
+        };
+        CampaignFollowupsCancelResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignFollowupsCancelOutput"] | null;
+            /** @constant */
+            tool?: "campaign.followups.cancel";
+        };
+        CampaignFollowUpSequenceInput: {
+            enabled: boolean;
+            steps: components["schemas"]["CampaignFollowUpStepInput"][];
+        };
+        CampaignFollowupsListInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            cursor?: string;
+            /** @enum {string} */
+            view?: "upcoming" | "done";
+        };
+        CampaignFollowupsListOutput: {
+            campaignId: string;
+            campaignName: string;
+            enabled: boolean;
+            /** Format: date-time */
+            generatedAt: string;
+            items: {
+                awaitingConnection: boolean;
+                channel: string;
+                id: string;
+                message: string;
+                scheduledAt: string | null;
+                state: string;
+                step: number;
+                targetCompanyName: string;
+                targetHandle: string;
+                updatedAt: string;
+            }[];
+            nextCursor: string | null;
+            summary: {
+                done: number;
+                enabled?: boolean;
+                upcoming: number;
+            };
+            timeZone: string;
+            /** @enum {string} */
+            view: "upcoming" | "done";
+        };
+        CampaignFollowupsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignFollowupsListOutput"] | null;
+            /** @constant */
+            tool?: "campaign.followups.list";
+        };
+        CampaignFollowUpStepInput: {
+            /** @enum {string} */
+            channel: "inherit" | "instagram" | "facebook" | "linkedin" | "gmail";
+            delayDays: number;
+            /** @enum {string} */
+            fallbackChannel?: "none" | "instagram" | "facebook" | "linkedin" | "gmail";
+            subject?: string;
+            variants: string[];
         };
         CampaignInspectInput: components["schemas"]["OptionalCampaignInput"];
         CampaignInspectOutput: {
@@ -1433,6 +1756,32 @@ export interface components {
             data?: components["schemas"]["CampaignOperationInspectOutput"] | null;
             /** @constant */
             tool?: "campaign.operation.inspect";
+        };
+        CampaignOutcomesListInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            cursor?: string;
+            limit?: number;
+        };
+        CampaignOutcomesListOutput: {
+            campaignId: string;
+            events: {
+                channel: string;
+                /** Format: date-time */
+                createdAt: string;
+                eventType: string;
+                id: string;
+                jobId: string;
+                reasonCode: string;
+                stopReason: string;
+                targetHandle: string;
+            }[];
+            hasMore: boolean;
+            nextCursor: string | null;
+        };
+        CampaignOutcomesListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignOutcomesListOutput"] | null;
+            /** @constant */
+            tool?: "campaign.outcomes.list";
         };
         CampaignPausePreflightResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CampaignActionApprovalRequiredOutput"] | components["schemas"]["CampaignActionReadyOutput"] | null;
@@ -1625,6 +1974,9 @@ export interface components {
                 businessId: string;
                 country: components["schemas"]["SupportedCountry"];
                 expectedRevision: string;
+                selectedEmailAddress?: string;
+                selectedLinkedinUrl?: string;
+                selectedPhoneNumber?: string;
             }[];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             name: string;
@@ -1635,6 +1987,7 @@ export interface components {
             tool?: "companies.list.prepare";
         };
         CompanyListRefineData: {
+            added: number;
             applied: boolean;
             beforeTotal: number;
             campaignId: string;
@@ -1649,6 +2002,7 @@ export interface components {
             sourceListUpdatedAt: string;
             targetCountAfter: number;
             targetCountBefore: number;
+            updated: number;
         };
         CompanyListRefineInput: {
             /** @description False previews exact removals without a write. True applies the same reviewed selection to the disabled draft list. */
@@ -1665,6 +2019,15 @@ export interface components {
             expectedTargetCount: number;
             expectedTotal: number;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Inspected companies to add or refresh. Existing identities are refreshed with the selected decision-maker routes. */
+            includeCompanies?: {
+                businessId: string;
+                country: components["schemas"]["SupportedCountry"];
+                expectedRevision: string;
+                selectedEmailAddress?: string;
+                selectedLinkedinUrl?: string;
+                selectedPhoneNumber?: string;
+            }[];
             listId: components["schemas"]["ResourceId"];
             /** @description Echo selectionDigest from the matching dry run when apply is true. */
             reviewedSelectionDigest?: string;
@@ -1806,6 +2169,40 @@ export interface components {
             /** @constant */
             tool?: "conversation.inspect";
         };
+        ConversationReplyData: {
+            actionId: string;
+            conversationId: string;
+            deliveryConfirmed: boolean;
+            /** @enum {string} */
+            deliveryRoute: "browser" | "email" | "instagram_api";
+            requiresExtensionWake: boolean;
+            /** @enum {string} */
+            state: "queued" | "claimed" | "submitted" | "sent" | "failed" | "cancelled" | "delivery_unknown";
+        };
+        ConversationReplyInput: {
+            conversationId: components["schemas"]["ResourceId"];
+            expectedLastInboundAt: components["schemas"]["ResourceVersion"];
+            expectedLastMessageAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: string;
+            text: string;
+        };
+        ConversationReplyInspectInput: {
+            idempotencyKey: string;
+        };
+        ConversationReplyInspectOutput: components["schemas"]["ConversationReplyData"] & {
+            lastErrorCode?: string;
+            lastErrorDetail?: string;
+        };
+        ConversationReplyInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ConversationReplyInspectOutput"] | null;
+            /** @constant */
+            tool?: "conversation.reply.inspect";
+        };
+        ConversationReplyResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ConversationReplyData"] | null;
+            /** @constant */
+            tool?: "conversation.reply";
+        };
         ConversationsListInput: {
             campaignId?: components["schemas"]["ResourceId"];
             channel?: components["schemas"]["InboxChannel"];
@@ -1834,6 +2231,25 @@ export interface components {
             /** @constant */
             tool?: "conversations.list";
         };
+        ConversationUpdateData: {
+            conversation: components["schemas"]["InboxConversationSummary"];
+        };
+        ConversationUpdateInput: {
+            /** @enum {string} */
+            action: "mark_read" | "mark_unread" | "close" | "reopen" | "snooze" | "unsnooze" | "assign_to_me" | "unassign" | "set_interest";
+            conversationId: components["schemas"]["ResourceId"];
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            /** @enum {string} */
+            interestIntent?: "interested" | "information_requested" | "meeting_intent" | "not_now" | "wrong_person" | "not_interested" | "opt_out" | "acknowledgement" | "unclear";
+            /** @enum {string} */
+            interestLevel?: "positive" | "neutral" | "negative";
+            snoozedUntil?: components["schemas"]["ResourceVersion"];
+        };
+        ConversationUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ConversationUpdateData"] | null;
+            /** @constant */
+            tool?: "conversation.update";
+        };
         Error: {
             /** @enum {string} */
             code: "invalid_request" | "unauthorized" | "insufficient_scope" | "not_found" | "rate_limited" | "internal_error" | "service_unavailable";
@@ -1846,6 +2262,36 @@ export interface components {
         };
         ErrorResponse: {
             error: components["schemas"]["Error"];
+        };
+        HistoryListInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            cursor?: string;
+            limit?: number;
+            search?: string;
+        };
+        HistoryListOutput: {
+            campaignId: string;
+            entries: {
+                campaign?: string;
+                campaignId?: string;
+                channel: string;
+                id: string;
+                jobId?: string;
+                sentAt: string;
+                sentFrom: string;
+                sentTo: string;
+                /** @enum {string} */
+                state: "Sent";
+                targetCompanyName?: string;
+                targetName: string;
+            }[];
+            hasMore: boolean;
+            nextCursor: string | null;
+        };
+        HistoryListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["HistoryListOutput"] | null;
+            /** @constant */
+            tool?: "history.list";
         };
         IdempotencyKey: string;
         /** @enum {string} */
@@ -1878,6 +2324,7 @@ export interface components {
             interestIntent: "" | "interested" | "information_requested" | "meeting_intent" | "not_now" | "wrong_person" | "not_interested" | "opt_out" | "acknowledgement" | "unclear";
             /** @enum {string} */
             interestLevel: "" | "positive" | "neutral" | "negative" | "needs_review";
+            lastInboundAt: string;
             lastMessageAt: string;
             /** @enum {string} */
             lastMessageDirection: "" | "inbound" | "outbound";
@@ -1889,6 +2336,7 @@ export interface components {
             targetHandle: string;
             targetName: string;
             unreadCount: number;
+            updatedAt: string;
         };
         InboxMessageMedia: {
             description: string;
@@ -1929,6 +2377,10 @@ export interface components {
             data?: components["schemas"]["IndustryLookupOutput"] | null;
             /** @constant */
             tool?: "industry.lookup";
+        };
+        LinkedinFollowUpSequenceInput: {
+            enabled: boolean;
+            steps: components["schemas"]["CampaignFollowUpStepInput"][];
         };
         ListImportData: {
             created: boolean;
@@ -2021,6 +2473,52 @@ export interface components {
             /** @description Omit to use the selected, active, or most recent campaign. */
             campaignId?: components["schemas"]["ResourceId"];
         };
+        PipelineCard: {
+            campaignId: string;
+            decisionMakerLinkedinName?: string;
+            decisionMakerLinkedinRole?: string;
+            decisionMakerName?: string;
+            decisionMakerRole?: string;
+            facebookHref?: string;
+            gmailHref?: string;
+            handle: string;
+            id: string;
+            instagramHref?: string;
+            isCompany: boolean;
+            linkedinHref?: string;
+            name: string;
+            reachedChannels: {
+                facebook: boolean;
+                gmail: boolean;
+                instagram: boolean;
+                linkedin: boolean;
+                sms: boolean;
+            };
+            sentAt: string;
+            stage: components["schemas"]["PipelineStage"];
+            stageKey: string;
+        };
+        PipelineCardsListInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            cursor?: string;
+            entityKey?: string;
+            limit?: number;
+            query?: string;
+            stage: components["schemas"]["PipelineStage"];
+        };
+        PipelineCardsListOutput: {
+            campaignId: string;
+            cards: components["schemas"]["PipelineCard"][];
+            hasMore: boolean;
+            nextCursor: string | null;
+            stage: components["schemas"]["PipelineStage"];
+            stageCounts: components["schemas"]["PipelineCounts"];
+        };
+        PipelineCardsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["PipelineCardsListOutput"] | null;
+            /** @constant */
+            tool?: "pipeline.cards.list";
+        };
         PipelineCounts: {
             call_booked: number;
             closed: number;
@@ -2041,8 +2539,62 @@ export interface components {
             /** @constant */
             tool?: "pipeline.inspect";
         };
+        PipelineNote: {
+            body: string;
+            createdAt: string;
+            createdByName: string;
+            id: string;
+            isOwn: boolean;
+            updatedAt: string;
+        };
+        PipelineNoteAddInput: {
+            body: string;
+            campaignId: components["schemas"]["ResourceId"];
+            entityKey: string;
+            idempotencyKey: string;
+        };
+        PipelineNoteAddOutput: {
+            campaignId: string;
+            entityKey: string;
+            note: components["schemas"]["PipelineNote"];
+        };
+        PipelineNoteAddResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["PipelineNoteAddOutput"] | null;
+            /** @constant */
+            tool?: "pipeline.note.add";
+        };
+        PipelineNoteListInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            entityKey: string;
+        };
+        PipelineNoteListOutput: {
+            campaignId: string;
+            entityKey: string;
+            notes: components["schemas"]["PipelineNote"][];
+        };
+        PipelineNoteListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["PipelineNoteListOutput"] | null;
+            /** @constant */
+            tool?: "pipeline.note.list";
+        };
         /** @enum {string} */
         PipelineStage: "contacted" | "replied" | "call_booked" | "closed";
+        PipelineStageUpdateInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            entityKey: string;
+            expectedStage: components["schemas"]["PipelineStage"];
+            stage: components["schemas"]["PipelineStage"];
+            stageKey: string;
+        };
+        PipelineStageUpdateOutput: {
+            campaignId: string;
+            card: components["schemas"]["PipelineCard"];
+        };
+        PipelineStageUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["PipelineStageUpdateOutput"] | null;
+            /** @constant */
+            tool?: "pipeline.stage.update";
+        };
         RepliesListInput: {
             campaignId?: components["schemas"]["ResourceId"];
             limit?: number;
@@ -2080,6 +2632,44 @@ export interface components {
             name: string;
             total: number;
             updatedAt: string;
+        };
+        SendersInspectOutput: {
+            browserProfiles: {
+                browserLabel: string;
+                extensionVersion: string;
+                id: string;
+                /** @enum {string} */
+                instagramAccountType: "professional" | "personal" | "unknown";
+                instagramUsername: string;
+                lastSeenAt: string;
+                online: boolean;
+                status: string;
+            }[];
+            /** Format: uri */
+            browserSetupUrl: string;
+            /** Format: date-time */
+            generatedAt: string;
+            mailboxes: {
+                canRead: boolean;
+                canSend: boolean;
+                effectiveDailyCap: number;
+                emailAddress: string;
+                id: string;
+                lastErrorCode: string;
+                lastHealthCheckAt: string | null;
+                needsReauthorization: boolean;
+                /** @enum {string} */
+                provider: "gmail" | "outlook" | "smtp";
+                replySyncEnabled: boolean;
+                sendEnabled: boolean;
+                /** @enum {string} */
+                status: "connected" | "action_required" | "paused" | "disabled";
+            }[];
+        };
+        SendersInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["SendersInspectOutput"] | null;
+            /** @constant */
+            tool?: "senders.inspect";
         };
         SendingInspectInput: components["schemas"]["OptionalCampaignInput"];
         SendingInspectOutput: {
@@ -2666,6 +3256,66 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    campaignFollowupsCancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignFollowupsCancelInput"];
+            };
+        };
+        responses: {
+            /** @description Durable cancellation receipt. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignFollowupsCancelResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    campaignFollowupsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignFollowupsListInput"];
+            };
+        };
+        responses: {
+            /** @description Follow-up queue page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignFollowupsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     campaignInspect: {
         parameters: {
             query?: never;
@@ -2781,6 +3431,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CampaignOperationInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    campaignOutcomesList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignOutcomesListInput"];
+            };
+        };
+        responses: {
+            /** @description Execution event page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignOutcomesListResult"];
                 };
             };
             400: components["responses"]["BadRequest"];
@@ -3190,6 +3870,96 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    conversationReply: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConversationReplyInput"];
+            };
+        };
+        responses: {
+            /** @description Reply action receipt, possibly queued or delivery unknown. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationReplyResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    conversationReplyInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConversationReplyInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Current durable reply state. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationReplyInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    conversationUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConversationUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Updated conversation. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     conversationsList: {
         parameters: {
             query?: never;
@@ -3210,6 +3980,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ConversationsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    historyList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HistoryListInput"];
+            };
+        };
+        responses: {
+            /** @description Confirmed sends page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HistoryListResult"];
                 };
             };
             400: components["responses"]["BadRequest"];
@@ -3400,6 +4200,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    pipelineCardsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PipelineCardsListInput"];
+            };
+        };
+        responses: {
+            /** @description Pipeline card page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PipelineCardsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     pipelineInspect: {
         parameters: {
             query?: never;
@@ -3433,6 +4263,96 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    pipelineNoteAdd: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PipelineNoteAddInput"];
+            };
+        };
+        responses: {
+            /** @description Saved note or exact replay. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PipelineNoteAddResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    pipelineNoteList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PipelineNoteListInput"];
+            };
+        };
+        responses: {
+            /** @description Pipeline notes. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PipelineNoteListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    pipelineStageUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PipelineStageUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Updated pipeline card. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PipelineStageUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     repliesList: {
         parameters: {
             query?: never;
@@ -3461,6 +4381,36 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    sendersInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceBriefingInput"];
+            };
+        };
+        responses: {
+            /** @description Sender status. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SendersInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];

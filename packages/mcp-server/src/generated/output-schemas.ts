@@ -106,7 +106,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -536,7 +548,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -942,7 +966,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -1257,7 +1293,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -1726,7 +1774,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -2103,7 +2163,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -2411,7 +2483,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -2573,6 +2657,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "lastMessageText",
           "lastMessageDirection",
           "lastMessageAt",
+          "lastInboundAt",
+          "updatedAt",
           "unreadCount",
           "needsReply",
           "interestLevel",
@@ -2612,6 +2698,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
             enum: ["", "inbound", "outbound"],
           },
           lastMessageAt: {
+            type: "string",
+          },
+          lastInboundAt: {
+            type: "string",
+          },
+          updatedAt: {
             type: "string",
           },
           unreadCount: {
@@ -2813,7 +2905,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -2975,6 +3079,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "lastMessageText",
           "lastMessageDirection",
           "lastMessageAt",
+          "lastInboundAt",
+          "updatedAt",
           "unreadCount",
           "needsReply",
           "interestLevel",
@@ -3014,6 +3120,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
             enum: ["", "inbound", "outbound"],
           },
           lastMessageAt: {
+            type: "string",
+          },
+          lastInboundAt: {
+            type: "string",
+          },
+          updatedAt: {
             type: "string",
           },
           unreadCount: {
@@ -3169,6 +3281,2482 @@ export const AGENT_OUTPUT_SCHEMAS = {
       },
     },
   }),
+  "conversation.update": z.fromJSONSchema({
+    $ref: "#/$defs/ConversationUpdateResult",
+    $defs: {
+      ConversationUpdateResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "conversation.update",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/ConversationUpdateData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      ConversationUpdateData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["conversation"],
+        properties: {
+          conversation: {
+            $ref: "#/$defs/InboxConversationSummary",
+          },
+        },
+      },
+      InboxConversationSummary: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "id",
+          "campaignId",
+          "campaignName",
+          "channel",
+          "targetHandle",
+          "targetName",
+          "targetCompanyName",
+          "status",
+          "lastMessageText",
+          "lastMessageDirection",
+          "lastMessageAt",
+          "lastInboundAt",
+          "updatedAt",
+          "unreadCount",
+          "needsReply",
+          "interestLevel",
+          "interestIntent",
+        ],
+        properties: {
+          id: {
+            type: "string",
+          },
+          campaignId: {
+            type: "string",
+          },
+          campaignName: {
+            type: "string",
+          },
+          channel: {
+            $ref: "#/$defs/InboxChannel",
+          },
+          targetHandle: {
+            type: "string",
+          },
+          targetName: {
+            type: "string",
+          },
+          targetCompanyName: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["open", "closed"],
+          },
+          lastMessageText: {
+            type: "string",
+          },
+          lastMessageDirection: {
+            type: "string",
+            enum: ["", "inbound", "outbound"],
+          },
+          lastMessageAt: {
+            type: "string",
+          },
+          lastInboundAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          unreadCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          needsReply: {
+            type: "boolean",
+          },
+          interestLevel: {
+            type: "string",
+            enum: ["", "positive", "neutral", "negative", "needs_review"],
+          },
+          interestIntent: {
+            type: "string",
+            enum: [
+              "",
+              "interested",
+              "information_requested",
+              "meeting_intent",
+              "not_now",
+              "wrong_person",
+              "not_interested",
+              "opt_out",
+              "acknowledgement",
+              "unclear",
+            ],
+          },
+        },
+      },
+      InboxChannel: {
+        type: "string",
+        enum: ["instagram", "facebook", "linkedin", "gmail", "outlook", "email", "sms"],
+      },
+    },
+  }),
+  "conversation.reply": z.fromJSONSchema({
+    $ref: "#/$defs/ConversationReplyResult",
+    $defs: {
+      ConversationReplyResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "conversation.reply",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/ConversationReplyData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      ConversationReplyData: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "conversationId",
+          "actionId",
+          "state",
+          "deliveryRoute",
+          "deliveryConfirmed",
+          "requiresExtensionWake",
+        ],
+        properties: {
+          conversationId: {
+            type: "string",
+          },
+          actionId: {
+            type: "string",
+          },
+          state: {
+            type: "string",
+            enum: [
+              "queued",
+              "claimed",
+              "submitted",
+              "sent",
+              "failed",
+              "cancelled",
+              "delivery_unknown",
+            ],
+          },
+          deliveryRoute: {
+            type: "string",
+            enum: ["browser", "email", "instagram_api"],
+          },
+          deliveryConfirmed: {
+            type: "boolean",
+          },
+          requiresExtensionWake: {
+            type: "boolean",
+          },
+        },
+      },
+    },
+  }),
+  "conversation.reply.inspect": z.fromJSONSchema({
+    $ref: "#/$defs/ConversationReplyInspectResult",
+    $defs: {
+      ConversationReplyInspectResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "conversation.reply.inspect",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/ConversationReplyInspectOutput",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      ConversationReplyInspectOutput: {
+        allOf: [
+          {
+            $ref: "#/$defs/ConversationReplyData",
+          },
+          {
+            type: "object",
+            properties: {
+              lastErrorCode: {
+                type: "string",
+              },
+              lastErrorDetail: {
+                type: "string",
+              },
+            },
+          },
+        ],
+      },
+      ConversationReplyData: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "conversationId",
+          "actionId",
+          "state",
+          "deliveryRoute",
+          "deliveryConfirmed",
+          "requiresExtensionWake",
+        ],
+        properties: {
+          conversationId: {
+            type: "string",
+          },
+          actionId: {
+            type: "string",
+          },
+          state: {
+            type: "string",
+            enum: [
+              "queued",
+              "claimed",
+              "submitted",
+              "sent",
+              "failed",
+              "cancelled",
+              "delivery_unknown",
+            ],
+          },
+          deliveryRoute: {
+            type: "string",
+            enum: ["browser", "email", "instagram_api"],
+          },
+          deliveryConfirmed: {
+            type: "boolean",
+          },
+          requiresExtensionWake: {
+            type: "boolean",
+          },
+        },
+      },
+    },
+  }),
+  "campaign.followups.list": z.fromJSONSchema({
+    $ref: "#/$defs/CampaignFollowupsListResult",
+    $defs: {
+      CampaignFollowupsListResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "campaign.followups.list",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/CampaignFollowupsListOutput",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      CampaignFollowupsListOutput: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "campaignId",
+          "campaignName",
+          "enabled",
+          "generatedAt",
+          "timeZone",
+          "summary",
+          "view",
+          "items",
+          "nextCursor",
+        ],
+        properties: {
+          campaignId: {
+            type: "string",
+          },
+          campaignName: {
+            type: "string",
+          },
+          enabled: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          timeZone: {
+            type: "string",
+          },
+          summary: {
+            type: "object",
+            additionalProperties: false,
+            required: ["upcoming", "done"],
+            properties: {
+              upcoming: {
+                type: "integer",
+                minimum: 0,
+              },
+              done: {
+                type: "integer",
+                minimum: 0,
+              },
+              enabled: {
+                type: "boolean",
+              },
+            },
+          },
+          view: {
+            type: "string",
+            enum: ["upcoming", "done"],
+          },
+          items: {
+            type: "array",
+            maxItems: 50,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: [
+                "id",
+                "channel",
+                "targetHandle",
+                "targetCompanyName",
+                "message",
+                "step",
+                "awaitingConnection",
+                "state",
+                "scheduledAt",
+                "updatedAt",
+              ],
+              properties: {
+                id: {
+                  type: "string",
+                },
+                channel: {
+                  type: "string",
+                },
+                targetHandle: {
+                  type: "string",
+                },
+                targetCompanyName: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                step: {
+                  type: "integer",
+                },
+                awaitingConnection: {
+                  type: "boolean",
+                },
+                state: {
+                  type: "string",
+                },
+                scheduledAt: {
+                  oneOf: [
+                    {
+                      type: "string",
+                    },
+                    {
+                      type: "null",
+                    },
+                  ],
+                },
+                updatedAt: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          nextCursor: {
+            oneOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+    },
+  }),
+  "campaign.followups.cancel": z.fromJSONSchema({
+    $ref: "#/$defs/CampaignFollowupsCancelResult",
+    $defs: {
+      CampaignFollowupsCancelResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "campaign.followups.cancel",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/CampaignFollowupsCancelOutput",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      CampaignFollowupsCancelOutput: {
+        type: "object",
+        additionalProperties: false,
+        required: ["campaignId", "cancelledJobIds", "stoppedChainCount", "replayed"],
+        properties: {
+          campaignId: {
+            type: "string",
+          },
+          cancelledJobIds: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          stoppedChainCount: {
+            type: "integer",
+            minimum: 1,
+          },
+          replayed: {
+            type: "boolean",
+          },
+        },
+      },
+    },
+  }),
+  "campaign.outcomes.list": z.fromJSONSchema({
+    $ref: "#/$defs/CampaignOutcomesListResult",
+    $defs: {
+      CampaignOutcomesListResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "campaign.outcomes.list",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/CampaignOutcomesListOutput",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      CampaignOutcomesListOutput: {
+        type: "object",
+        additionalProperties: false,
+        required: ["campaignId", "events", "hasMore", "nextCursor"],
+        properties: {
+          campaignId: {
+            type: "string",
+          },
+          events: {
+            type: "array",
+            maxItems: 100,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: [
+                "id",
+                "jobId",
+                "channel",
+                "targetHandle",
+                "eventType",
+                "reasonCode",
+                "stopReason",
+                "createdAt",
+              ],
+              properties: {
+                id: {
+                  type: "string",
+                },
+                jobId: {
+                  type: "string",
+                },
+                channel: {
+                  type: "string",
+                },
+                targetHandle: {
+                  type: "string",
+                },
+                eventType: {
+                  type: "string",
+                },
+                reasonCode: {
+                  type: "string",
+                },
+                stopReason: {
+                  type: "string",
+                },
+                createdAt: {
+                  type: "string",
+                  format: "date-time",
+                },
+              },
+            },
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          nextCursor: {
+            oneOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+    },
+  }),
+  "senders.inspect": z.fromJSONSchema({
+    $ref: "#/$defs/SendersInspectResult",
+    $defs: {
+      SendersInspectResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "senders.inspect",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/SendersInspectOutput",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      SendersInspectOutput: {
+        type: "object",
+        additionalProperties: false,
+        required: ["generatedAt", "browserProfiles", "mailboxes", "browserSetupUrl"],
+        properties: {
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          browserSetupUrl: {
+            type: "string",
+            format: "uri",
+          },
+          browserProfiles: {
+            type: "array",
+            maxItems: 20,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: [
+                "id",
+                "browserLabel",
+                "instagramUsername",
+                "instagramAccountType",
+                "online",
+                "lastSeenAt",
+                "extensionVersion",
+                "status",
+              ],
+              properties: {
+                id: {
+                  type: "string",
+                },
+                browserLabel: {
+                  type: "string",
+                },
+                instagramUsername: {
+                  type: "string",
+                },
+                instagramAccountType: {
+                  type: "string",
+                  enum: ["professional", "personal", "unknown"],
+                },
+                online: {
+                  type: "boolean",
+                },
+                lastSeenAt: {
+                  type: "string",
+                },
+                extensionVersion: {
+                  type: "string",
+                },
+                status: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          mailboxes: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: [
+                "id",
+                "provider",
+                "emailAddress",
+                "status",
+                "sendEnabled",
+                "replySyncEnabled",
+                "canSend",
+                "canRead",
+                "needsReauthorization",
+                "lastHealthCheckAt",
+                "lastErrorCode",
+                "effectiveDailyCap",
+              ],
+              properties: {
+                id: {
+                  type: "string",
+                },
+                provider: {
+                  type: "string",
+                  enum: ["gmail", "outlook", "smtp"],
+                },
+                emailAddress: {
+                  type: "string",
+                },
+                status: {
+                  type: "string",
+                  enum: ["connected", "action_required", "paused", "disabled"],
+                },
+                sendEnabled: {
+                  type: "boolean",
+                },
+                replySyncEnabled: {
+                  type: "boolean",
+                },
+                canSend: {
+                  type: "boolean",
+                },
+                canRead: {
+                  type: "boolean",
+                },
+                needsReauthorization: {
+                  type: "boolean",
+                },
+                lastHealthCheckAt: {
+                  oneOf: [
+                    {
+                      type: "string",
+                    },
+                    {
+                      type: "null",
+                    },
+                  ],
+                },
+                lastErrorCode: {
+                  type: "string",
+                },
+                effectiveDailyCap: {
+                  type: "integer",
+                  minimum: 0,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  }),
+  "history.list": z.fromJSONSchema({
+    $ref: "#/$defs/HistoryListResult",
+    $defs: {
+      HistoryListResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "history.list",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/HistoryListOutput",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      HistoryListOutput: {
+        type: "object",
+        additionalProperties: false,
+        required: ["campaignId", "entries", "hasMore", "nextCursor"],
+        properties: {
+          campaignId: {
+            type: "string",
+          },
+          entries: {
+            type: "array",
+            maxItems: 100,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["id", "sentTo", "targetName", "sentFrom", "sentAt", "channel", "state"],
+              properties: {
+                id: {
+                  type: "string",
+                },
+                jobId: {
+                  type: "string",
+                },
+                sentTo: {
+                  type: "string",
+                },
+                targetName: {
+                  type: "string",
+                },
+                targetCompanyName: {
+                  type: "string",
+                },
+                sentFrom: {
+                  type: "string",
+                },
+                sentAt: {
+                  type: "string",
+                },
+                channel: {
+                  type: "string",
+                },
+                state: {
+                  type: "string",
+                  enum: ["Sent"],
+                },
+                campaignId: {
+                  type: "string",
+                },
+                campaign: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          nextCursor: {
+            oneOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+    },
+  }),
   "pipeline.inspect": z.fromJSONSchema({
     $ref: "#/$defs/PipelineInspectResult",
     $defs: {
@@ -3274,7 +5862,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -3499,6 +6099,1274 @@ export const AGENT_OUTPUT_SCHEMAS = {
       },
     },
   }),
+  "pipeline.cards.list": z.fromJSONSchema({
+    $ref: "#/$defs/PipelineCardsListResult",
+    $defs: {
+      PipelineCardsListResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "pipeline.cards.list",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/PipelineCardsListOutput",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      PipelineCardsListOutput: {
+        type: "object",
+        additionalProperties: false,
+        required: ["campaignId", "stage", "cards", "stageCounts", "hasMore", "nextCursor"],
+        properties: {
+          campaignId: {
+            type: "string",
+          },
+          stage: {
+            $ref: "#/$defs/PipelineStage",
+          },
+          cards: {
+            type: "array",
+            maxItems: 15,
+            items: {
+              $ref: "#/$defs/PipelineCard",
+            },
+          },
+          stageCounts: {
+            $ref: "#/$defs/PipelineCounts",
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          nextCursor: {
+            oneOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      PipelineStage: {
+        type: "string",
+        enum: ["contacted", "replied", "call_booked", "closed"],
+      },
+      PipelineCard: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "id",
+          "stageKey",
+          "stage",
+          "handle",
+          "name",
+          "isCompany",
+          "campaignId",
+          "reachedChannels",
+          "sentAt",
+        ],
+        properties: {
+          id: {
+            type: "string",
+          },
+          stageKey: {
+            type: "string",
+          },
+          stage: {
+            $ref: "#/$defs/PipelineStage",
+          },
+          handle: {
+            type: "string",
+          },
+          name: {
+            type: "string",
+          },
+          isCompany: {
+            type: "boolean",
+          },
+          campaignId: {
+            type: "string",
+          },
+          decisionMakerName: {
+            type: "string",
+          },
+          decisionMakerRole: {
+            type: "string",
+          },
+          decisionMakerLinkedinName: {
+            type: "string",
+          },
+          decisionMakerLinkedinRole: {
+            type: "string",
+          },
+          instagramHref: {
+            type: "string",
+          },
+          facebookHref: {
+            type: "string",
+          },
+          linkedinHref: {
+            type: "string",
+          },
+          gmailHref: {
+            type: "string",
+          },
+          reachedChannels: {
+            type: "object",
+            additionalProperties: false,
+            required: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+            properties: {
+              instagram: {
+                type: "boolean",
+              },
+              facebook: {
+                type: "boolean",
+              },
+              linkedin: {
+                type: "boolean",
+              },
+              gmail: {
+                type: "boolean",
+              },
+              sms: {
+                type: "boolean",
+              },
+            },
+          },
+          sentAt: {
+            type: "string",
+          },
+        },
+      },
+      PipelineCounts: {
+        type: "object",
+        additionalProperties: false,
+        required: ["contacted", "replied", "call_booked", "closed"],
+        properties: {
+          contacted: {
+            type: "integer",
+            minimum: 0,
+          },
+          replied: {
+            type: "integer",
+            minimum: 0,
+          },
+          call_booked: {
+            type: "integer",
+            minimum: 0,
+          },
+          closed: {
+            type: "integer",
+            minimum: 0,
+          },
+        },
+      },
+    },
+  }),
+  "pipeline.stage.update": z.fromJSONSchema({
+    $ref: "#/$defs/PipelineStageUpdateResult",
+    $defs: {
+      PipelineStageUpdateResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "pipeline.stage.update",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/PipelineStageUpdateOutput",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      PipelineStageUpdateOutput: {
+        type: "object",
+        additionalProperties: false,
+        required: ["campaignId", "card"],
+        properties: {
+          campaignId: {
+            type: "string",
+          },
+          card: {
+            $ref: "#/$defs/PipelineCard",
+          },
+        },
+      },
+      PipelineCard: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "id",
+          "stageKey",
+          "stage",
+          "handle",
+          "name",
+          "isCompany",
+          "campaignId",
+          "reachedChannels",
+          "sentAt",
+        ],
+        properties: {
+          id: {
+            type: "string",
+          },
+          stageKey: {
+            type: "string",
+          },
+          stage: {
+            $ref: "#/$defs/PipelineStage",
+          },
+          handle: {
+            type: "string",
+          },
+          name: {
+            type: "string",
+          },
+          isCompany: {
+            type: "boolean",
+          },
+          campaignId: {
+            type: "string",
+          },
+          decisionMakerName: {
+            type: "string",
+          },
+          decisionMakerRole: {
+            type: "string",
+          },
+          decisionMakerLinkedinName: {
+            type: "string",
+          },
+          decisionMakerLinkedinRole: {
+            type: "string",
+          },
+          instagramHref: {
+            type: "string",
+          },
+          facebookHref: {
+            type: "string",
+          },
+          linkedinHref: {
+            type: "string",
+          },
+          gmailHref: {
+            type: "string",
+          },
+          reachedChannels: {
+            type: "object",
+            additionalProperties: false,
+            required: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+            properties: {
+              instagram: {
+                type: "boolean",
+              },
+              facebook: {
+                type: "boolean",
+              },
+              linkedin: {
+                type: "boolean",
+              },
+              gmail: {
+                type: "boolean",
+              },
+              sms: {
+                type: "boolean",
+              },
+            },
+          },
+          sentAt: {
+            type: "string",
+          },
+        },
+      },
+      PipelineStage: {
+        type: "string",
+        enum: ["contacted", "replied", "call_booked", "closed"],
+      },
+    },
+  }),
+  "pipeline.note.list": z.fromJSONSchema({
+    $ref: "#/$defs/PipelineNoteListResult",
+    $defs: {
+      PipelineNoteListResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "pipeline.note.list",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/PipelineNoteListOutput",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      PipelineNoteListOutput: {
+        type: "object",
+        additionalProperties: false,
+        required: ["campaignId", "entityKey", "notes"],
+        properties: {
+          campaignId: {
+            type: "string",
+          },
+          entityKey: {
+            type: "string",
+          },
+          notes: {
+            type: "array",
+            maxItems: 100,
+            items: {
+              $ref: "#/$defs/PipelineNote",
+            },
+          },
+        },
+      },
+      PipelineNote: {
+        type: "object",
+        additionalProperties: false,
+        required: ["id", "body", "createdAt", "updatedAt", "createdByName", "isOwn"],
+        properties: {
+          id: {
+            type: "string",
+          },
+          body: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          createdByName: {
+            type: "string",
+          },
+          isOwn: {
+            type: "boolean",
+          },
+        },
+      },
+    },
+  }),
+  "pipeline.note.add": z.fromJSONSchema({
+    $ref: "#/$defs/PipelineNoteAddResult",
+    $defs: {
+      PipelineNoteAddResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "pipeline.note.add",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/PipelineNoteAddOutput",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.search",
+          "company.inspect",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      PipelineNoteAddOutput: {
+        type: "object",
+        additionalProperties: false,
+        required: ["campaignId", "entityKey", "note"],
+        properties: {
+          campaignId: {
+            type: "string",
+          },
+          entityKey: {
+            type: "string",
+          },
+          note: {
+            $ref: "#/$defs/PipelineNote",
+          },
+        },
+      },
+      PipelineNote: {
+        type: "object",
+        additionalProperties: false,
+        required: ["id", "body", "createdAt", "updatedAt", "createdByName", "isOwn"],
+        properties: {
+          id: {
+            type: "string",
+          },
+          body: {
+            type: "string",
+          },
+          createdAt: {
+            type: "string",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          createdByName: {
+            type: "string",
+          },
+          isOwn: {
+            type: "boolean",
+          },
+        },
+      },
+    },
+  }),
   "company.timeline": z.fromJSONSchema({
     $ref: "#/$defs/CompanyTimelineResult",
     $defs: {
@@ -3604,7 +7472,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -3898,7 +7778,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -4233,7 +8125,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -4562,7 +8466,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -4966,7 +8882,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -5221,7 +9149,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -5508,7 +9448,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -5772,7 +9724,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -6088,7 +10052,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -6212,6 +10188,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "status",
           "enabled",
           "channel",
+          "channels",
           "targetCount",
           "messageVariants",
           "dailyCap",
@@ -6250,7 +10227,36 @@ export const AGENT_OUTPUT_SCHEMAS = {
             const: false,
           },
           channel: {
-            const: "instagram",
+            type: "string",
+            enum: ["instagram", "facebook", "linkedin", "gmail", "sms", "multichannel"],
+          },
+          channels: {
+            type: "array",
+            minItems: 1,
+            maxItems: 5,
+            uniqueItems: true,
+            items: {
+              type: "string",
+              enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+            },
+          },
+          description: {
+            type: "string",
+          },
+          linkedinInviteMode: {
+            type: "string",
+            enum: ["invite_only", "invite_with_note"],
+          },
+          linkedinInviteNote: {
+            type: "string",
+          },
+          followUpSequence: {
+            type: ["object", "null"],
+            additionalProperties: true,
+          },
+          linkedinFollowUpSequence: {
+            type: ["object", "null"],
+            additionalProperties: true,
           },
           targetCount: {
             type: "integer",
@@ -6411,7 +10417,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -6673,7 +10691,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -7002,7 +11032,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -7331,7 +11373,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -7832,7 +11886,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -8182,7 +12248,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -8559,7 +12637,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -8906,7 +12996,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -9428,7 +13530,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -9949,7 +14063,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -10270,7 +14396,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -10525,7 +14663,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -10777,7 +14927,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -10901,6 +15063,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replayed",
           "beforeTotal",
           "removed",
+          "added",
+          "updated",
           "remaining",
           "targetCountBefore",
           "targetCountAfter",
@@ -10931,7 +15095,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           removed: {
             type: "integer",
-            minimum: 1,
+            minimum: 0,
+          },
+          added: {
+            type: "integer",
+            minimum: 0,
+          },
+          updated: {
+            type: "integer",
+            minimum: 0,
           },
           remaining: {
             type: "integer",
@@ -11066,7 +15238,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -11348,7 +15532,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",
@@ -11591,7 +15787,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "replies.list",
           "conversations.list",
           "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
           "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
           "company.timeline",
           "industry.lookup",
           "campaign.validate",

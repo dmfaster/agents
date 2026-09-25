@@ -1,6 +1,6 @@
 # DM Faster Agent 1.0 tools
 
-Agent 1.0 exposes exactly 34 bounded domain tools. Each credential is bound to one
+Agent 1.0 exposes exactly 46 bounded domain tools. Each credential is bound to one
 workspace, and every tool requires the exact scopes shown below; scopes are not
 inherited from `workspace:read`. MCP names use underscores and HTTP contract
 names use dots.
@@ -33,7 +33,19 @@ only one input in a command may use `-`.
 | `replies_list`               | `replies.list`               | `replies list [campaign-id] [options] --json`                                                   | `inbox:read`                        | bounded read                                  |
 | `conversations_list`         | `conversations.list`         | `conversations list --input FILE --json`                                                        | `inbox:read`                        | paginated inbox conversation read             |
 | `conversation_inspect`       | `conversation.inspect`       | `conversation inspect --input FILE --json`                                                      | `inbox:read`                        | actual message page read                      |
+| `conversation_update`        | `conversation.update`        | `conversation update --input FILE --json`                                                       | `inbox:read`, `inbox:write`         | guarded inbox state update                    |
+| `conversation_reply`         | `conversation.reply`         | `conversation reply --input FILE --json`                                                        | `inbox:read`, `inbox:write`         | exact instructed reply action                 |
+| `conversation_reply_inspect` | `conversation.reply.inspect` | `conversation reply inspect --input FILE --json`                                                | `inbox:read`                        | durable reply delivery receipt                |
+| `campaign_followups_list`    | `campaign.followups.list`    | `campaign followups list --input FILE --json`                                                   | `sending:read`                      | paginated follow-up jobs                      |
+| `campaign_followups_cancel`  | `campaign.followups.cancel`  | `campaign followups cancel --input FILE --json`                                                 | `campaigns:write`                   | cancel queued prospect chains                 |
+| `campaign_outcomes_list`     | `campaign.outcomes.list`     | `campaign outcomes list --input FILE --json`                                                    | `sending:read`                      | paginated send/skip/failure events            |
+| `senders_inspect`            | `senders.inspect`            | `senders inspect --json`                                                                        | `sending:read`                      | browser and mailbox readiness                 |
+| `history_list`               | `history.list`               | `history list --input FILE --json`                                                              | `campaigns:read`, `sending:read`    | paginated confirmed sends                     |
 | `pipeline_inspect`           | `pipeline.inspect`           | `pipeline inspect [campaign-id] --json`                                                         | `pipeline:read`                     | bounded read                                  |
+| `pipeline_cards_list`        | `pipeline.cards.list`        | `pipeline cards list --input FILE --json`                                                       | `pipeline:read`                     | paginated exact cards                         |
+| `pipeline_stage_update`      | `pipeline.stage.update`      | `pipeline stage update --input FILE --json`                                                     | `pipeline:read`, `pipeline:write`   | guarded stage change                          |
+| `pipeline_note_list`         | `pipeline.note.list`         | `pipeline note list --input FILE --json`                                                        | `pipeline:read`                     | exact card notes                              |
+| `pipeline_note_add`          | `pipeline.note.add`          | `pipeline note add --input FILE --json`                                                         | `pipeline:read`, `pipeline:write`   | idempotent private note                       |
 | `company_timeline`           | `company.timeline`           | `company timeline <campaign-id> <outreach-id> --json`                                           | `pipeline:read`, `campaigns:read`   | bounded read                                  |
 | `industry_lookup`            | `industry.lookup`            | `industry lookup <query> [options] --json`                                                      | `audiences:read`                    | planning read                                 |
 | `campaign_validate`          | `campaign.validate`          | `campaign validate --state <file> --json`                                                       | `audiences:read`                    | planning read                                 |
@@ -98,8 +110,9 @@ requested. Use `companies_list_inspect` for saved-list membership and
 
 `companies_list_refine` takes the source `listId`, its `expectedUpdatedAt` as
 `expectedListUpdatedAt`, the attached draft's ID and `updatedAt`, exact source
-company and campaign route counts, and up to 1,000 `{country,businessId}`
-exclusions. Include exact expected remaining company and route counts, a stable
+company and campaign route counts, up to 1,000 `{country,businessId}`
+exclusions, and up to 50 freshly inspected additions or contact refreshes with
+optional selected contact routes. Include exact expected remaining company and route counts, a stable
 idempotency key, and `apply: false` for a dry run. Review that result with the
 user before calling the same input with `apply: true` and its `selectionDigest`
 as `reviewedSelectionDigest` when they requested the
@@ -160,11 +173,13 @@ replacement. Inspect it first and provide the returned `campaign.updatedAt`:
 }
 ```
 
-`updates` requires at least one of `name`, `messageVariants`, `dailyCap`,
-`pacingSeconds`, or the automatic sending-window fields described below. Name,
+`updates` requires at least one supported setting. Social channel toggles,
+LinkedIn invite mode/note, shared and LinkedIn follow-up sequences, description,
+name, message variants, cap, pacing, and automatic sending-window fields are
+supported. Name,
 message, cap, and pacing bounds match draft preparation. Omitted settings and
 the audience are preserved. The owner can edit only disabled, unstarted,
-Instagram drafts. The result echoes the saved settings and new
+social-channel drafts. The result echoes the saved settings and new
 `campaignUpdatedAt`; it never launches or queues sending. Stale versions fail
 without overwriting another edit. After a timeout, inspect the campaign to
 check whether the requested change was saved before deciding to retry.
@@ -268,7 +283,20 @@ handoff, then resume the original action binding after the owner reconnects it.
 - `replies_list` remains a campaign pipeline summary. For actual inbound and
   outbound text, use `conversations_list` and `conversation_inspect`; keep their
   returned cursor and exact conversation ID to read every page. Reading does not
-  mark a conversation as read or authorize a reply.
+  mark a conversation as read or authorize a reply. `conversation_update` requires
+  the exact `updatedAt`. `conversation_reply` requires the exact approved text,
+  last inbound and latest message times, and a stable idempotency key. Poll
+  `conversation_reply_inspect` to learn whether the reply actually sent.
+- `pipeline_cards_list` requires a campaign and stage, returns 15 cards per
+  cursor page, and supplies the identity and current stage for guarded updates.
+  `pipeline_stage_update` changes only one current card; `pipeline_note_add`
+  uses a stable idempotency key.
+- `campaign_followups_list` pages 50 jobs at a time. `campaign_followups_cancel`
+  stops the selected queued prospects' remaining chains; it refuses any running
+  or submitted attempt and needs exact job IDs, campaign version, and key.
+- `campaign_outcomes_list` pages recorded execution events. `history_list` pages
+  confirmed sends only. `senders_inspect` reports safe sender readiness and an
+  owner setup URL; it never provides provider credentials.
 - Campaign and company-outreach identifiers are at most 160 characters.
 - Use identifiers returned by DM Faster. Never rely on omitted campaign IDs
   when the user's description is ambiguous.

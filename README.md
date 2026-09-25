@@ -14,16 +14,15 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-Agent 1.0 exposes 34 bounded domain tools, including company-centric prospecting,
-read-only inbox conversation reads, and ongoing campaign delivery controls. It
-can inspect a live workspace, resolve industries, validate complete campaign
-plans, preview exact audiences, inspect saved lists, read conversations and
-messages, remove an exact Instagram username, prepare private lists and disabled
-campaign drafts idempotently, and launch or pause on explicit user instructions
-after a one-time owner grant of campaign control, or per-action approval for
-older connections.
-It cannot send replies, book meetings, expose provider credentials, or bypass
-the browser extension's execution boundary.
+The 1.6.0 source candidate exposes 46 bounded domain tools. It adds exact
+company/contact list refinement, multichannel social draft editing, inbox
+updates and explicitly instructed replies, pipeline cards/stages/notes,
+follow-up cancellation, sender readiness, and paginated sending outcomes and
+history. Reply actions report queued and confirmed delivery separately.
+Launch and pause still require an explicit user instruction and the owner's
+campaign-control grant or the existing per-action approval path. The interface
+does not expose provider credentials or bypass the browser extension's
+execution boundary.
 
 This repository intentionally contains no DM Faster application server,
 database, browser extension, sending runtime, or private product source.
@@ -77,9 +76,9 @@ After this one-time connection approval, telling your agent “launch it” or
 returned authorization ID and the same campaign ID and idempotency key.
 Planning and draft preparation never authorize launch.
 
-Existing connections retain per-action approval. To enable conversational
-controls, run `auth logout`, then `auth login --access full` and personally
-approve the new connection. Credentials are never upgraded silently.
+Existing connections retain per-action approval. Use `auth upgrade --access
+full` to request new permissions while retaining the current credential until
+the owner approves the replacement. Credentials are never upgraded silently.
 
 ## Use the CLI or MCP server directly
 
@@ -89,7 +88,7 @@ npx --yes @dmfaster/cli@1.6.0 conversations list --filter unread --limit 25 --js
 npx --yes @dmfaster/mcp-server@1.6.0
 ```
 
-The 34 MCP domain tools cover workspace, campaign, sending, reply, inbox,
+The 46 MCP domain tools cover workspace, campaign, sending, reply, inbox,
 pipeline, company-history, industry, validation, exact-audience preview,
 private draft, launch, and pause workflows. Compliant MCP Apps hosts can also render the
 read-only `campaign_workspace` presentation tool inline. Headless hosts receive
@@ -158,11 +157,12 @@ disabled; an explicitly instructed, authorized launch arms the schedule.
 ## Agent 1.6.0 candidate
 
 Version 1.6.0 adds `companies_list_refine` / `companies list refine --input FILE`.
-It previews exact company exclusions, then saves a separate vetted list and
-attaches it to an existing disabled, unstarted campaign after matching versions,
-counts, and a reviewed digest. The original list remains available and the
-operation never starts sending. The server operation must be deployed before
-publishing these clients.
+It previews exact company additions, contact refreshes, and exclusions, then
+saves a separate vetted list and attaches it to an existing disabled,
+unstarted campaign under version, count, and digest guards. It also adds the
+inbox, pipeline, follow-up, sender, outcome and history tools described above.
+The server operations and two new database migrations must be deployed and
+verified before publishing these clients.
 
 ## Agent 1.5.0 release
 

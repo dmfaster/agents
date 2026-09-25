@@ -69,6 +69,10 @@ Configuration:
 
 ${agentCommandHelp()}
 
+Local exports:
+  history export CAMPAIGN_ID [--max ROWS] [--cursor CURSOR]
+    Write complete confirmed-send history as JSON Lines to standard output.
+
 Agent quick start:
   Begin with 'workspace briefing --json'. For a new campaign, create one complete
   state and run validate, then save and review the exact audience preview. Pass
@@ -151,6 +155,82 @@ function exactCommandTool(words: string[]): AgentToolName | null {
       (name) => AGENT_TOOL_DEFINITIONS[name].cli.command.join(" ") === words.join(" "),
     ) ?? null
   );
+}
+
+function parseHistoryExport(args: string[]) {
+  if (args[0] !== "history" || args[1] !== "export") return null;
+  const campaignId = String(args[2] || "").trim();
+  if (!campaignId || campaignId.startsWith("--") || campaignId.length > 160)
+    throw new UsageError("Use history export CAMPAIGN_ID [--max ROWS] [--cursor CURSOR].");
+  let maxRows = 10_000;
+  let cursor = "";
+  const seen = new Set<string>();
+  for (let index = 3; index < args.length; index += 2) {
+    const option = args[index];
+    const value = args[index + 1];
+    if (!value || value.startsWith("--") || seen.has(option || ""))
+      throw new UsageError("Use each history export option once with a value.");
+    seen.add(option!);
+    if (option === "--max") maxRows = parseInteger(value, option, 10_000);
+    else if (option === "--cursor") {
+      if (value.length > 2_000) throw new UsageError("--cursor is too long.");
+      cursor = value;
+    } else throw new UsageError(`Unknown history export option: ${option}.`);
+  }
+  return { campaignId, maxRows, cursor };
+}
+
+async function runHistoryExport(input: {
+  campaignId: string;
+  maxRows: number;
+  cursor: string;
+  client: AgentInvoker;
+  stdout: Output;
+  stderr: Output;
+}) {
+  const rows: object[] = [];
+  const seenIds = new Set<string>();
+  let cursor = input.cursor;
+  for (;;) {
+    const result = await input.client.invoke("history.list", {
+      campaignId: input.campaignId,
+      ...(cursor ? { cursor } : {}),
+      limit: Math.min(100, input.maxRows - rows.length),
+    });
+    if (
+      !result.ok ||
+      !result.data ||
+      !Array.isArray((result.data as { entries?: unknown }).entries)
+    ) {
+      line(input.stderr, JSON.stringify(result));
+      return 1;
+    }
+    const page = result.data as {
+      entries: Array<{ id: string }>;
+      hasMore: boolean;
+      nextCursor: string | null;
+    };
+    for (const entry of page.entries) {
+      if (seenIds.has(entry.id)) continue;
+      seenIds.add(entry.id);
+      rows.push(entry);
+    }
+    if (!page.hasMore) break;
+    if (rows.length >= input.maxRows) {
+      line(
+        input.stderr,
+        `error: Export exceeds ${input.maxRows} rows. Use history list pages or a narrower campaign.`,
+      );
+      return 1;
+    }
+    if (!page.entries.length || !page.nextCursor || page.nextCursor === cursor) {
+      line(input.stderr, "error: History export cursor stalled. No rows were written.");
+      return 1;
+    }
+    cursor = page.nextCursor;
+  }
+  for (const row of rows) line(input.stdout, JSON.stringify(row));
+  return 0;
 }
 
 function describedInputSchema(tool: AgentToolName) {
@@ -1575,6 +1655,18 @@ export async function runCli(argv: string[], context: CliContext = {}) {
       return await runAuthLogout({
         config,
         context: { ...context, credentialStore },
+        stdout,
+        stderr,
+      });
+    }
+
+    const historyExport = parseHistoryExport(args);
+    if (historyExport) {
+      if (!config.token) throw new UsageError(missingTokenMessage(config));
+      const createClient = context.createClient ?? createDmfasterClient;
+      return await runHistoryExport({
+        ...historyExport,
+        client: createClient({ baseUrl: config.baseUrl, token: config.token }),
         stdout,
         stderr,
       });

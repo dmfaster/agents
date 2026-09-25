@@ -44,7 +44,8 @@ the human.
 
 Agent 1.0 defines these bounded scopes: `workspace:read`, `campaigns:read`,
 `sending:read`, `inbox:read`, `pipeline:read`, `audiences:read`, `campaigns:write`,
-`campaigns:launch`, and `campaigns:control`. Login defaults to the `full` profile.
+`campaigns:launch`, `campaigns:control`, `inbox:write`, and `pipeline:write`.
+Login defaults to the `full` profile.
 The owner approves this connection once. With `campaigns:control`, explicit user
 instructions authorize launch and pause without another approval page per action;
 the normal `campaigns:launch` or `campaigns:write` permission is still required.
