@@ -44,6 +44,7 @@ const EXPECTED_TOOLS = new Map([
   ["company.inspect", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.list.prepare", { effect: "draft", scopes: ["audiences:read", "campaigns:write"] }],
   ["companies.list.inspect", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
+  ["companies.list.refine", { effect: "write", scopes: ["campaigns:read", "campaigns:write"] }],
   ["campaign.operation.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["campaign.delivery.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["campaign.delivery.update", { effect: "write", scopes: ["campaigns:read", "campaigns:write"] }],

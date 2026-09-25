@@ -38,7 +38,7 @@ import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "1.5.0";
+export const CLI_VERSION = "1.6.0";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();

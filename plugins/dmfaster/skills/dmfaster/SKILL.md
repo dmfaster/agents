@@ -11,7 +11,7 @@ implementation, review, tests, migrations, or deployments, follow the
 repository's own development guidance unless the user explicitly asks for live
 workspace evidence.
 
-The suite has 33 narrow domain tools, including company-centric search,
+The suite has 34 narrow domain tools, including company-centric search,
 complete company research, private shortlists, operational reads, campaign
 planning, live delivery settings, and authorized campaign controls. It does not expose generic mutation,
 provider execution, reply sending, meeting booking, browser-worker credentials,
@@ -50,8 +50,15 @@ an Instagram handle. Contactless companies remain research rows. Older lists
 are not automatically backfilled with previously lost contacts; see
 [tools.md](references/tools.md).
 Use `companies_list_inspect` to browse any company list, then `company_inspect`
-for current research details. No campaign is created or started. All five CLI
-commands accept `--input FILE` with the same JSON contract as MCP.
+for current research details. For an existing disabled, unstarted campaign whose
+company audience needs exact exclusions, use `companies_list_refine`: inspect
+the full source list and campaign, preview with `apply: false`, review the
+excluded company identities and exact before/after counts, then apply with the
+same key, inputs, and returned `selectionDigest` only when the user requested
+that cleanup. The tool saves a
+separate vetted list and attaches it to the same draft; it never starts sending.
+If either resource changed, inspect again. All six CLI commands accept
+`--input FILE` with the same JSON contract as MCP.
 
 ## Connect
 

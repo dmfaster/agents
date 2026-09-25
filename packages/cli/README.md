@@ -3,33 +3,34 @@
 CLI for DM Faster Agent 1.0. Run the version-pinned package, then authenticate
 through the focused DM Faster browser approval page.
 
-These examples are pinned to the 1.5.0 runtime to avoid silently installing a
-different client release. They include the September 9, 2026 server update for
-saved company contact details.
+This source prepares the version-pinned 1.6.0 runtime. The published baseline
+remains 1.5.0 until the coordinated package release. These instructions include
+the September 9, 2026 server update for saved company contact details.
 
 ```bash
-npx --yes @dmfaster/cli@1.5.0 auth login --json
-npx --yes @dmfaster/cli@1.5.0 auth login --access plan --json
-npx --yes @dmfaster/cli@1.5.0 auth status --json
-npx --yes @dmfaster/cli@1.5.0 doctor --json
-npx --yes @dmfaster/cli@1.5.0 describe companies search
+npx --yes @dmfaster/cli@1.6.0 auth login --json
+npx --yes @dmfaster/cli@1.6.0 auth login --access plan --json
+npx --yes @dmfaster/cli@1.6.0 auth status --json
+npx --yes @dmfaster/cli@1.6.0 doctor --json
+npx --yes @dmfaster/cli@1.6.0 describe companies search
 
-npx --yes @dmfaster/cli@1.5.0 analytics summary --scope today --json
-npx --yes @dmfaster/cli@1.5.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.5.0 campaigns list --status Running --limit 10 --json
-npx --yes @dmfaster/cli@1.5.0 conversations list --filter unread --channel linkedin --limit 25 --json
-npx --yes @dmfaster/cli@1.5.0 conversation inspect conversation_123 --limit 40 --json
-npx --yes @dmfaster/cli@1.5.0 replies list campaign_123 --limit 5 --query "Visio" --json
-npx --yes @dmfaster/cli@1.5.0 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.6.0 analytics summary --scope today --json
+npx --yes @dmfaster/cli@1.6.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.6.0 campaigns list --status Running --limit 10 --json
+npx --yes @dmfaster/cli@1.6.0 conversations list --filter unread --channel linkedin --limit 25 --json
+npx --yes @dmfaster/cli@1.6.0 conversation inspect conversation_123 --limit 40 --json
+npx --yes @dmfaster/cli@1.6.0 replies list campaign_123 --limit 5 --query "Visio" --json
+npx --yes @dmfaster/cli@1.6.0 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.6.0 companies list refine --input reviewed-refinement.json --json
 
-npx --yes @dmfaster/cli@1.5.0 campaign validate --state campaign-state.json --json
-npx --yes @dmfaster/cli@1.5.0 audience preview --state campaign-state.json --json > audience-preview.json
+npx --yes @dmfaster/cli@1.6.0 campaign validate --state campaign-state.json --json
+npx --yes @dmfaster/cli@1.6.0 audience preview --state campaign-state.json --json > audience-preview.json
 # Review the exact count and sample in audience-preview.json before continuing.
-npx --yes @dmfaster/cli@1.5.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
-npx --yes @dmfaster/cli@1.5.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
-npx --yes @dmfaster/cli@1.5.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
+npx --yes @dmfaster/cli@1.6.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
+npx --yes @dmfaster/cli@1.6.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
+npx --yes @dmfaster/cli@1.6.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
 
-npx --yes @dmfaster/cli@1.5.0 auth logout --json
+npx --yes @dmfaster/cli@1.6.0 auth logout --json
 ```
 
 `auth login` creates a short-lived PKCE device request, prints a confirmation

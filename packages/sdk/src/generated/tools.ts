@@ -30,6 +30,7 @@ export const AGENT_TOOL_NAMES = [
   "company.inspect",
   "companies.list.prepare",
   "companies.list.inspect",
+  "companies.list.refine",
   "campaign.operation.inspect",
   "campaign.delivery.inspect",
   "campaign.delivery.update",
@@ -185,6 +186,11 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "companies.list.refine": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
   "campaign.operation.inspect": {
     effect: "read",
     approval: "none",
@@ -232,6 +238,7 @@ export const AGENT_TOOL_SCOPES = {
   "company.inspect": ["audiences:read"],
   "companies.list.prepare": ["audiences:read", "campaigns:write"],
   "companies.list.inspect": ["campaigns:read", "audiences:read"],
+  "companies.list.refine": ["campaigns:read", "campaigns:write"],
   "campaign.operation.inspect": ["campaigns:read"],
   "campaign.delivery.inspect": ["campaigns:read"],
   "campaign.delivery.update": ["campaigns:read", "campaigns:write"],
@@ -248,6 +255,7 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "campaign.pause.preflight",
   "campaign.pause",
   "companies.list.prepare",
+  "companies.list.refine",
   "campaign.delivery.update",
 ] as const;
 export const AGENT_TOOL_DEFINITIONS = {
@@ -824,6 +832,25 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["companies", "list", "inspect"],
     },
   },
+  "companies.list.refine": {
+    mcp: {
+      name: "companies_list_refine",
+      title: "Refine disabled campaign audience",
+      description:
+        "Preview reviewed exclusions, then attach a refined copy to a disabled, unstarted campaign. Current versions and exact counts are required. Never starts sending or changes the source list.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies list refine --input FILE",
+      command: ["companies", "list", "refine"],
+    },
+  },
   "campaign.operation.inspect": {
     mcp: {
       name: "campaign_operation_inspect",
@@ -972,6 +999,9 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "companies.list.inspect": {
     $ref: "#/components/schemas/CompanyListInspectInput",
+  },
+  "companies.list.refine": {
+    $ref: "#/components/schemas/CompanyListRefineInput",
   },
   "campaign.operation.inspect": {
     $ref: "#/components/schemas/CampaignOperationInspectInput",
@@ -2454,6 +2484,95 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
     required: ["listId"],
+  },
+  CompanyListRefineInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [
+      "listId",
+      "campaignId",
+      "expectedListUpdatedAt",
+      "expectedCampaignUpdatedAt",
+      "expectedTotal",
+      "expectedTargetCount",
+      "excludeCompanies",
+      "expectedRemaining",
+      "expectedRemainingTargetCount",
+      "idempotencyKey",
+      "apply",
+    ],
+    properties: {
+      listId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedListUpdatedAt: {
+        type: "string",
+        minLength: 20,
+        maxLength: 40,
+      },
+      expectedCampaignUpdatedAt: {
+        type: "string",
+        minLength: 20,
+        maxLength: 40,
+      },
+      expectedTotal: {
+        type: "integer",
+        minimum: 1,
+        maximum: 25000,
+      },
+      expectedTargetCount: {
+        type: "integer",
+        minimum: 0,
+        maximum: 125000,
+      },
+      excludeCompanies: {
+        type: "array",
+        minItems: 1,
+        maxItems: 1000,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: ["country", "businessId"],
+          properties: {
+            country: {
+              $ref: "#/components/schemas/SupportedCountry",
+            },
+            businessId: {
+              type: "string",
+              minLength: 1,
+              maxLength: 192,
+            },
+          },
+        },
+      },
+      expectedRemaining: {
+        type: "integer",
+        minimum: 1,
+        maximum: 25000,
+      },
+      expectedRemainingTargetCount: {
+        type: "integer",
+        minimum: 1,
+        maximum: 125000,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      reviewedSelectionDigest: {
+        type: "string",
+        minLength: 64,
+        maxLength: 64,
+        description: "Echo selectionDigest from the matching dry run when apply is true.",
+      },
+      apply: {
+        type: "boolean",
+        description:
+          "False previews exact removals without a write. True applies the same reviewed selection to the disabled draft list.",
+      },
+    },
   },
   CampaignOperationInspectInput: {
     type: "object",

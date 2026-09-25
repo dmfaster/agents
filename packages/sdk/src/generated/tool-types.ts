@@ -31,6 +31,7 @@ export type AgentToolInputMap = {
   "company.inspect": operations["companyInspect"]["requestBody"]["content"]["application/json"];
   "companies.list.prepare": operations["companyListPrepare"]["requestBody"]["content"]["application/json"];
   "companies.list.inspect": operations["companyListInspect"]["requestBody"]["content"]["application/json"];
+  "companies.list.refine": operations["companyListRefine"]["requestBody"]["content"]["application/json"];
   "campaign.operation.inspect": operations["campaignOperationInspect"]["requestBody"]["content"]["application/json"];
   "campaign.delivery.inspect": operations["campaignDeliveryInspect"]["requestBody"]["content"]["application/json"];
   "campaign.delivery.update": operations["campaignDeliveryUpdate"]["requestBody"]["content"]["application/json"];
@@ -125,6 +126,9 @@ export type AgentToolDataMap = {
   >;
   "companies.list.inspect": NonNullable<
     operations["companyListInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.list.refine": NonNullable<
+    operations["companyListRefine"]["responses"][200]["content"]["application/json"]["data"]
   >;
   "campaign.operation.inspect": NonNullable<
     operations["campaignOperationInspect"]["responses"][200]["content"]["application/json"]["data"]

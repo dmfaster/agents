@@ -442,6 +442,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/companies.list.refine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refine a disabled campaign's company audience
+         * @description Preview exact exclusions, then save a refined copy of a company list and attach it to one disabled, unstarted campaign. Requires current list and campaign versions and exact expected counts. Never starts sending or changes the source list.
+         */
+        post: operations["companyListRefine"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/companies.search": {
         parameters: {
             query?: never;
@@ -1022,7 +1042,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.list.prepare" | "companies.list.inspect" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -1538,6 +1558,13 @@ export interface components {
                 publicFunding?: {
                     [key: string]: unknown;
                 } | null;
+                /** @description Company-owned social account URLs verified from the company's website. */
+                socialProfiles?: {
+                    /** @enum {string} */
+                    platform: "instagram" | "facebook" | "linkedin" | "youtube" | "tiktok" | "x";
+                    /** Format: uri */
+                    url: string;
+                }[];
                 technologies: string[];
             } & {
                 [key: string]: unknown;
@@ -1606,6 +1633,46 @@ export interface components {
             data?: components["schemas"]["CompanyListPrepareData"] | null;
             /** @constant */
             tool?: "companies.list.prepare";
+        };
+        CompanyListRefineData: {
+            applied: boolean;
+            beforeTotal: number;
+            campaignId: string;
+            campaignUpdatedAt: string;
+            listId: string;
+            listUpdatedAt: string | null;
+            remaining: number;
+            removed: number;
+            replayed: boolean;
+            selectionDigest: string;
+            sourceListId: string;
+            sourceListUpdatedAt: string;
+            targetCountAfter: number;
+            targetCountBefore: number;
+        };
+        CompanyListRefineInput: {
+            /** @description False previews exact removals without a write. True applies the same reviewed selection to the disabled draft list. */
+            apply: boolean;
+            campaignId: components["schemas"]["ResourceId"];
+            excludeCompanies: {
+                businessId: string;
+                country: components["schemas"]["SupportedCountry"];
+            }[];
+            expectedCampaignUpdatedAt: string;
+            expectedListUpdatedAt: string;
+            expectedRemaining: number;
+            expectedRemainingTargetCount: number;
+            expectedTargetCount: number;
+            expectedTotal: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            listId: components["schemas"]["ResourceId"];
+            /** @description Echo selectionDigest from the matching dry run when apply is true. */
+            reviewedSelectionDigest?: string;
+        };
+        CompanyListRefineResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyListRefineData"] | null;
+            /** @constant */
+            tool?: "companies.list.refine";
         };
         /** @description Search the same company inventory and filters as the live app. Returns full rows, exact total and pagination. Echo querySignature and expectedRevision on subsequent pages. */
         CompanySearchData: {
@@ -2959,6 +3026,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CompanyListPrepareResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyListRefine: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyListRefineInput"];
+            };
+        };
+        responses: {
+            /** @description Preview or apply exact company exclusions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyListRefineResult"];
                 };
             };
             400: components["responses"]["BadRequest"];

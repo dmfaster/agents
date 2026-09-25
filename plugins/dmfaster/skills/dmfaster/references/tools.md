@@ -1,6 +1,6 @@
 # DM Faster Agent 1.0 tools
 
-Agent 1.0 exposes exactly 33 bounded domain tools. Each credential is bound to one
+Agent 1.0 exposes exactly 34 bounded domain tools. Each credential is bound to one
 workspace, and every tool requires the exact scopes shown below; scopes are not
 inherited from `workspace:read`. MCP names use underscores and HTTP contract
 names use dots.
@@ -16,7 +16,7 @@ authorizes launch or pause.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@1.5.0
+npx --yes @dmfaster/cli@1.6.0
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
@@ -55,6 +55,7 @@ only one input in a command may use `-`.
 | `company_inspect`            | `company.inspect`            | `company inspect --input FILE --json`                                                           | `audiences:read`                    | full research and contact profile             |
 | `companies_list_prepare`     | `companies.list.prepare`     | `companies list prepare --input FILE --json`                                                    | `audiences:read`, `campaigns:write` | private company shortlist with contact routes |
 | `companies_list_inspect`     | `companies.list.inspect`     | `companies list inspect --input FILE --json`                                                    | `campaigns:read`, `audiences:read`  | saved company list inspection                 |
+| `companies_list_refine`      | `companies.list.refine`      | `companies list refine --input FILE --json`                                                     | `campaigns:read`, `campaigns:write` | vetted copy for one disabled draft            |
 | `campaign_operation_inspect` | `campaign.operation.inspect` | `campaign operation inspect --input FILE --json`                                                | `campaigns:read`                    | browser operation receipt                     |
 | `campaign_delivery_inspect`  | `campaign.delivery.inspect`  | `campaign delivery inspect --input FILE --json`                                                 | `campaigns:read`                    | current delivery settings and revision        |
 | `campaign_delivery_update`   | `campaign.delivery.update`   | `campaign delivery update --input FILE --json`                                                  | `campaigns:read`, `campaigns:write` | ongoing Instagram delivery settings           |
@@ -71,7 +72,7 @@ then `companies_search` with the exact requested criteria. For example:
 }
 ```
 
-All five company tools accept a JSON file through CLI `--input FILE`. Search
+All six company tools accept a JSON file through CLI `--input FILE`. Search
 pages contain at most 100 companies. Echo the returned `querySignature` and
 `expectedRevision` when paging; do not present the sample size as an exact total.
 Call `company_inspect` with returned country/businessId identities for full
@@ -94,6 +95,19 @@ automatically backfilled with real contacts lost before the September 9 fix;
 inspect current company profiles and prepare a fresh reviewed shortlist when
 requested. Use `companies_list_inspect` for saved-list membership and
 `company_inspect` for current complete profiles.
+
+`companies_list_refine` takes the source `listId`, its `expectedUpdatedAt` as
+`expectedListUpdatedAt`, the attached draft's ID and `updatedAt`, exact source
+company and campaign route counts, and up to 1,000 `{country,businessId}`
+exclusions. Include exact expected remaining company and route counts, a stable
+idempotency key, and `apply: false` for a dry run. Review that result with the
+user before calling the same input with `apply: true` and its `selectionDigest`
+as `reviewedSelectionDigest` when they requested the
+cleanup. It saves a separate private list and reattaches only the disabled,
+unstarted draft. The original list stays available. A changed version, count,
+selection, or started campaign blocks the swap. Inspect both resources after
+any uncertain result and retry with the same key only if the draft is still
+unstarted. Neither preview nor application starts sending.
 
 ## Saved-list workflow
 

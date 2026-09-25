@@ -21,7 +21,7 @@ or network access. It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 33 domain tools directly.
+continue to use all 34 domain tools directly.
 
 `audience_preview` returns a server-issued `reviewedAudience` identity with an
 exact, immutable search revision. The user must review that preview before a
@@ -43,13 +43,13 @@ tools satisfy the credential's scopes, with missing scopes for the others.
 Workspace role, plan, and action preconditions still apply when a tool runs.
 
 ```bash
-npx --yes @dmfaster/cli@1.5.0 auth login --json
-npx --yes @dmfaster/mcp-server@1.5.0
+npx --yes @dmfaster/cli@1.6.0 auth login --json
+npx --yes @dmfaster/mcp-server@1.6.0
 ```
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
-smaller ceiling. The MCP server can expose all 33 domain schemas and the
+smaller ceiling. The MCP server can expose all 34 domain schemas and the
 local connection and presentation schemas while the DM Faster API independently rejects
 domain tools outside the stored credential's scopes.
 
@@ -59,7 +59,7 @@ preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world. Domain tools also
 advertise output schemas generated from the public Agent API contract.
 
-The MCP names are the 33 domain tools:
+The MCP names are the 34 domain tools:
 
 - `analytics_summary`
 - `workspace_briefing`
@@ -91,6 +91,7 @@ The MCP names are the 33 domain tools:
 - `company_inspect`
 - `companies_list_prepare`
 - `companies_list_inspect`
+- `companies_list_refine`
 - `campaign_operation_inspect`
 - `campaign_delivery_inspect`
 - `campaign_delivery_update`
@@ -122,7 +123,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.5.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.6.0"]
     }
   }
 }

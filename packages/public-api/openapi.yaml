@@ -1520,6 +1520,57 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/agent/tools/companies.list.refine:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyListRefine
+      summary: Refine a disabled campaign's company audience
+      description: Preview exact exclusions, then save a refined copy of a company list and attach it to one disabled, unstarted campaign. Requires current list and campaign versions and exact expected counts. Never starts sending or changes the source list.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: companies_list_refine
+        title: Refine disabled campaign audience
+        description: Preview reviewed exclusions, then attach a refined copy to a disabled, unstarted campaign. Current versions and exact counts are required. Never starts sending or changes the source list.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: B2B company prospecting
+        usage: companies list refine --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyListRefineInput"
+      responses:
+        "200":
+          description: Preview or apply exact company exclusions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyListRefineResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/agent/tools/campaign.operation.inspect:
     post:
       tags:
@@ -2125,6 +2176,7 @@ components:
         - company.inspect
         - companies.list.prepare
         - companies.list.inspect
+        - companies.list.refine
         - campaign.operation.inspect
         - campaign.delivery.inspect
         - campaign.delivery.update
@@ -4883,6 +4935,18 @@ components:
             financials: { type: array, items: { type: object, additionalProperties: true } }
             decisionMakers: { type: array, items: { type: object, additionalProperties: true } }
             technologies: { type: array, items: { type: string } }
+            socialProfiles:
+              type: array
+              description: Company-owned social account URLs verified from the company's website.
+              items:
+                type: object
+                additionalProperties: false
+                required: [platform, url]
+                properties:
+                  platform:
+                    type: string
+                    enum: [instagram, facebook, linkedin, youtube, tiktok, x]
+                  url: { type: string, format: uri }
             advertising: { type: object, additionalProperties: true }
             exhibitions: { type: array, items: { type: object, additionalProperties: true } }
             publicFunding: { type: [object, "null"], additionalProperties: true }
@@ -5004,6 +5068,104 @@ components:
             data:
               oneOf:
                 - $ref: "#/components/schemas/CompanyListInspectData"
+                - type: "null"
+
+    CompanyListRefineInput:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          listId,
+          campaignId,
+          expectedListUpdatedAt,
+          expectedCampaignUpdatedAt,
+          expectedTotal,
+          expectedTargetCount,
+          excludeCompanies,
+          expectedRemaining,
+          expectedRemainingTargetCount,
+          idempotencyKey,
+          apply,
+        ]
+      properties:
+        listId:
+          $ref: "#/components/schemas/ResourceId"
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
+        expectedListUpdatedAt: { type: string, minLength: 20, maxLength: 40 }
+        expectedCampaignUpdatedAt: { type: string, minLength: 20, maxLength: 40 }
+        expectedTotal: { type: integer, minimum: 1, maximum: 25000 }
+        expectedTargetCount: { type: integer, minimum: 0, maximum: 125000 }
+        excludeCompanies:
+          type: array
+          minItems: 1
+          maxItems: 1000
+          items:
+            type: object
+            additionalProperties: false
+            required: [country, businessId]
+            properties:
+              country:
+                $ref: "#/components/schemas/SupportedCountry"
+              businessId: { type: string, minLength: 1, maxLength: 192 }
+        expectedRemaining: { type: integer, minimum: 1, maximum: 25000 }
+        expectedRemainingTargetCount: { type: integer, minimum: 1, maximum: 125000 }
+        idempotencyKey:
+          $ref: "#/components/schemas/IdempotencyKey"
+        reviewedSelectionDigest:
+          type: string
+          minLength: 64
+          maxLength: 64
+          description: Echo selectionDigest from the matching dry run when apply is true.
+        apply:
+          type: boolean
+          description: False previews exact removals without a write. True applies the same reviewed selection to the disabled draft list.
+    CompanyListRefineData:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          sourceListId,
+          listId,
+          campaignId,
+          applied,
+          replayed,
+          beforeTotal,
+          removed,
+          remaining,
+          targetCountBefore,
+          targetCountAfter,
+          sourceListUpdatedAt,
+          listUpdatedAt,
+          campaignUpdatedAt,
+          selectionDigest,
+        ]
+      properties:
+        sourceListId: { type: string }
+        listId: { type: string }
+        campaignId: { type: string }
+        applied: { type: boolean }
+        replayed: { type: boolean }
+        beforeTotal: { type: integer, minimum: 1 }
+        removed: { type: integer, minimum: 1 }
+        remaining: { type: integer, minimum: 1 }
+        targetCountBefore: { type: integer, minimum: 0 }
+        targetCountAfter: { type: integer, minimum: 1 }
+        sourceListUpdatedAt: { type: string }
+        listUpdatedAt: { type: [string, "null"] }
+        campaignUpdatedAt: { type: string }
+        selectionDigest: { type: string }
+    CompanyListRefineResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: companies.list.refine
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyListRefineData"
                 - type: "null"
 
     CampaignOperationInspectInput:

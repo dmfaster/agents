@@ -642,6 +642,38 @@ export const CompanyListInspectInputSchema = z
     expectedUpdatedAt: z.string().max(160).optional(),
   })
   .strict();
+export const CompanyListRefineInputSchema = z
+  .object({
+    listId: ResourceIdSchema,
+    campaignId: ResourceIdSchema,
+    expectedListUpdatedAt: z.string().min(20).max(40),
+    expectedCampaignUpdatedAt: z.string().min(20).max(40),
+    expectedTotal: z.number().int().min(1).max(25000),
+    expectedTargetCount: z.number().int().min(0).max(125000),
+    excludeCompanies: z
+      .array(
+        z
+          .object({ country: SupportedCountrySchema, businessId: z.string().min(1).max(192) })
+          .strict(),
+      )
+      .min(1)
+      .max(1000),
+    expectedRemaining: z.number().int().min(1).max(25000),
+    expectedRemainingTargetCount: z.number().int().min(1).max(125000),
+    idempotencyKey: IdempotencyKeySchema,
+    reviewedSelectionDigest: z
+      .string()
+      .min(64)
+      .max(64)
+      .describe("Echo selectionDigest from the matching dry run when apply is true.")
+      .optional(),
+    apply: z
+      .boolean()
+      .describe(
+        "False previews exact removals without a write. True applies the same reviewed selection to the disabled draft list.",
+      ),
+  })
+  .strict();
 export const CampaignOperationInspectInputSchema = z
   .object({
     campaignId: z.string().min(1).max(160),
@@ -700,6 +732,7 @@ export const AGENT_INPUT_SCHEMAS = {
   "company.inspect": CompanyInspectInputSchema,
   "companies.list.prepare": CompanyListPrepareInputSchema,
   "companies.list.inspect": CompanyListInspectInputSchema,
+  "companies.list.refine": CompanyListRefineInputSchema,
   "campaign.operation.inspect": CampaignOperationInspectInputSchema,
   "campaign.delivery.inspect": CampaignDeliveryInspectInputSchema,
   "campaign.delivery.update": CampaignDeliveryUpdateInputSchema,
