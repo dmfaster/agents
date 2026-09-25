@@ -7,6 +7,8 @@ export type AgentToolInputMap = {
   "campaign.inspect": operations["campaignInspect"]["requestBody"]["content"]["application/json"];
   "sending.inspect": operations["sendingInspect"]["requestBody"]["content"]["application/json"];
   "replies.list": operations["repliesList"]["requestBody"]["content"]["application/json"];
+  "conversations.list": operations["conversationsList"]["requestBody"]["content"]["application/json"];
+  "conversation.inspect": operations["conversationInspect"]["requestBody"]["content"]["application/json"];
   "pipeline.inspect": operations["pipelineInspect"]["requestBody"]["content"]["application/json"];
   "company.timeline": operations["companyTimeline"]["requestBody"]["content"]["application/json"];
   "industry.lookup": operations["industryLookup"]["requestBody"]["content"]["application/json"];
@@ -51,6 +53,12 @@ export type AgentToolDataMap = {
   >;
   "replies.list": NonNullable<
     operations["repliesList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "conversations.list": NonNullable<
+    operations["conversationsList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "conversation.inspect": NonNullable<
+    operations["conversationInspect"]["responses"][200]["content"]["application/json"]["data"]
   >;
   "pipeline.inspect": NonNullable<
     operations["pipelineInspect"]["responses"][200]["content"]["application/json"]["data"]

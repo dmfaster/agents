@@ -7,6 +7,8 @@ export {
   AGENT_TOOL_SCOPES,
   AGENT_OWNER_ONLY_TOOLS,
   AGENT_TOOL_DEFINITIONS,
+  AGENT_TOOL_INPUT_SCHEMAS,
+  AGENT_INPUT_SCHEMA_DEFINITIONS,
 } from "./generated/tools.ts";
 export type { AgentToolInputMap, AgentToolDataMap } from "./generated/tool-types.ts";
 

@@ -373,7 +373,7 @@ export interface paths {
         put?: never;
         /**
          * List campaigns
-         * @description Lists the most recently updated campaigns, optionally filtered by status. Read-only.
+         * @description Lists campaigns with exact filtered totals and a continuation cursor. A changed collection rejects the cursor so callers can restart without silently skipping a campaign. Read-only.
          */
         post: operations["campaignsList"];
         delete?: never;
@@ -496,6 +496,46 @@ export interface paths {
          * @description Returns up to 30 recorded outreach and pipeline events for one company. Read-only.
          */
         post: operations["companyTimeline"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/conversation.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read one inbox conversation
+         * @description Reads an exact workspace conversation and one bounded page of actual messages, including attachment metadata. Read-only; inspection does not mark messages read.
+         */
+        post: operations["conversationInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/conversations.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * List inbox conversations
+         * @description Lists actual inbox conversations with app filters and a continuation cursor. Read-only; listing does not mark messages read.
+         */
+        post: operations["conversationsList"];
         delete?: never;
         options?: never;
         head?: never;
@@ -734,6 +774,8 @@ export interface components {
             campaignUpdatedAt: string;
             channels: components["schemas"]["TargetChannel"][];
             dailyCap: number;
+            /** @description Delivery restrictions the caller must disclose when summarizing the launch, including manual runs ending at local midnight. */
+            deliveryNotice?: string;
             targetCount: number;
             targetListId: string;
         };
@@ -893,7 +935,13 @@ export interface components {
             executionMode: "read_only" | "simulation" | "live";
             resourceRefs: {
                 campaignId?: string;
+                /** Format: date-time */
+                campaignUpdatedAt?: string;
+                executionTimezone?: string;
+                preparationFingerprint?: string;
                 targetListId?: string;
+                /** Format: date-time */
+                targetListUpdatedAt?: string;
             };
             /** @enum {string} */
             status: "success" | "needs_input" | "needs_approval" | "blocked" | "failed";
@@ -974,7 +1022,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.list.prepare" | "companies.list.inspect" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "pipeline.inspect" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.list.prepare" | "companies.list.inspect" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -1291,6 +1339,7 @@ export interface components {
                     gmail: number;
                     instagram: number;
                     linkedin: number;
+                    sms: number;
                 };
                 companiesPlanned: number;
                 companiesReached: number;
@@ -1382,13 +1431,22 @@ export interface components {
             tool?: "campaign.prepare";
         };
         CampaignsListInput: {
+            channel?: components["schemas"]["TargetChannel"];
+            /** @description Opaque nextCursor returned by the preceding page. */
+            cursor?: string;
             limit?: number;
+            /** @description Case-insensitive campaign name search. */
+            query?: string;
             status?: components["schemas"]["CampaignStatus"];
         };
         CampaignsListOutput: {
             campaigns: components["schemas"]["CampaignSummary"][];
             /** Format: date-time */
             generatedAt: string;
+            hasMore: boolean;
+            nextCursor: string | null;
+            /** @description Exact number of campaigns matching the supplied filters at this page's collection revision. */
+            totalCount: number;
         };
         CampaignsListResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CampaignsListOutput"] | null;
@@ -1663,6 +1721,52 @@ export interface components {
             /** @constant */
             tool?: "company.timeline";
         };
+        ConversationInspectInput: {
+            conversationId: components["schemas"]["ResourceId"];
+            cursor?: string;
+            limit?: number;
+        };
+        ConversationInspectOutput: {
+            conversation: components["schemas"]["InboxConversationSummary"];
+            /** Format: date-time */
+            generatedAt: string;
+            hasMore: boolean;
+            messages: components["schemas"]["InboxConversationMessage"][];
+            nextCursor: string | null;
+        };
+        ConversationInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ConversationInspectOutput"] | null;
+            /** @constant */
+            tool?: "conversation.inspect";
+        };
+        ConversationsListInput: {
+            campaignId?: components["schemas"]["ResourceId"];
+            channel?: components["schemas"]["InboxChannel"];
+            cursor?: string;
+            /** @enum {string} */
+            filter?: "all" | "needs_reply" | "waiting" | "unread" | "snoozed" | "closed";
+            includeAutomaticResponses?: boolean;
+            /** @enum {string} */
+            intent?: "interested" | "information_requested" | "meeting_intent" | "not_now" | "wrong_person" | "not_interested" | "opt_out" | "acknowledgement" | "unclear";
+            /** @enum {string} */
+            interest?: "positive" | "neutral" | "negative" | "needs_review";
+            limit?: number;
+            mailboxId?: components["schemas"]["ResourceId"];
+            query?: string;
+        };
+        ConversationsListOutput: {
+            conversations: components["schemas"]["InboxConversationSummary"][];
+            /** Format: date-time */
+            generatedAt: string;
+            hasMore: boolean;
+            nextCursor: string | null;
+            scopeStats: components["schemas"]["InboxScopeStats"];
+        };
+        ConversationsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ConversationsListOutput"] | null;
+            /** @constant */
+            tool?: "conversations.list";
+        };
         Error: {
             /** @enum {string} */
             code: "invalid_request" | "unauthorized" | "insufficient_scope" | "not_found" | "rate_limited" | "internal_error" | "service_unavailable";
@@ -1677,6 +1781,74 @@ export interface components {
             error: components["schemas"]["Error"];
         };
         IdempotencyKey: string;
+        /** @enum {string} */
+        InboxChannel: "instagram" | "facebook" | "linkedin" | "gmail" | "outlook" | "email" | "sms";
+        InboxConversationMessage: {
+            channel: components["schemas"]["InboxChannel"];
+            deleted?: boolean;
+            deliveryStatus: string;
+            /** @enum {string} */
+            direction: "inbound" | "outbound";
+            editedAt?: string;
+            id: string;
+            isAutomaticResponse: boolean;
+            media: components["schemas"]["InboxMessageMedia"][];
+            /** @enum {string} */
+            messageType: "text" | "reply_signal" | "attachment" | "system";
+            /** @enum {string} */
+            replyKind: "human" | "automatic" | "uncertain";
+            seenAt?: string;
+            senderName: string;
+            sentAt: string;
+            text: string;
+        };
+        InboxConversationSummary: {
+            campaignId: string;
+            campaignName: string;
+            channel: components["schemas"]["InboxChannel"];
+            id: string;
+            /** @enum {string} */
+            interestIntent: "" | "interested" | "information_requested" | "meeting_intent" | "not_now" | "wrong_person" | "not_interested" | "opt_out" | "acknowledgement" | "unclear";
+            /** @enum {string} */
+            interestLevel: "" | "positive" | "neutral" | "negative" | "needs_review";
+            lastMessageAt: string;
+            /** @enum {string} */
+            lastMessageDirection: "" | "inbound" | "outbound";
+            lastMessageText: string;
+            needsReply: boolean;
+            /** @enum {string} */
+            status: "open" | "closed";
+            targetCompanyName: string;
+            targetHandle: string;
+            targetName: string;
+            unreadCount: number;
+        };
+        InboxMessageMedia: {
+            description: string;
+            durationMs: number;
+            height: number;
+            id: string;
+            /** @enum {string} */
+            kind: "image" | "video" | "audio" | "link";
+            mimeType: string;
+            previewUrl: string;
+            title: string;
+            url: string;
+            width: number;
+        };
+        /** @description Counts in the selected campaign, channel, mailbox and text scope across conversation filters. These are not the total matching one filter. */
+        InboxScopeStats: {
+            closed: number;
+            needsReply: number;
+            needsReview: number;
+            negative: number;
+            neutral: number;
+            positive: number;
+            snoozed: number;
+            total: number;
+            unread: number;
+            waiting: number;
+        };
         IndustryLookupInput: {
             /** @enum {string} */
             language?: "en" | "fi";
@@ -1892,7 +2064,7 @@ export interface components {
         /** @enum {string} */
         SupportedCountry: "FI" | "NO" | "EE" | "SE" | "DK" | "UK" | "IE" | "AE" | "AT" | "BE" | "CA" | "NL" | "NZ" | "ES" | "FR" | "HK" | "IL" | "LV" | "LT" | "IT" | "CH" | "PT" | "SA" | "SG" | "IS" | "AU" | "DE" | "US" | "ZA";
         /** @enum {string} */
-        TargetChannel: "instagram" | "facebook" | "linkedin" | "gmail";
+        TargetChannel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
         /** @enum {string} */
         TolVersion: "2008" | "2025";
         WorkspaceBriefingInput: Record<string, never>;
@@ -2885,6 +3057,67 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    conversationInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConversationInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Conversation and message page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    conversationsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConversationsListInput"];
+            };
+        };
+        responses: {
+            /** @description Inbox conversation page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];

@@ -7,14 +7,20 @@ import {
   ResourceIdSchema,
   AgentCampaignStateSchema,
 } from "./generated/input-schemas.ts";
+import { AGENT_OUTPUT_SCHEMAS } from "./generated/output-schemas.ts";
 
 export const MCP_AGENT_TOOL_NAMES = AGENT_TOOL_NAMES.map(
   (name) => AGENT_TOOL_DEFINITIONS[name].mcp.name,
 );
 
 export const MCP_PRESENTATION_TOOL_NAMES = ["campaign_workspace"] as const;
+export const MCP_LOCAL_TOOL_NAMES = ["connection_status"] as const;
 
-export const MCP_TOOL_NAMES = [...MCP_AGENT_TOOL_NAMES, ...MCP_PRESENTATION_TOOL_NAMES] as const;
+export const MCP_TOOL_NAMES = [
+  ...MCP_AGENT_TOOL_NAMES,
+  ...MCP_LOCAL_TOOL_NAMES,
+  ...MCP_PRESENTATION_TOOL_NAMES,
+] as const;
 
 export type McpAgentToolName = (typeof MCP_AGENT_TOOL_NAMES)[number];
 export type McpToolName = (typeof MCP_TOOL_NAMES)[number];
@@ -38,6 +44,7 @@ export type AgentToolDefinition = {
   title: string;
   description: string;
   inputSchema: z.ZodType;
+  outputSchema: z.ZodType;
   annotations: AgentToolAnnotations;
   call(input: unknown): Promise<AgentToolResult>;
 };
@@ -53,9 +60,11 @@ export function createAgentToolDefinitions(client: AgentInvoker): AgentToolDefin
   return AGENT_TOOL_NAMES.map((tool) => {
     const metadata = AGENT_TOOL_DEFINITIONS[tool].mcp;
     const inputSchema = AGENT_INPUT_SCHEMAS[tool];
+    const outputSchema = AGENT_OUTPUT_SCHEMAS[tool];
     return {
       ...metadata,
       inputSchema,
+      outputSchema,
       call: async (value: unknown) =>
         client.invoke(tool, inputSchema.parse(value) as AgentToolInputMap[typeof tool]),
     };

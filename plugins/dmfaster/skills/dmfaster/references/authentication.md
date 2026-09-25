@@ -19,13 +19,14 @@ repository, or MCP configuration.
 Check the current credential without a global install:
 
 ```bash
-npx --yes @dmfaster/cli@1.4.0 auth status --json
+npx --yes @dmfaster/cli@1.5.0 auth status --json
+npx --yes @dmfaster/cli@1.5.0 doctor --json
 ```
 
 When authentication is required:
 
 ```bash
-npx --yes @dmfaster/cli@1.4.0 auth login --json
+npx --yes @dmfaster/cli@1.5.0 auth login --json
 ```
 
 The CLI prints an `authorization_required` JSON event and a human-readable
@@ -48,10 +49,12 @@ The owner approves this connection once. With `campaigns:control`, explicit user
 instructions authorize launch and pause without another approval page per action;
 the normal `campaigns:launch` or `campaigns:write` permission is still required.
 Existing connections are never upgraded silently. When the owner wants direct
-control, use `auth logout` to revoke the stored connection, then
-`auth login --access full` to request the new permission. Login deliberately
-refuses to overwrite an existing stored credential. The human personally approves
-the new connection page; the agent must not operate it for them.
+control, use `auth upgrade --access full` to request the new permission. The old
+connection stays available while browser approval is pending. The CLI verifies
+secure storage before revoking the old remote credential; denial or expiry leaves
+the old connection in place. Login deliberately refuses to overwrite an existing
+stored credential. The human personally approves the new connection page; the
+agent must not operate it for them.
 
 Use `--access read`, `--access plan`, or `--access draft` for smaller grants.
 These profiles add operational reads, planning, and private drafts respectively.
@@ -80,5 +83,9 @@ browser cookie, `dmf_session` cookie, or `wtoken_...` browser-worker credential.
 - `409`: the approved campaign version or operation binding changed. Run the
   exact preflight again; do not bypass the conflict.
 - `429`: respect the retry hint and avoid parallel retries.
-- MCP startup failure with no credential: authenticate with the pinned CLI,
-  then restart or reload the MCP host.
+- MCP `connection_status` returns `not_authenticated`: authenticate with the
+  pinned CLI. The running MCP server uses the new credential on its next call.
+- MCP `connection_status` lists tools that satisfy the credential's scopes and
+  missing scopes for the rest. Role, plan, and action conditions are still
+  checked on each call. `doctor` reports local runtime and credential-store
+  recovery steps without printing the credential.

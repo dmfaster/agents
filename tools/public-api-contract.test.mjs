@@ -20,6 +20,8 @@ const EXPECTED_TOOLS = new Map([
   ["campaign.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["sending.inspect", { effect: "read", scopes: ["sending:read"] }],
   ["replies.list", { effect: "read", scopes: ["inbox:read"] }],
+  ["conversations.list", { effect: "read", scopes: ["inbox:read"] }],
+  ["conversation.inspect", { effect: "read", scopes: ["inbox:read"] }],
   ["pipeline.inspect", { effect: "read", scopes: ["pipeline:read"] }],
   ["company.timeline", { effect: "read", scopes: ["campaigns:read", "pipeline:read"] }],
   ["industry.lookup", { effect: "read", scopes: ["audiences:read"] }],

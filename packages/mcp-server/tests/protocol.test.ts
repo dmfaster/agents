@@ -25,7 +25,7 @@ function result(tool: AgentToolName): AgentToolResult {
     durationMs: 1,
     evidence: [],
     consistency: { status: "verified", checks: [] },
-    data: {},
+    data: null,
     artifacts: [],
     error: null,
   };
@@ -45,9 +45,25 @@ function createWire(client: AgentInvoker) {
   const output = new PassThrough();
   const lines = createInterface({ input: output, crlfDelay: Infinity });
   const iterator = lines[Symbol.asyncIterator]();
-  const handle = serveDmfasterStdio(client, {
-    transport: new StdioServerTransport(input, output),
-  });
+  const handle = serveDmfasterStdio(
+    client,
+    {
+      transport: new StdioServerTransport(input, output),
+    },
+    {
+      env: { DMFASTER_API_URL: "https://app.dmfaster.test" },
+      auth: {
+        credentialStore: {
+          kind: "macos-keychain",
+          async get() {
+            return null;
+          },
+          async set() {},
+          async delete() {},
+        },
+      },
+    },
+  );
 
   return {
     send(message: JsonObject) {
@@ -153,6 +169,13 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
     tools.map((tool) => tool.name),
     MCP_TOOL_NAMES,
   );
+  for (const tool of tools.filter(
+    (candidate) => !["connection_status", "campaign_workspace"].includes(String(candidate.name)),
+  )) {
+    const outputSchema = tool.outputSchema as JsonObject;
+    assert.equal(outputSchema.type, "object", `${tool.name} must advertise a result schema`);
+    assert.ok(outputSchema.properties, `${tool.name} must describe its result fields`);
+  }
   const workspaceTool = tools.find((tool) => tool.name === "campaign_workspace");
   assert.ok(workspaceTool);
   assert.equal(
@@ -177,6 +200,18 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   const called = await wire.receive();
   assert.equal((called.result as JsonObject).isError, undefined);
   assert.deepEqual(calls, [{ tool: "workspace.briefing", input: {} }]);
+
+  wire.send({
+    jsonrpc: "2.0",
+    id: 31,
+    method: "tools/call",
+    params: { name: "connection_status", arguments: {}, _meta: modernEnvelope },
+  });
+  const connection = await wire.receive();
+  assert.equal(
+    ((connection.result as JsonObject).structuredContent as JsonObject).status,
+    "not_authenticated",
+  );
 
   wire.send({
     jsonrpc: "2.0",

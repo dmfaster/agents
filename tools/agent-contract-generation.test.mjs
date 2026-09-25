@@ -12,8 +12,8 @@ test("generation is deterministic and includes every adapter without private cod
   const first = compileAgentContract(contract()),
     second = compileAgentContract(contract());
   assert.deepEqual(first, second);
-  assert.equal(first.size, 3);
-  assert.equal(compileAgentContract(contract(), { includeServer: true }).size, 5);
+  assert.equal(first.size, 4);
+  assert.equal(compileAgentContract(contract(), { includeServer: true }).size, 6);
   assert.equal(
     compileAgentContract(contract(), { includeServer: true }).get(
       "site/src/lib/agent-platform/public-input-schemas.generated.ts",
@@ -26,6 +26,10 @@ test("generation is deterministic and includes every adapter without private cod
   }
   assert.match(first.get("packages/sdk/src/generated/tool-types.ts"), /operations\["listImport"\]/);
   assert.match(first.get("packages/mcp-server/src/generated/input-schemas.ts"), /\.strict\(\)/);
+  assert.match(
+    first.get("packages/mcp-server/src/generated/output-schemas.ts"),
+    /z\.fromJSONSchema\(/,
+  );
 });
 
 test("a contract-only tool addition flows to SDK, MCP and server catalogs", () => {

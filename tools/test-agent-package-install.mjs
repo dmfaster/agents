@@ -35,6 +35,8 @@ const expectedTools = [
   "campaign_validate",
   "campaign_workspace",
   "campaigns_list",
+  "conversations_list",
+  "conversation_inspect",
   "company_timeline",
   "industry_lookup",
   "lists_list",
@@ -56,6 +58,7 @@ const expectedTools = [
   "campaign_operation_inspect",
   "campaign_delivery_inspect",
   "campaign_delivery_update",
+  "connection_status",
 ];
 const temporaryRoot = mkdtempSync(path.join(tmpdir(), "dmfaster-agent-packages-"));
 const artifactDirectory = path.join(temporaryRoot, "artifacts");
@@ -212,11 +215,11 @@ try {
   assert.match(help.stdout, /Campaign controls:/u);
   assert.match(
     help.stdout,
-    /Full access includes direct campaign\s+control on explicit user instructions/u,
+    /Full access includes direct\s+campaign control on explicit user instructions/u,
   );
   assert.match(
     help.stdout,
-    /Older connections need one new full-access\s+login or per-action approval/u,
+    /auth upgrade.*to replace a stored credential without disconnecting first/su,
   );
 
   const cliToken = `dmf_pat_${"1".repeat(64)}`;
@@ -352,8 +355,13 @@ try {
     assert.deepEqual(
       listed.tools.map((tool) => tool.name).sort(),
       [...expectedTools].sort(),
-      "the packed MCP server must expose 31 domain tools and the campaign workspace",
+      "the packed MCP server must expose 33 domain tools, connection status, and the campaign workspace",
     );
+    for (const tool of listed.tools.filter(
+      (candidate) => !["connection_status", "campaign_workspace"].includes(candidate.name),
+    )) {
+      assert.equal(tool.outputSchema?.type, "object", `${tool.name} must describe its output`);
+    }
     const workspaceTool = listed.tools.find((tool) => tool.name === "campaign_workspace");
     assert.equal(workspaceTool?._meta?.ui?.resourceUri, campaignWorkspaceUri);
     assert.equal(workspaceTool?._meta?.["openai/outputTemplate"], campaignWorkspaceUri);
@@ -374,7 +382,7 @@ try {
   }
 
   process.stdout.write(
-    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 with 23 Agent 1.0 domain tools plus the campaign workspace passed.\n",
+    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 with 33 Agent 1.0 domain tools plus connection status and the campaign workspace passed.\n",
   );
 } finally {
   const expectedPrefix = path.join(tmpdir(), "dmfaster-agent-packages-");

@@ -24,10 +24,25 @@ export const CampaignStatusSchema = z.union([
   z.literal("Cooldown"),
   z.literal("Completed"),
 ]);
+export const TargetChannelSchema = z.union([
+  z.literal("instagram"),
+  z.literal("facebook"),
+  z.literal("linkedin"),
+  z.literal("gmail"),
+  z.literal("sms"),
+]);
 export const CampaignsListInputSchema = z
   .object({
     status: CampaignStatusSchema.optional(),
+    query: z.string().min(1).max(120).describe("Case-insensitive campaign name search.").optional(),
+    channel: TargetChannelSchema.optional(),
     limit: z.number().int().min(1).max(25).optional(),
+    cursor: z
+      .string()
+      .min(1)
+      .max(500)
+      .describe("Opaque nextCursor returned by the preceding page.")
+      .optional(),
   })
   .strict();
 export const OptionalCampaignInputSchema = z
@@ -50,6 +65,64 @@ export const RepliesListInputSchema = z
       .regex(new RegExp(".*\\S.*"))
       .describe("Optional case-insensitive reply search text.")
       .optional(),
+  })
+  .strict();
+export const InboxChannelSchema = z.union([
+  z.literal("instagram"),
+  z.literal("facebook"),
+  z.literal("linkedin"),
+  z.literal("gmail"),
+  z.literal("outlook"),
+  z.literal("email"),
+  z.literal("sms"),
+]);
+export const ConversationsListInputSchema = z
+  .object({
+    filter: z
+      .union([
+        z.literal("all"),
+        z.literal("needs_reply"),
+        z.literal("waiting"),
+        z.literal("unread"),
+        z.literal("snoozed"),
+        z.literal("closed"),
+      ])
+      .optional(),
+    interest: z
+      .union([
+        z.literal("positive"),
+        z.literal("neutral"),
+        z.literal("negative"),
+        z.literal("needs_review"),
+      ])
+      .optional(),
+    intent: z
+      .union([
+        z.literal("interested"),
+        z.literal("information_requested"),
+        z.literal("meeting_intent"),
+        z.literal("not_now"),
+        z.literal("wrong_person"),
+        z.literal("not_interested"),
+        z.literal("opt_out"),
+        z.literal("acknowledgement"),
+        z.literal("unclear"),
+      ])
+      .optional(),
+    channel: InboxChannelSchema.optional(),
+    mailboxId: ResourceIdSchema.optional(),
+    campaignId: ResourceIdSchema.optional(),
+    query: z.string().min(1).max(120).optional(),
+    includeAutomaticResponses: z.boolean().optional(),
+    cursor: z.string().min(1).max(2000).optional(),
+    limit: z.number().int().min(1).max(60).optional(),
+  })
+  .strict();
+export const ConversationInspectInputSchema = z
+  .object({
+    conversationId: ResourceIdSchema,
+    cursor: z.string().min(1).max(2000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
   })
   .strict();
 export const PipelineInspectInputSchema = OptionalCampaignInputSchema;
@@ -232,12 +305,6 @@ export const AgentSignalCriterionSchema = z
     description: z.string(),
   })
   .strict();
-export const TargetChannelSchema = z.union([
-  z.literal("instagram"),
-  z.literal("facebook"),
-  z.literal("linkedin"),
-  z.literal("gmail"),
-]);
 export const AgentCampaignDeliverySettingsSchema = z
   .object({
     dailyCap: z
@@ -609,6 +676,8 @@ export const AGENT_INPUT_SCHEMAS = {
   "campaign.inspect": CampaignInspectInputSchema,
   "sending.inspect": SendingInspectInputSchema,
   "replies.list": RepliesListInputSchema,
+  "conversations.list": ConversationsListInputSchema,
+  "conversation.inspect": ConversationInspectInputSchema,
   "pipeline.inspect": PipelineInspectInputSchema,
   "company.timeline": CompanyTimelineInputSchema,
   "industry.lookup": IndustryLookupInputSchema,

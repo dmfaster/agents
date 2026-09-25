@@ -225,7 +225,7 @@ paths:
       tags: [Agent tools]
       operationId: campaignsList
       summary: List campaigns
-      description: Lists the most recently updated campaigns, optionally filtered by status. Read-only.
+      description: Lists campaigns with exact filtered totals and a continuation cursor. A changed collection rejects the cursor so callers can restart without silently skipping a campaign. Read-only.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["campaigns:read"]
       x-dmfaster-approval: none
@@ -233,7 +233,7 @@ paths:
       x-dmfaster-mcp:
         name: campaigns_list
         title: List campaigns
-        description: List campaigns in the current workspace, optionally filtered by status.
+        description: Search and page through campaigns in the current workspace. Reuse nextCursor until hasMore is false; restart if the collection changes.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -241,7 +241,7 @@ paths:
           openWorldHint: false
       x-dmfaster-cli:
         section: Workspace reads
-        usage: campaigns list [--status STATUS] [--limit N]
+        usage: campaigns list [--status STATUS] [--query TEXT] [--channel CHANNEL] [--limit N] [--cursor CURSOR]
       requestBody:
         required: true
         content:
@@ -410,6 +410,91 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RepliesListResult"
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/conversations.list:
+    post:
+      tags: [Agent tools]
+      operationId: conversationsList
+      summary: List inbox conversations
+      description: Lists actual inbox conversations with app filters and a continuation cursor. Read-only; listing does not mark messages read.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["inbox:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: conversations_list
+        title: List inbox conversations
+        description: Find actual inbox conversations by status, campaign, channel, and text. Page with the returned cursor; listing never marks a conversation read.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Inbox
+        usage: conversations list [--filter FILTER] [--channel CHANNEL] [--campaign-id ID] [--query TEXT] [--limit N] [--cursor CURSOR] [--input FILE]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConversationsListInput"
+      responses:
+        "200":
+          description: Inbox conversation page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationsListResult"
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/conversation.inspect:
+    post:
+      tags: [Agent tools]
+      operationId: conversationInspect
+      summary: Read one inbox conversation
+      description: Reads an exact workspace conversation and one bounded page of actual messages, including attachment metadata. Read-only; inspection does not mark messages read.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["inbox:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: conversation_inspect
+        title: Read inbox conversation
+        description: Read an exact conversation's inbound and outbound message page. Pass nextCursor with the same conversation ID to continue.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Inbox
+        usage: conversation inspect CONVERSATION_ID [--limit N] [--cursor CURSOR] [--input FILE]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConversationInspectInput"
+      responses:
+        "200":
+          description: Conversation and message page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationInspectResult"
         "400": { $ref: "#/components/responses/BadRequest" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
@@ -2016,6 +2101,8 @@ components:
         - campaign.inspect
         - sending.inspect
         - replies.list
+        - conversations.list
+        - conversation.inspect
         - pipeline.inspect
         - company.timeline
         - industry.lookup
@@ -2223,6 +2310,28 @@ components:
                 - $ref: "#/components/schemas/RepliesListOutput"
                 - type: "null"
 
+    ConversationsListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: conversations.list }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/ConversationsListOutput"
+                - type: "null"
+
+    ConversationInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: conversation.inspect }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/ConversationInspectOutput"
+                - type: "null"
+
     PipelineInspectResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -2368,10 +2477,22 @@ components:
       properties:
         status:
           $ref: "#/components/schemas/CampaignStatus"
+        query:
+          type: string
+          minLength: 1
+          maxLength: 120
+          description: Case-insensitive campaign name search.
+        channel:
+          $ref: "#/components/schemas/TargetChannel"
         limit:
           type: integer
           minimum: 1
           maximum: 25
+        cursor:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: Opaque nextCursor returned by the preceding page.
 
     CampaignInspectInput:
       $ref: "#/components/schemas/OptionalCampaignInput"
@@ -2395,6 +2516,67 @@ components:
           maxLength: 120
           pattern: ".*\\S.*"
           description: Optional case-insensitive reply search text.
+
+    ConversationsListInput:
+      type: object
+      additionalProperties: false
+      properties:
+        filter:
+          type: string
+          enum: [all, needs_reply, waiting, unread, snoozed, closed]
+        interest:
+          type: string
+          enum: [positive, neutral, negative, needs_review]
+        intent:
+          type: string
+          enum:
+            [
+              interested,
+              information_requested,
+              meeting_intent,
+              not_now,
+              wrong_person,
+              not_interested,
+              opt_out,
+              acknowledgement,
+              unclear,
+            ]
+        channel:
+          $ref: "#/components/schemas/InboxChannel"
+        mailboxId:
+          $ref: "#/components/schemas/ResourceId"
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
+        query:
+          type: string
+          minLength: 1
+          maxLength: 120
+        includeAutomaticResponses:
+          type: boolean
+        cursor:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 60
+
+    ConversationInspectInput:
+      type: object
+      additionalProperties: false
+      required: [conversationId]
+      properties:
+        conversationId:
+          $ref: "#/components/schemas/ResourceId"
+        cursor:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
 
     PipelineInspectInput:
       $ref: "#/components/schemas/OptionalCampaignInput"
@@ -3417,7 +3599,11 @@ components:
           additionalProperties: false
           properties:
             targetListId: { type: string }
+            targetListUpdatedAt: { type: string, format: date-time }
             campaignId: { type: string }
+            campaignUpdatedAt: { type: string, format: date-time }
+            preparationFingerprint: { type: string }
+            executionTimezone: { type: string }
         approval:
           oneOf:
             - type: object
@@ -3476,6 +3662,10 @@ components:
           uniqueItems: true
           items: { $ref: "#/components/schemas/TargetChannel" }
         dailyCap: { type: integer, minimum: 0 }
+        deliveryNotice:
+          type: string
+          maxLength: 1000
+          description: Delivery restrictions the caller must disclose when summarizing the launch, including manual runs ending at local midnight.
 
     AgentActionAuthorization:
       type: object
@@ -3637,7 +3827,11 @@ components:
 
     TargetChannel:
       type: string
-      enum: [instagram, facebook, linkedin, gmail]
+      enum: [instagram, facebook, linkedin, gmail, sms]
+
+    InboxChannel:
+      type: string
+      enum: [instagram, facebook, linkedin, gmail, outlook, email, sms]
 
     PipelineStage:
       type: string
@@ -3847,7 +4041,7 @@ components:
     CampaignsListOutput:
       type: object
       additionalProperties: false
-      required: [generatedAt, campaigns]
+      required: [generatedAt, campaigns, totalCount, hasMore, nextCursor]
       properties:
         generatedAt:
           type: string
@@ -3857,6 +4051,18 @@ components:
           maxItems: 25
           items:
             $ref: "#/components/schemas/CampaignSummary"
+        totalCount:
+          type: integer
+          minimum: 0
+          description: Exact number of campaigns matching the supplied filters at this page's collection revision.
+        hasMore:
+          type: boolean
+        nextCursor:
+          oneOf:
+            - type: string
+              minLength: 1
+              maxLength: 500
+            - type: "null"
 
     CampaignInspectOutput:
       type: object
@@ -3907,6 +4113,7 @@ components:
                 - facebook
                 - linkedin
                 - gmail
+                - sms
               properties:
                 instagram:
                   type: integer
@@ -3918,6 +4125,9 @@ components:
                   type: integer
                   minimum: 0
                 gmail:
+                  type: integer
+                  minimum: 0
+                sms:
                   type: integer
                   minimum: 0
         pipeline:
@@ -4117,6 +4327,181 @@ components:
           maxItems: 20
           items:
             $ref: "#/components/schemas/AgentLead"
+
+    InboxConversationSummary:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          id,
+          campaignId,
+          campaignName,
+          channel,
+          targetHandle,
+          targetName,
+          targetCompanyName,
+          status,
+          lastMessageText,
+          lastMessageDirection,
+          lastMessageAt,
+          unreadCount,
+          needsReply,
+          interestLevel,
+          interestIntent,
+        ]
+      properties:
+        id: { type: string }
+        campaignId: { type: string }
+        campaignName: { type: string }
+        channel:
+          $ref: "#/components/schemas/InboxChannel"
+        targetHandle: { type: string }
+        targetName: { type: string }
+        targetCompanyName: { type: string }
+        status: { type: string, enum: [open, closed] }
+        lastMessageText: { type: string }
+        lastMessageDirection: { type: string, enum: ["", inbound, outbound] }
+        lastMessageAt: { type: string }
+        unreadCount: { type: integer, minimum: 0 }
+        needsReply: { type: boolean }
+        interestLevel: { type: string, enum: ["", positive, neutral, negative, needs_review] }
+        interestIntent:
+          {
+            type: string,
+            enum:
+              [
+                "",
+                interested,
+                information_requested,
+                meeting_intent,
+                not_now,
+                wrong_person,
+                not_interested,
+                opt_out,
+                acknowledgement,
+                unclear,
+              ],
+          }
+
+    InboxScopeStats:
+      type: object
+      additionalProperties: false
+      description: Counts in the selected campaign, channel, mailbox and text scope across conversation filters. These are not the total matching one filter.
+      required:
+        [
+          total,
+          needsReply,
+          waiting,
+          unread,
+          snoozed,
+          closed,
+          positive,
+          neutral,
+          negative,
+          needsReview,
+        ]
+      properties:
+        total: { type: integer, minimum: 0 }
+        needsReply: { type: integer, minimum: 0 }
+        waiting: { type: integer, minimum: 0 }
+        unread: { type: integer, minimum: 0 }
+        snoozed: { type: integer, minimum: 0 }
+        closed: { type: integer, minimum: 0 }
+        positive: { type: integer, minimum: 0 }
+        neutral: { type: integer, minimum: 0 }
+        negative: { type: integer, minimum: 0 }
+        needsReview: { type: integer, minimum: 0 }
+
+    ConversationsListOutput:
+      type: object
+      additionalProperties: false
+      required: [generatedAt, conversations, scopeStats, hasMore, nextCursor]
+      properties:
+        generatedAt: { type: string, format: date-time }
+        conversations:
+          type: array
+          maxItems: 60
+          items:
+            $ref: "#/components/schemas/InboxConversationSummary"
+        scopeStats:
+          $ref: "#/components/schemas/InboxScopeStats"
+        hasMore: { type: boolean }
+        nextCursor:
+          oneOf:
+            - type: string
+            - type: "null"
+
+    InboxMessageMedia:
+      type: object
+      additionalProperties: false
+      required: [id, kind, url, previewUrl, title, description, mimeType, durationMs, width, height]
+      properties:
+        id: { type: string }
+        kind: { type: string, enum: [image, video, audio, link] }
+        url: { type: string }
+        previewUrl: { type: string }
+        title: { type: string }
+        description: { type: string }
+        mimeType: { type: string }
+        durationMs: { type: integer, minimum: 0 }
+        width: { type: integer, minimum: 0 }
+        height: { type: integer, minimum: 0 }
+
+    InboxConversationMessage:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          id,
+          channel,
+          direction,
+          senderName,
+          text,
+          media,
+          messageType,
+          replyKind,
+          isAutomaticResponse,
+          deliveryStatus,
+          sentAt,
+        ]
+      properties:
+        id: { type: string }
+        channel:
+          $ref: "#/components/schemas/InboxChannel"
+        direction: { type: string, enum: [inbound, outbound] }
+        senderName: { type: string }
+        text: { type: string }
+        media:
+          type: array
+          items:
+            $ref: "#/components/schemas/InboxMessageMedia"
+        messageType: { type: string, enum: [text, reply_signal, attachment, system] }
+        replyKind: { type: string, enum: [human, automatic, uncertain] }
+        isAutomaticResponse: { type: boolean }
+        deliveryStatus: { type: string }
+        sentAt: { type: string }
+        editedAt: { type: string }
+        deleted: { type: boolean }
+        seenAt: { type: string }
+
+    ConversationInspectOutput:
+      type: object
+      additionalProperties: false
+      required: [generatedAt, conversation, messages, hasMore, nextCursor]
+      properties:
+        generatedAt: { type: string, format: date-time }
+        conversation:
+          $ref: "#/components/schemas/InboxConversationSummary"
+        messages:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/InboxConversationMessage"
+        hasMore: { type: boolean }
+        nextCursor:
+          oneOf:
+            - type: string
+            - type: "null"
 
     CompanyTimelineOutput:
       type: object

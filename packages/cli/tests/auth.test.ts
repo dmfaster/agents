@@ -187,6 +187,7 @@ test("browser login prints the confirmation code, opens the server URL, and stor
     "store:get",
     "browser:open",
     "lock:assert",
+    "store:get",
     "store:set",
     "lock:release",
   ]);
@@ -338,8 +339,267 @@ test("browser login never overwrites an existing stored credential", async () =>
   assert.equal(deviceCalls, 0);
   assert.equal(writes, 0);
   assert.equal(lockCalls, 0);
-  assert.match(stderr.read(), /auth logout/);
+  assert.match(stderr.read(), /auth upgrade/);
   assert.doesNotMatch(stderr.read(), new RegExp(token));
+});
+
+test("auth upgrade keeps the old credential through approval, verifies replacement, then revokes old", async () => {
+  const oldToken = generatedToken();
+  const newToken = generatedToken();
+  const server = deviceResponse();
+  const exchange = successfulExchange(newToken);
+  const events: string[] = [];
+  let storedToken = oldToken;
+  const stdout = output();
+  const stderr = output();
+  const exitCode = await runCli(["auth", "upgrade", "--access", "full"], {
+    stdout: stdout.stream,
+    stderr: stderr.stream,
+    resolveConfig: async () => config(oldToken, "macOS Keychain"),
+    credentialStore: {
+      kind: "macos-keychain",
+      async get() {
+        events.push("store:get");
+        return storedToken;
+      },
+      async set(_baseUrl, value) {
+        events.push("store:set");
+        storedToken = value;
+      },
+      async delete() {
+        throw new Error("upgrade must not delete the credential");
+      },
+    },
+    acquireLoginLock: fakeLoginLock(events),
+    openBrowser: async () => {
+      assert.equal(storedToken, oldToken);
+      events.push("browser:open");
+    },
+    fetch: async (url, init) => {
+      const path = String(url);
+      if (path.endsWith("/device")) return Response.json(server, { status: 201 });
+      if (path.endsWith("/token")) return Response.json(exchange);
+      if (path.endsWith("/status")) return Response.json({ authenticated: true, ...exchange });
+      if (path.endsWith("/revoke")) {
+        assert.equal(
+          init?.headers && new Headers(init.headers).get("authorization"),
+          `Bearer ${oldToken}`,
+        );
+        assert.equal(storedToken, newToken);
+        events.push("old:revoke");
+        return Response.json({ revoked: true });
+      }
+      throw new Error("unexpected request");
+    },
+    deviceAuthAdapters: instantPolling(),
+  });
+
+  assert.equal(exitCode, 0);
+  assert.equal(storedToken, newToken);
+  assert.ok(events.indexOf("store:set") < events.indexOf("old:revoke"));
+  assert.ok(events.lastIndexOf("store:get") < events.indexOf("old:revoke"));
+  assert.match(stdout.read(), /"upgraded":true/);
+  assert.match(stdout.read(), /"priorCredentialRevoked":true/);
+  for (const secret of [oldToken, newToken]) {
+    assert.doesNotMatch(stdout.read(), new RegExp(secret));
+    assert.doesNotMatch(stderr.read(), new RegExp(secret));
+  }
+});
+
+test("auth upgrade preserves the old credential if browser approval is denied", async () => {
+  const oldToken = generatedToken();
+  const server = deviceResponse();
+  let storedToken = oldToken;
+  let writes = 0;
+  const exitCode = await runCli(["auth", "upgrade"], {
+    stdout: output().stream,
+    stderr: output().stream,
+    resolveConfig: async () => config(oldToken, "macOS Keychain"),
+    credentialStore: {
+      kind: "macos-keychain",
+      async get() {
+        return storedToken;
+      },
+      async set(_baseUrl, token) {
+        writes += 1;
+        storedToken = token;
+      },
+      async delete() {
+        throw new Error("must not delete");
+      },
+    },
+    acquireLoginLock: fakeLoginLock(),
+    openBrowser: async () => {},
+    fetch: async (url) =>
+      String(url).endsWith("/device")
+        ? Response.json(server, { status: 201 })
+        : Response.json({ error: "access_denied" }, { status: 403 }),
+    deviceAuthAdapters: instantPolling(),
+  });
+  assert.equal(exitCode, 1);
+  assert.equal(storedToken, oldToken);
+  assert.equal(writes, 0);
+});
+
+test("auth upgrade revokes only the unused new token after secure storage rejects replacement", async () => {
+  const oldToken = generatedToken();
+  const newToken = generatedToken();
+  const server = deviceResponse();
+  const exchange = successfulExchange(newToken);
+  const revoked: string[] = [];
+  const stderr = output();
+  const exitCode = await runCli(["auth", "upgrade"], {
+    stdout: output().stream,
+    stderr: stderr.stream,
+    resolveConfig: async () => config(oldToken, "macOS Keychain"),
+    credentialStore: fakeStore({
+      existing: oldToken,
+      onSet() {
+        throw new Error("Secure storage failed.");
+      },
+    }),
+    acquireLoginLock: fakeLoginLock(),
+    openBrowser: async () => {},
+    fetch: async (url, init) => {
+      const path = String(url);
+      if (path.endsWith("/device")) return Response.json(server, { status: 201 });
+      if (path.endsWith("/token")) return Response.json(exchange);
+      if (path.endsWith("/status")) return Response.json({ authenticated: true, ...exchange });
+      if (path.endsWith("/revoke")) {
+        revoked.push(new Headers(init?.headers).get("authorization") || "");
+        return Response.json({ revoked: true });
+      }
+      throw new Error("unexpected request");
+    },
+    deviceAuthAdapters: instantPolling(),
+  });
+  assert.equal(exitCode, 1);
+  assert.deepEqual(revoked, [`Bearer ${newToken}`]);
+  assert.match(stderr.read(), /Secure storage failed/);
+  assert.doesNotMatch(stderr.read(), new RegExp(oldToken));
+});
+
+test("auth upgrade reports old revocation failure while retaining the verified new connection", async () => {
+  const oldToken = generatedToken();
+  const newToken = generatedToken();
+  const server = deviceResponse();
+  const exchange = successfulExchange(newToken);
+  let storedToken = oldToken;
+  const stderr = output();
+  const stdout = output();
+  const exitCode = await runCli(["auth", "upgrade"], {
+    stdout: stdout.stream,
+    stderr: stderr.stream,
+    resolveConfig: async () => config(oldToken, "macOS Keychain"),
+    credentialStore: {
+      kind: "macos-keychain",
+      async get() {
+        return storedToken;
+      },
+      async set(_baseUrl, token) {
+        storedToken = token;
+      },
+      async delete() {
+        throw new Error("must not delete");
+      },
+    },
+    acquireLoginLock: fakeLoginLock(),
+    openBrowser: async () => {},
+    fetch: async (url) => {
+      const path = String(url);
+      if (path.endsWith("/device")) return Response.json(server, { status: 201 });
+      if (path.endsWith("/token")) return Response.json(exchange);
+      if (path.endsWith("/status")) return Response.json({ authenticated: true, ...exchange });
+      if (path.endsWith("/revoke")) throw new Error("offline");
+      throw new Error("unexpected request");
+    },
+    deviceAuthAdapters: instantPolling(),
+  });
+  assert.equal(exitCode, 0);
+  assert.equal(storedToken, newToken);
+  assert.match(stderr.read(), /prior remote credential could not be revoked/);
+  assert.match(stdout.read(), /"priorCredentialRevoked":false/);
+  assert.doesNotMatch(stderr.read(), new RegExp(oldToken));
+});
+
+test("auth upgrade rejects a credential missing the requested scopes", async () => {
+  const oldToken = generatedToken();
+  const newToken = generatedToken();
+  const server = deviceResponse();
+  const stderr = output();
+  let writes = 0;
+  let revoked = "";
+  const exitCode = await runCli(["auth", "upgrade", "--access", "full"], {
+    stdout: output().stream,
+    stderr: stderr.stream,
+    resolveConfig: async () => config(oldToken, "macOS Keychain"),
+    credentialStore: fakeStore({
+      existing: oldToken,
+      onSet() {
+        writes += 1;
+      },
+    }),
+    acquireLoginLock: fakeLoginLock(),
+    openBrowser: async () => {},
+    fetch: async (url, init) => {
+      const path = String(url);
+      if (path.endsWith("/device")) return Response.json(server, { status: 201 });
+      if (path.endsWith("/token")) {
+        const exchange = successfulExchange(newToken);
+        exchange.credential.scopes = ["workspace:read"];
+        return Response.json(exchange);
+      }
+      if (path.endsWith("/revoke")) {
+        revoked = new Headers(init?.headers).get("authorization") || "";
+        return Response.json({ revoked: true });
+      }
+      throw new Error("unexpected request");
+    },
+    deviceAuthAdapters: instantPolling(),
+  });
+  assert.equal(exitCode, 1);
+  assert.equal(writes, 0);
+  assert.equal(revoked, `Bearer ${newToken}`);
+  assert.match(stderr.read(), /without the requested access profile/);
+});
+
+test("auth upgrade preserves the old connection when the issued token fails remote verification", async () => {
+  const oldToken = generatedToken();
+  const newToken = generatedToken();
+  const server = deviceResponse();
+  let writes = 0;
+  let revoked = "";
+  const stderr = output();
+  const exitCode = await runCli(["auth", "upgrade"], {
+    stdout: output().stream,
+    stderr: stderr.stream,
+    resolveConfig: async () => config(oldToken, "macOS Keychain"),
+    credentialStore: fakeStore({
+      existing: oldToken,
+      onSet() {
+        writes += 1;
+      },
+    }),
+    acquireLoginLock: fakeLoginLock(),
+    openBrowser: async () => {},
+    fetch: async (url, init) => {
+      const path = String(url);
+      if (path.endsWith("/device")) return Response.json(server, { status: 201 });
+      if (path.endsWith("/token")) return Response.json(successfulExchange(newToken));
+      if (path.endsWith("/status"))
+        return Response.json({ error: "unauthorized" }, { status: 401 });
+      if (path.endsWith("/revoke")) {
+        revoked = new Headers(init?.headers).get("authorization") || "";
+        return Response.json({ revoked: true });
+      }
+      throw new Error("unexpected request");
+    },
+    deviceAuthAdapters: instantPolling(),
+  });
+  assert.equal(exitCode, 1);
+  assert.equal(writes, 0);
+  assert.equal(revoked, `Bearer ${newToken}`);
+  assert.doesNotMatch(stderr.read(), new RegExp(oldToken));
 });
 
 test("revokes the new remote credential when secure storage fails", async () => {
