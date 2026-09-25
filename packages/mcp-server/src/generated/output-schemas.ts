@@ -14260,6 +14260,29 @@ export const AGENT_OUTPUT_SCHEMAS = {
                   },
                 },
               },
+              websiteContacts: {
+                type: "array",
+                description:
+                  "Email addresses and phone numbers verified on saved company website HTML. Company-route and person ownership are unassigned.",
+                items: {
+                  type: "object",
+                  additionalProperties: false,
+                  required: ["channel", "value", "sourceUrl"],
+                  properties: {
+                    channel: {
+                      type: "string",
+                      enum: ["email", "phone"],
+                    },
+                    value: {
+                      type: "string",
+                    },
+                    sourceUrl: {
+                      type: "string",
+                      format: "uri",
+                    },
+                  },
+                },
+              },
               advertising: {
                 type: "object",
                 additionalProperties: true,

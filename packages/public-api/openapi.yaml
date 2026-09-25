@@ -6050,6 +6050,17 @@ components:
                     type: string
                     enum: [instagram, facebook, linkedin, youtube, tiktok, x]
                   url: { type: string, format: uri }
+            websiteContacts:
+              type: array
+              description: Email addresses and phone numbers verified on saved company website HTML. Company-route and person ownership are unassigned.
+              items:
+                type: object
+                additionalProperties: false
+                required: [channel, value, sourceUrl]
+                properties:
+                  channel: { type: string, enum: [email, phone] }
+                  value: { type: string }
+                  sourceUrl: { type: string, format: uri }
             advertising: { type: object, additionalProperties: true }
             exhibitions: { type: array, items: { type: object, additionalProperties: true } }
             publicFunding: { type: [object, "null"], additionalProperties: true }

@@ -1915,6 +1915,14 @@ export interface components {
                     url: string;
                 }[];
                 technologies: string[];
+                /** @description Email addresses and phone numbers verified on saved company website HTML. Company-route and person ownership are unassigned. */
+                websiteContacts?: {
+                    /** @enum {string} */
+                    channel: "email" | "phone";
+                    /** Format: uri */
+                    sourceUrl: string;
+                    value: string;
+                }[];
             } & {
                 [key: string]: unknown;
             };
