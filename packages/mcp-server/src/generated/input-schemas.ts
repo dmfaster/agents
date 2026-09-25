@@ -125,7 +125,124 @@ export const ConversationInspectInputSchema = z
     limit: z.number().int().min(1).max(100).optional(),
   })
   .strict();
+export const ResourceVersionSchema = z
+  .string()
+  .min(20)
+  .max(27)
+  .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"));
+export const ConversationUpdateInputSchema = z
+  .object({
+    conversationId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    action: z.union([
+      z.literal("mark_read"),
+      z.literal("mark_unread"),
+      z.literal("close"),
+      z.literal("reopen"),
+      z.literal("snooze"),
+      z.literal("unsnooze"),
+      z.literal("assign_to_me"),
+      z.literal("unassign"),
+      z.literal("set_interest"),
+    ]),
+    snoozedUntil: ResourceVersionSchema.optional(),
+    interestLevel: z
+      .union([z.literal("positive"), z.literal("neutral"), z.literal("negative")])
+      .optional(),
+    interestIntent: z
+      .union([
+        z.literal("interested"),
+        z.literal("information_requested"),
+        z.literal("meeting_intent"),
+        z.literal("not_now"),
+        z.literal("wrong_person"),
+        z.literal("not_interested"),
+        z.literal("opt_out"),
+        z.literal("acknowledgement"),
+        z.literal("unclear"),
+      ])
+      .optional(),
+  })
+  .strict();
+export const ConversationReplyInputSchema = z
+  .object({
+    conversationId: ResourceIdSchema,
+    expectedLastInboundAt: ResourceVersionSchema,
+    expectedLastMessageAt: ResourceVersionSchema,
+    text: z.string().min(1).max(10000),
+    idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9_-]+$")),
+  })
+  .strict();
+export const ConversationReplyInspectInputSchema = z
+  .object({ idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9_-]+$")) })
+  .strict();
+export const CampaignFollowupsListInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    view: z.union([z.literal("upcoming"), z.literal("done")]).optional(),
+    cursor: z.string().min(1).max(512).optional(),
+  })
+  .strict();
+export const CampaignFollowupsCancelInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    expectedCampaignUpdatedAt: ResourceVersionSchema,
+    jobIds: z.array(ResourceIdSchema).min(1).max(50),
+    idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9._:-]+$")),
+  })
+  .strict();
+export const CampaignOutcomesListInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    cursor: z.string().min(1).max(512).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+export const HistoryListInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    cursor: z.string().min(1).max(512).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    search: z.string().min(3).max(120).optional(),
+  })
+  .strict();
 export const PipelineInspectInputSchema = OptionalCampaignInputSchema;
+export const PipelineStageSchema = z.union([
+  z.literal("contacted"),
+  z.literal("replied"),
+  z.literal("call_booked"),
+  z.literal("closed"),
+]);
+export const PipelineCardsListInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    stage: PipelineStageSchema,
+    limit: z.number().int().min(1).max(15).optional(),
+    cursor: z.string().min(1).max(4000).optional(),
+    query: z.string().min(1).max(120).optional(),
+    entityKey: z.string().min(1).max(320).optional(),
+  })
+  .strict();
+export const PipelineStageUpdateInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    entityKey: z.string().min(1).max(320),
+    stageKey: z.string().min(1).max(500),
+    expectedStage: PipelineStageSchema,
+    stage: PipelineStageSchema,
+  })
+  .strict();
+export const PipelineNoteListInputSchema = z
+  .object({ campaignId: ResourceIdSchema, entityKey: z.string().min(1).max(320) })
+  .strict();
+export const PipelineNoteAddInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    entityKey: z.string().min(1).max(320),
+    body: z.string().min(1).max(2000),
+    idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9._:-]+$")),
+  })
+  .strict();
 export const CompanyTimelineInputSchema = z
   .object({ campaignId: ResourceIdSchema, companyOutreachId: ResourceIdSchema })
   .strict();
@@ -436,11 +553,6 @@ export const ListInspectInputSchema = z
     offset: z.number().int().min(0).max(1000000).optional(),
   })
   .strict();
-export const ResourceVersionSchema = z
-  .string()
-  .min(20)
-  .max(27)
-  .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"));
 export const ListTargetRemoveInputSchema = z
   .object({
     listId: ResourceIdSchema,
@@ -468,6 +580,35 @@ export const CampaignDraftPrepareInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
+export const CampaignFollowUpStepInputSchema = z
+  .object({
+    delayDays: z.number().int().min(1).max(30),
+    channel: z.union([
+      z.literal("inherit"),
+      z.literal("instagram"),
+      z.literal("facebook"),
+      z.literal("linkedin"),
+      z.literal("gmail"),
+    ]),
+    fallbackChannel: z
+      .union([
+        z.literal("none"),
+        z.literal("instagram"),
+        z.literal("facebook"),
+        z.literal("linkedin"),
+        z.literal("gmail"),
+      ])
+      .optional(),
+    subject: z.string().max(500).optional(),
+    variants: z.array(z.string().min(1).max(1000)).min(1).max(4),
+  })
+  .strict();
+export const CampaignFollowUpSequenceInputSchema = z
+  .object({ enabled: z.boolean(), steps: z.array(CampaignFollowUpStepInputSchema).max(3) })
+  .strict();
+export const LinkedinFollowUpSequenceInputSchema = z
+  .object({ enabled: z.boolean(), steps: z.array(CampaignFollowUpStepInputSchema).max(2) })
+  .strict();
 export const CampaignDraftUpdateInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
@@ -475,7 +616,17 @@ export const CampaignDraftUpdateInputSchema = z
     updates: z
       .object({
         name: z.string().min(1).max(120).optional(),
+        description: z.string().max(1000).optional(),
         messageVariants: z.array(z.string().min(1).max(1000)).min(1).max(4).optional(),
+        instagramEnabled: z.boolean().optional(),
+        facebookEnabled: z.boolean().optional(),
+        linkedinEnabled: z.boolean().optional(),
+        linkedinInviteMode: z
+          .union([z.literal("invite_only"), z.literal("invite_with_note")])
+          .optional(),
+        linkedinInviteNote: z.string().max(300).optional(),
+        followUpSequence: CampaignFollowUpSequenceInputSchema.optional(),
+        linkedinFollowUpSequence: LinkedinFollowUpSequenceInputSchema.optional(),
         dailyCap: z.number().int().min(1).max(60).optional(),
         pacingSeconds: z.number().int().min(12).max(3600).optional(),
         instagramSendingWindowEnabled: z.boolean().optional(),
@@ -626,6 +777,9 @@ export const CompanyListPrepareInputSchema = z
             country: SupportedCountrySchema,
             businessId: z.string().min(1).max(192),
             expectedRevision: z.string().min(64).max(64),
+            selectedLinkedinUrl: z.string().min(1).max(500).optional(),
+            selectedEmailAddress: z.string().min(1).max(320).optional(),
+            selectedPhoneNumber: z.string().min(1).max(80).optional(),
           })
           .strict(),
       )
@@ -640,6 +794,57 @@ export const CompanyListInspectInputSchema = z
     offset: z.number().int().min(0).max(1000000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     expectedUpdatedAt: z.string().max(160).optional(),
+  })
+  .strict();
+export const CompanyListRefineInputSchema = z
+  .object({
+    listId: ResourceIdSchema,
+    campaignId: ResourceIdSchema,
+    expectedListUpdatedAt: z.string().min(20).max(40),
+    expectedCampaignUpdatedAt: z.string().min(20).max(40),
+    expectedTotal: z.number().int().min(1).max(25000),
+    expectedTargetCount: z.number().int().min(0).max(125000),
+    excludeCompanies: z
+      .array(
+        z
+          .object({ country: SupportedCountrySchema, businessId: z.string().min(1).max(192) })
+          .strict(),
+      )
+      .min(0)
+      .max(1000),
+    includeCompanies: z
+      .array(
+        z
+          .object({
+            country: SupportedCountrySchema,
+            businessId: z.string().min(1).max(192),
+            expectedRevision: z.string().min(64).max(64),
+            selectedLinkedinUrl: z.string().min(1).max(500).optional(),
+            selectedEmailAddress: z.string().min(1).max(320).optional(),
+            selectedPhoneNumber: z.string().min(1).max(80).optional(),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(50)
+      .describe(
+        "Inspected companies to add or refresh. Existing identities are refreshed with the selected decision-maker routes.",
+      )
+      .optional(),
+    expectedRemaining: z.number().int().min(1).max(25000),
+    expectedRemainingTargetCount: z.number().int().min(1).max(125000),
+    idempotencyKey: IdempotencyKeySchema,
+    reviewedSelectionDigest: z
+      .string()
+      .min(64)
+      .max(64)
+      .describe("Echo selectionDigest from the matching dry run when apply is true.")
+      .optional(),
+    apply: z
+      .boolean()
+      .describe(
+        "False previews exact removals without a write. True applies the same reviewed selection to the disabled draft list.",
+      ),
   })
   .strict();
 export const CampaignOperationInspectInputSchema = z
@@ -678,7 +883,19 @@ export const AGENT_INPUT_SCHEMAS = {
   "replies.list": RepliesListInputSchema,
   "conversations.list": ConversationsListInputSchema,
   "conversation.inspect": ConversationInspectInputSchema,
+  "conversation.update": ConversationUpdateInputSchema,
+  "conversation.reply": ConversationReplyInputSchema,
+  "conversation.reply.inspect": ConversationReplyInspectInputSchema,
+  "campaign.followups.list": CampaignFollowupsListInputSchema,
+  "campaign.followups.cancel": CampaignFollowupsCancelInputSchema,
+  "campaign.outcomes.list": CampaignOutcomesListInputSchema,
+  "senders.inspect": WorkspaceBriefingInputSchema,
+  "history.list": HistoryListInputSchema,
   "pipeline.inspect": PipelineInspectInputSchema,
+  "pipeline.cards.list": PipelineCardsListInputSchema,
+  "pipeline.stage.update": PipelineStageUpdateInputSchema,
+  "pipeline.note.list": PipelineNoteListInputSchema,
+  "pipeline.note.add": PipelineNoteAddInputSchema,
   "company.timeline": CompanyTimelineInputSchema,
   "industry.lookup": IndustryLookupInputSchema,
   "campaign.validate": CampaignValidateInputSchema,
@@ -700,6 +917,7 @@ export const AGENT_INPUT_SCHEMAS = {
   "company.inspect": CompanyInspectInputSchema,
   "companies.list.prepare": CompanyListPrepareInputSchema,
   "companies.list.inspect": CompanyListInspectInputSchema,
+  "companies.list.refine": CompanyListRefineInputSchema,
   "campaign.operation.inspect": CampaignOperationInspectInputSchema,
   "campaign.delivery.inspect": CampaignDeliveryInspectInputSchema,
   "campaign.delivery.update": CampaignDeliveryUpdateInputSchema,

@@ -37,6 +37,14 @@ const expectedTools = [
   "campaigns_list",
   "conversations_list",
   "conversation_inspect",
+  "conversation_update",
+  "conversation_reply",
+  "conversation_reply_inspect",
+  "campaign_followups_list",
+  "campaign_followups_cancel",
+  "campaign_outcomes_list",
+  "senders_inspect",
+  "history_list",
   "company_timeline",
   "industry_lookup",
   "lists_list",
@@ -47,6 +55,10 @@ const expectedTools = [
   "list_import",
   "list_prepare",
   "pipeline_inspect",
+  "pipeline_cards_list",
+  "pipeline_stage_update",
+  "pipeline_note_list",
+  "pipeline_note_add",
   "replies_list",
   "sending_inspect",
   "workspace_briefing",
@@ -55,6 +67,7 @@ const expectedTools = [
   "company_inspect",
   "companies_list_prepare",
   "companies_list_inspect",
+  "companies_list_refine",
   "campaign_operation_inspect",
   "campaign_delivery_inspect",
   "campaign_delivery_update",
@@ -355,7 +368,7 @@ try {
     assert.deepEqual(
       listed.tools.map((tool) => tool.name).sort(),
       [...expectedTools].sort(),
-      "the packed MCP server must expose 33 domain tools, connection status, and the campaign workspace",
+      "the packed MCP server must expose 46 domain tools, connection status, and the campaign workspace",
     );
     for (const tool of listed.tools.filter(
       (candidate) => !["connection_status", "campaign_workspace"].includes(candidate.name),
@@ -382,7 +395,7 @@ try {
   }
 
   process.stdout.write(
-    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 with 33 Agent 1.0 domain tools plus connection status and the campaign workspace passed.\n",
+    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 with 46 Agent 1.0 domain tools plus connection status and the campaign workspace passed.\n",
   );
 } finally {
   const expectedPrefix = path.join(tmpdir(), "dmfaster-agent-packages-");

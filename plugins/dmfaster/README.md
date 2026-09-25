@@ -6,14 +6,14 @@ stdio MCP 2026-07-28 server definition. It includes the portable Agent Plugins
 Codex, Claude, and Cursor. Hosts that have not
 implemented that revision use the same skill through the version-pinned CLI.
 
-Agent 1.0 exposes 33 bounded domain tools plus an optional portable MCP Apps
-campaign workspace. It can inspect a live workspace, resolve
-industries, validate stateless campaign plans, preview exact audiences, prepare
-private lists and campaign drafts idempotently, and launch or pause a campaign
-on explicit user instructions after the owner grants direct control at connection
-time, or after per-action approval for older connections. It does
-not send replies, book meetings, expose provider credentials, or bypass the
-browser extension's execution boundary.
+The 1.6.0 source candidate exposes 46 bounded domain tools plus an optional
+portable MCP Apps campaign workspace. It covers company research, exact
+audience and draft preparation, inbox and pipeline work, follow-up control,
+sender readiness and paginated outcomes. Replies require the user's explicit
+instruction for the exact text and report delivery state. Campaign launch and
+pause require the owner's direct-control grant or the existing per-action
+approval path. The interface does not expose provider credentials or bypass
+the browser extension's execution boundary.
 
 A first-time paid user can state the campaign goal without learning DM Faster's
 screens or tool names. The agent carries the plan through validation, exact
@@ -23,15 +23,14 @@ resume call; the user only completes the browser-store installation/link and
 any approval explicitly required by the returned connection or action state.
 
 Compliant MCP Apps hosts can render the campaign workspace inline. Modern
-headless hosts use the same complete campaign state and 33 domain tools without
+headless hosts use the same complete campaign state and 46 domain tools without
 losing any server capability or safety guarantee; older clients do not receive
 a legacy MCP downgrade.
 
 ## Release status
 
-This source targets the version-pinned 1.5.0 candidate packages. Changes in this private
-canonical directory do not reach installed users until they are synchronized to
-the approved public repository and released.
+This public source targets the version-pinned 1.6.0 candidate packages. Installed
+users receive the new tools only after the trusted package release and plugin update.
 
 Do not point users at the private monorepo as a public marketplace. Synchronize
 this plugin directory to the approved public repository after package, privacy,
@@ -42,7 +41,7 @@ hosted MCP endpoint, while Agent 1.0 intentionally runs the version-pinned local
 stdio server.
 
 Repository maintainers must follow the [agent distribution release
-runbook](../../docs/runbooks/agent-distribution-release.md). Package publication
+runbook](../../docs/releasing.md). Package publication
 and plugin publication are separate approved releases.
 
 ## Authentication
@@ -51,7 +50,7 @@ Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@1.5.0 auth login --json
+npx --yes @dmfaster/cli@1.6.0 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use

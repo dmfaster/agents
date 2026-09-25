@@ -22,7 +22,19 @@ const EXPECTED_TOOLS = new Map([
   ["replies.list", { effect: "read", scopes: ["inbox:read"] }],
   ["conversations.list", { effect: "read", scopes: ["inbox:read"] }],
   ["conversation.inspect", { effect: "read", scopes: ["inbox:read"] }],
+  ["conversation.update", { effect: "write", scopes: ["inbox:read", "inbox:write"] }],
+  ["conversation.reply", { effect: "external", scopes: ["inbox:read", "inbox:write"] }],
+  ["conversation.reply.inspect", { effect: "read", scopes: ["inbox:read"] }],
+  ["campaign.followups.list", { effect: "read", scopes: ["sending:read"] }],
+  ["campaign.followups.cancel", { effect: "write", scopes: ["campaigns:write"] }],
+  ["campaign.outcomes.list", { effect: "read", scopes: ["sending:read"] }],
+  ["senders.inspect", { effect: "read", scopes: ["sending:read"] }],
+  ["history.list", { effect: "read", scopes: ["campaigns:read", "sending:read"] }],
   ["pipeline.inspect", { effect: "read", scopes: ["pipeline:read"] }],
+  ["pipeline.cards.list", { effect: "read", scopes: ["pipeline:read"] }],
+  ["pipeline.stage.update", { effect: "write", scopes: ["pipeline:read", "pipeline:write"] }],
+  ["pipeline.note.list", { effect: "read", scopes: ["pipeline:read"] }],
+  ["pipeline.note.add", { effect: "write", scopes: ["pipeline:read", "pipeline:write"] }],
   ["company.timeline", { effect: "read", scopes: ["campaigns:read", "pipeline:read"] }],
   ["industry.lookup", { effect: "read", scopes: ["audiences:read"] }],
   ["campaign.validate", { effect: "read", scopes: ["audiences:read"] }],
@@ -44,6 +56,7 @@ const EXPECTED_TOOLS = new Map([
   ["company.inspect", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.list.prepare", { effect: "draft", scopes: ["audiences:read", "campaigns:write"] }],
   ["companies.list.inspect", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
+  ["companies.list.refine", { effect: "write", scopes: ["campaigns:read", "campaigns:write"] }],
   ["campaign.operation.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["campaign.delivery.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["campaign.delivery.update", { effect: "write", scopes: ["campaigns:read", "campaigns:write"] }],
@@ -57,8 +70,17 @@ const EXPECTED_AUTH_METHODS = new Map([
 ]);
 const EXPECTED_TOOL_NAMES = [...EXPECTED_TOOLS.keys()];
 const EXPECTED_SCOPE_NAMES = [
-  ...new Set([...EXPECTED_TOOLS.values()].flatMap(({ scopes }) => scopes)),
+  "workspace:read",
+  "campaigns:read",
+  "sending:read",
+  "inbox:read",
+  "pipeline:read",
+  "audiences:read",
+  "campaigns:write",
+  "campaigns:launch",
   "campaigns:control",
+  "inbox:write",
+  "pipeline:write",
 ];
 
 function sourceSlice(source, start, end) {

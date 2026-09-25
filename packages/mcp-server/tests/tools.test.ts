@@ -3,6 +3,8 @@ import test from "node:test";
 
 import {
   AGENT_TOOL_POLICIES,
+  AGENT_TOOL_DEFINITIONS,
+  AGENT_TOOL_NAMES,
   type AgentToolInputMap,
   type AgentToolName,
   type AgentToolResult,
@@ -114,7 +116,12 @@ test("registers the complete Agent 1.0 surface with honest MCP safety hints", ()
     definitions.map((definition) => definition.name),
     MCP_AGENT_TOOL_NAMES,
   );
-  for (const definition of definitions.slice(0, 11)) {
+  const readNames = new Set(
+    AGENT_TOOL_NAMES.filter((tool) => AGENT_TOOL_POLICIES[tool].effect === "read").map(
+      (tool) => AGENT_TOOL_DEFINITIONS[tool].mcp.name,
+    ),
+  );
+  for (const definition of definitions.filter((entry) => readNames.has(entry.name))) {
     assert.deepEqual(definition.annotations, {
       readOnlyHint: true,
       destructiveHint: false,
@@ -144,6 +151,24 @@ test("registers the complete Agent 1.0 surface with honest MCP safety hints", ()
       destructiveHint: true,
       idempotentHint: true,
       openWorldHint: true,
+    },
+  );
+  assert.deepEqual(
+    definitions.find((definition) => definition.name === "conversation_reply")?.annotations,
+    {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+      openWorldHint: true,
+    },
+  );
+  assert.deepEqual(
+    definitions.find((definition) => definition.name === "campaign_followups_cancel")?.annotations,
+    {
+      readOnlyHint: false,
+      destructiveHint: true,
+      idempotentHint: true,
+      openWorldHint: false,
     },
   );
 });

@@ -10,6 +10,8 @@ export const DMFASTER_AGENT_SCOPES = [
   "campaigns:write",
   "campaigns:launch",
   "campaigns:control",
+  "inbox:write",
+  "pipeline:write",
 ] as const;
 
 export const DMFASTER_AGENT_ACCESS_PROFILES = Object.freeze({

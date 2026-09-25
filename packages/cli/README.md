@@ -3,33 +3,35 @@
 CLI for DM Faster Agent 1.0. Run the version-pinned package, then authenticate
 through the focused DM Faster browser approval page.
 
-These examples are pinned to the 1.5.0 runtime to avoid silently installing a
-different client release. They include the September 9, 2026 server update for
-saved company contact details.
+This source prepares the version-pinned 1.6.0 runtime. The published baseline
+remains 1.5.0 until the coordinated package release. These instructions include
+the September 9, 2026 server update for saved company contact details.
 
 ```bash
-npx --yes @dmfaster/cli@1.5.0 auth login --json
-npx --yes @dmfaster/cli@1.5.0 auth login --access plan --json
-npx --yes @dmfaster/cli@1.5.0 auth status --json
-npx --yes @dmfaster/cli@1.5.0 doctor --json
-npx --yes @dmfaster/cli@1.5.0 describe companies search
+npx --yes @dmfaster/cli@1.6.0 auth login --json
+npx --yes @dmfaster/cli@1.6.0 auth login --access plan --json
+npx --yes @dmfaster/cli@1.6.0 auth status --json
+npx --yes @dmfaster/cli@1.6.0 doctor --json
+npx --yes @dmfaster/cli@1.6.0 describe companies search
 
-npx --yes @dmfaster/cli@1.5.0 analytics summary --scope today --json
-npx --yes @dmfaster/cli@1.5.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.5.0 campaigns list --status Running --limit 10 --json
-npx --yes @dmfaster/cli@1.5.0 conversations list --filter unread --channel linkedin --limit 25 --json
-npx --yes @dmfaster/cli@1.5.0 conversation inspect conversation_123 --limit 40 --json
-npx --yes @dmfaster/cli@1.5.0 replies list campaign_123 --limit 5 --query "Visio" --json
-npx --yes @dmfaster/cli@1.5.0 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.6.0 analytics summary --scope today --json
+npx --yes @dmfaster/cli@1.6.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.6.0 campaigns list --status Running --limit 10 --json
+npx --yes @dmfaster/cli@1.6.0 conversations list --filter unread --channel linkedin --limit 25 --json
+npx --yes @dmfaster/cli@1.6.0 conversation inspect conversation_123 --limit 40 --json
+npx --yes @dmfaster/cli@1.6.0 replies list campaign_123 --limit 5 --query "Visio" --json
+npx --yes @dmfaster/cli@1.6.0 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.6.0 companies list refine --input reviewed-refinement.json --json
+npx --yes @dmfaster/cli@1.6.0 history export campaign_123 > campaign-history.jsonl
 
-npx --yes @dmfaster/cli@1.5.0 campaign validate --state campaign-state.json --json
-npx --yes @dmfaster/cli@1.5.0 audience preview --state campaign-state.json --json > audience-preview.json
+npx --yes @dmfaster/cli@1.6.0 campaign validate --state campaign-state.json --json
+npx --yes @dmfaster/cli@1.6.0 audience preview --state campaign-state.json --json > audience-preview.json
 # Review the exact count and sample in audience-preview.json before continuing.
-npx --yes @dmfaster/cli@1.5.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
-npx --yes @dmfaster/cli@1.5.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
-npx --yes @dmfaster/cli@1.5.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
+npx --yes @dmfaster/cli@1.6.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
+npx --yes @dmfaster/cli@1.6.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
+npx --yes @dmfaster/cli@1.6.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
 
-npx --yes @dmfaster/cli@1.5.0 auth logout --json
+npx --yes @dmfaster/cli@1.6.0 auth logout --json
 ```
 
 `auth login` creates a short-lived PKCE device request, prints a confirmation
@@ -41,12 +43,12 @@ receives the issued credential.
 Login defaults to the complete `full` profile. Use `--access` to grant only the
 needed capability set:
 
-| Profile | Capability                                                                      |
-| ------- | ------------------------------------------------------------------------------- |
-| `read`  | inspect workspace, campaigns, sending, replies, and pipeline                    |
-| `plan`  | `read` plus industry lookup, validation, and exact audience preview             |
-| `draft` | `plan` plus private list/campaign preparation and approved pause requests       |
-| `full`  | `draft` plus launch/pause on explicit instructions after a one-time owner grant |
+| Profile | Capability                                                                                                                                   |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `read`  | inspect workspace, campaigns, sending, replies, and pipeline                                                                                 |
+| `plan`  | `read` plus industry lookup, validation, and exact audience preview                                                                          |
+| `draft` | `plan` plus private list/campaign preparation and approved pause requests                                                                    |
+| `full`  | `draft` plus campaign control, inbox replies, pipeline updates, and follow-up cancellation under the owner's grant and explicit instructions |
 
 The server still checks every exact scope, workspace membership, owner-only
 rule, and action authorization. An access profile is a credential ceiling, not
@@ -60,6 +62,13 @@ restart with no cursor; a partial set is never reported as complete.
 `conversations list` accepts inbox filters and a cursor as flags. The
 `conversation inspect` command takes the exact conversation ID and optional
 message cursor. Both also accept `--input FILE` for the complete typed input.
+
+`history export CAMPAIGN_ID` follows the confirmed-send history cursor and
+writes JSON Lines to standard output. It checks every page before writing any
+rows, so an API or cursor failure cannot produce a partial export. It defaults
+to at most 10,000 rows; use `--max` for a smaller bound or `--cursor` to start
+from a saved history cursor. `history list --input FILE` remains the typed,
+page-by-page path for larger histories and MCP clients.
 
 Login emits two newline-delimited JSON events on stdout: first
 `authorization_required`, then `authenticated` after a successful exchange.
@@ -186,11 +195,13 @@ Instagram campaigns always exclude known contacts: `onlyNewChats` and
 `skipPreviouslyMessaged` must both be `true`. Unsupported values are rejected
 before a draft is created.
 
-To change an existing disabled Instagram draft, use
+To change an existing disabled, unstarted social campaign draft, use
 `dmfaster campaign draft update --input update.json --json`. Supply `campaignId`,
 `expectedCampaignUpdatedAt` from campaign inspection, and a nonempty `updates`
-object containing any of `name`, `messageVariants`, `dailyCap` (1–60), or
-`pacingSeconds` (12–3,600). Omitted settings and the audience are preserved.
+object containing any supported setting: social channel toggles, LinkedIn invite
+mode and note, follow-up sequences, description, `name`, `messageVariants`,
+`dailyCap` (1–60), `pacingSeconds` (12–3,600), or sending-window fields.
+Omitted settings and the audience are preserved.
 Stale versions and started campaigns are rejected. After an uncertain
 response, inspect the campaign before retrying. No launch approval is needed to
 edit a disabled draft.

@@ -86,6 +86,14 @@ export async function parseSavedListCommand(
             ![
               "name",
               "messageVariants",
+              "description",
+              "instagramEnabled",
+              "facebookEnabled",
+              "linkedinEnabled",
+              "linkedinInviteMode",
+              "linkedinInviteNote",
+              "followUpSequence",
+              "linkedinFollowUpSequence",
               "dailyCap",
               "pacingSeconds",
               "instagramSendingWindowEnabled",
@@ -100,6 +108,46 @@ export async function parseSavedListCommand(
         );
       const updates: AgentToolInputMap["campaign.draft.update"]["updates"] = {};
       if ("name" in patch) updates.name = bounded(patch.name, 120);
+      if ("description" in patch) {
+        if (typeof patch.description !== "string" || patch.description.length > 1000)
+          throw new Error("Description must be at most 1000 characters.");
+        updates.description = patch.description;
+      }
+      for (const key of ["instagramEnabled", "facebookEnabled", "linkedinEnabled"] as const) {
+        if (key in patch) {
+          if (typeof patch[key] !== "boolean") throw new Error(`${key} must be true or false.`);
+          updates[key] = patch[key];
+        }
+      }
+      if ("linkedinInviteMode" in patch) {
+        if (
+          patch.linkedinInviteMode !== "invite_only" &&
+          patch.linkedinInviteMode !== "invite_with_note"
+        )
+          throw new Error("Invalid LinkedIn invite mode.");
+        updates.linkedinInviteMode = patch.linkedinInviteMode;
+      }
+      if ("linkedinInviteNote" in patch) {
+        if (typeof patch.linkedinInviteNote !== "string" || patch.linkedinInviteNote.length > 300)
+          throw new Error("LinkedIn invite note must be at most 300 characters.");
+        updates.linkedinInviteNote = patch.linkedinInviteNote;
+      }
+      for (const key of ["followUpSequence", "linkedinFollowUpSequence"] as const) {
+        if (key in patch) {
+          const sequence = patch[key];
+          if (!sequence || typeof sequence !== "object" || Array.isArray(sequence))
+            throw new Error(`${key} must be an object.`);
+          const record = sequence as Record<string, unknown>;
+          const maxSteps = key === "linkedinFollowUpSequence" ? 2 : 3;
+          if (
+            typeof record.enabled !== "boolean" ||
+            !Array.isArray(record.steps) ||
+            record.steps.length > maxSteps
+          )
+            throw new Error(`${key} needs enabled and at most ${maxSteps} steps.`);
+          updates[key] = sequence as NonNullable<(typeof updates)[typeof key]>;
+        }
+      }
       if ("dailyCap" in patch) updates.dailyCap = integer(patch.dailyCap, 1, 60);
       if ("pacingSeconds" in patch) updates.pacingSeconds = integer(patch.pacingSeconds, 12, 3600);
       if ("instagramSendingWindowEnabled" in patch) {

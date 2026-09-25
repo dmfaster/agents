@@ -11,10 +11,11 @@ implementation, review, tests, migrations, or deployments, follow the
 repository's own development guidance unless the user explicitly asks for live
 workspace evidence.
 
-The suite has 33 narrow domain tools, including company-centric search,
+The suite has 46 narrow domain tools, including company-centric search,
 complete company research, private shortlists, operational reads, campaign
-planning, live delivery settings, and authorized campaign controls. It does not expose generic mutation,
-provider execution, reply sending, meeting booking, browser-worker credentials,
+planning, live delivery settings, authorized campaign controls, inspected inbox
+replies, pipeline updates, follow-up cancellation, and execution event pages.
+It does not expose generic mutation, meeting booking, browser-worker credentials,
 or database access.
 
 The MCP server also offers `connection_status` for local authentication and
@@ -44,14 +45,22 @@ instructions. Unknown evidence is not a negative finding or purchase intent.
 
 When asked to save a private research shortlist, use `companies_list_prepare`
 with explicitly inspected companies and each inspection's revision. This saves
-company identities and available real contact routes, not an automatic selection
-of individual message recipients. Never use a generated `company.…` identity as
+company identities and available real contact routes. Supply a `selected*` contact
+field when the user has reviewed a specific decision-maker route; the tool
+rejects a route absent from the fresh inspection. Never use a generated `company.…` identity as
 an Instagram handle. Contactless companies remain research rows. Older lists
 are not automatically backfilled with previously lost contacts; see
 [tools.md](references/tools.md).
 Use `companies_list_inspect` to browse any company list, then `company_inspect`
-for current research details. No campaign is created or started. All five CLI
-commands accept `--input FILE` with the same JSON contract as MCP.
+for current research details. For an existing disabled, unstarted campaign whose
+company audience needs exact changes, use `companies_list_refine`: inspect
+the full source list and campaign, preview with `apply: false`, review the
+excluded or added company identities and exact before/after counts, then apply with the
+same key, inputs, and returned `selectionDigest` only when the user requested
+that cleanup. The tool saves a
+separate vetted list and attaches it to the same draft; it never starts sending.
+If either resource changed, inspect again. All six CLI commands accept
+`--input FILE` with the same JSON contract as MCP.
 
 ## Connect
 
@@ -96,7 +105,20 @@ Choose the narrowest read workflow that answers the request:
   actual inbound and outbound messages. Follow the returned cursors before
   claiming a collection or thread is complete. Reading does not mark messages
   read or authorize a reply.
-- Use `pipeline_inspect` for contacted, replied, booked-call, and closed counts.
+- Use `conversation_update` for an instructed read, close, snooze, assignment,
+  or interest change using the inspected `updatedAt`.
+- Use `conversation_reply` only with exact text explicitly instructed or
+  approved by the user for the inspected conversation. Echo both message
+  timestamps and a stable idempotency key. The first receipt can be queued;
+  poll `conversation_reply_inspect` until delivery is confirmed or a failure
+  is known. Never report queued as sent.
+- Use `pipeline_inspect` for counts, `pipeline_cards_list` for complete filtered
+  card pages, and `pipeline_note_list` for card notes.
+- Use `campaign_followups_list` for the queue and completed, skipped, or failed
+  follow-ups. Use `campaign_outcomes_list` for execution events and `history_list`
+  for confirmed sends; follow every cursor for a complete collection.
+- Use `senders_inspect` for browser and mailbox readiness. A setup URL is a
+  handoff for the owner, not an action the agent can perform.
 - Use `company_timeline` only with campaign and outreach identifiers returned by
   DM Faster.
 
@@ -120,6 +142,18 @@ without restarting the campaign, editing messages, or retrying failed targets.
 Repeat an uncertain request with exactly the same key and input. On a revision
 conflict, inspect and review the current settings first. Existing provider
 cooldowns and in-flight submissions retain their execution boundaries.
+
+For a requested follow-up stop, inspect the upcoming queue and exact campaign
+version. `campaign_followups_cancel` takes queued job IDs, the campaign's
+`updatedAt`, and a stable idempotency key. It stops those prospects' follow-up
+chains, including later queued steps, and refuses running or submitted attempts.
+Inspect the queue again; cancelling cannot recall a previously submitted message.
+
+When the user asks to record a meeting or change a lead stage, use
+`pipeline_cards_list` to get the exact card ID, stage key, and stage. Use
+`pipeline_stage_update` with those values. Mark `call_booked` only from a
+recorded booking or the user's explicit instruction. `pipeline_note_add` takes
+an exact card and stable idempotency key; notes stay private to the workspace.
 
 ## Plan a campaign
 
@@ -179,7 +213,9 @@ business profile, industry lookup, or Enterprise company-search entitlement.
 It rejects company lists and lists containing non-Instagram rows; ancillary contact fields on Instagram profiles are preserved. It cannot activate or schedule
 activation. To revise a saved draft, use `campaign_draft_update` with the campaign
 ID, `expectedCampaignUpdatedAt` from `campaign_inspect`, and only the requested
-settings in `updates`. Supported settings are name, messageVariants, dailyCap, pacingSeconds, and the automatic sending window. Keep the same campaign ID; do not create a replacement draft
+settings in `updates`. Supported settings include social channel toggles,
+LinkedIn invite mode and note, follow-up sequences, name, message variants,
+daily cap, pacing, and the automatic sending window. Keep the same campaign ID; do not create a replacement draft
 for a setting change. Omitted settings and the audience are preserved. Stale
 versions and started or selected campaigns are rejected. After an
 uncertain response, inspect again before retrying; the previous version cannot

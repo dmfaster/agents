@@ -19,14 +19,14 @@ repository, or MCP configuration.
 Check the current credential without a global install:
 
 ```bash
-npx --yes @dmfaster/cli@1.5.0 auth status --json
-npx --yes @dmfaster/cli@1.5.0 doctor --json
+npx --yes @dmfaster/cli@1.6.0 auth status --json
+npx --yes @dmfaster/cli@1.6.0 doctor --json
 ```
 
 When authentication is required:
 
 ```bash
-npx --yes @dmfaster/cli@1.5.0 auth login --json
+npx --yes @dmfaster/cli@1.6.0 auth login --json
 ```
 
 The CLI prints an `authorization_required` JSON event and a human-readable
@@ -44,7 +44,8 @@ the human.
 
 Agent 1.0 defines these bounded scopes: `workspace:read`, `campaigns:read`,
 `sending:read`, `inbox:read`, `pipeline:read`, `audiences:read`, `campaigns:write`,
-`campaigns:launch`, and `campaigns:control`. Login defaults to the `full` profile.
+`campaigns:launch`, `campaigns:control`, `inbox:write`, and `pipeline:write`.
+Login defaults to the `full` profile.
 The owner approves this connection once. With `campaigns:control`, explicit user
 instructions authorize launch and pause without another approval page per action;
 the normal `campaigns:launch` or `campaigns:write` permission is still required.

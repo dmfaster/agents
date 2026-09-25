@@ -29,7 +29,9 @@ x-dmfaster-scopes:
   "campaigns:read": Read campaign metadata and performance.
   "sending:read": Read browser-worker and sending health.
   "inbox:read": Read reply-attention data from the unified inbox.
+  "inbox:write": Update conversations and send explicitly instructed replies.
   "pipeline:read": Read pipeline summaries and company outreach history.
+  "pipeline:write": Update prospect stages and notes.
   "audiences:read": Resolve industries and preview exact company audiences.
   "campaigns:write": Validate plans, prepare private drafts, and request confirmed pauses.
   "campaigns:launch": Request and execute separately approved campaign launches.
@@ -503,6 +505,307 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
         "503": { $ref: "#/components/responses/ServiceUnavailable" }
 
+  /api/v1/agent/tools/conversation.update:
+    post:
+      tags: [Agent tools]
+      operationId: conversationUpdate
+      summary: Update one inbox conversation
+      description: Applies one bounded inbox action to the exact inspected conversation version. Never sends a message.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes: ["inbox:read", "inbox:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: conversation_update
+        title: Update inbox conversation
+        description: Mark read or unread, close or reopen, snooze, assign, or set interest on one inspected conversation. Echo its updatedAt.
+        annotations:
+          {
+            readOnlyHint: false,
+            destructiveHint: false,
+            idempotentHint: true,
+            openWorldHint: false,
+          }
+      x-dmfaster-cli:
+        section: Inbox
+        usage: conversation update --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConversationUpdateInput" }
+      responses:
+        "200":
+          description: Updated conversation.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConversationUpdateResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/conversation.reply:
+    post:
+      tags: [Agent tools]
+      operationId: conversationReply
+      summary: Send an instructed reply to one conversation
+      description: Queue or send the exact user-approved text only when the inspected conversation still has the same inbound and latest message. A durable idempotency key prevents duplicate replies. A queued receipt does not prove delivery.
+      x-dmfaster-effect: external
+      x-dmfaster-required-scopes: ["inbox:read", "inbox:write"]
+      x-dmfaster-approval: human_confirmation
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: conversation_reply
+        title: Send conversation reply
+        description: Send only text explicitly approved by the user for this exact conversation. Echo lastInboundAt and lastMessageAt from inspection, and use a stable idempotency key. Inspect delivery afterward.
+        annotations:
+          { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true }
+      x-dmfaster-cli:
+        section: Inbox
+        usage: conversation reply --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConversationReplyInput" }
+      responses:
+        "200":
+          description: Reply action receipt, possibly queued or delivery unknown.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConversationReplyResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/conversation.reply.inspect:
+    post:
+      tags: [Agent tools]
+      operationId: conversationReplyInspect
+      summary: Inspect actual reply delivery state
+      description: Reads the durable action created by conversation.reply, including queued, sent, failed, or delivery unknown state.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["inbox:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: conversation_reply_inspect
+        title: Inspect reply delivery
+        description: Check the durable state of a reply by its idempotency key; queued is not sent.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        section: Inbox
+        usage: conversation reply inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ConversationReplyInspectInput" }
+      responses:
+        "200":
+          description: Current durable reply state.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ConversationReplyInspectResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/campaign.followups.list:
+    post:
+      tags: [Agent tools]
+      operationId: campaignFollowupsList
+      summary: Inspect upcoming or completed follow-up jobs
+      description: Returns the authoritative follow-up queue, including failed and skipped jobs, with cursor pagination.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["sending:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: campaign_followups_list
+        title: List campaign follow-ups
+        description: Read upcoming, completed, skipped, or failed follow-ups for one campaign.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: campaign followups list --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignFollowupsListInput" }
+      responses:
+        "200":
+          description: Follow-up queue page.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignFollowupsListResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/campaign.followups.cancel:
+    post:
+      tags: [Agent tools]
+      operationId: campaignFollowupsCancel
+      summary: Cancel queued follow-ups for selected prospects
+      description: Stops the selected queued, unsubmitted follow-up chains and skips their remaining queued follow-up jobs. Running or submitted attempts block the action. Requires the owner's explicit instruction for these prospects.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes: ["campaigns:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_followups_cancel
+        title: Cancel queued follow-ups
+        description: Stop exact queued follow-up chains using inspected job IDs, campaign version, and a stable idempotency key.
+        annotations:
+          { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: campaign followups cancel --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignFollowupsCancelInput" }
+      responses:
+        "200":
+          description: Durable cancellation receipt.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignFollowupsCancelResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/campaign.outcomes.list:
+    post:
+      tags: [Agent tools]
+      operationId: campaignOutcomesList
+      summary: Page through actual campaign execution events
+      description: Reads recorded worker events for a campaign, including send, skip, and failure reasons. A queued job is not a sent message.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["sending:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: campaign_outcomes_list
+        title: List campaign outcomes
+        description: Read the execution event timeline with reasons and cursor pagination.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: campaign outcomes list --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignOutcomesListInput" }
+      responses:
+        "200":
+          description: Execution event page.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignOutcomesListResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/senders.inspect:
+    post:
+      tags: [Agent tools]
+      operationId: sendersInspect
+      summary: Inspect connected sender accounts and recovery status
+      description: Returns safe browser and mailbox status. Connection repair remains an owner handoff through the app; this tool does not expose credentials.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["sending:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: senders_inspect
+        title: Inspect senders
+        description: Read browser and email sender status, health, and the setup URL for manual reconnection.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: senders inspect
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/WorkspaceBriefingInput" }
+      responses:
+        "200":
+          description: Sender status.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SendersInspectResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/history.list:
+    post:
+      tags: [Agent tools]
+      operationId: historyList
+      summary: Page through confirmed sent-message history
+      description: Reads confirmed sends for one campaign. Cursor pages can be used to build an export; failed and skipped attempts are in campaign.outcomes.list.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["campaigns:read", "sending:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: history_list
+        title: List sent history
+        description: Page the confirmed sends for one campaign, including channel and target.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: history list --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/HistoryListInput" }
+      responses:
+        "200":
+          description: Confirmed sends page.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HistoryListResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
   /api/v1/agent/tools/pipeline.inspect:
     post:
       tags: [Agent tools]
@@ -549,6 +852,162 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/pipeline.cards.list:
+    post:
+      tags: [Agent tools]
+      operationId: pipelineCardsList
+      summary: Page through exact pipeline cards
+      description: Returns a bounded, cursor-paginated pipeline card page with stable stage keys for follow-up actions.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["pipeline:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: pipeline_cards_list
+        title: List pipeline cards
+        description: Page campaign pipeline cards by stage, search, or exact entity key.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        section: Pipeline
+        usage: pipeline cards list --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PipelineCardsListInput" }
+      responses:
+        "200":
+          description: Pipeline card page.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PipelineCardsListResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/pipeline.stage.update:
+    post:
+      tags: [Agent tools]
+      operationId: pipelineStageUpdate
+      summary: Update an inspected pipeline card stage
+      description: Changes one existing card only when its stage still matches the inspected stage. Marking a meeting booked requires recorded evidence or the user's explicit instruction.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes: ["pipeline:read", "pipeline:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: pipeline_stage_update
+        title: Update pipeline stage
+        description: Change one inspected card using its exact stageKey and expectedStage.
+        annotations:
+          {
+            readOnlyHint: false,
+            destructiveHint: false,
+            idempotentHint: true,
+            openWorldHint: false,
+          }
+      x-dmfaster-cli:
+        section: Pipeline
+        usage: pipeline stage update --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PipelineStageUpdateInput" }
+      responses:
+        "200":
+          description: Updated pipeline card.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PipelineStageUpdateResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/pipeline.note.list:
+    post:
+      tags: [Agent tools]
+      operationId: pipelineNoteList
+      summary: Read notes on one pipeline card
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["pipeline:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: pipeline_note_list
+        title: List pipeline notes
+        description: Read up to 100 notes for an exact campaign and pipeline entity.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        section: Pipeline
+        usage: pipeline note list --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PipelineNoteListInput" }
+      responses:
+        "200":
+          description: Pipeline notes.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PipelineNoteListResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/pipeline.note.add:
+    post:
+      tags: [Agent tools]
+      operationId: pipelineNoteAdd
+      summary: Add an idempotent note to one pipeline card
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes: ["pipeline:read", "pipeline:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: pipeline_note_add
+        title: Add pipeline note
+        description: Add a note to an exact existing card with a durable idempotency key.
+        annotations:
+          {
+            readOnlyHint: false,
+            destructiveHint: false,
+            idempotentHint: true,
+            openWorldHint: false,
+          }
+      x-dmfaster-cli:
+        section: Pipeline
+        usage: pipeline note add --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PipelineNoteAddInput" }
+      responses:
+        "200":
+          description: Saved note or exact replay.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PipelineNoteAddResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
         "429": { $ref: "#/components/responses/TooManyRequests" }
         "500": { $ref: "#/components/responses/InternalServerError" }
         "503": { $ref: "#/components/responses/ServiceUnavailable" }
@@ -1520,6 +1979,57 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/agent/tools/companies.list.refine:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyListRefine
+      summary: Refine a disabled campaign's company audience
+      description: Preview exact exclusions, then save a refined copy of a company list and attach it to one disabled, unstarted campaign. Requires current list and campaign versions and exact expected counts. Never starts sending or changes the source list.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: companies_list_refine
+        title: Refine disabled campaign audience
+        description: Preview reviewed exclusions, then attach a refined copy to a disabled, unstarted campaign. Current versions and exact counts are required. Never starts sending or changes the source list.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: B2B company prospecting
+        usage: companies list refine --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyListRefineInput"
+      responses:
+        "200":
+          description: Preview or apply exact company exclusions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyListRefineResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /api/v1/agent/tools/campaign.operation.inspect:
     post:
       tags:
@@ -1874,6 +2384,8 @@ components:
         - campaigns:write
         - campaigns:launch
         - campaigns:control
+        - inbox:write
+        - pipeline:write
 
     AgentDeviceAuthorizationInput:
       type: object
@@ -1906,7 +2418,7 @@ components:
         scopes:
           type: array
           minItems: 1
-          maxItems: 9
+          maxItems: 11
           uniqueItems: true
           items:
             $ref: "#/components/schemas/AgentApiScope"
@@ -1981,7 +2493,7 @@ components:
         scopes:
           type: array
           minItems: 1
-          maxItems: 9
+          maxItems: 11
           uniqueItems: true
           items:
             $ref: "#/components/schemas/AgentApiScope"
@@ -2103,7 +2615,19 @@ components:
         - replies.list
         - conversations.list
         - conversation.inspect
+        - conversation.update
+        - conversation.reply
+        - conversation.reply.inspect
+        - campaign.followups.list
+        - campaign.followups.cancel
+        - campaign.outcomes.list
+        - senders.inspect
+        - history.list
         - pipeline.inspect
+        - pipeline.cards.list
+        - pipeline.stage.update
+        - pipeline.note.list
+        - pipeline.note.add
         - company.timeline
         - industry.lookup
         - campaign.validate
@@ -2125,6 +2649,7 @@ components:
         - company.inspect
         - companies.list.prepare
         - companies.list.inspect
+        - companies.list.refine
         - campaign.operation.inspect
         - campaign.delivery.inspect
         - campaign.delivery.update
@@ -2342,6 +2867,47 @@ components:
               oneOf:
                 - $ref: "#/components/schemas/PipelineInspectOutput"
                 - type: "null"
+
+    PipelineCardsListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: pipeline.cards.list }
+            data:
+              {
+                oneOf: [{ $ref: "#/components/schemas/PipelineCardsListOutput" }, { type: "null" }],
+              }
+
+    PipelineStageUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: pipeline.stage.update }
+            data:
+              {
+                oneOf:
+                  [{ $ref: "#/components/schemas/PipelineStageUpdateOutput" }, { type: "null" }],
+              }
+
+    PipelineNoteListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: pipeline.note.list }
+            data:
+              { oneOf: [{ $ref: "#/components/schemas/PipelineNoteListOutput" }, { type: "null" }] }
+
+    PipelineNoteAddResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: pipeline.note.add }
+            data:
+              { oneOf: [{ $ref: "#/components/schemas/PipelineNoteAddOutput" }, { type: "null" }] }
 
     CompanyTimelineResult:
       allOf:
@@ -2580,6 +3146,98 @@ components:
 
     PipelineInspectInput:
       $ref: "#/components/schemas/OptionalCampaignInput"
+
+    PipelineCardsListInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, stage]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        stage: { $ref: "#/components/schemas/PipelineStage" }
+        limit: { type: integer, minimum: 1, maximum: 15 }
+        cursor: { type: string, minLength: 1, maxLength: 4000 }
+        query: { type: string, minLength: 1, maxLength: 120 }
+        entityKey: { type: string, minLength: 1, maxLength: 320 }
+
+    PipelineStageUpdateInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, entityKey, stageKey, expectedStage, stage]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        entityKey: { type: string, minLength: 1, maxLength: 320 }
+        stageKey: { type: string, minLength: 1, maxLength: 500 }
+        expectedStage: { $ref: "#/components/schemas/PipelineStage" }
+        stage: { $ref: "#/components/schemas/PipelineStage" }
+
+    PipelineNoteListInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, entityKey]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        entityKey: { type: string, minLength: 1, maxLength: 320 }
+
+    PipelineNoteAddInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, entityKey, body, idempotencyKey]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        entityKey: { type: string, minLength: 1, maxLength: 320 }
+        body: { type: string, minLength: 1, maxLength: 2000 }
+        idempotencyKey:
+          { type: string, minLength: 8, maxLength: 160, pattern: "^[a-zA-Z0-9._:-]+$" }
+
+    ConversationReplyInspectInput:
+      type: object
+      additionalProperties: false
+      required: [idempotencyKey]
+      properties:
+        idempotencyKey: { type: string, minLength: 8, maxLength: 160, pattern: "^[a-zA-Z0-9_-]+$" }
+
+    CampaignFollowupsListInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        view: { type: string, enum: [upcoming, done] }
+        cursor: { type: string, minLength: 1, maxLength: 512 }
+
+    CampaignFollowupsCancelInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, expectedCampaignUpdatedAt, jobIds, idempotencyKey]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        expectedCampaignUpdatedAt: { $ref: "#/components/schemas/ResourceVersion" }
+        jobIds:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items: { $ref: "#/components/schemas/ResourceId" }
+        idempotencyKey:
+          { type: string, minLength: 8, maxLength: 160, pattern: "^[a-zA-Z0-9._:-]+$" }
+
+    CampaignOutcomesListInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        cursor: { type: string, minLength: 1, maxLength: 512 }
+        limit: { type: integer, minimum: 1, maximum: 100 }
+
+    HistoryListInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        cursor: { type: string, minLength: 1, maxLength: 512 }
+        limit: { type: integer, minimum: 1, maximum: 100 }
+        search: { type: string, minLength: 3, maxLength: 120 }
 
     CompanyTimelineInput:
       type: object
@@ -2826,6 +3484,44 @@ components:
       pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$
       minLength: 20
       maxLength: 27
+    CampaignFollowUpStepInput:
+      type: object
+      additionalProperties: false
+      required: [delayDays, channel, variants]
+      properties:
+        delayDays: { type: integer, minimum: 1, maximum: 30 }
+        channel:
+          type: string
+          enum: [inherit, instagram, facebook, linkedin, gmail]
+        fallbackChannel:
+          type: string
+          enum: [none, instagram, facebook, linkedin, gmail]
+        subject: { type: string, maxLength: 500 }
+        variants:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items: { type: string, minLength: 1, maxLength: 1000 }
+    CampaignFollowUpSequenceInput:
+      type: object
+      additionalProperties: false
+      required: [enabled, steps]
+      properties:
+        enabled: { type: boolean }
+        steps:
+          type: array
+          maxItems: 3
+          items: { $ref: "#/components/schemas/CampaignFollowUpStepInput" }
+    LinkedinFollowUpSequenceInput:
+      type: object
+      additionalProperties: false
+      required: [enabled, steps]
+      properties:
+        enabled: { type: boolean }
+        steps:
+          type: array
+          maxItems: 2
+          items: { $ref: "#/components/schemas/CampaignFollowUpStepInput" }
     CampaignDraftUpdateInput:
       type: object
       additionalProperties: false
@@ -2847,6 +3543,9 @@ components:
               type: string
               minLength: 1
               maxLength: 120
+            description:
+              type: string
+              maxLength: 1000
             messageVariants:
               type: array
               minItems: 1
@@ -2855,6 +3554,22 @@ components:
                 type: string
                 minLength: 1
                 maxLength: 1000
+            instagramEnabled:
+              type: boolean
+            facebookEnabled:
+              type: boolean
+            linkedinEnabled:
+              type: boolean
+            linkedinInviteMode:
+              type: string
+              enum: [invite_only, invite_with_note]
+            linkedinInviteNote:
+              type: string
+              maxLength: 300
+            followUpSequence:
+              $ref: "#/components/schemas/CampaignFollowUpSequenceInput"
+            linkedinFollowUpSequence:
+              $ref: "#/components/schemas/LinkedinFollowUpSequenceInput"
             dailyCap:
               type: integer
               minimum: 1
@@ -2888,6 +3603,7 @@ components:
         - status
         - enabled
         - channel
+        - channels
         - targetCount
         - messageVariants
         - dailyCap
@@ -2919,7 +3635,29 @@ components:
         enabled:
           const: false
         channel:
-          const: instagram
+          type: string
+          enum: [instagram, facebook, linkedin, gmail, sms, multichannel]
+        channels:
+          type: array
+          minItems: 1
+          maxItems: 5
+          uniqueItems: true
+          items:
+            type: string
+            enum: [instagram, facebook, linkedin, gmail, sms]
+        description:
+          type: string
+        linkedinInviteMode:
+          type: string
+          enum: [invite_only, invite_with_note]
+        linkedinInviteNote:
+          type: string
+        followUpSequence:
+          type: [object, "null"]
+          additionalProperties: true
+        linkedinFollowUpSequence:
+          type: [object, "null"]
+          additionalProperties: true
         targetCount:
           type: integer
           minimum: 0
@@ -4311,6 +5049,83 @@ components:
           items:
             $ref: "#/components/schemas/AgentLead"
 
+    PipelineCard:
+      type: object
+      additionalProperties: false
+      required: [id, stageKey, stage, handle, name, isCompany, campaignId, reachedChannels, sentAt]
+      properties:
+        id: { type: string }
+        stageKey: { type: string }
+        stage: { $ref: "#/components/schemas/PipelineStage" }
+        handle: { type: string }
+        name: { type: string }
+        isCompany: { type: boolean }
+        campaignId: { type: string }
+        decisionMakerName: { type: string }
+        decisionMakerRole: { type: string }
+        decisionMakerLinkedinName: { type: string }
+        decisionMakerLinkedinRole: { type: string }
+        instagramHref: { type: string }
+        facebookHref: { type: string }
+        linkedinHref: { type: string }
+        gmailHref: { type: string }
+        reachedChannels:
+          type: object
+          additionalProperties: false
+          required: [instagram, facebook, linkedin, gmail, sms]
+          properties:
+            instagram: { type: boolean }
+            facebook: { type: boolean }
+            linkedin: { type: boolean }
+            gmail: { type: boolean }
+            sms: { type: boolean }
+        sentAt: { type: string }
+    PipelineCardsListOutput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, stage, cards, stageCounts, hasMore, nextCursor]
+      properties:
+        campaignId: { type: string }
+        stage: { $ref: "#/components/schemas/PipelineStage" }
+        cards: { type: array, maxItems: 15, items: { $ref: "#/components/schemas/PipelineCard" } }
+        stageCounts: { $ref: "#/components/schemas/PipelineCounts" }
+        hasMore: { type: boolean }
+        nextCursor: { oneOf: [{ type: string }, { type: "null" }] }
+    PipelineStageUpdateOutput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, card]
+      properties:
+        campaignId: { type: string }
+        card: { $ref: "#/components/schemas/PipelineCard" }
+    PipelineNote:
+      type: object
+      additionalProperties: false
+      required: [id, body, createdAt, updatedAt, createdByName, isOwn]
+      properties:
+        id: { type: string }
+        body: { type: string }
+        createdAt: { type: string }
+        updatedAt: { type: string }
+        createdByName: { type: string }
+        isOwn: { type: boolean }
+    PipelineNoteListOutput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, entityKey, notes]
+      properties:
+        campaignId: { type: string }
+        entityKey: { type: string }
+        notes: { type: array, maxItems: 100, items: { $ref: "#/components/schemas/PipelineNote" } }
+    PipelineNoteAddOutput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, entityKey, note]
+      properties:
+        campaignId: { type: string }
+        entityKey: { type: string }
+        note: { $ref: "#/components/schemas/PipelineNote" }
+
     RepliesListOutput:
       type: object
       additionalProperties: false
@@ -4344,6 +5159,8 @@ components:
           lastMessageText,
           lastMessageDirection,
           lastMessageAt,
+          lastInboundAt,
+          updatedAt,
           unreadCount,
           needsReply,
           interestLevel,
@@ -4362,6 +5179,8 @@ components:
         lastMessageText: { type: string }
         lastMessageDirection: { type: string, enum: ["", inbound, outbound] }
         lastMessageAt: { type: string }
+        lastInboundAt: { type: string }
+        updatedAt: { type: string }
         unreadCount: { type: integer, minimum: 0 }
         needsReply: { type: boolean }
         interestLevel: { type: string, enum: ["", positive, neutral, negative, needs_review] }
@@ -4382,6 +5201,342 @@ components:
                 unclear,
               ],
           }
+
+    ConversationUpdateInput:
+      type: object
+      additionalProperties: false
+      required: [conversationId, expectedUpdatedAt, action]
+      properties:
+        conversationId: { $ref: "#/components/schemas/ResourceId" }
+        expectedUpdatedAt: { $ref: "#/components/schemas/ResourceVersion" }
+        action:
+          type: string
+          enum:
+            [
+              mark_read,
+              mark_unread,
+              close,
+              reopen,
+              snooze,
+              unsnooze,
+              assign_to_me,
+              unassign,
+              set_interest,
+            ]
+        snoozedUntil: { $ref: "#/components/schemas/ResourceVersion" }
+        interestLevel: { type: string, enum: [positive, neutral, negative] }
+        interestIntent:
+          type: string
+          enum:
+            [
+              interested,
+              information_requested,
+              meeting_intent,
+              not_now,
+              wrong_person,
+              not_interested,
+              opt_out,
+              acknowledgement,
+              unclear,
+            ]
+    ConversationUpdateData:
+      type: object
+      additionalProperties: false
+      required: [conversation]
+      properties:
+        conversation: { $ref: "#/components/schemas/InboxConversationSummary" }
+    ConversationUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: conversation.update }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/ConversationUpdateData"
+                - type: "null"
+    ConversationReplyInput:
+      type: object
+      additionalProperties: false
+      required: [conversationId, expectedLastInboundAt, expectedLastMessageAt, text, idempotencyKey]
+      properties:
+        conversationId: { $ref: "#/components/schemas/ResourceId" }
+        expectedLastInboundAt: { $ref: "#/components/schemas/ResourceVersion" }
+        expectedLastMessageAt: { $ref: "#/components/schemas/ResourceVersion" }
+        text: { type: string, minLength: 1, maxLength: 10000 }
+        idempotencyKey: { type: string, minLength: 8, maxLength: 160, pattern: "^[a-zA-Z0-9_-]+$" }
+    ConversationReplyData:
+      type: object
+      additionalProperties: false
+      required:
+        [conversationId, actionId, state, deliveryRoute, deliveryConfirmed, requiresExtensionWake]
+      properties:
+        conversationId: { type: string }
+        actionId: { type: string }
+        state:
+          {
+            type: string,
+            enum: [queued, claimed, submitted, sent, failed, cancelled, delivery_unknown],
+          }
+        deliveryRoute: { type: string, enum: [browser, email, instagram_api] }
+        deliveryConfirmed: { type: boolean }
+        requiresExtensionWake: { type: boolean }
+    ConversationReplyResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: conversation.reply }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/ConversationReplyData"
+                - type: "null"
+
+    ConversationReplyInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: conversation.reply.inspect }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/ConversationReplyInspectOutput"
+                - type: "null"
+    ConversationReplyInspectOutput:
+      allOf:
+        - $ref: "#/components/schemas/ConversationReplyData"
+        - type: object
+          properties:
+            lastErrorCode: { type: string }
+            lastErrorDetail: { type: string }
+
+    CampaignFollowupsListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: campaign.followups.list }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignFollowupsListOutput"
+                - type: "null"
+    CampaignFollowupsCancelResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: campaign.followups.cancel }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignFollowupsCancelOutput"
+                - type: "null"
+    CampaignFollowupsCancelOutput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, cancelledJobIds, stoppedChainCount, replayed]
+      properties:
+        campaignId: { type: string }
+        cancelledJobIds: { type: array, items: { type: string } }
+        stoppedChainCount: { type: integer, minimum: 1 }
+        replayed: { type: boolean }
+    CampaignFollowupsListOutput:
+      type: object
+      additionalProperties: false
+      required:
+        [campaignId, campaignName, enabled, generatedAt, timeZone, summary, view, items, nextCursor]
+      properties:
+        campaignId: { type: string }
+        campaignName: { type: string }
+        enabled: { type: boolean }
+        generatedAt: { type: string, format: date-time }
+        timeZone: { type: string }
+        summary:
+          type: object
+          additionalProperties: false
+          required: [upcoming, done]
+          properties:
+            upcoming: { type: integer, minimum: 0 }
+            done: { type: integer, minimum: 0 }
+            enabled: { type: boolean }
+        view: { type: string, enum: [upcoming, done] }
+        items:
+          type: array
+          maxItems: 50
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              [
+                id,
+                channel,
+                targetHandle,
+                targetCompanyName,
+                message,
+                step,
+                awaitingConnection,
+                state,
+                scheduledAt,
+                updatedAt,
+              ]
+            properties:
+              id: { type: string }
+              channel: { type: string }
+              targetHandle: { type: string }
+              targetCompanyName: { type: string }
+              message: { type: string }
+              step: { type: integer }
+              awaitingConnection: { type: boolean }
+              state: { type: string }
+              scheduledAt: { oneOf: [{ type: string }, { type: "null" }] }
+              updatedAt: { type: string }
+        nextCursor: { oneOf: [{ type: string }, { type: "null" }] }
+
+    CampaignOutcomesListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: campaign.outcomes.list }
+            data:
+              {
+                oneOf:
+                  [{ $ref: "#/components/schemas/CampaignOutcomesListOutput" }, { type: "null" }],
+              }
+    CampaignOutcomesListOutput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, events, hasMore, nextCursor]
+      properties:
+        campaignId: { type: string }
+        events:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              [id, jobId, channel, targetHandle, eventType, reasonCode, stopReason, createdAt]
+            properties:
+              id: { type: string }
+              jobId: { type: string }
+              channel: { type: string }
+              targetHandle: { type: string }
+              eventType: { type: string }
+              reasonCode: { type: string }
+              stopReason: { type: string }
+              createdAt: { type: string, format: date-time }
+        hasMore: { type: boolean }
+        nextCursor: { oneOf: [{ type: string }, { type: "null" }] }
+
+    SendersInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: senders.inspect }
+            data:
+              { oneOf: [{ $ref: "#/components/schemas/SendersInspectOutput" }, { type: "null" }] }
+    SendersInspectOutput:
+      type: object
+      additionalProperties: false
+      required: [generatedAt, browserProfiles, mailboxes, browserSetupUrl]
+      properties:
+        generatedAt: { type: string, format: date-time }
+        browserSetupUrl: { type: string, format: uri }
+        browserProfiles:
+          type: array
+          maxItems: 20
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              [
+                id,
+                browserLabel,
+                instagramUsername,
+                instagramAccountType,
+                online,
+                lastSeenAt,
+                extensionVersion,
+                status,
+              ]
+            properties:
+              id: { type: string }
+              browserLabel: { type: string }
+              instagramUsername: { type: string }
+              instagramAccountType: { type: string, enum: [professional, personal, unknown] }
+              online: { type: boolean }
+              lastSeenAt: { type: string }
+              extensionVersion: { type: string }
+              status: { type: string }
+        mailboxes:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              [
+                id,
+                provider,
+                emailAddress,
+                status,
+                sendEnabled,
+                replySyncEnabled,
+                canSend,
+                canRead,
+                needsReauthorization,
+                lastHealthCheckAt,
+                lastErrorCode,
+                effectiveDailyCap,
+              ]
+            properties:
+              id: { type: string }
+              provider: { type: string, enum: [gmail, outlook, smtp] }
+              emailAddress: { type: string }
+              status: { type: string, enum: [connected, action_required, paused, disabled] }
+              sendEnabled: { type: boolean }
+              replySyncEnabled: { type: boolean }
+              canSend: { type: boolean }
+              canRead: { type: boolean }
+              needsReauthorization: { type: boolean }
+              lastHealthCheckAt: { oneOf: [{ type: string }, { type: "null" }] }
+              lastErrorCode: { type: string }
+              effectiveDailyCap: { type: integer, minimum: 0 }
+
+    HistoryListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: history.list }
+            data: { oneOf: [{ $ref: "#/components/schemas/HistoryListOutput" }, { type: "null" }] }
+    HistoryListOutput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, entries, hasMore, nextCursor]
+      properties:
+        campaignId: { type: string }
+        entries:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            required: [id, sentTo, targetName, sentFrom, sentAt, channel, state]
+            properties:
+              id: { type: string }
+              jobId: { type: string }
+              sentTo: { type: string }
+              targetName: { type: string }
+              targetCompanyName: { type: string }
+              sentFrom: { type: string }
+              sentAt: { type: string }
+              channel: { type: string }
+              state: { type: string, enum: [Sent] }
+              campaignId: { type: string }
+              campaign: { type: string }
+        hasMore: { type: boolean }
+        nextCursor: { oneOf: [{ type: string }, { type: "null" }] }
 
     InboxScopeStats:
       type: object
@@ -4883,6 +6038,29 @@ components:
             financials: { type: array, items: { type: object, additionalProperties: true } }
             decisionMakers: { type: array, items: { type: object, additionalProperties: true } }
             technologies: { type: array, items: { type: string } }
+            socialProfiles:
+              type: array
+              description: Company-owned social account URLs verified from the company's website.
+              items:
+                type: object
+                additionalProperties: false
+                required: [platform, url]
+                properties:
+                  platform:
+                    type: string
+                    enum: [instagram, facebook, linkedin, youtube, tiktok, x]
+                  url: { type: string, format: uri }
+            websiteContacts:
+              type: array
+              description: Email addresses and phone numbers verified on saved company website HTML. Company-route and person ownership are unassigned.
+              items:
+                type: object
+                additionalProperties: false
+                required: [channel, value, sourceUrl]
+                properties:
+                  channel: { type: string, enum: [email, phone] }
+                  value: { type: string }
+                  sourceUrl: { type: string, format: uri }
             advertising: { type: object, additionalProperties: true }
             exhibitions: { type: array, items: { type: object, additionalProperties: true } }
             publicFunding: { type: [object, "null"], additionalProperties: true }
@@ -4925,6 +6103,18 @@ components:
                 type: string
                 maxLength: 64
                 minLength: 64
+              selectedLinkedinUrl:
+                type: string
+                minLength: 1
+                maxLength: 500
+              selectedEmailAddress:
+                type: string
+                minLength: 1
+                maxLength: 320
+              selectedPhoneNumber:
+                type: string
+                minLength: 1
+                maxLength: 80
             required:
               - country
               - businessId
@@ -5004,6 +6194,125 @@ components:
             data:
               oneOf:
                 - $ref: "#/components/schemas/CompanyListInspectData"
+                - type: "null"
+
+    CompanyListRefineInput:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          listId,
+          campaignId,
+          expectedListUpdatedAt,
+          expectedCampaignUpdatedAt,
+          expectedTotal,
+          expectedTargetCount,
+          excludeCompanies,
+          expectedRemaining,
+          expectedRemainingTargetCount,
+          idempotencyKey,
+          apply,
+        ]
+      properties:
+        listId:
+          $ref: "#/components/schemas/ResourceId"
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
+        expectedListUpdatedAt: { type: string, minLength: 20, maxLength: 40 }
+        expectedCampaignUpdatedAt: { type: string, minLength: 20, maxLength: 40 }
+        expectedTotal: { type: integer, minimum: 1, maximum: 25000 }
+        expectedTargetCount: { type: integer, minimum: 0, maximum: 125000 }
+        excludeCompanies:
+          type: array
+          minItems: 0
+          maxItems: 1000
+          items:
+            type: object
+            additionalProperties: false
+            required: [country, businessId]
+            properties:
+              country:
+                $ref: "#/components/schemas/SupportedCountry"
+              businessId: { type: string, minLength: 1, maxLength: 192 }
+        includeCompanies:
+          type: array
+          minItems: 1
+          maxItems: 50
+          description: Inspected companies to add or refresh. Existing identities are refreshed with the selected decision-maker routes.
+          items:
+            type: object
+            additionalProperties: false
+            required: [country, businessId, expectedRevision]
+            properties:
+              country:
+                $ref: "#/components/schemas/SupportedCountry"
+              businessId: { type: string, minLength: 1, maxLength: 192 }
+              expectedRevision: { type: string, minLength: 64, maxLength: 64 }
+              selectedLinkedinUrl: { type: string, minLength: 1, maxLength: 500 }
+              selectedEmailAddress: { type: string, minLength: 1, maxLength: 320 }
+              selectedPhoneNumber: { type: string, minLength: 1, maxLength: 80 }
+        expectedRemaining: { type: integer, minimum: 1, maximum: 25000 }
+        expectedRemainingTargetCount: { type: integer, minimum: 1, maximum: 125000 }
+        idempotencyKey:
+          $ref: "#/components/schemas/IdempotencyKey"
+        reviewedSelectionDigest:
+          type: string
+          minLength: 64
+          maxLength: 64
+          description: Echo selectionDigest from the matching dry run when apply is true.
+        apply:
+          type: boolean
+          description: False previews exact removals without a write. True applies the same reviewed selection to the disabled draft list.
+    CompanyListRefineData:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          sourceListId,
+          listId,
+          campaignId,
+          applied,
+          replayed,
+          beforeTotal,
+          removed,
+          added,
+          updated,
+          remaining,
+          targetCountBefore,
+          targetCountAfter,
+          sourceListUpdatedAt,
+          listUpdatedAt,
+          campaignUpdatedAt,
+          selectionDigest,
+        ]
+      properties:
+        sourceListId: { type: string }
+        listId: { type: string }
+        campaignId: { type: string }
+        applied: { type: boolean }
+        replayed: { type: boolean }
+        beforeTotal: { type: integer, minimum: 1 }
+        removed: { type: integer, minimum: 0 }
+        added: { type: integer, minimum: 0 }
+        updated: { type: integer, minimum: 0 }
+        remaining: { type: integer, minimum: 1 }
+        targetCountBefore: { type: integer, minimum: 0 }
+        targetCountAfter: { type: integer, minimum: 1 }
+        sourceListUpdatedAt: { type: string }
+        listUpdatedAt: { type: [string, "null"] }
+        campaignUpdatedAt: { type: string }
+        selectionDigest: { type: string }
+    CompanyListRefineResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: companies.list.refine
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyListRefineData"
                 - type: "null"
 
     CampaignOperationInspectInput:
