@@ -51,6 +51,17 @@ export type AgentToolInputMap = {
   "campaign.operation.inspect": operations["campaignOperationInspect"]["requestBody"]["content"]["application/json"];
   "campaign.delivery.inspect": operations["campaignDeliveryInspect"]["requestBody"]["content"]["application/json"];
   "campaign.delivery.update": operations["campaignDeliveryUpdate"]["requestBody"]["content"]["application/json"];
+  "companies.fit.status": operations["companyFitStatus"]["requestBody"]["content"]["application/json"];
+  "companies.fit.cancel": operations["companyFitCancel"]["requestBody"]["content"]["application/json"];
+  "companies.fit.runs.list": operations["companyFitRunsList"]["requestBody"]["content"]["application/json"];
+  "companies.fit.run": operations["companyFitRun"]["requestBody"]["content"]["application/json"];
+  "companies.fit.cohort": operations["companyFitCohort"]["requestBody"]["content"]["application/json"];
+  "copy.performance": operations["copyPerformance"]["requestBody"]["content"]["application/json"];
+  "calendar.status": operations["calendarStatus"]["requestBody"]["content"]["application/json"];
+  "calendar.availability": operations["calendarAvailability"]["requestBody"]["content"]["application/json"];
+  "calendar.meeting.book": operations["calendarMeetingBook"]["requestBody"]["content"]["application/json"];
+  "calls.list": operations["callsList"]["requestBody"]["content"]["application/json"];
+  "call.inspect": operations["callInspect"]["requestBody"]["content"]["application/json"];
 };
 export type AgentToolDataMap = {
   "analytics.summary": NonNullable<
@@ -202,5 +213,38 @@ export type AgentToolDataMap = {
   >;
   "campaign.delivery.update": NonNullable<
     operations["campaignDeliveryUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.fit.status": NonNullable<
+    operations["companyFitStatus"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.fit.cancel": NonNullable<
+    operations["companyFitCancel"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.fit.runs.list": NonNullable<
+    operations["companyFitRunsList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.fit.run": NonNullable<
+    operations["companyFitRun"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.fit.cohort": NonNullable<
+    operations["companyFitCohort"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "copy.performance": NonNullable<
+    operations["copyPerformance"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "calendar.status": NonNullable<
+    operations["calendarStatus"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "calendar.availability": NonNullable<
+    operations["calendarAvailability"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "calendar.meeting.book": NonNullable<
+    operations["calendarMeetingBook"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "calls.list": NonNullable<
+    operations["callsList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.inspect": NonNullable<
+    operations["callInspect"]["responses"][200]["content"]["application/json"]["data"]
   >;
 };

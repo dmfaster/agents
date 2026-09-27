@@ -1,3 +1,7 @@
+> Release candidate: 1.8.0 source. The published baseline is 1.7.0.
+> Product deployment and package/plugin publication require guarded release
+> approval and verification before these new controls can be called live.
+
 # DM Faster for agents
 
 This repository is the public source for
@@ -14,7 +18,7 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-The 1.7.0 release exposes 50 bounded domain tools. It adds durable,
+The 1.8.0 candidate exposes 61 bounded domain tools. It adds resumable,
 website-backed company fit review for B2B appointment setting, exact progress,
 paginated source evidence, and a guarded audience refinement proposal. The
 earlier company/contact refinement, multichannel draft editing, inbox,
@@ -62,7 +66,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.7.0 auth login --json
+npx --yes @dmfaster/cli@1.8.0 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -84,12 +88,12 @@ the owner approves the replacement. Credentials are never upgraded silently.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.7.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.7.0 conversations list --filter unread --limit 25 --json
-npx --yes @dmfaster/mcp-server@1.7.0
+npx --yes @dmfaster/cli@1.8.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.8.0 conversations list --filter unread --limit 25 --json
+npx --yes @dmfaster/mcp-server@1.8.0
 ```
 
-The 50 MCP domain tools cover workspace, campaign, sending, reply, inbox,
+The 61 MCP domain tools cover workspace, campaign, sending, reply, inbox,
 pipeline, company-history, industry, validation, exact-audience preview,
 private draft, launch, and pause workflows. Compliant MCP Apps hosts can also render the
 read-only `campaign_workspace` presentation tool inline. Headless hosts receive
@@ -137,7 +141,7 @@ private product source or trademarks.
 All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
 
 ```bash
-npx --yes @dmfaster/cli@1.7.0 list import --name "My prospects" --file usernames.csv --json
+npx --yes @dmfaster/cli@1.8.0 list import --name "My prospects" --file usernames.csv --json
 ```
 
 The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
@@ -155,7 +159,7 @@ and workspace timezone. Edits preserve omitted settings and reject stale
 versions or started campaigns. Saving or toggling a draft window leaves it
 disabled; an explicitly instructed, authorized launch arms the schedule.
 
-## Agent 1.7.0 release
+## Agent 1.7.0 release (published baseline)
 
 Version 1.7.0 adds `companies_fit_start`, `companies_fit_advance`,
 `companies_fit_results`, and `companies_fit_proposal`. The review uses bounded
@@ -195,3 +199,18 @@ codex plugin add dmfaster@dmfaster-agents
 
 Start a new session to load the refreshed skill and MCP configuration. Updating
 plugin files does not change the permissions of an existing DM Faster connection.
+
+## Agent 1.8.0 candidate
+
+The candidate adds compact review status/history, cancellation, bounded run
+coordination, deeper current website research for unknowns, ranked best-N cohorts
+and complete exports. Historical copy reports use exact sent text and explicit
+observational attribution limits. Calendar status/availability and instructed
+booking reuse Product services with durable request guards. Call reads preserve
+the app's current permissions. Product migration 0343 and guarded deployment must
+precede package/plugin publication. Older clients retain their existing response
+shapes. See the shared review and booking reference for workflow details.
+
+The local Codex 0.149.0 fixture check passed using the CLI fallback after an
+incompatible MCP handshake. Claude Code was unavailable and is unverified.
+Stateless MCP 2026-07-28 and clean package consumers have separate automated checks.

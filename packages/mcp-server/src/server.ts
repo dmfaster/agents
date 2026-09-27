@@ -26,13 +26,14 @@ import {
 } from "./tools.ts";
 import { registerCampaignWorkspace } from "./campaign-workspace.ts";
 
-export const MCP_SERVER_VERSION = "1.7.0";
+export const MCP_SERVER_VERSION = "1.8.0";
 export const DEFAULT_MCP_API_URL = DEFAULT_DMFASTER_API_URL;
 export const MCP_SERVER_INSTRUCTIONS = [
   "DM Faster lets a user describe a sales campaign while you operate the bounded workflow for them; do not assume prior product knowledge.",
   "Use connection_status if authentication or workspace access is unclear. Choose the narrowest read tool for the user's request; workspace_briefing provides a broad status update.",
   "If a current connection lacks a newly requested scope, guide the user through `dmfaster auth upgrade --access full`; the existing connection remains usable during their browser approval.",
   "Use conversations_list and conversation_inspect for actual inbox threads and message pages; replies_list is the older campaign pipeline summary. Follow cursors and do not treat a partial page as complete. For an explicitly instructed inbox change, echo updatedAt to conversation_update. Send only exact user-approved text with conversation_reply, binding both inspected message timestamps and an idempotency key; poll conversation_reply_inspect for real delivery state. Queued is not sent.",
+  "For large company reviews, use companies_fit_start once, companies_fit_run for bounded automatic batches, and companies_fit_status or companies_fit_runs_list to recover identity/progress. Resume the same runId after retryable failures; companies_fit_cancel fences further work. CLI companies fit run --until-complete coordinates bounded retries. Use companies_fit_cohort to preview an explicit best-N subset, review its evidence and exact counts, then preview/apply companies_list_refine with its digest. Unknowns omitted from a cohort are not poor fits. For deeper research, start with unknownsFromRunId and maxPages up to 5; preserve unknown when evidence is insufficient. Use copy_performance for historical exact sent text and observed replies/bookings, and explain sample size and observational attribution. Use calendar_status and calendar_availability before calendar_meeting_book on explicit instructions for exact time/invitees. Calendar invitations are external sends; mark booked only after provider-backed success. Existing connections need an explicit calendar/calls scope upgrade, not automatic permission expansion.",
   "For a new campaign, assemble one complete campaign state, resolve uncertain industries with industry_lookup, then call campaign_validate and audience_preview. Show the exact preview to the user before campaign_prepare, and echo the preview's server-issued reviewedAudience object unchanged; never derive it.",
   "When the host renders MCP Apps, use campaign_workspace to let the user review that complete state; headless hosts continue with the same state and domain tools.",
   "Preparation creates only a private disabled draft and requires the matching exact reviewed audience; keep the latest complete state and reviewedAudience because this MCP server is stateless.",
@@ -49,7 +50,7 @@ function asStructuredContent(result: AgentToolResult) {
 
 function toolResult(result: AgentToolResult) {
   return {
-    content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+    content: [{ type: "text" as const, text: JSON.stringify(result) }],
     structuredContent: asStructuredContent(result),
     ...(result.ok ? {} : { isError: true }),
   };

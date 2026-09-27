@@ -10,7 +10,7 @@ scoped, workspace-bound `dmf_pat_…` token.
 > authorized source checkout.
 
 ```bash
-npm install @dmfaster/sdk@1.7.0
+npm install @dmfaster/sdk@1.8.0
 ```
 
 Non-loopback endpoints must use HTTPS. The client also refuses HTTP redirects so
@@ -121,7 +121,7 @@ Send both endpoints when changing the interval. A saved window can be toggled
 on or off while the draft stays disabled; only the separate launch operation
 arms the schedule. Started campaigns cannot be edited with this draft tool.
 
-## Direct campaign control (1.7.0)
+## Direct campaign control (1.8.0)
 
 An owner can grant `campaigns:control` once when connecting an agent with the
 `full` profile. Explicit user instructions then suffice for launch or pause:
@@ -129,3 +129,24 @@ preflight returns `ready` and a version-bound authorization ID for immediate
 execution. The normal action scope is still required. Existing credentials
 retain per-action approval until the owner reconnects and grants this permission.
 Planning or preparing a campaign never authorizes launch.
+
+## Resumable reviews and complete exports (1.8.0 candidate)
+
+```ts
+import { runCompanyFitReview, collectCompanyFitResults } from "@dmfaster/sdk";
+const receipt = await runCompanyFitReview(client, runId, {
+  maxDurationMs: 30 * 60_000,
+  onProgress: (progress) => console.error(progress.complete, progress.total),
+});
+if (receipt.stopReason === "complete") {
+  const reviewed = await collectCompanyFitResults(client, runId);
+}
+```
+
+Transient retries retain the durable run ID. Budget expiry returns progress;
+caller cancellation throws `request_aborted`, and repeating the same run resumes.
+Export reconciles a complete, unchanged version and every unique company before
+returning data. The new typed tools also cover status/history/cancellation,
+ranked cohorts, copy performance, calendar observations/bookings and permitted
+call reads. External bookings require exact user instructions and granted scopes;
+SDK availability does not establish a production release.

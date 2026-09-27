@@ -79,14 +79,30 @@ test("creates an S256 PKCE pair from exactly 32 random bytes", () => {
 });
 
 test("defines immutable least-privilege access profiles and returns defensive scope copies", () => {
-  assert.deepEqual(DMFASTER_AGENT_ACCESS_PROFILES.read, DMFASTER_AGENT_SCOPES.slice(0, 5));
-  assert.deepEqual(DMFASTER_AGENT_ACCESS_PROFILES.plan, DMFASTER_AGENT_SCOPES.slice(0, 6));
-  assert.deepEqual(DMFASTER_AGENT_ACCESS_PROFILES.draft, DMFASTER_AGENT_SCOPES.slice(0, 7));
+  assert.deepEqual(DMFASTER_AGENT_ACCESS_PROFILES.read, [
+    ...DMFASTER_AGENT_SCOPES.slice(0, 5),
+    "calendar:read",
+    "calls:read",
+  ]);
+  assert.deepEqual(DMFASTER_AGENT_ACCESS_PROFILES.plan, [
+    ...DMFASTER_AGENT_SCOPES.slice(0, 6),
+    "calendar:read",
+    "calls:read",
+  ]);
+  assert.deepEqual(DMFASTER_AGENT_ACCESS_PROFILES.draft, [
+    ...DMFASTER_AGENT_SCOPES.slice(0, 7),
+    "calendar:read",
+    "calls:read",
+  ]);
   assert.deepEqual(DMFASTER_AGENT_ACCESS_PROFILES.full, DMFASTER_AGENT_SCOPES);
 
   const scopes = getDmfasterAgentScopes("plan");
   scopes.push("campaigns:launch");
-  assert.deepEqual(getDmfasterAgentScopes("plan"), DMFASTER_AGENT_SCOPES.slice(0, 6));
+  assert.deepEqual(getDmfasterAgentScopes("plan"), [
+    ...DMFASTER_AGENT_SCOPES.slice(0, 6),
+    "calendar:read",
+    "calls:read",
+  ]);
   assert.throws(
     () => getDmfasterAgentScopes("administrator" as never),
     /Unknown DM Faster agent access profile/,
@@ -136,7 +152,11 @@ test("starts plan-only device auth without draft or launch scopes", async () => 
     },
   });
 
-  assert.deepEqual(requestedScopes, DMFASTER_AGENT_SCOPES.slice(0, 6));
+  assert.deepEqual(requestedScopes, [
+    ...DMFASTER_AGENT_SCOPES.slice(0, 6),
+    "calendar:read",
+    "calls:read",
+  ]);
   assert.ok(!(requestedScopes as string[]).includes("campaigns:write"));
   assert.ok(!(requestedScopes as string[]).includes("campaigns:launch"));
 });

@@ -12,12 +12,15 @@ export const DMFASTER_AGENT_SCOPES = [
   "campaigns:control",
   "inbox:write",
   "pipeline:write",
+  "calendar:read",
+  "calendar:write",
+  "calls:read",
 ] as const;
 
 export const DMFASTER_AGENT_ACCESS_PROFILES = Object.freeze({
-  read: Object.freeze(DMFASTER_AGENT_SCOPES.slice(0, 5)),
-  plan: Object.freeze(DMFASTER_AGENT_SCOPES.slice(0, 6)),
-  draft: Object.freeze(DMFASTER_AGENT_SCOPES.slice(0, 7)),
+  read: Object.freeze([...DMFASTER_AGENT_SCOPES.slice(0, 5), "calendar:read", "calls:read"]),
+  plan: Object.freeze([...DMFASTER_AGENT_SCOPES.slice(0, 6), "calendar:read", "calls:read"]),
+  draft: Object.freeze([...DMFASTER_AGENT_SCOPES.slice(0, 7), "calendar:read", "calls:read"]),
   full: Object.freeze([...DMFASTER_AGENT_SCOPES]),
 });
 

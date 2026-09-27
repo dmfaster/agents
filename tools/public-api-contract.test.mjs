@@ -64,6 +64,17 @@ const EXPECTED_TOOLS = new Map([
   ["campaign.operation.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["campaign.delivery.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["campaign.delivery.update", { effect: "write", scopes: ["campaigns:read", "campaigns:write"] }],
+  ["companies.fit.status", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
+  ["companies.fit.cancel", { effect: "write", scopes: ["campaigns:read", "audiences:read", "campaigns:write"] }],
+  ["companies.fit.runs.list", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
+  ["companies.fit.run", { effect: "draft", scopes: ["campaigns:read", "audiences:read", "campaigns:write"] }],
+  ["companies.fit.cohort", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
+  ["copy.performance", { effect: "read", scopes: ["campaigns:read", "sending:read", "inbox:read", "calendar:read"] }],
+  ["calendar.status", { effect: "read", scopes: ["calendar:read"] }],
+  ["calendar.availability", { effect: "read", scopes: ["calendar:read"] }],
+  ["calendar.meeting.book", { effect: "external", scopes: ["calendar:write", "calendar:read", "inbox:read", "pipeline:write"] }],
+  ["calls.list", { effect: "read", scopes: ["calls:read"] }],
+  ["call.inspect", { effect: "read", scopes: ["calls:read"] }],
 ]);
 
 const EXPECTED_AUTH_METHODS = new Map([
@@ -85,6 +96,9 @@ const EXPECTED_SCOPE_NAMES = [
   "campaigns:control",
   "inbox:write",
   "pipeline:write",
+  "calendar:read",
+  "calendar:write",
+  "calls:read",
 ];
 
 function sourceSlice(source, start, end) {

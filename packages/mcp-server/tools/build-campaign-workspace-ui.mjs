@@ -36,26 +36,37 @@ try {
     platform: "browser",
     target: ["es2022"],
     jsx: "automatic",
+    // Shared workspace components must use the renderer's React instance, not
+    // an independently resolved peer version from their own node_modules.
+    alias: {
+      react: path.dirname(require.resolve("react/package.json")),
+      "react-dom": path.dirname(require.resolve("react-dom/package.json")),
+    },
     define: {
       "process.env.NODE_ENV": JSON.stringify("production"),
     },
     legalComments: "none",
   });
 
-  const tailwindCli = path.join(path.dirname(require.resolve("@tailwindcss/cli/package.json")), "dist", "index.mjs");
-  const cssResult = spawnSync(process.execPath, [
-    tailwindCli,
-    "-i",
-    path.join(packageRoot, "ui", "styles.css"),
-    "-o",
-    cssPath,
-    "--minify",
-  ], {
-    cwd: packageRoot,
-    encoding: "utf8",
-  });
+  const tailwindCli = path.join(
+    path.dirname(require.resolve("@tailwindcss/cli/package.json")),
+    "dist",
+    "index.mjs",
+  );
+  const cssResult = spawnSync(
+    process.execPath,
+    [tailwindCli, "-i", path.join(packageRoot, "ui", "styles.css"), "-o", cssPath, "--minify"],
+    {
+      cwd: packageRoot,
+      encoding: "utf8",
+    },
+  );
   if (cssResult.status !== 0) {
-    throw new Error(cssResult.stderr.trim() || cssResult.stdout.trim() || "Tailwind failed to build the MCP App stylesheet.");
+    throw new Error(
+      cssResult.stderr.trim() ||
+        cssResult.stdout.trim() ||
+        "Tailwind failed to build the MCP App stylesheet.",
+    );
   }
 
   const javascript = readFileSync(javascriptPath, "utf8").replaceAll("</script", "<\\/script");

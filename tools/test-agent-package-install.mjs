@@ -69,6 +69,17 @@ const expectedTools = [
   "companies_fit_advance",
   "companies_fit_results",
   "companies_fit_proposal",
+  "companies_fit_status",
+  "companies_fit_cancel",
+  "companies_fit_runs_list",
+  "companies_fit_run",
+  "companies_fit_cohort",
+  "copy_performance",
+  "calendar_status",
+  "calendar_availability",
+  "calendar_meeting_book",
+  "calls_list",
+  "call_inspect",
   "companies_list_prepare",
   "companies_list_inspect",
   "companies_list_refine",
@@ -372,7 +383,7 @@ try {
     assert.deepEqual(
       listed.tools.map((tool) => tool.name).sort(),
       [...expectedTools].sort(),
-      "the packed MCP server must expose 50 domain tools, connection status, and the campaign workspace",
+      "the packed MCP server must expose 61 domain tools, connection status, and the campaign workspace",
     );
     for (const tool of listed.tools.filter(
       (candidate) => !["connection_status", "campaign_workspace"].includes(candidate.name),

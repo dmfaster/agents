@@ -11,11 +11,11 @@ implementation, review, tests, migrations, or deployments, follow the
 repository's own development guidance unless the user explicitly asks for live
 workspace evidence.
 
-The suite has 50 narrow domain tools, including company-centric search,
+The suite has 61 narrow domain tools, including company-centric search,
 complete company research, private shortlists, operational reads, campaign
 planning, live delivery settings, authorized campaign controls, inspected inbox
 replies, pipeline updates, follow-up cancellation, and execution event pages.
-It does not expose generic mutation, meeting booking, browser-worker credentials,
+It does not expose generic mutation, browser-worker credentials,
 or database access.
 
 The MCP server also offers `connection_status` for local authentication and
@@ -64,23 +64,55 @@ If either resource changed, inspect again. All company CLI commands accept
 
 For a large company audience, use `companies_fit_start` after inspecting the
 disabled campaign and its exact saved-list count and versions. Describe the
-actual offer in `offer`; use one stable idempotency key. Call
-`companies_fit_advance` repeatedly with the returned run ID until
-`progress.readyForProposal` is true. Each call processes at most 16 sites and
-durably saves progress. The reviewer fetches a bounded portion of the current
-company website and may reuse evidence checked in the same workspace within
-seven days; `refreshEvidence: true` forces a new fetch. Failed, blocked, or
-inconclusive sites remain `unknown`, never automatic exclusions. A fit tier is
-an evidence-backed prioritization, not proof of buying intent.
+actual offer in `offer`; use one stable idempotency key. Use `companies_fit_run`
+to process bounded batches and follow `pollAfterMs`, or use the CLI's
+`companies fit run --input FILE --until-complete` coordinator. It retries
+transient errors with backoff and resumes the same durable run after an
+interruption. A run does not continue while every client is disconnected.
+Use `companies_fit_status` for compact progress, `companies_fit_runs_list`
+for recovery, and `companies_fit_cancel` when instructed to stop. Evidence
+already saved survives cancellation; an in-flight fetch may finish but cannot
+commit a new assessment to the cancelled run.
 
-Read `companies_fit_results` in pages, keeping `expectedComplete` equal to
-the first page's `progress.complete` when continuing. Review the evidence and
-reasons, especially every proposed exclusion. `companies_fit_proposal`
-returns exact counts and a `companies_list_refine` dry-run input only when the
-run is complete and the original draft remains unchanged. Preview that input,
-show the exact selection and counts to the user, then apply with the returned
-`selectionDigest` only after they request the audience cleanup. Neither fit
-review nor its proposal starts sending.
+Default research checks up to two official website pages. To investigate the
+unknowns from a completed review, start with `unknownsFromRunId` and `maxPages: 5`.
+It checks the same audience and offer, preserves fresh evidenced known fits,
+and revisits unknown companies. This is bounded fresh research, not a static
+company catalogue. Blocked or inconclusive sites remain unknown.
+
+Read `companies_fit_results` with `expectedVersion` from the initial progress.
+Use `includeEvidence: false` only for compact summaries; review full citations
+before selecting an audience. The CLI's `companies fit export RUN_ID --output FILE`
+reconciles every company against one complete evidence version before writing.
+
+Use `companies_fit_cohort` for an explicit best-N selection of cited strong or
+possible matches with stable ties. `companies_fit_proposal` instead identifies
+high-confidence poor fits. Both return exact `companies_list_refine` dry-run
+input. Preview it, show the exact selection and counts, then apply with the
+returned `selectionDigest` only when the user requested that audience change.
+Unknowns are not poor fits. Fit review and selection do not start sending.
+
+## Historical copy and meetings
+
+Use `copy_performance` when asked to reuse copy that converted. It returns exact
+sent text, confirmed sends, linked-conversation coverage, human replies and
+confirmed calendar bookings for a bounded date window. Compare enough observed
+examples and explain attribution limitations; do not call pipeline labels or
+current template text proven conversions.
+
+For an instructed booking, inspect the exact conversation, call `calendar_status`
+and `calendar_availability`, then use `calendar_meeting_book` only for the user's
+explicitly authorized title, time, duration, timezone and attendee emails. Booking
+sends calendar invitations. Echo the inspected conversation version and a stable
+idempotency key. Retry an uncertain booking with precisely the same details and
+key; changing them requires a new instruction and key. Report only its confirmed
+receipt. Existing credentials need a human-approved upgrade for calendar scopes.
+
+Use `calls_list` and `call_inspect` for recorded meeting lifecycle, participants
+and outcomes. Do not infer attendance or sales outcomes from a booking.
+See [reviews-and-bookings.md](references/reviews-and-bookings.md) for examples,
+limits and recovery. Calendar connection changes, event editing, recording media
+and arbitrary call mutations remain outside this interface.
 
 ## Connect
 

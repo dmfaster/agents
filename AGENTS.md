@@ -59,6 +59,9 @@ shared Codex, Claude, and Cursor plugin.
 - Pipeline stage and note writes, and follow-up cancellation, require exact
   inspected identities and conflict checks. Never infer a booked meeting from
   a queued message or a positive reply alone.
+- Calendar booking sends invitations only for exact user-instructed details,
+  with owner calendar grants and a durable immutable request key. Preserve app
+  availability checks and distinguish observed free slots from a booked event.
 - Never expose provider credentials, bypass consent, or add arbitrary workspace
   mutations. New controls must have typed, bounded contracts and matching
   Product implementation.

@@ -833,3 +833,106 @@ test("campaign operation wait returns the acknowledged result or a resumable tim
     if (!finishes) assert.match(stderr.read(), /same campaignId and commandId/);
   }
 });
+
+test("coordinated review and complete export use the same durable run through the CLI", async (t) => {
+  const { mkdtemp, readFile, rm } = await import("node:fs/promises");
+  const { tmpdir } = await import("node:os");
+  const { join } = await import("node:path");
+  const root = await mkdtemp(join(tmpdir(), "dmf-fit-cli-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const context = configuredContext(calls);
+  const progress = {
+    runId: "fit_cli",
+    campaignId: "c",
+    listId: "l",
+    status: "ready",
+    total: 1,
+    complete: 1,
+    pending: 0,
+    processing: 0,
+    strong: 1,
+    possible: 0,
+    poor: 0,
+    unknown: 0,
+    readyForProposal: true,
+    version: "a".repeat(64),
+    maxPages: 2,
+    pollAfterMs: 250,
+    expiresAt: "2026-10-27T00:00:00Z",
+  };
+  context.readTextFile = async () => JSON.stringify({ runId: "fit_cli", limit: 8 });
+  context.createClient = () => ({
+    async invoke(tool, input) {
+      calls.push({ tool, input });
+      return {
+        version: 1,
+        tool,
+        policy: AGENT_TOOL_POLICIES[tool],
+        ok: true,
+        generatedAt: new Date().toISOString(),
+        durationMs: 1,
+        evidence: [],
+        consistency: { status: "verified", checks: [] },
+        artifacts: [],
+        error: null,
+        data:
+          tool === "companies.fit.results"
+            ? {
+                progress,
+                items: [{ country: "FI", businessId: "1", status: "complete" }],
+                progressVersion: "a".repeat(64),
+                totalMatching: 1,
+                nextOffset: null,
+              }
+            : { progress, processed: 1, stopReason: "complete" },
+      };
+    },
+  });
+  const stdout = output(),
+    stderr = output();
+  assert.equal(
+    await runCli(["companies", "fit", "run", "--input", "run.json", "--until-complete"], {
+      ...context,
+      stdout: stdout.stream,
+      stderr: stderr.stream,
+    }),
+    0,
+  );
+  assert.equal(JSON.parse(stdout.read()).stopReason, "complete");
+  assert.equal(JSON.parse(stderr.read()).runId, "fit_cli");
+  const path = join(root, "complete.json"),
+    receipt = output();
+  assert.equal(
+    await runCli(["companies", "fit", "export", "fit_cli", "--output", path], {
+      ...context,
+      stdout: receipt.stream,
+    }),
+    0,
+  );
+  assert.equal(JSON.parse(await readFile(path, "utf8")).items.length, 1);
+  assert.equal(JSON.parse(receipt.read()).companyCount, 1);
+  const original = await readFile(path, "utf8");
+  assert.notEqual(
+    await runCli(["companies", "fit", "export", "fit_cli", "--output", path], {
+      ...context,
+      stderr: output().stream,
+    }),
+    0,
+  );
+  assert.equal(await readFile(path, "utf8"), original);
+  assert.ok(calls.every((call) => (call.input as { runId: string }).runId === "fit_cli"));
+});
+
+test("interrupting the review coordinator returns an explicit resumable receipt", async () => {
+  const context = configuredContext([]),
+    stdout = output();
+  context.readTextFile = async () => JSON.stringify({ runId: "fit_interrupt" });
+  const exit = await runCli(
+    ["companies", "fit", "run", "--input", "run.json", "--until-complete"],
+    { ...context, signal: AbortSignal.abort(), stdout: stdout.stream },
+  );
+  assert.equal(exit, 130);
+  assert.equal(JSON.parse(stdout.read()).runId, "fit_interrupt");
+  assert.equal(JSON.parse(stdout.read()).stopReason, "interrupted");
+});

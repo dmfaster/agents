@@ -48,9 +48,10 @@ test("Agent 1.0 adapters expose only narrow idempotent and authorized actions", 
   const source = `${await combinedSource("cli")}\n${await combinedSource("mcp-server")}`;
   assert.doesNotMatch(
     source,
-    /reply[._]send|meeting[._]book|list[._](?:create|update|delete)|campaign[._](?:delete|stop)|\b(?:sql|query_database|execute_generic)\b|approved\s*:/iu,
+    /reply[._]send|list[._](?:create|update|delete)|campaign[._](?:delete|stop)|\b(?:sql|query_database|execute_generic)\b|approved\s*:/iu,
   );
-  const { AGENT_TOOL_DEFINITIONS } = await import("../packages/sdk/src/generated/tools.ts");
+  const { AGENT_TOOL_DEFINITIONS, AGENT_TOOL_POLICIES } =
+    await import("../packages/sdk/src/generated/tools.ts");
   assert.equal(AGENT_TOOL_DEFINITIONS["workspace.briefing"].mcp.annotations.readOnlyHint, true);
   assert.equal(AGENT_TOOL_DEFINITIONS["list.import"].mcp.annotations.destructiveHint, false);
   assert.equal(AGENT_TOOL_DEFINITIONS["campaign.launch"].mcp.annotations.destructiveHint, true);
@@ -64,6 +65,10 @@ test("Agent 1.0 adapters expose only narrow idempotent and authorized actions", 
     "campaign_pause_preflight",
   );
   assert.equal(AGENT_TOOL_DEFINITIONS["campaign.pause"].mcp.name, "campaign_pause");
+  const booking = AGENT_TOOL_DEFINITIONS["calendar.meeting.book"];
+  assert.equal(AGENT_TOOL_POLICIES["calendar.meeting.book"].approval, "human_confirmation");
+  assert.equal(booking.mcp.annotations.openWorldHint, true);
+  assert.equal(booking.mcp.annotations.idempotentHint, true);
   assert.match(source, /idempotencyKey/u);
   assert.match(source, /authorizationId/u);
 });

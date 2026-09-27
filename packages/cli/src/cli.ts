@@ -1,5 +1,7 @@
 import {
   createDmfasterClient,
+  runCompanyFitReview,
+  collectCompanyFitResults,
   AGENT_TOOL_NAMES,
   AGENT_TOOL_DEFINITIONS,
   AGENT_TOOL_SCOPES,
@@ -31,14 +33,14 @@ import {
   type AcquireLoginLock,
   type OpenBrowser,
 } from "@dmfaster/local-auth";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { parseSavedListCommand } from "./saved-lists.ts";
 import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "1.7.0";
+export const CLI_VERSION = "1.8.0";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();
@@ -69,7 +71,11 @@ Configuration:
 
 ${agentCommandHelp()}
 
+Review runner:
+  companies fit run --input FILE --until-complete [--max-seconds 1800]
+
 Local exports:
+  companies fit export RUN_ID [--output FILE]
   history export CAMPAIGN_ID [--max ROWS] [--cursor CURSOR]
     Write complete confirmed-send history as JSON Lines to standard output.
 
@@ -107,6 +113,7 @@ type AgentInvoker = {
 };
 
 export type CliContext = {
+  signal?: AbortSignal;
   stdout?: Output;
   stderr?: Output;
   stdin?: AsyncIterable<string | Uint8Array>;
@@ -703,6 +710,22 @@ async function commandFromArgs(
       throw new UsageError("Tool input must contain a JSON object.");
     }
   };
+  if (
+    [
+      "companies.fit.status",
+      "companies.fit.runs.list",
+      "companies.fit.run",
+      "companies.fit.cancel",
+      "companies.fit.cohort",
+      "copy.performance",
+      "calendar.status",
+      "calendar.availability",
+      "calendar.meeting.book",
+      "calls.list",
+      "call.inspect",
+    ].includes(tool)
+  )
+    return { tool, input: await jsonInput() };
   if (tool === "conversations.list" || tool === "conversation.inspect") {
     if (rest[0] === "--input") return { tool, input: await jsonInput() };
     if (tool === "conversation.inspect") {
@@ -1672,6 +1695,74 @@ export async function runCli(argv: string[], context: CliContext = {}) {
       });
     }
 
+    if (args.slice(0, 3).join(" ") === "companies fit export") {
+      const runId = args[3];
+      if (!runId || (args.length !== 4 && (args.length !== 6 || args[4] !== "--output")))
+        throw new UsageError("Use companies fit export RUN_ID [--output FILE].");
+      if (!config.token) throw new UsageError(missingTokenMessage(config));
+      const client = (context.createClient ?? createDmfasterClient)({
+        baseUrl: config.baseUrl,
+        token: config.token,
+      });
+      const data = await collectCompanyFitResults(client, runId);
+      const body = JSON.stringify(data, null, 2);
+      if (args[5]) {
+        await writeFile(args[5], body + "\n", { flag: "wx", mode: 0o600 });
+        line(stdout, JSON.stringify({ runId, companyCount: data.items.length, output: args[5] }));
+      } else line(stdout, body);
+      return 0;
+    }
+    if (args.slice(0, 3).join(" ") === "companies fit run" && args.includes("--until-complete")) {
+      const commandArgs = args.filter((arg) => arg !== "--until-complete");
+      const maxIndex = commandArgs.indexOf("--max-seconds");
+      let maxSeconds = 1800;
+      if (maxIndex !== -1) {
+        maxSeconds = parseInteger(commandArgs[maxIndex + 1], "--max-seconds", 1800);
+        commandArgs.splice(maxIndex, 2);
+      }
+      const command = await commandFromArgs(commandArgs, context);
+      const request = command.input as AgentToolInputMap["companies.fit.run"];
+      if (!config.token) throw new UsageError(missingTokenMessage(config));
+      const client = (context.createClient ?? createDmfasterClient)({
+        baseUrl: config.baseUrl,
+        token: config.token,
+      });
+      let result;
+      try {
+        result = await runCompanyFitReview(client, request.runId, {
+          ...(request.limit !== undefined ? { limit: request.limit } : {}),
+          maxDurationMs: maxSeconds * 1000,
+          ...(context.signal ? { signal: context.signal } : {}),
+          ...(context.sleep ? { sleep: context.sleep } : {}),
+          onProgress: (progress) =>
+            line(
+              stderr,
+              JSON.stringify({
+                runId: progress.runId,
+                complete: progress.complete,
+                total: progress.total,
+                pending: progress.pending,
+                processing: progress.processing,
+              }),
+            ),
+        });
+      } catch (error) {
+        if (error instanceof DmfasterSdkError && error.code === "request_aborted") {
+          line(
+            stdout,
+            JSON.stringify({
+              runId: request.runId,
+              stopReason: "interrupted",
+              resume: "Repeat the same run command.",
+            }),
+          );
+          return 130;
+        }
+        throw error;
+      }
+      line(stdout, JSON.stringify(result, null, 2));
+      return result.stopReason === "complete" ? 0 : 1;
+    }
     let waitSeconds = 0;
     let commandArgs = args;
     if (args.slice(0, 3).join(" ") === "campaign operation inspect" && args.includes("--wait")) {

@@ -1,6 +1,6 @@
 # DM Faster Agent 1.0 tools
 
-Agent 1.0 exposes exactly 50 bounded domain tools. Each credential is bound to one
+Agent 1.0 exposes exactly 61 bounded domain tools. Each credential is bound to one
 workspace, and every tool requires the exact scopes shown below; scopes are not
 inherited from `workspace:read`. MCP names use underscores and HTTP contract
 names use dots.
@@ -16,7 +16,7 @@ authorizes launch or pause.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@1.7.0
+npx --yes @dmfaster/cli@1.8.0
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
@@ -75,6 +75,20 @@ only one input in a command may use `-`.
 | `campaign_operation_inspect` | `campaign.operation.inspect` | `campaign operation inspect --input FILE --json`                                                | `campaigns:read`                                      | browser operation receipt                     |
 | `campaign_delivery_inspect`  | `campaign.delivery.inspect`  | `campaign delivery inspect --input FILE --json`                                                 | `campaigns:read`                                      | current delivery settings and revision        |
 | `campaign_delivery_update`   | `campaign.delivery.update`   | `campaign delivery update --input FILE --json`                                                  | `campaigns:read`, `campaigns:write`                   | ongoing Instagram delivery settings           |
+
+| `companies_fit_status` | `companies.fit.status` | `companies fit status --input FILE --json` | `campaigns:read`, `audiences:read` | Inspect fit review progress |
+| `companies_fit_cancel` | `companies.fit.cancel` | `companies fit cancel --input FILE --json` | `campaigns:read`, `audiences:read`, `campaigns:write` | Cancel fit review |
+| `companies_fit_runs_list` | `companies.fit.runs.list` | `companies fit runs list --input FILE --json` | `campaigns:read`, `audiences:read` | Find resumable fit reviews |
+| `companies_fit_run` | `companies.fit.run` | `companies fit run --input FILE --json` | `campaigns:read`, `audiences:read`, `campaigns:write` | Run a resumable fit review |
+| `companies_fit_cohort` | `companies.fit.cohort` | `companies fit cohort --input FILE --json` | `campaigns:read`, `audiences:read` | Select a ranked audience cohort |
+| `copy_performance` | `copy.performance` | `copy performance --input FILE --json` | `campaigns:read`, `sending:read`, `inbox:read`, `calendar:read` | Find historical outreach copy performance |
+| `calendar_status` | `calendar.status` | `calendar status --input FILE --json` | `calendar:read` | Inspect calendar connection |
+| `calendar_availability` | `calendar.availability` | `calendar availability --input FILE --json` | `calendar:read` | Find available meeting slots |
+| `calendar_meeting_book` | `calendar.meeting.book` | `calendar meeting book --input FILE --json` | `calendar:write`, `calendar:read`, `inbox:read`, `pipeline:write` | Book a conversation meeting |
+| `calls_list` | `calls.list` | `calls list --input FILE --json` | `calls:read` | List authorized meetings |
+| `call_inspect` | `call.inspect` | `call inspect --input FILE --json` | `calls:read` | Inspect meeting and outcomes |
+
+See [reviews-and-bookings.md](reviews-and-bookings.md) for runner, cohort, copy attribution and invitation workflows.
 
 ## Company research and saved contacts
 
