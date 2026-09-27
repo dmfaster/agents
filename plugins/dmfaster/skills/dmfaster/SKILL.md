@@ -11,7 +11,7 @@ implementation, review, tests, migrations, or deployments, follow the
 repository's own development guidance unless the user explicitly asks for live
 workspace evidence.
 
-The suite has 46 narrow domain tools, including company-centric search,
+The suite has 50 narrow domain tools, including company-centric search,
 complete company research, private shortlists, operational reads, campaign
 planning, live delivery settings, authorized campaign controls, inspected inbox
 replies, pipeline updates, follow-up cancellation, and execution event pages.
@@ -59,8 +59,28 @@ excluded or added company identities and exact before/after counts, then apply w
 same key, inputs, and returned `selectionDigest` only when the user requested
 that cleanup. The tool saves a
 separate vetted list and attaches it to the same draft; it never starts sending.
-If either resource changed, inspect again. All six CLI commands accept
+If either resource changed, inspect again. All company CLI commands accept
 `--input FILE` with the same JSON contract as MCP.
+
+For a large company audience, use `companies_fit_start` after inspecting the
+disabled campaign and its exact saved-list count and versions. Describe the
+actual offer in `offer`; use one stable idempotency key. Call
+`companies_fit_advance` repeatedly with the returned run ID until
+`progress.readyForProposal` is true. Each call processes at most 16 sites and
+durably saves progress. The reviewer fetches a bounded portion of the current
+company website and may reuse evidence checked in the same workspace within
+seven days; `refreshEvidence: true` forces a new fetch. Failed, blocked, or
+inconclusive sites remain `unknown`, never automatic exclusions. A fit tier is
+an evidence-backed prioritization, not proof of buying intent.
+
+Read `companies_fit_results` in pages, keeping `expectedComplete` equal to
+the first page's `progress.complete` when continuing. Review the evidence and
+reasons, especially every proposed exclusion. `companies_fit_proposal`
+returns exact counts and a `companies_list_refine` dry-run input only when the
+run is complete and the original draft remains unchanged. Preview that input,
+show the exact selection and counts to the user, then apply with the returned
+`selectionDigest` only after they request the audience cleanup. Neither fit
+review nor its proposal starts sending.
 
 ## Connect
 

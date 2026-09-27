@@ -6,7 +6,7 @@ stdio MCP 2026-07-28 server definition. It includes the portable Agent Plugins
 Codex, Claude, and Cursor. Hosts that have not
 implemented that revision use the same skill through the version-pinned CLI.
 
-The 1.6.0 source candidate exposes 46 bounded domain tools plus an optional
+The 1.7.0 source candidate exposes 50 bounded domain tools plus an optional
 portable MCP Apps campaign workspace. It covers company research, exact
 audience and draft preparation, inbox and pipeline work, follow-up control,
 sender readiness and paginated outcomes. Replies require the user's explicit
@@ -23,13 +23,13 @@ resume call; the user only completes the browser-store installation/link and
 any approval explicitly required by the returned connection or action state.
 
 Compliant MCP Apps hosts can render the campaign workspace inline. Modern
-headless hosts use the same complete campaign state and 46 domain tools without
+headless hosts use the same complete campaign state and 50 domain tools without
 losing any server capability or safety guarantee; older clients do not receive
 a legacy MCP downgrade.
 
 ## Release status
 
-This public source targets the version-pinned 1.6.0 candidate packages. Installed
+This public source targets the version-pinned 1.7.0 candidate packages. Installed
 users receive the new tools only after the trusted package release and plugin update.
 
 Do not point users at the private monorepo as a public marketplace. Synchronize
@@ -41,7 +41,7 @@ hosted MCP endpoint, while Agent 1.0 intentionally runs the version-pinned local
 stdio server.
 
 Repository maintainers must follow the [agent distribution release
-runbook](../../docs/releasing.md). Package publication
+runbook](../../docs/runbooks/agent-distribution-release.md). Package publication
 and plugin publication are separate approved releases.
 
 ## Authentication
@@ -50,7 +50,7 @@ Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@1.6.0 auth login --json
+npx --yes @dmfaster/cli@1.7.0 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use
