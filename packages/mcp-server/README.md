@@ -21,7 +21,7 @@ or network access. It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 50 domain tools directly.
+continue to use all 61 domain tools directly.
 
 `audience_preview` returns a server-issued `reviewedAudience` identity with an
 exact, immutable search revision. The user must review that preview before a
@@ -43,13 +43,13 @@ tools satisfy the credential's scopes, with missing scopes for the others.
 Workspace role, plan, and action preconditions still apply when a tool runs.
 
 ```bash
-npx --yes @dmfaster/cli@1.7.0 auth login --json
-npx --yes @dmfaster/mcp-server@1.7.0
+npx --yes @dmfaster/cli@1.8.0 auth login --json
+npx --yes @dmfaster/mcp-server@1.8.0
 ```
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
-smaller ceiling. The MCP server can expose all 50 domain schemas and the
+smaller ceiling. The MCP server can expose all 61 domain schemas and the
 local connection and presentation schemas while the DM Faster API independently rejects
 domain tools outside the stored credential's scopes.
 
@@ -59,7 +59,7 @@ preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world. Domain tools also
 advertise output schemas generated from the public Agent API contract.
 
-The MCP names are the 50 domain tools:
+The MCP names are the 61 domain tools:
 
 - `analytics_summary`
 - `workspace_briefing`
@@ -112,6 +112,18 @@ The MCP names are the 50 domain tools:
 - `campaign_delivery_inspect`
 - `campaign_delivery_update`
 
+- `companies_fit_status`
+- `companies_fit_cancel`
+- `companies_fit_runs_list`
+- `companies_fit_run`
+- `companies_fit_cohort`
+- `copy_performance`
+- `calendar_status`
+- `calendar_availability`
+- `calendar_meeting_book`
+- `calls_list`
+- `call_inspect`
+
 The two additional MCP tools are:
 
 - `connection_status` (local authentication and workspace identity)
@@ -139,7 +151,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.7.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.8.0"]
     }
   }
 }
@@ -228,3 +240,13 @@ remain research rows. Saved routes are snapshots, not verified deliverability.
 Older lists are not automatically backfilled with contacts previously lost.
 This server behavior was available with the published 1.4.0 CLI and MCP server;
 saving a research list creates no campaign and sends nothing.
+
+## Review and meeting controls (1.8.0 source candidate)
+
+Review runs have durable status/history, cancellation, bounded coordination and
+best-N evidenced cohorts. Unknown research can check up to five current website
+pages. CLI/SDK coordinators resume the same run; no offline scheduler is claimed.
+Historical copy reports return exact sent text and observed attribution limits.
+Calendar booking reuses the app service and sends invitations only under exact
+user instructions and owner calendar scopes. Call reads preserve app permissions.
+See the shared plugin review and booking reference for full workflow limits.

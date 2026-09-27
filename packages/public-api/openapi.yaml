@@ -36,6 +36,9 @@ x-dmfaster-scopes:
   "campaigns:write": Validate plans, prepare private drafts, and request confirmed pauses.
   "campaigns:launch": Request and execute separately approved campaign launches.
   "campaigns:control": With the action's normal scope, start or pause campaigns on explicit user instructions without per-action browser approval. Requires an owner grant at connection time.
+  "calendar:read": Inspect calendar connection and bounded availability.
+  "calendar:write": Book explicitly instructed meetings and send calendar invitations.
+  "calls:read": Read authorized meeting details and outcomes.
 paths:
   /api/v1/agent/auth/device:
     post:
@@ -2347,6 +2350,569 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/agent/tools/companies.fit.status:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyFitStatus
+      summary: Inspect fit review progress
+      description: Read exact compact progress, resumable run identity, freshness and polling advice.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - audiences:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_fit_status
+        title: Inspect fit review progress
+        description: Read exact compact progress, resumable run identity, freshness and polling advice.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: companies fit status --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyFitStatusInput"
+      responses:
+        "200":
+          description: Inspect fit review progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyFitStatusResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/companies.fit.cancel:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyFitCancel
+      summary: Cancel fit review
+      description: Stop new work and fence in-flight results; completed evidence remains readable. Does not change a campaign.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - audiences:read
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: companies_fit_cancel
+        title: Cancel fit review
+        description: Stop new work and fence in-flight results; completed evidence remains readable. Does not change a campaign.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: companies fit cancel --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyFitCancelInput"
+      responses:
+        "200":
+          description: Cancel fit review
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyFitCancelResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/companies.fit.runs.list:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyFitRunsList
+      summary: Find resumable fit reviews
+      description: List recent review identities and exact progress in this workspace; use the returned cursor to continue.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - audiences:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_fit_runs_list
+        title: Find resumable fit reviews
+        description: List recent review identities and exact progress in this workspace; use the returned cursor to continue.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: companies fit runs list --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyFitRunsListInput"
+      responses:
+        "200":
+          description: Find resumable fit reviews
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyFitRunsListResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/companies.fit.run:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyFitRun
+      summary: Run a resumable fit review
+      description: Process bounded batches automatically for up to 45 seconds. Resume with the same runId until complete. CLI --until-complete adds bounded retries and backoff. Does not run while every client is disconnected.
+      x-dmfaster-effect: draft
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - audiences:read
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: companies_fit_run
+        title: Run a resumable fit review
+        description: Process bounded batches automatically for up to 45 seconds. Resume with the same runId until complete. CLI --until-complete adds bounded retries and backoff. Does not run while every client is disconnected.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: companies fit run --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyFitRunInput"
+      responses:
+        "200":
+          description: Run a resumable fit review
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyFitRunResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/companies.fit.cohort:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyFitCohort
+      summary: Select a ranked audience cohort
+      description: Return the best requested number of evidenced strong/possible matches, with stable ties and exact guarded refinement input. Unknowns are excluded only as an explicit cohort selection, never labelled poor. Preview and review the selection before applying companies.list.refine.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - audiences:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_fit_cohort
+        title: Select a ranked audience cohort
+        description: Return the best requested number of evidenced strong/possible matches, with stable ties and exact guarded refinement input. Unknowns are excluded only as an explicit cohort selection, never labelled poor. Preview and review the selection before applying companies.list.refine.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: companies fit cohort --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyFitCohortInput"
+      responses:
+        "200":
+          description: Select a ranked audience cohort
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyFitCohortResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/copy.performance:
+    post:
+      tags:
+        - Agent tools
+      operationId: copyPerformance
+      summary: Find historical outreach copy performance
+      description: Read exact text from confirmed outreach jobs and observed human replies/confirmed calendar bookings. A reply or booking is associated with the first confirmed outreach in its exact conversation; this is observational evidence, not causal lift. Missing deleted job text remains unattributed.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - sending:read
+        - inbox:read
+        - calendar:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: copy_performance
+        title: Find historical outreach copy performance
+        description: Read exact text from confirmed outreach jobs and observed human replies/confirmed calendar bookings. A reply or booking is associated with the first confirmed outreach in its exact conversation; this is observational evidence, not causal lift. Missing deleted job text remains unattributed.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: copy performance --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CopyPerformanceInput"
+      responses:
+        "200":
+          description: Find historical outreach copy performance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CopyPerformanceResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/calendar.status:
+    post:
+      tags:
+        - Agent tools
+      operationId: calendarStatus
+      summary: Inspect calendar connection
+      description: Read connection readiness and provide the existing human OAuth setup destination without exposing tokens.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - calendar:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: calendar_status
+        title: Inspect calendar connection
+        description: Read connection readiness and provide the existing human OAuth setup destination without exposing tokens.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: calendar status --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalendarStatusInput"
+      responses:
+        "200":
+          description: Inspect calendar connection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalendarStatusResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/calendar.availability:
+    post:
+      tags:
+        - Agent tools
+      operationId: calendarAvailability
+      summary: Find available meeting slots
+      description: Read primary-calendar busy periods and return bounded free slots within an exact window of at most seven days. Availability is an observation; booking checks again.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - calendar:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: calendar_availability
+        title: Find available meeting slots
+        description: Read primary-calendar busy periods and return bounded free slots within an exact window of at most seven days. Availability is an observation; booking checks again.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: calendar availability --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalendarAvailabilityInput"
+      responses:
+        "200":
+          description: Find available meeting slots
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalendarAvailabilityResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/calendar.meeting.book:
+    post:
+      tags:
+        - Agent tools
+      operationId: calendarMeetingBook
+      summary: Book a conversation meeting
+      description: On explicit instruction, book exact invitees/time through the existing app booking service, send provider invitations, persist the confirmed meeting, and update its pipeline card. Echo the inspected conversation version. Stable keys reject changed payloads.
+      x-dmfaster-effect: external
+      x-dmfaster-required-scopes:
+        - calendar:write
+        - calendar:read
+        - inbox:read
+        - pipeline:write
+      x-dmfaster-approval: human_confirmation
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: calendar_meeting_book
+        title: Book a conversation meeting
+        description: On explicit instruction, book exact invitees/time through the existing app booking service, send provider invitations, persist the confirmed meeting, and update its pipeline card. Echo the inspected conversation version. Stable keys reject changed payloads.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: true
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: calendar meeting book --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalendarMeetingBookInput"
+      responses:
+        "200":
+          description: Book a conversation meeting
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalendarMeetingBookResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/calls.list:
+    post:
+      tags:
+        - Agent tools
+      operationId: callsList
+      summary: List authorized meetings
+      description: Page meeting records through the app access service. Recorded meetings are separate from inferred pipeline booking labels.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - calls:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: calls_list
+        title: List authorized meetings
+        description: Page meeting records through the app access service. Recorded meetings are separate from inferred pipeline booking labels.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: calls list --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CallsListInput"
+      responses:
+        "200":
+          description: List authorized meetings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CallsListResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/call.inspect:
+    post:
+      tags:
+        - Agent tools
+      operationId: callInspect
+      summary: Inspect meeting and outcomes
+      description: Read authorized meeting details, participant links and recorded outcomes through the app access service; never infers attendance or sales outcomes.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - calls:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: call_inspect
+        title: Inspect meeting and outcomes
+        description: Read authorized meeting details, participant links and recorded outcomes through the app access service; never infers attendance or sales outcomes.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: call inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CallInspectInput"
+      responses:
+        "200":
+          description: Inspect meeting and outcomes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CallInspectResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -2540,6 +3106,9 @@ components:
         - campaigns:control
         - inbox:write
         - pipeline:write
+        - calendar:read
+        - calendar:write
+        - calls:read
 
     AgentDeviceAuthorizationInput:
       type: object
@@ -2572,7 +3141,7 @@ components:
         scopes:
           type: array
           minItems: 1
-          maxItems: 11
+          maxItems: 14
           uniqueItems: true
           items:
             $ref: "#/components/schemas/AgentApiScope"
@@ -2647,7 +3216,7 @@ components:
         scopes:
           type: array
           minItems: 1
-          maxItems: 11
+          maxItems: 14
           uniqueItems: true
           items:
             $ref: "#/components/schemas/AgentApiScope"
@@ -2811,6 +3380,17 @@ components:
         - campaign.operation.inspect
         - campaign.delivery.inspect
         - campaign.delivery.update
+        - companies.fit.status
+        - companies.fit.cancel
+        - companies.fit.runs.list
+        - companies.fit.run
+        - companies.fit.cohort
+        - copy.performance
+        - calendar.status
+        - calendar.availability
+        - calendar.meeting.book
+        - calls.list
+        - call.inspect
 
     AgentToolPolicy:
       type: object
@@ -6241,36 +6821,54 @@ components:
       type: object
       additionalProperties: false
       required:
-        [
-          campaignId,
-          listId,
-          expectedCampaignUpdatedAt,
-          expectedListUpdatedAt,
-          expectedTotal,
-          expectedTargetCount,
-          offer,
-          idempotencyKey,
-        ]
+        - campaignId
+        - listId
+        - expectedCampaignUpdatedAt
+        - expectedListUpdatedAt
+        - expectedTotal
+        - expectedTargetCount
+        - offer
+        - idempotencyKey
       properties:
-        campaignId: { $ref: "#/components/schemas/ResourceId" }
-        listId: { $ref: "#/components/schemas/ResourceId" }
-        expectedCampaignUpdatedAt: { type: string, minLength: 20, maxLength: 40 }
-        expectedListUpdatedAt: { type: string, minLength: 20, maxLength: 40 }
-        expectedTotal: { type: integer, minimum: 1, maximum: 25000 }
-        expectedTargetCount: { type: integer, minimum: 0, maximum: 125000 }
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
+        listId:
+          $ref: "#/components/schemas/ResourceId"
+        expectedCampaignUpdatedAt:
+          type: string
+          minLength: 20
+          maxLength: 40
+        expectedListUpdatedAt:
+          type: string
+          minLength: 20
+          maxLength: 40
+        expectedTotal:
+          type: integer
+          minimum: 1
+          maximum: 25000
+        expectedTargetCount:
+          type: integer
+          minimum: 0
+          maximum: 125000
         offer:
-          {
-            type: string,
-            minLength: 20,
-            maxLength: 500,
-            description: What B2B appointment-setting service is being sold to these companies.,
-          }
+          type: string
+          minLength: 20
+          maxLength: 500
+          description: What B2B appointment-setting service is being sold to these companies.
         refreshEvidence:
-          {
-            type: boolean,
-            description: Ignore recent evidence from the same workspace and fetch websites anew.,
-          }
-        idempotencyKey: { $ref: "#/components/schemas/IdempotencyKey" }
+          type: boolean
+          description: Ignore recent evidence from the same workspace and fetch websites anew.
+        idempotencyKey:
+          $ref: "#/components/schemas/IdempotencyKey"
+        maxPages:
+          type: integer
+          minimum: 2
+          maximum: 5
+          description: Maximum official website pages per company, excluding robots; defaults to 2. Each company has a 20-second fetch budget.
+        unknownsFromRunId:
+          $ref: "#/components/schemas/ResourceId"
+          description: Review only unknowns from this completed, recent run; carry forward its other assessments only for the same offer, website and exact audience.
+
     CompanyFitAdvanceInput:
       type: object
       additionalProperties: false
@@ -6281,18 +6879,44 @@ components:
     CompanyFitResultsInput:
       type: object
       additionalProperties: false
-      required: [runId]
+      required:
+        - runId
       properties:
-        runId: { $ref: "#/components/schemas/ResourceId" }
-        tier: { type: string, enum: [strong, possible, poor, unknown] }
-        offset: { type: integer, minimum: 0, maximum: 1000000 }
-        limit: { type: integer, minimum: 1, maximum: 100 }
-        sort: { type: string, enum: [priority, audience] }
+        runId:
+          $ref: "#/components/schemas/ResourceId"
+        tier:
+          type: string
+          enum:
+            - strong
+            - possible
+            - poor
+            - unknown
+        offset:
+          type: integer
+          minimum: 0
+          maximum: 1000000
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        sort:
+          type: string
+          enum:
+            - priority
+            - audience
         expectedComplete:
           type: integer
           minimum: 0
           maximum: 25000
           description: Echo progress.complete from the first page when continuing so advancing runs cannot shift pages.
+        expectedVersion:
+          type: string
+          minLength: 64
+          maxLength: 64
+        includeEvidence:
+          type: boolean
+          description: Defaults to true. False returns compact fit reasons with empty evidence arrays; fetch full evidence before an audience review.
+
     CompanyFitProposalInput:
       type: object
       additionalProperties: false
@@ -6322,7 +6946,7 @@ components:
         runId: { type: string }
         campaignId: { type: string }
         listId: { type: string }
-        status: { type: string, enum: [initializing, ready, stale] }
+        status: { type: string, enum: [initializing, ready, stale, cancelled] }
         total: { type: integer, minimum: 1 }
         pending: { type: integer, minimum: 0 }
         processing: { type: integer, minimum: 0 }
@@ -6376,6 +7000,11 @@ components:
       additionalProperties: false
       required: [progress, totalMatching, items, nextOffset]
       properties:
+        progressVersion:
+          type: string
+          minLength: 64
+          maxLength: 64
+          description: Present only when the caller supplies expectedVersion. Legacy requests retain their exact response shape.
         progress: { $ref: "#/components/schemas/CompanyFitProgress" }
         totalMatching: { type: integer, minimum: 0 }
         items: { type: array, items: { $ref: "#/components/schemas/CompanyFitItem" } }
@@ -6860,4 +7489,922 @@ components:
             data:
               oneOf:
                 - $ref: "#/components/schemas/CampaignDeliveryUpdateOutput"
+                - type: "null"
+    CompanyFitDetailedProgress:
+      type: object
+      additionalProperties: false
+      required:
+        - runId
+        - campaignId
+        - listId
+        - status
+        - total
+        - pending
+        - processing
+        - complete
+        - strong
+        - possible
+        - poor
+        - unknown
+        - readyForProposal
+        - version
+        - maxPages
+        - pollAfterMs
+        - expiresAt
+      properties:
+        runId:
+          type: string
+        campaignId:
+          type: string
+        listId:
+          type: string
+        status:
+          type: string
+          enum:
+            - initializing
+            - ready
+            - stale
+            - cancelled
+        total:
+          type: integer
+          minimum: 1
+        pending:
+          type: integer
+          minimum: 0
+        processing:
+          type: integer
+          minimum: 0
+        complete:
+          type: integer
+          minimum: 0
+        strong:
+          type: integer
+          minimum: 0
+        possible:
+          type: integer
+          minimum: 0
+        poor:
+          type: integer
+          minimum: 0
+        unknown:
+          type: integer
+          minimum: 0
+        readyForProposal:
+          type: boolean
+        version:
+          type: string
+          minLength: 64
+          maxLength: 64
+        maxPages:
+          type: integer
+          minimum: 2
+          maximum: 5
+        pollAfterMs:
+          type: integer
+          minimum: 0
+          maximum: 60000
+        expiresAt:
+          type: string
+          minLength: 20
+          maxLength: 40
+
+    CompanyFitStatusInput:
+      type: object
+      additionalProperties: false
+      required:
+        - runId
+      properties:
+        runId:
+          $ref: "#/components/schemas/ResourceId"
+
+    CompanyFitStatusData:
+      type: object
+      additionalProperties: false
+      required:
+        - progress
+      properties:
+        progress:
+          $ref: "#/components/schemas/CompanyFitDetailedProgress"
+
+    CompanyFitStatusResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyFitStatusData"
+                - type: "null"
+
+    CompanyFitCancelInput:
+      type: object
+      additionalProperties: false
+      required:
+        - runId
+      properties:
+        runId:
+          $ref: "#/components/schemas/ResourceId"
+
+    CompanyFitCancelData:
+      type: object
+      additionalProperties: false
+      required:
+        - progress
+      properties:
+        progress:
+          $ref: "#/components/schemas/CompanyFitDetailedProgress"
+
+    CompanyFitCancelResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyFitCancelData"
+                - type: "null"
+
+    CompanyFitRunsListInput:
+      type: object
+      additionalProperties: false
+      required: []
+      properties:
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 25
+        before:
+          $ref: "#/components/schemas/CompanyFitRunCursor"
+
+    CompanyFitRunCursor:
+      type: object
+      additionalProperties: false
+      required: [createdAt, id]
+      properties:
+        createdAt:
+          type: string
+          minLength: 20
+          maxLength: 40
+        id:
+          $ref: "#/components/schemas/ResourceId"
+
+    CompanyFitRunsListData:
+      type: object
+      additionalProperties: false
+      required:
+        - runs
+        - nextBefore
+      properties:
+        runs:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompanyFitDetailedProgress"
+          maxItems: 25
+        nextBefore:
+          oneOf:
+            - $ref: "#/components/schemas/CompanyFitRunCursor"
+            - type: "null"
+
+    CompanyFitRunsListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyFitRunsListData"
+                - type: "null"
+
+    CompanyFitRunInput:
+      type: object
+      additionalProperties: false
+      required:
+        - runId
+      properties:
+        runId:
+          $ref: "#/components/schemas/ResourceId"
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 8
+
+    CompanyFitRunData:
+      type: object
+      additionalProperties: false
+      required:
+        - progress
+        - processed
+        - stopReason
+      properties:
+        progress:
+          $ref: "#/components/schemas/CompanyFitDetailedProgress"
+        processed:
+          type: integer
+          minimum: 0
+          maximum: 16
+        stopReason:
+          type: string
+          enum:
+            - complete
+            - budget
+            - waiting
+            - cancelled
+
+    CompanyFitRunResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyFitRunData"
+                - type: "null"
+
+    CompanyFitCohortInput:
+      type: object
+      additionalProperties: false
+      required:
+        - runId
+        - expectedVersion
+        - take
+      properties:
+        runId:
+          $ref: "#/components/schemas/ResourceId"
+        expectedVersion:
+          type: string
+          minLength: 64
+          maxLength: 64
+        take:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        minimumPriority:
+          type: integer
+          minimum: 1
+          maximum: 100
+
+    CompanyFitCohortData:
+      type: object
+      additionalProperties: false
+      required:
+        - progress
+        - selected
+        - proposedExclusions
+        - expectedRemaining
+        - expectedRemainingTargetCount
+        - refinePreviewInput
+      properties:
+        progress:
+          $ref: "#/components/schemas/CompanyFitDetailedProgress"
+        selected:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompanyFitItem"
+          maxItems: 1000
+        proposedExclusions:
+          type: integer
+          minimum: 0
+          maximum: 1000
+        expectedRemaining:
+          type: integer
+          minimum: 1
+          maximum: 25000
+        expectedRemainingTargetCount:
+          type: integer
+          minimum: 0
+          maximum: 125000
+        refinePreviewInput:
+          oneOf:
+            - $ref: "#/components/schemas/CompanyListRefineInput"
+            - type: "null"
+
+    CompanyFitCohortResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyFitCohortData"
+                - type: "null"
+
+    CopyPerformanceInput:
+      type: object
+      additionalProperties: false
+      required:
+        - from
+        - to
+      properties:
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
+        from:
+          type: string
+          minLength: 20
+          maxLength: 40
+        to:
+          type: string
+          minLength: 20
+          maxLength: 40
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 25
+        offset:
+          type: integer
+          minimum: 0
+          maximum: 1000000
+
+    CopyPerformanceItem:
+      type: object
+      additionalProperties: false
+      required:
+        - campaignId
+        - campaignName
+        - channel
+        - text
+        - linkedConversations
+        - confirmedSends
+        - repliedTargets
+        - bookedTargets
+        - replyRate
+        - bookingRate
+        - attribution
+      properties:
+        campaignId:
+          type: string
+          minLength: 1
+          maxLength: 160
+        campaignName:
+          type: string
+          minLength: 0
+          maxLength: 200
+        channel:
+          type: string
+          minLength: 1
+          maxLength: 160
+        text:
+          type: string
+          minLength: 0
+          maxLength: 10000
+        linkedConversations:
+          type: integer
+          minimum: 0
+          maximum: 100000000
+          description: Conversations with an exact outbound job link. Shows the observed coverage of confirmed sends.
+        confirmedSends:
+          type: integer
+          minimum: 0
+          maximum: 100000000
+        repliedTargets:
+          type: integer
+          minimum: 0
+          maximum: 100000000
+        bookedTargets:
+          type: integer
+          minimum: 0
+          maximum: 100000000
+        replyRate:
+          type:
+            - number
+            - "null"
+        bookingRate:
+          type:
+            - number
+            - "null"
+        attribution:
+          type: string
+          const: first_confirmed_outreach_per_conversation
+
+    CopyPerformanceData:
+      type: object
+      additionalProperties: false
+      required:
+        - from
+        - to
+        - totalMatching
+        - items
+        - nextOffset
+        - unattributedSends
+        - limitations
+      properties:
+        from:
+          type: string
+          minLength: 1
+          maxLength: 160
+        to:
+          type: string
+          minLength: 1
+          maxLength: 160
+        totalMatching:
+          type: integer
+          minimum: 0
+          maximum: 100000000
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CopyPerformanceItem"
+          maxItems: 25
+        nextOffset:
+          type:
+            - integer
+            - "null"
+        unattributedSends:
+          type: integer
+          minimum: 0
+          maximum: 100000000
+        limitations:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 500
+          maxItems: 10
+
+    CopyPerformanceResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CopyPerformanceData"
+                - type: "null"
+
+    CalendarStatusInput:
+      type: object
+      additionalProperties: false
+      required: []
+      properties: {}
+
+    CalendarStatusData:
+      type: object
+      additionalProperties: false
+      required:
+        - configured
+        - connected
+        - email
+        - tokenError
+        - setupUrl
+      properties:
+        configured:
+          type: boolean
+        connected:
+          type: boolean
+        email:
+          type: string
+          minLength: 0
+          maxLength: 320
+        tokenError:
+          type: string
+          minLength: 0
+          maxLength: 500
+        setupUrl:
+          type: string
+          minLength: 1
+          maxLength: 500
+
+    CalendarStatusResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CalendarStatusData"
+                - type: "null"
+
+    CalendarAvailabilityInput:
+      type: object
+      additionalProperties: false
+      required:
+        - from
+        - to
+        - timezone
+        - durationMinutes
+      properties:
+        from:
+          type: string
+          minLength: 20
+          maxLength: 40
+        to:
+          type: string
+          minLength: 20
+          maxLength: 40
+        timezone:
+          type: string
+          minLength: 1
+          maxLength: 80
+        durationMinutes:
+          type: integer
+          enum:
+            - 15
+            - 30
+            - 45
+            - 60
+            - 90
+            - 120
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+
+    CalendarSlot:
+      type: object
+      additionalProperties: false
+      required:
+        - start
+        - end
+      properties:
+        start:
+          type: string
+          minLength: 1
+          maxLength: 160
+        end:
+          type: string
+          minLength: 1
+          maxLength: 160
+
+    CalendarAvailabilityData:
+      type: object
+      additionalProperties: false
+      required:
+        - from
+        - to
+        - timezone
+        - slots
+        - hasMore
+        - observedAt
+      properties:
+        from:
+          type: string
+          minLength: 1
+          maxLength: 160
+        to:
+          type: string
+          minLength: 1
+          maxLength: 160
+        timezone:
+          type: string
+          minLength: 1
+          maxLength: 160
+        slots:
+          type: array
+          items:
+            $ref: "#/components/schemas/CalendarSlot"
+          maxItems: 100
+        hasMore:
+          type: boolean
+        observedAt:
+          type: string
+          minLength: 1
+          maxLength: 160
+
+    CalendarAvailabilityResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CalendarAvailabilityData"
+                - type: "null"
+
+    CalendarMeetingBookInput:
+      type: object
+      additionalProperties: false
+      required:
+        - conversationId
+        - expectedConversationUpdatedAt
+        - idempotencyKey
+        - title
+        - start
+        - timezone
+        - durationMinutes
+        - attendees
+      properties:
+        conversationId:
+          $ref: "#/components/schemas/ResourceId"
+        expectedConversationUpdatedAt:
+          type: string
+          minLength: 20
+          maxLength: 40
+        idempotencyKey:
+          type: string
+          minLength: 8
+          maxLength: 120
+          pattern: ^[a-zA-Z0-9_-]{8,120}$
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        start:
+          type: string
+          minLength: 20
+          maxLength: 40
+        timezone:
+          type: string
+          minLength: 1
+          maxLength: 80
+        durationMinutes:
+          type: integer
+          enum:
+            - 15
+            - 30
+            - 45
+            - 60
+            - 90
+            - 120
+        attendees:
+          type: array
+          items:
+            type: string
+            minLength: 3
+            maxLength: 320
+            pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+          maxItems: 20
+          minItems: 1
+
+    CalendarMeetingBookData:
+      type: object
+      additionalProperties: false
+      required:
+        - conversationId
+        - calendarEventId
+        - replayed
+        - htmlLink
+        - meetingLink
+        - pipelineStage
+      properties:
+        conversationId:
+          type: string
+          minLength: 1
+          maxLength: 160
+        calendarEventId:
+          type: string
+          minLength: 1
+          maxLength: 160
+        replayed:
+          type: boolean
+        htmlLink:
+          type: string
+          minLength: 0
+          maxLength: 2000
+        meetingLink:
+          type: string
+          minLength: 0
+          maxLength: 2000
+        pipelineStage:
+          type: string
+          const: call_booked
+
+    CalendarMeetingBookResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CalendarMeetingBookData"
+                - type: "null"
+
+    CallsListInput:
+      type: object
+      additionalProperties: false
+      required: []
+      properties:
+        offset:
+          type: integer
+          minimum: 0
+          maximum: 1000000
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 50
+
+    CallListItemPublic:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - title
+        - lifecycle
+        - scheduledStartAt
+        - scheduledEndAt
+        - timezone
+        - bookingSource
+        - calendarManaged
+        - conferenceConfigured
+        - recordingMode
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 160
+        title:
+          type: string
+          minLength: 0
+          maxLength: 500
+        lifecycle:
+          type: string
+          minLength: 1
+          maxLength: 160
+        scheduledStartAt:
+          type: string
+          minLength: 1
+          maxLength: 160
+        scheduledEndAt:
+          type: string
+          minLength: 1
+          maxLength: 160
+        timezone:
+          type: string
+          minLength: 1
+          maxLength: 160
+        bookingSource:
+          type: string
+          minLength: 0
+          maxLength: 200
+        calendarManaged:
+          type: boolean
+        conferenceConfigured:
+          type: boolean
+        recordingMode:
+          type: string
+          enum:
+            - off
+            - on
+        createdAt:
+          type: string
+          minLength: 1
+          maxLength: 160
+        updatedAt:
+          type: string
+          minLength: 1
+          maxLength: 160
+
+    CallsListData:
+      type: object
+      additionalProperties: false
+      required:
+        - items
+        - nextOffset
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CallListItemPublic"
+          maxItems: 50
+        nextOffset:
+          type:
+            - integer
+            - "null"
+
+    CallsListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CallsListData"
+                - type: "null"
+
+    CallInspectInput:
+      type: object
+      additionalProperties: false
+      required:
+        - meetingId
+      properties:
+        meetingId:
+          $ref: "#/components/schemas/ResourceId"
+
+    CallOutcomePublic:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - attendanceResult
+        - salesDisposition
+        - occurredAt
+        - nextStep
+        - followUpAt
+        - reason
+        - recordedAt
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 160
+        attendanceResult:
+          type: string
+          minLength: 1
+          maxLength: 160
+        salesDisposition:
+          type: string
+          minLength: 1
+          maxLength: 160
+        occurredAt:
+          type: string
+          minLength: 1
+          maxLength: 160
+        nextStep:
+          type: string
+          minLength: 0
+          maxLength: 5000
+        followUpAt:
+          type: string
+          minLength: 0
+          maxLength: 40
+        reason:
+          type: string
+          minLength: 0
+          maxLength: 5000
+        recordedAt:
+          type: string
+          minLength: 1
+          maxLength: 160
+
+    CallInspectData:
+      type: object
+      additionalProperties: false
+      required:
+        - meeting
+        - outcomes
+        - participants
+      properties:
+        meeting:
+          $ref: "#/components/schemas/CallListItemPublic"
+        outcomes:
+          type: array
+          items:
+            $ref: "#/components/schemas/CallOutcomePublic"
+          maxItems: 1000
+        participants:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - id
+              - displayName
+              - identity
+              - companyOutreachId
+              - companyName
+            properties:
+              id:
+                type: string
+                minLength: 1
+                maxLength: 160
+              displayName:
+                type: string
+                minLength: 0
+                maxLength: 500
+              identity:
+                type: string
+                minLength: 0
+                maxLength: 500
+              companyOutreachId:
+                type: string
+                minLength: 0
+                maxLength: 500
+              companyName:
+                type: string
+                minLength: 0
+                maxLength: 500
+          maxItems: 1000
+
+    CallInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CallInspectData"
                 - type: "null"

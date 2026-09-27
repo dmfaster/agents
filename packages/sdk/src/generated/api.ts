@@ -121,6 +121,106 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/calendar.availability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Find available meeting slots
+         * @description Read primary-calendar busy periods and return bounded free slots within an exact window of at most seven days. Availability is an observation; booking checks again.
+         */
+        post: operations["calendarAvailability"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/calendar.meeting.book": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Book a conversation meeting
+         * @description On explicit instruction, book exact invitees/time through the existing app booking service, send provider invitations, persist the confirmed meeting, and update its pipeline card. Echo the inspected conversation version. Stable keys reject changed payloads.
+         */
+        post: operations["calendarMeetingBook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/calendar.status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect calendar connection
+         * @description Read connection readiness and provide the existing human OAuth setup destination without exposing tokens.
+         */
+        post: operations["calendarStatus"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect meeting and outcomes
+         * @description Read authorized meeting details, participant links and recorded outcomes through the app access service; never infers attendance or sales outcomes.
+         */
+        post: operations["callInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/calls.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * List authorized meetings
+         * @description Page meeting records through the app access service. Recorded meetings are separate from inferred pipeline booking labels.
+         */
+        post: operations["callsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/campaign.delivery.inspect": {
         parameters: {
             query?: never;
@@ -482,6 +582,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/companies.fit.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel fit review
+         * @description Stop new work and fence in-flight results; completed evidence remains readable. Does not change a campaign.
+         */
+        post: operations["companyFitCancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.fit.cohort": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Select a ranked audience cohort
+         * @description Return the best requested number of evidenced strong/possible matches, with stable ties and exact guarded refinement input. Unknowns are excluded only as an explicit cohort selection, never labelled poor. Preview and review the selection before applying companies.list.refine.
+         */
+        post: operations["companyFitCohort"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/companies.fit.proposal": {
         parameters: {
             query?: never;
@@ -522,6 +662,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/companies.fit.run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Run a resumable fit review
+         * @description Process bounded batches automatically for up to 45 seconds. Resume with the same runId until complete. CLI --until-complete adds bounded retries and backoff. Does not run while every client is disconnected.
+         */
+        post: operations["companyFitRun"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.fit.runs.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Find resumable fit reviews
+         * @description List recent review identities and exact progress in this workspace; use the returned cursor to continue.
+         */
+        post: operations["companyFitRunsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/companies.fit.start": {
         parameters: {
             query?: never;
@@ -536,6 +716,26 @@ export interface paths {
          * @description Snapshot a disabled campaign's exact company list for a resumable website-evidence review. Creates no campaign changes and never sends messages.
          */
         post: operations["companyFitStart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.fit.status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect fit review progress
+         * @description Read exact compact progress, resumable run identity, freshness and polling advice.
+         */
+        post: operations["companyFitStatus"];
         delete?: never;
         options?: never;
         head?: never;
@@ -756,6 +956,26 @@ export interface paths {
          * @description Lists actual inbox conversations with app filters and a continuation cursor. Read-only; listing does not mark messages read.
          */
         post: operations["conversationsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/copy.performance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Find historical outreach copy performance
+         * @description Read exact text from confirmed outreach jobs and observed human replies/confirmed calendar bookings. A reply or booking is associated with the first confirmed outreach in its exact conversation; this is observational evidence, not causal lift. Missing deleted job text remains unattributed.
+         */
+        post: operations["copyPerformance"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1114,7 +1334,7 @@ export interface components {
             targetListId: string;
         };
         /** @enum {string} */
-        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "inbox:write" | "pipeline:write";
+        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "inbox:write" | "pipeline:write" | "calendar:read" | "calendar:write" | "calls:read";
         AgentAuthenticatedParty: {
             /** Format: email */
             email: string;
@@ -1356,7 +1576,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -1479,6 +1699,116 @@ export interface components {
             input: components["schemas"]["CampaignActionPreflightInput"];
             /** @constant */
             tool: "campaign.launch.preflight";
+        };
+        CalendarAvailabilityData: {
+            from: string;
+            hasMore: boolean;
+            observedAt: string;
+            slots: components["schemas"]["CalendarSlot"][];
+            timezone: string;
+            to: string;
+        };
+        CalendarAvailabilityInput: {
+            /** @enum {integer} */
+            durationMinutes: 15 | 30 | 45 | 60 | 90 | 120;
+            from: string;
+            limit?: number;
+            timezone: string;
+            to: string;
+        };
+        CalendarAvailabilityResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CalendarAvailabilityData"] | null;
+        };
+        CalendarMeetingBookData: {
+            calendarEventId: string;
+            conversationId: string;
+            htmlLink: string;
+            meetingLink: string;
+            /** @constant */
+            pipelineStage: "call_booked";
+            replayed: boolean;
+        };
+        CalendarMeetingBookInput: {
+            attendees: string[];
+            conversationId: components["schemas"]["ResourceId"];
+            /** @enum {integer} */
+            durationMinutes: 15 | 30 | 45 | 60 | 90 | 120;
+            expectedConversationUpdatedAt: string;
+            idempotencyKey: string;
+            start: string;
+            timezone: string;
+            title: string;
+        };
+        CalendarMeetingBookResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CalendarMeetingBookData"] | null;
+        };
+        CalendarSlot: {
+            end: string;
+            start: string;
+        };
+        CalendarStatusData: {
+            configured: boolean;
+            connected: boolean;
+            email: string;
+            setupUrl: string;
+            tokenError: string;
+        };
+        CalendarStatusInput: Record<string, never>;
+        CalendarStatusResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CalendarStatusData"] | null;
+        };
+        CallInspectData: {
+            meeting: components["schemas"]["CallListItemPublic"];
+            outcomes: components["schemas"]["CallOutcomePublic"][];
+            participants: {
+                companyName: string;
+                companyOutreachId: string;
+                displayName: string;
+                id: string;
+                identity: string;
+            }[];
+        };
+        CallInspectInput: {
+            meetingId: components["schemas"]["ResourceId"];
+        };
+        CallInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallInspectData"] | null;
+        };
+        CallListItemPublic: {
+            bookingSource: string;
+            calendarManaged: boolean;
+            conferenceConfigured: boolean;
+            createdAt: string;
+            id: string;
+            lifecycle: string;
+            /** @enum {string} */
+            recordingMode: "off" | "on";
+            scheduledEndAt: string;
+            scheduledStartAt: string;
+            timezone: string;
+            title: string;
+            updatedAt: string;
+        };
+        CallOutcomePublic: {
+            attendanceResult: string;
+            followUpAt: string;
+            id: string;
+            nextStep: string;
+            occurredAt: string;
+            reason: string;
+            recordedAt: string;
+            salesDisposition: string;
+        };
+        CallsListData: {
+            items: components["schemas"]["CallListItemPublic"][];
+            nextOffset: number | null;
+        };
+        CallsListInput: {
+            limit?: number;
+            offset?: number;
+        };
+        CallsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallsListData"] | null;
         };
         CampaignActionApprovalRequiredOutput: {
             /** Format: uri */
@@ -1972,6 +2302,52 @@ export interface components {
             /** @constant */
             tool?: "companies.fit.advance";
         };
+        CompanyFitCancelData: {
+            progress: components["schemas"]["CompanyFitDetailedProgress"];
+        };
+        CompanyFitCancelInput: {
+            runId: components["schemas"]["ResourceId"];
+        };
+        CompanyFitCancelResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyFitCancelData"] | null;
+        };
+        CompanyFitCohortData: {
+            expectedRemaining: number;
+            expectedRemainingTargetCount: number;
+            progress: components["schemas"]["CompanyFitDetailedProgress"];
+            proposedExclusions: number;
+            refinePreviewInput: components["schemas"]["CompanyListRefineInput"] | null;
+            selected: components["schemas"]["CompanyFitItem"][];
+        };
+        CompanyFitCohortInput: {
+            expectedVersion: string;
+            minimumPriority?: number;
+            runId: components["schemas"]["ResourceId"];
+            take: number;
+        };
+        CompanyFitCohortResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyFitCohortData"] | null;
+        };
+        CompanyFitDetailedProgress: {
+            campaignId: string;
+            complete: number;
+            expiresAt: string;
+            listId: string;
+            maxPages: number;
+            pending: number;
+            pollAfterMs: number;
+            poor: number;
+            possible: number;
+            processing: number;
+            readyForProposal: boolean;
+            runId: string;
+            /** @enum {string} */
+            status: "initializing" | "ready" | "stale" | "cancelled";
+            strong: number;
+            total: number;
+            unknown: number;
+            version: string;
+        };
         CompanyFitEvidence: {
             observedAt: string;
             text: string;
@@ -2003,7 +2379,7 @@ export interface components {
             readyForProposal: boolean;
             runId: string;
             /** @enum {string} */
-            status: "initializing" | "ready" | "stale";
+            status: "initializing" | "ready" | "stale" | "cancelled";
             strong: number;
             total: number;
             unknown: number;
@@ -2027,11 +2403,16 @@ export interface components {
             items: components["schemas"]["CompanyFitItem"][];
             nextOffset: number | null;
             progress: components["schemas"]["CompanyFitProgress"];
+            /** @description Present only when the caller supplies expectedVersion. Legacy requests retain their exact response shape. */
+            progressVersion?: string;
             totalMatching: number;
         };
         CompanyFitResultsInput: {
             /** @description Echo progress.complete from the first page when continuing so advancing runs cannot shift pages. */
             expectedComplete?: number;
+            expectedVersion?: string;
+            /** @description Defaults to true. False returns compact fit reasons with empty evidence arrays; fetch full evidence before an audience review. */
+            includeEvidence?: boolean;
             limit?: number;
             offset?: number;
             runId: components["schemas"]["ResourceId"];
@@ -2045,6 +2426,35 @@ export interface components {
             /** @constant */
             tool?: "companies.fit.results";
         };
+        CompanyFitRunCursor: {
+            createdAt: string;
+            id: components["schemas"]["ResourceId"];
+        };
+        CompanyFitRunData: {
+            processed: number;
+            progress: components["schemas"]["CompanyFitDetailedProgress"];
+            /** @enum {string} */
+            stopReason: "complete" | "budget" | "waiting" | "cancelled";
+        };
+        CompanyFitRunInput: {
+            limit?: number;
+            runId: components["schemas"]["ResourceId"];
+        };
+        CompanyFitRunResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyFitRunData"] | null;
+        };
+        CompanyFitRunsListData: {
+            nextBefore: components["schemas"]["CompanyFitRunCursor"] | null;
+            runs: components["schemas"]["CompanyFitDetailedProgress"][];
+        };
+        CompanyFitRunsListInput: {
+            before?: components["schemas"]["CompanyFitRunCursor"];
+            campaignId?: components["schemas"]["ResourceId"];
+            limit?: number;
+        };
+        CompanyFitRunsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyFitRunsListData"] | null;
+        };
         CompanyFitStartData: {
             progress: components["schemas"]["CompanyFitProgress"];
             replayed: boolean;
@@ -2057,15 +2467,28 @@ export interface components {
             expectedTotal: number;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             listId: components["schemas"]["ResourceId"];
+            /** @description Maximum official website pages per company, excluding robots; defaults to 2. Each company has a 20-second fetch budget. */
+            maxPages?: number;
             /** @description What B2B appointment-setting service is being sold to these companies. */
             offer: string;
             /** @description Ignore recent evidence from the same workspace and fetch websites anew. */
             refreshEvidence?: boolean;
+            /** @description Review only unknowns from this completed, recent run; carry forward its other assessments only for the same offer, website and exact audience. */
+            unknownsFromRunId?: components["schemas"]["ResourceId"];
         };
         CompanyFitStartResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyFitStartData"] | null;
             /** @constant */
             tool?: "companies.fit.start";
+        };
+        CompanyFitStatusData: {
+            progress: components["schemas"]["CompanyFitDetailedProgress"];
+        };
+        CompanyFitStatusInput: {
+            runId: components["schemas"]["ResourceId"];
+        };
+        CompanyFitStatusResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyFitStatusData"] | null;
         };
         /** @description Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown. */
         CompanyInspectData: {
@@ -2445,6 +2868,40 @@ export interface components {
             data?: components["schemas"]["ConversationUpdateData"] | null;
             /** @constant */
             tool?: "conversation.update";
+        };
+        CopyPerformanceData: {
+            from: string;
+            items: components["schemas"]["CopyPerformanceItem"][];
+            limitations: string[];
+            nextOffset: number | null;
+            to: string;
+            totalMatching: number;
+            unattributedSends: number;
+        };
+        CopyPerformanceInput: {
+            campaignId?: components["schemas"]["ResourceId"];
+            from: string;
+            limit?: number;
+            offset?: number;
+            to: string;
+        };
+        CopyPerformanceItem: {
+            /** @constant */
+            attribution: "first_confirmed_outreach_per_conversation";
+            bookedTargets: number;
+            bookingRate: number | null;
+            campaignId: string;
+            campaignName: string;
+            channel: string;
+            confirmedSends: number;
+            /** @description Conversations with an exact outbound job link. Shows the observed coverage of confirmed sends. */
+            linkedConversations: number;
+            repliedTargets: number;
+            replyRate: number | null;
+            text: string;
+        };
+        CopyPerformanceResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CopyPerformanceData"] | null;
         };
         Error: {
             /** @enum {string} */
@@ -3332,6 +3789,156 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    calendarAvailability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CalendarAvailabilityInput"];
+            };
+        };
+        responses: {
+            /** @description Find available meeting slots */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarAvailabilityResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    calendarMeetingBook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CalendarMeetingBookInput"];
+            };
+        };
+        responses: {
+            /** @description Book a conversation meeting */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarMeetingBookResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    calendarStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CalendarStatusInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect calendar connection */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarStatusResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect meeting and outcomes */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallsListInput"];
+            };
+        };
+        responses: {
+            /** @description List authorized meetings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     campaignDeliveryInspect: {
         parameters: {
             query?: never;
@@ -3882,6 +4489,66 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    companyFitCancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyFitCancelInput"];
+            };
+        };
+        responses: {
+            /** @description Cancel fit review */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyFitCancelResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyFitCohort: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyFitCohortInput"];
+            };
+        };
+        responses: {
+            /** @description Select a ranked audience cohort */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyFitCohortResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     companyFitProposal: {
         parameters: {
             query?: never;
@@ -3942,6 +4609,66 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    companyFitRun: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyFitRunInput"];
+            };
+        };
+        responses: {
+            /** @description Run a resumable fit review */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyFitRunResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyFitRunsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyFitRunsListInput"];
+            };
+        };
+        responses: {
+            /** @description Find resumable fit reviews */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyFitRunsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     companyFitStart: {
         parameters: {
             query?: never;
@@ -3962,6 +4689,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CompanyFitStartResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyFitStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyFitStatusInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect fit review progress */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyFitStatusResult"];
                 };
             };
             400: components["responses"]["BadRequest"];
@@ -4296,6 +5053,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ConversationsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    copyPerformance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CopyPerformanceInput"];
+            };
+        };
+        responses: {
+            /** @description Find historical outreach copy performance */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CopyPerformanceResult"];
                 };
             };
             400: components["responses"]["BadRequest"];

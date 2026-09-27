@@ -50,6 +50,17 @@ export const AGENT_TOOL_NAMES = [
   "campaign.operation.inspect",
   "campaign.delivery.inspect",
   "campaign.delivery.update",
+  "companies.fit.status",
+  "companies.fit.cancel",
+  "companies.fit.runs.list",
+  "companies.fit.run",
+  "companies.fit.cohort",
+  "copy.performance",
+  "calendar.status",
+  "calendar.availability",
+  "calendar.meeting.book",
+  "calls.list",
+  "call.inspect",
 ] as const;
 export const AGENT_TOOL_POLICIES = Object.freeze({
   "analytics.summary": {
@@ -302,6 +313,61 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "companies.fit.status": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.fit.cancel": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.fit.runs.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.fit.run": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.fit.cohort": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "copy.performance": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "calendar.status": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "calendar.availability": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "calendar.meeting.book": {
+    effect: "external",
+    approval: "human_confirmation",
+    exposure: "public_api",
+  },
+  "calls.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "call.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
 } as const);
 export const AGENT_TOOL_SCOPES = {
   "analytics.summary": ["workspace:read"],
@@ -354,6 +420,17 @@ export const AGENT_TOOL_SCOPES = {
   "campaign.operation.inspect": ["campaigns:read"],
   "campaign.delivery.inspect": ["campaigns:read"],
   "campaign.delivery.update": ["campaigns:read", "campaigns:write"],
+  "companies.fit.status": ["campaigns:read", "audiences:read"],
+  "companies.fit.cancel": ["campaigns:read", "audiences:read", "campaigns:write"],
+  "companies.fit.runs.list": ["campaigns:read", "audiences:read"],
+  "companies.fit.run": ["campaigns:read", "audiences:read", "campaigns:write"],
+  "companies.fit.cohort": ["campaigns:read", "audiences:read"],
+  "copy.performance": ["campaigns:read", "sending:read", "inbox:read", "calendar:read"],
+  "calendar.status": ["calendar:read"],
+  "calendar.availability": ["calendar:read"],
+  "calendar.meeting.book": ["calendar:write", "calendar:read", "inbox:read", "pipeline:write"],
+  "calls.list": ["calls:read"],
+  "call.inspect": ["calls:read"],
 } as const;
 export const AGENT_OWNER_ONLY_TOOLS = [
   "conversation.update",
@@ -377,6 +454,11 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "companies.list.prepare",
   "companies.list.refine",
   "campaign.delivery.update",
+  "companies.fit.cancel",
+  "companies.fit.run",
+  "calendar.status",
+  "calendar.availability",
+  "calendar.meeting.book",
 ] as const;
 export const AGENT_TOOL_DEFINITIONS = {
   "analytics.summary": {
@@ -1324,6 +1406,215 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["campaign", "delivery", "update"],
     },
   },
+  "companies.fit.status": {
+    mcp: {
+      name: "companies_fit_status",
+      title: "Inspect fit review progress",
+      description:
+        "Read exact compact progress, resumable run identity, freshness and polling advice.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "companies fit status --input FILE",
+      command: ["companies", "fit", "status"],
+    },
+  },
+  "companies.fit.cancel": {
+    mcp: {
+      name: "companies_fit_cancel",
+      title: "Cancel fit review",
+      description:
+        "Stop new work and fence in-flight results; completed evidence remains readable. Does not change a campaign.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "companies fit cancel --input FILE",
+      command: ["companies", "fit", "cancel"],
+    },
+  },
+  "companies.fit.runs.list": {
+    mcp: {
+      name: "companies_fit_runs_list",
+      title: "Find resumable fit reviews",
+      description:
+        "List recent review identities and exact progress in this workspace; use the returned cursor to continue.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "companies fit runs list --input FILE",
+      command: ["companies", "fit", "runs", "list"],
+    },
+  },
+  "companies.fit.run": {
+    mcp: {
+      name: "companies_fit_run",
+      title: "Run a resumable fit review",
+      description:
+        "Process bounded batches automatically for up to 45 seconds. Resume with the same runId until complete. CLI --until-complete adds bounded retries and backoff. Does not run while every client is disconnected.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "companies fit run --input FILE",
+      command: ["companies", "fit", "run"],
+    },
+  },
+  "companies.fit.cohort": {
+    mcp: {
+      name: "companies_fit_cohort",
+      title: "Select a ranked audience cohort",
+      description:
+        "Return the best requested number of evidenced strong/possible matches, with stable ties and exact guarded refinement input. Unknowns are excluded only as an explicit cohort selection, never labelled poor. Preview and review the selection before applying companies.list.refine.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "companies fit cohort --input FILE",
+      command: ["companies", "fit", "cohort"],
+    },
+  },
+  "copy.performance": {
+    mcp: {
+      name: "copy_performance",
+      title: "Find historical outreach copy performance",
+      description:
+        "Read exact text from confirmed outreach jobs and observed human replies/confirmed calendar bookings. A reply or booking is associated with the first confirmed outreach in its exact conversation; this is observational evidence, not causal lift. Missing deleted job text remains unattributed.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "copy performance --input FILE",
+      command: ["copy", "performance"],
+    },
+  },
+  "calendar.status": {
+    mcp: {
+      name: "calendar_status",
+      title: "Inspect calendar connection",
+      description:
+        "Read connection readiness and provide the existing human OAuth setup destination without exposing tokens.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "calendar status --input FILE",
+      command: ["calendar", "status"],
+    },
+  },
+  "calendar.availability": {
+    mcp: {
+      name: "calendar_availability",
+      title: "Find available meeting slots",
+      description:
+        "Read primary-calendar busy periods and return bounded free slots within an exact window of at most seven days. Availability is an observation; booking checks again.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "calendar availability --input FILE",
+      command: ["calendar", "availability"],
+    },
+  },
+  "calendar.meeting.book": {
+    mcp: {
+      name: "calendar_meeting_book",
+      title: "Book a conversation meeting",
+      description:
+        "On explicit instruction, book exact invitees/time through the existing app booking service, send provider invitations, persist the confirmed meeting, and update its pipeline card. Echo the inspected conversation version. Stable keys reject changed payloads.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "calendar meeting book --input FILE",
+      command: ["calendar", "meeting", "book"],
+    },
+  },
+  "calls.list": {
+    mcp: {
+      name: "calls_list",
+      title: "List authorized meetings",
+      description:
+        "Page meeting records through the app access service. Recorded meetings are separate from inferred pipeline booking labels.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "calls list --input FILE",
+      command: ["calls", "list"],
+    },
+  },
+  "call.inspect": {
+    mcp: {
+      name: "call_inspect",
+      title: "Inspect meeting and outcomes",
+      description:
+        "Read authorized meeting details, participant links and recorded outcomes through the app access service; never infers attendance or sales outcomes.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "call inspect --input FILE",
+      command: ["call", "inspect"],
+    },
+  },
 } as const;
 export const AGENT_TOOL_INPUT_SCHEMAS = {
   "analytics.summary": {
@@ -1475,6 +1766,39 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "campaign.delivery.update": {
     $ref: "#/components/schemas/CampaignDeliveryUpdateInput",
+  },
+  "companies.fit.status": {
+    $ref: "#/components/schemas/CompanyFitStatusInput",
+  },
+  "companies.fit.cancel": {
+    $ref: "#/components/schemas/CompanyFitCancelInput",
+  },
+  "companies.fit.runs.list": {
+    $ref: "#/components/schemas/CompanyFitRunsListInput",
+  },
+  "companies.fit.run": {
+    $ref: "#/components/schemas/CompanyFitRunInput",
+  },
+  "companies.fit.cohort": {
+    $ref: "#/components/schemas/CompanyFitCohortInput",
+  },
+  "copy.performance": {
+    $ref: "#/components/schemas/CopyPerformanceInput",
+  },
+  "calendar.status": {
+    $ref: "#/components/schemas/CalendarStatusInput",
+  },
+  "calendar.availability": {
+    $ref: "#/components/schemas/CalendarAvailabilityInput",
+  },
+  "calendar.meeting.book": {
+    $ref: "#/components/schemas/CalendarMeetingBookInput",
+  },
+  "calls.list": {
+    $ref: "#/components/schemas/CallsListInput",
+  },
+  "call.inspect": {
+    $ref: "#/components/schemas/CallInspectInput",
   },
 } as const;
 export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
@@ -3322,6 +3646,18 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       idempotencyKey: {
         $ref: "#/components/schemas/IdempotencyKey",
       },
+      maxPages: {
+        type: "integer",
+        minimum: 2,
+        maximum: 5,
+        description:
+          "Maximum official website pages per company, excluding robots; defaults to 2. Each company has a 20-second fetch budget.",
+      },
+      unknownsFromRunId: {
+        $ref: "#/components/schemas/ResourceId",
+        description:
+          "Review only unknowns from this completed, recent run; carry forward its other assessments only for the same offer, website and exact audience.",
+      },
     },
   },
   CompanyFitAdvanceInput: {
@@ -3371,6 +3707,16 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maximum: 25000,
         description:
           "Echo progress.complete from the first page when continuing so advancing runs cannot shift pages.",
+      },
+      expectedVersion: {
+        type: "string",
+        minLength: 64,
+        maxLength: 64,
+      },
+      includeEvidence: {
+        type: "boolean",
+        description:
+          "Defaults to true. False returns compact fit reasons with empty evidence arrays; fetch full evidence before an audience review.",
       },
     },
   },
@@ -3678,6 +4024,253 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           },
         },
         minProperties: 1,
+      },
+    },
+  },
+  CompanyFitStatusInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["runId"],
+    properties: {
+      runId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
+  },
+  CompanyFitCancelInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["runId"],
+    properties: {
+      runId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
+  },
+  CompanyFitRunsListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 25,
+      },
+      before: {
+        $ref: "#/components/schemas/CompanyFitRunCursor",
+      },
+    },
+  },
+  CompanyFitRunCursor: {
+    type: "object",
+    additionalProperties: false,
+    required: ["createdAt", "id"],
+    properties: {
+      createdAt: {
+        type: "string",
+        minLength: 20,
+        maxLength: 40,
+      },
+      id: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
+  },
+  CompanyFitRunInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["runId"],
+    properties: {
+      runId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 8,
+      },
+    },
+  },
+  CompanyFitCohortInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["runId", "expectedVersion", "take"],
+    properties: {
+      runId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedVersion: {
+        type: "string",
+        minLength: 64,
+        maxLength: 64,
+      },
+      take: {
+        type: "integer",
+        minimum: 1,
+        maximum: 1000,
+      },
+      minimumPriority: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+  },
+  CopyPerformanceInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["from", "to"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      from: {
+        type: "string",
+        minLength: 20,
+        maxLength: 40,
+      },
+      to: {
+        type: "string",
+        minLength: 20,
+        maxLength: 40,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 25,
+      },
+      offset: {
+        type: "integer",
+        minimum: 0,
+        maximum: 1000000,
+      },
+    },
+  },
+  CalendarStatusInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [],
+    properties: {},
+  },
+  CalendarAvailabilityInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["from", "to", "timezone", "durationMinutes"],
+    properties: {
+      from: {
+        type: "string",
+        minLength: 20,
+        maxLength: 40,
+      },
+      to: {
+        type: "string",
+        minLength: 20,
+        maxLength: 40,
+      },
+      timezone: {
+        type: "string",
+        minLength: 1,
+        maxLength: 80,
+      },
+      durationMinutes: {
+        type: "integer",
+        enum: [15, 30, 45, 60, 90, 120],
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+  },
+  CalendarMeetingBookInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [
+      "conversationId",
+      "expectedConversationUpdatedAt",
+      "idempotencyKey",
+      "title",
+      "start",
+      "timezone",
+      "durationMinutes",
+      "attendees",
+    ],
+    properties: {
+      conversationId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedConversationUpdatedAt: {
+        type: "string",
+        minLength: 20,
+        maxLength: 40,
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 8,
+        maxLength: 120,
+        pattern: "^[a-zA-Z0-9_-]{8,120}$",
+      },
+      title: {
+        type: "string",
+        minLength: 1,
+        maxLength: 200,
+      },
+      start: {
+        type: "string",
+        minLength: 20,
+        maxLength: 40,
+      },
+      timezone: {
+        type: "string",
+        minLength: 1,
+        maxLength: 80,
+      },
+      durationMinutes: {
+        type: "integer",
+        enum: [15, 30, 45, 60, 90, 120],
+      },
+      attendees: {
+        type: "array",
+        items: {
+          type: "string",
+          minLength: 3,
+          maxLength: 320,
+          pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+        },
+        maxItems: 20,
+        minItems: 1,
+      },
+    },
+  },
+  CallsListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [],
+    properties: {
+      offset: {
+        type: "integer",
+        minimum: 0,
+        maximum: 1000000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 50,
+      },
+    },
+  },
+  CallInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["meetingId"],
+    properties: {
+      meetingId: {
+        $ref: "#/components/schemas/ResourceId",
       },
     },
   },

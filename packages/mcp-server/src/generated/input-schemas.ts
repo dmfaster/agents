@@ -785,6 +785,18 @@ export const CompanyFitStartInputSchema = z
       .describe("Ignore recent evidence from the same workspace and fetch websites anew.")
       .optional(),
     idempotencyKey: IdempotencyKeySchema,
+    maxPages: z
+      .number()
+      .int()
+      .min(2)
+      .max(5)
+      .describe(
+        "Maximum official website pages per company, excluding robots; defaults to 2. Each company has a 20-second fetch budget.",
+      )
+      .optional(),
+    unknownsFromRunId: ResourceIdSchema.describe(
+      "Review only unknowns from this completed, recent run; carry forward its other assessments only for the same offer, website and exact audience.",
+    ).optional(),
   })
   .strict();
 export const CompanyFitAdvanceInputSchema = z
@@ -806,6 +818,13 @@ export const CompanyFitResultsInputSchema = z
       .max(25000)
       .describe(
         "Echo progress.complete from the first page when continuing so advancing runs cannot shift pages.",
+      )
+      .optional(),
+    expectedVersion: z.string().min(64).max(64).optional(),
+    includeEvidence: z
+      .boolean()
+      .describe(
+        "Defaults to true. False returns compact fit reasons with empty evidence arrays; fetch full evidence before an audience review.",
       )
       .optional(),
   })
@@ -918,6 +937,84 @@ export const CampaignDeliveryUpdateInputSchema = z
       .refine((value) => Object.keys(value).length >= 1, "Provide at least 1 properties"),
   })
   .strict();
+export const CompanyFitStatusInputSchema = z.object({ runId: ResourceIdSchema }).strict();
+export const CompanyFitCancelInputSchema = z.object({ runId: ResourceIdSchema }).strict();
+export const CompanyFitRunCursorSchema = z
+  .object({ createdAt: z.string().min(20).max(40), id: ResourceIdSchema })
+  .strict();
+export const CompanyFitRunsListInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema.optional(),
+    limit: z.number().int().min(1).max(25).optional(),
+    before: CompanyFitRunCursorSchema.optional(),
+  })
+  .strict();
+export const CompanyFitRunInputSchema = z
+  .object({ runId: ResourceIdSchema, limit: z.number().int().min(1).max(8).optional() })
+  .strict();
+export const CompanyFitCohortInputSchema = z
+  .object({
+    runId: ResourceIdSchema,
+    expectedVersion: z.string().min(64).max(64),
+    take: z.number().int().min(1).max(1000),
+    minimumPriority: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+export const CopyPerformanceInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema.optional(),
+    from: z.string().min(20).max(40),
+    to: z.string().min(20).max(40),
+    limit: z.number().int().min(1).max(25).optional(),
+    offset: z.number().int().min(0).max(1000000).optional(),
+  })
+  .strict();
+export const CalendarStatusInputSchema = z.object({}).strict();
+export const CalendarAvailabilityInputSchema = z
+  .object({
+    from: z.string().min(20).max(40),
+    to: z.string().min(20).max(40),
+    timezone: z.string().min(1).max(80),
+    durationMinutes: z.union([
+      z.literal(15),
+      z.literal(30),
+      z.literal(45),
+      z.literal(60),
+      z.literal(90),
+      z.literal(120),
+    ]),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+export const CalendarMeetingBookInputSchema = z
+  .object({
+    conversationId: ResourceIdSchema,
+    expectedConversationUpdatedAt: z.string().min(20).max(40),
+    idempotencyKey: z.string().min(8).max(120).regex(new RegExp("^[a-zA-Z0-9_-]{8,120}$")),
+    title: z.string().min(1).max(200),
+    start: z.string().min(20).max(40),
+    timezone: z.string().min(1).max(80),
+    durationMinutes: z.union([
+      z.literal(15),
+      z.literal(30),
+      z.literal(45),
+      z.literal(60),
+      z.literal(90),
+      z.literal(120),
+    ]),
+    attendees: z
+      .array(z.string().min(3).max(320).regex(new RegExp("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")))
+      .min(1)
+      .max(20),
+  })
+  .strict();
+export const CallsListInputSchema = z
+  .object({
+    offset: z.number().int().min(0).max(1000000).optional(),
+    limit: z.number().int().min(1).max(50).optional(),
+  })
+  .strict();
+export const CallInspectInputSchema = z.object({ meetingId: ResourceIdSchema }).strict();
 export const AGENT_INPUT_SCHEMAS = {
   "analytics.summary": AnalyticsSummaryInputSchema,
   "workspace.briefing": WorkspaceBriefingInputSchema,
@@ -969,4 +1066,15 @@ export const AGENT_INPUT_SCHEMAS = {
   "campaign.operation.inspect": CampaignOperationInspectInputSchema,
   "campaign.delivery.inspect": CampaignDeliveryInspectInputSchema,
   "campaign.delivery.update": CampaignDeliveryUpdateInputSchema,
+  "companies.fit.status": CompanyFitStatusInputSchema,
+  "companies.fit.cancel": CompanyFitCancelInputSchema,
+  "companies.fit.runs.list": CompanyFitRunsListInputSchema,
+  "companies.fit.run": CompanyFitRunInputSchema,
+  "companies.fit.cohort": CompanyFitCohortInputSchema,
+  "copy.performance": CopyPerformanceInputSchema,
+  "calendar.status": CalendarStatusInputSchema,
+  "calendar.availability": CalendarAvailabilityInputSchema,
+  "calendar.meeting.book": CalendarMeetingBookInputSchema,
+  "calls.list": CallsListInputSchema,
+  "call.inspect": CallInspectInputSchema,
 } as const;
