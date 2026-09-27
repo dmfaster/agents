@@ -40,6 +40,10 @@ export const AGENT_TOOL_NAMES = [
   "companies.filters",
   "companies.search",
   "company.inspect",
+  "companies.fit.start",
+  "companies.fit.advance",
+  "companies.fit.results",
+  "companies.fit.proposal",
   "companies.list.prepare",
   "companies.list.inspect",
   "companies.list.refine",
@@ -248,6 +252,26 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "companies.fit.start": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.fit.advance": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.fit.results": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.fit.proposal": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
   "companies.list.prepare": {
     effect: "draft",
     approval: "none",
@@ -320,6 +344,10 @@ export const AGENT_TOOL_SCOPES = {
   "companies.filters": ["audiences:read"],
   "companies.search": ["audiences:read"],
   "company.inspect": ["audiences:read"],
+  "companies.fit.start": ["campaigns:read", "audiences:read", "campaigns:write"],
+  "companies.fit.advance": ["campaigns:read", "audiences:read", "campaigns:write"],
+  "companies.fit.results": ["campaigns:read", "audiences:read"],
+  "companies.fit.proposal": ["campaigns:read", "audiences:read"],
   "companies.list.prepare": ["audiences:read", "campaigns:write"],
   "companies.list.inspect": ["campaigns:read", "audiences:read"],
   "companies.list.refine": ["campaigns:read", "campaigns:write"],
@@ -344,6 +372,8 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "campaign.launch",
   "campaign.pause.preflight",
   "campaign.pause",
+  "companies.fit.start",
+  "companies.fit.advance",
   "companies.list.prepare",
   "companies.list.refine",
   "campaign.delivery.update",
@@ -1104,6 +1134,82 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["company", "inspect"],
     },
   },
+  "companies.fit.start": {
+    mcp: {
+      name: "companies_fit_start",
+      title: "Start company fit review",
+      description:
+        "Snapshot a disabled campaign's exact audience for a resumable website-evidence review. Never changes the audience or starts sending.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies fit start --input FILE",
+      command: ["companies", "fit", "start"],
+    },
+  },
+  "companies.fit.advance": {
+    mcp: {
+      name: "companies_fit_advance",
+      title: "Review next company batch",
+      description:
+        "Review up to 16 websites in a durable audience run. Repeat until pending and processing are zero; no audience write occurs.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: false,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies fit advance --input FILE",
+      command: ["companies", "fit", "advance"],
+    },
+  },
+  "companies.fit.results": {
+    mcp: {
+      name: "companies_fit_results",
+      title: "Inspect company fit evidence",
+      description:
+        "Read paginated source excerpts, fit reasons, priority, and exact progress for one review run.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies fit results --input FILE",
+      command: ["companies", "fit", "results"],
+    },
+  },
+  "companies.fit.proposal": {
+    mcp: {
+      name: "companies_fit_proposal",
+      title: "Prepare fit-based audience refinement",
+      description:
+        "Return exact guarded dry-run input for excluding only high-confidence poor fits. Never changes the campaign.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies fit proposal --input FILE",
+      command: ["companies", "fit", "proposal"],
+    },
+  },
   "companies.list.prepare": {
     mcp: {
       name: "companies_list_prepare",
@@ -1339,6 +1445,18 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "company.inspect": {
     $ref: "#/components/schemas/CompanyInspectInput",
+  },
+  "companies.fit.start": {
+    $ref: "#/components/schemas/CompanyFitStartInput",
+  },
+  "companies.fit.advance": {
+    $ref: "#/components/schemas/CompanyFitAdvanceInput",
+  },
+  "companies.fit.results": {
+    $ref: "#/components/schemas/CompanyFitResultsInput",
+  },
+  "companies.fit.proposal": {
+    $ref: "#/components/schemas/CompanyFitProposalInput",
   },
   "companies.list.prepare": {
     $ref: "#/components/schemas/CompanyListPrepareInput",
@@ -3150,6 +3268,121 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
     required: ["country", "businessId"],
+  },
+  CompanyFitStartInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [
+      "campaignId",
+      "listId",
+      "expectedCampaignUpdatedAt",
+      "expectedListUpdatedAt",
+      "expectedTotal",
+      "expectedTargetCount",
+      "offer",
+      "idempotencyKey",
+    ],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      listId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedCampaignUpdatedAt: {
+        type: "string",
+        minLength: 20,
+        maxLength: 40,
+      },
+      expectedListUpdatedAt: {
+        type: "string",
+        minLength: 20,
+        maxLength: 40,
+      },
+      expectedTotal: {
+        type: "integer",
+        minimum: 1,
+        maximum: 25000,
+      },
+      expectedTargetCount: {
+        type: "integer",
+        minimum: 0,
+        maximum: 125000,
+      },
+      offer: {
+        type: "string",
+        minLength: 20,
+        maxLength: 500,
+        description: "What B2B appointment-setting service is being sold to these companies.",
+      },
+      refreshEvidence: {
+        type: "boolean",
+        description: "Ignore recent evidence from the same workspace and fetch websites anew.",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+  },
+  CompanyFitAdvanceInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["runId"],
+    properties: {
+      runId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 16,
+      },
+    },
+  },
+  CompanyFitResultsInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["runId"],
+    properties: {
+      runId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      tier: {
+        type: "string",
+        enum: ["strong", "possible", "poor", "unknown"],
+      },
+      offset: {
+        type: "integer",
+        minimum: 0,
+        maximum: 1000000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+      sort: {
+        type: "string",
+        enum: ["priority", "audience"],
+      },
+      expectedComplete: {
+        type: "integer",
+        minimum: 0,
+        maximum: 25000,
+        description:
+          "Echo progress.complete from the first page when continuing so advancing runs cannot shift pages.",
+      },
+    },
+  },
+  CompanyFitProposalInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["runId"],
+    properties: {
+      runId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
   },
   CompanyListPrepareInput: {
     type: "object",

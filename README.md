@@ -14,11 +14,12 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-The 1.6.0 source candidate exposes 46 bounded domain tools. It adds exact
-company/contact list refinement, multichannel social draft editing, inbox
-updates and explicitly instructed replies, pipeline cards/stages/notes,
-follow-up cancellation, sender readiness, and paginated sending outcomes and
-history. Reply actions report queued and confirmed delivery separately.
+The 1.7.0 source candidate exposes 50 bounded domain tools. It adds durable,
+website-backed company fit review for B2B appointment setting, exact progress,
+paginated source evidence, and a guarded audience refinement proposal. The
+earlier company/contact refinement, multichannel draft editing, inbox,
+pipeline, follow-up, sender, outcome and history tools remain available.
+Reply actions report queued and confirmed delivery separately.
 Launch and pause still require an explicit user instruction and the owner's
 campaign-control grant or the existing per-action approval path. The interface
 does not expose provider credentials or bypass the browser extension's
@@ -61,7 +62,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.6.0 auth login --json
+npx --yes @dmfaster/cli@1.7.0 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -83,12 +84,12 @@ the owner approves the replacement. Credentials are never upgraded silently.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.6.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.6.0 conversations list --filter unread --limit 25 --json
-npx --yes @dmfaster/mcp-server@1.6.0
+npx --yes @dmfaster/cli@1.7.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.7.0 conversations list --filter unread --limit 25 --json
+npx --yes @dmfaster/mcp-server@1.7.0
 ```
 
-The 46 MCP domain tools cover workspace, campaign, sending, reply, inbox,
+The 50 MCP domain tools cover workspace, campaign, sending, reply, inbox,
 pipeline, company-history, industry, validation, exact-audience preview,
 private draft, launch, and pause workflows. Compliant MCP Apps hosts can also render the
 read-only `campaign_workspace` presentation tool inline. Headless hosts receive
@@ -136,7 +137,7 @@ private product source or trademarks.
 All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
 
 ```bash
-npx --yes @dmfaster/cli@1.6.0 list import --name "My prospects" --file usernames.csv --json
+npx --yes @dmfaster/cli@1.7.0 list import --name "My prospects" --file usernames.csv --json
 ```
 
 The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
@@ -154,15 +155,24 @@ and workspace timezone. Edits preserve omitted settings and reject stale
 versions or started campaigns. Saving or toggling a draft window leaves it
 disabled; an explicitly instructed, authorized launch arms the schedule.
 
-## Agent 1.6.0 candidate
+## Agent 1.7.0 candidate
+
+Version 1.7.0 adds `companies_fit_start`, `companies_fit_advance`,
+`companies_fit_results`, and `companies_fit_proposal`. The review uses bounded
+current website evidence and conservative fit tiers. Missing or ambiguous
+evidence stays unknown. A proposal only returns dry-run input for the existing
+version-guarded refinement tool; it never changes the audience or sends
+messages. The Product server and migration 0342 must be deployed and verified
+before these clients are published.
+
+## Agent 1.6.0 release
 
 Version 1.6.0 adds `companies_list_refine` / `companies list refine --input FILE`.
 It previews exact company additions, contact refreshes, and exclusions, then
 saves a separate vetted list and attaches it to an existing disabled,
 unstarted campaign under version, count, and digest guards. It also adds the
 inbox, pipeline, follow-up, sender, outcome and history tools described above.
-The server operations and two new database migrations must be deployed and
-verified before publishing these clients.
+Those server operations and database migrations are already released.
 
 ## Agent 1.5.0 release
 

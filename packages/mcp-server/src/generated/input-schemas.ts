@@ -767,6 +767,50 @@ export const CompanySearchInputSchema = z
 export const CompanyInspectInputSchema = z
   .object({ country: SupportedCountrySchema, businessId: z.string().min(1).max(192) })
   .strict();
+export const CompanyFitStartInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    listId: ResourceIdSchema,
+    expectedCampaignUpdatedAt: z.string().min(20).max(40),
+    expectedListUpdatedAt: z.string().min(20).max(40),
+    expectedTotal: z.number().int().min(1).max(25000),
+    expectedTargetCount: z.number().int().min(0).max(125000),
+    offer: z
+      .string()
+      .min(20)
+      .max(500)
+      .describe("What B2B appointment-setting service is being sold to these companies."),
+    refreshEvidence: z
+      .boolean()
+      .describe("Ignore recent evidence from the same workspace and fetch websites anew.")
+      .optional(),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const CompanyFitAdvanceInputSchema = z
+  .object({ runId: ResourceIdSchema, limit: z.number().int().min(1).max(16).optional() })
+  .strict();
+export const CompanyFitResultsInputSchema = z
+  .object({
+    runId: ResourceIdSchema,
+    tier: z
+      .union([z.literal("strong"), z.literal("possible"), z.literal("poor"), z.literal("unknown")])
+      .optional(),
+    offset: z.number().int().min(0).max(1000000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    sort: z.union([z.literal("priority"), z.literal("audience")]).optional(),
+    expectedComplete: z
+      .number()
+      .int()
+      .min(0)
+      .max(25000)
+      .describe(
+        "Echo progress.complete from the first page when continuing so advancing runs cannot shift pages.",
+      )
+      .optional(),
+  })
+  .strict();
+export const CompanyFitProposalInputSchema = z.object({ runId: ResourceIdSchema }).strict();
 export const CompanyListPrepareInputSchema = z
   .object({
     name: z.string().min(1).max(120),
@@ -915,6 +959,10 @@ export const AGENT_INPUT_SCHEMAS = {
   "companies.filters": CompanyFiltersInputSchema,
   "companies.search": CompanySearchInputSchema,
   "company.inspect": CompanyInspectInputSchema,
+  "companies.fit.start": CompanyFitStartInputSchema,
+  "companies.fit.advance": CompanyFitAdvanceInputSchema,
+  "companies.fit.results": CompanyFitResultsInputSchema,
+  "companies.fit.proposal": CompanyFitProposalInputSchema,
   "companies.list.prepare": CompanyListPrepareInputSchema,
   "companies.list.inspect": CompanyListInspectInputSchema,
   "companies.list.refine": CompanyListRefineInputSchema,

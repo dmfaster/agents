@@ -1,6 +1,6 @@
 # DM Faster Agent 1.0 tools
 
-Agent 1.0 exposes exactly 46 bounded domain tools. Each credential is bound to one
+Agent 1.0 exposes exactly 50 bounded domain tools. Each credential is bound to one
 workspace, and every tool requires the exact scopes shown below; scopes are not
 inherited from `workspace:read`. MCP names use underscores and HTTP contract
 names use dots.
@@ -16,61 +16,65 @@ authorizes launch or pause.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@1.6.0
+npx --yes @dmfaster/cli@1.7.0
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
 and effect. `--input -` and `--state -` read bounded JSON from standard input;
 only one input in a command may use `-`.
 
-| MCP tool                     | HTTP tool                    | CLI suffix                                                                                      | Required scope                      | Effect                                        |
-| ---------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------- | --------------------------------------------- |
-| `analytics_summary`          | `analytics.summary`          | `analytics summary --scope <scope> [--campaign ID_OR_NAME] --json`                              | `workspace:read`                    | bounded read                                  |
-| `workspace_briefing`         | `workspace.briefing`         | `workspace briefing --json`                                                                     | `workspace:read`                    | bounded read                                  |
-| `campaigns_list`             | `campaigns.list`             | `campaigns list [options] --json`                                                               | `campaigns:read`                    | bounded read                                  |
-| `campaign_inspect`           | `campaign.inspect`           | `campaign inspect [campaign-id] --json`                                                         | `campaigns:read`                    | bounded read                                  |
-| `sending_inspect`            | `sending.inspect`            | `sending inspect [campaign-id] --json`                                                          | `sending:read`                      | bounded read                                  |
-| `replies_list`               | `replies.list`               | `replies list [campaign-id] [options] --json`                                                   | `inbox:read`                        | bounded read                                  |
-| `conversations_list`         | `conversations.list`         | `conversations list --input FILE --json`                                                        | `inbox:read`                        | paginated inbox conversation read             |
-| `conversation_inspect`       | `conversation.inspect`       | `conversation inspect --input FILE --json`                                                      | `inbox:read`                        | actual message page read                      |
-| `conversation_update`        | `conversation.update`        | `conversation update --input FILE --json`                                                       | `inbox:read`, `inbox:write`         | guarded inbox state update                    |
-| `conversation_reply`         | `conversation.reply`         | `conversation reply --input FILE --json`                                                        | `inbox:read`, `inbox:write`         | exact instructed reply action                 |
-| `conversation_reply_inspect` | `conversation.reply.inspect` | `conversation reply inspect --input FILE --json`                                                | `inbox:read`                        | durable reply delivery receipt                |
-| `campaign_followups_list`    | `campaign.followups.list`    | `campaign followups list --input FILE --json`                                                   | `sending:read`                      | paginated follow-up jobs                      |
-| `campaign_followups_cancel`  | `campaign.followups.cancel`  | `campaign followups cancel --input FILE --json`                                                 | `campaigns:write`                   | cancel queued prospect chains                 |
-| `campaign_outcomes_list`     | `campaign.outcomes.list`     | `campaign outcomes list --input FILE --json`                                                    | `sending:read`                      | paginated send/skip/failure events            |
-| `senders_inspect`            | `senders.inspect`            | `senders inspect --json`                                                                        | `sending:read`                      | browser and mailbox readiness                 |
-| `history_list`               | `history.list`               | `history list --input FILE --json`                                                              | `campaigns:read`, `sending:read`    | paginated confirmed sends                     |
-| `pipeline_inspect`           | `pipeline.inspect`           | `pipeline inspect [campaign-id] --json`                                                         | `pipeline:read`                     | bounded read                                  |
-| `pipeline_cards_list`        | `pipeline.cards.list`        | `pipeline cards list --input FILE --json`                                                       | `pipeline:read`                     | paginated exact cards                         |
-| `pipeline_stage_update`      | `pipeline.stage.update`      | `pipeline stage update --input FILE --json`                                                     | `pipeline:read`, `pipeline:write`   | guarded stage change                          |
-| `pipeline_note_list`         | `pipeline.note.list`         | `pipeline note list --input FILE --json`                                                        | `pipeline:read`                     | exact card notes                              |
-| `pipeline_note_add`          | `pipeline.note.add`          | `pipeline note add --input FILE --json`                                                         | `pipeline:read`, `pipeline:write`   | idempotent private note                       |
-| `company_timeline`           | `company.timeline`           | `company timeline <campaign-id> <outreach-id> --json`                                           | `pipeline:read`, `campaigns:read`   | bounded read                                  |
-| `industry_lookup`            | `industry.lookup`            | `industry lookup <query> [options] --json`                                                      | `audiences:read`                    | planning read                                 |
-| `campaign_validate`          | `campaign.validate`          | `campaign validate --state <file> --json`                                                       | `audiences:read`                    | planning read                                 |
-| `audience_preview`           | `audience.preview`           | `audience preview --state <file> [--sample-size N] --json`                                      | `audiences:read`                    | exact preview read                            |
-| `lists_list`                 | `lists.list`                 | `lists list [--query TEXT] [--limit N] [--offset N] --json`                                     | `campaigns:read`                    | saved-list discovery                          |
-| `list_inspect`               | `list.inspect`               | `list inspect LIST_ID [--username HANDLE] [--limit N] [--offset N] --json`                      | `campaigns:read`                    | exact audience and membership                 |
-| `list_target_remove`         | `list.target.remove`         | `list target remove LIST_ID --username HANDLE --expected-version TIMESTAMP --json`              | `campaigns:write`                   | owner-only target removal                     |
-| `campaign_draft_prepare`     | `campaign.draft.prepare`     | `campaign draft prepare --input FILE --json`                                                    | `campaigns:read`, `campaigns:write` | disabled Instagram draft                      |
-| `campaign_draft_update`      | `campaign.draft.update`      | `campaign draft update --input FILE --json`                                                     | `campaigns:read`, `campaigns:write` | update an existing disabled draft             |
-| `list_import`                | `list.import`                | `list import --name NAME --file FILE [--idempotency-key KEY] --json`                            | `campaigns:write`                   | private Instagram username import             |
-| `list_prepare`               | `list.prepare`               | `list prepare --state FILE --reviewed-audience PREVIEW_JSON [--idempotency-key KEY] --json`     | `audiences:read`, `campaigns:write` | private idempotent draft                      |
-| `campaign_prepare`           | `campaign.prepare`           | `campaign prepare --state FILE --reviewed-audience PREVIEW_JSON [--idempotency-key KEY] --json` | `audiences:read`, `campaigns:write` | private idempotent draft                      |
-| `campaign_launch_preflight`  | `campaign.launch.preflight`  | `campaign launch preflight <campaign-id> --idempotency-key KEY --json`                          | `campaigns:launch`                  | readiness and approval request                |
-| `campaign_launch`            | `campaign.launch`            | `campaign launch <campaign-id> --idempotency-key KEY --authorization-id ID --json`              | `campaigns:launch`                  | approved external action                      |
-| `campaign_pause_preflight`   | `campaign.pause.preflight`   | `campaign pause preflight <campaign-id> --idempotency-key KEY --json`                           | `campaigns:write`                   | eligibility and approval request              |
-| `campaign_pause`             | `campaign.pause`             | `campaign pause <campaign-id> --idempotency-key KEY --authorization-id ID --json`               | `campaigns:write`                   | approved workspace action                     |
-| `companies_filters`          | `companies.filters`          | `companies filters --input FILE --json`                                                         | `audiences:read`                    | country-specific company filter options       |
-| `companies_search`           | `companies.search`           | `companies search --input FILE --json`                                                          | `audiences:read`                    | company search with app filters               |
-| `company_inspect`            | `company.inspect`            | `company inspect --input FILE --json`                                                           | `audiences:read`                    | full research and contact profile             |
-| `companies_list_prepare`     | `companies.list.prepare`     | `companies list prepare --input FILE --json`                                                    | `audiences:read`, `campaigns:write` | private company shortlist with contact routes |
-| `companies_list_inspect`     | `companies.list.inspect`     | `companies list inspect --input FILE --json`                                                    | `campaigns:read`, `audiences:read`  | saved company list inspection                 |
-| `companies_list_refine`      | `companies.list.refine`      | `companies list refine --input FILE --json`                                                     | `campaigns:read`, `campaigns:write` | vetted copy for one disabled draft            |
-| `campaign_operation_inspect` | `campaign.operation.inspect` | `campaign operation inspect --input FILE --json`                                                | `campaigns:read`                    | browser operation receipt                     |
-| `campaign_delivery_inspect`  | `campaign.delivery.inspect`  | `campaign delivery inspect --input FILE --json`                                                 | `campaigns:read`                    | current delivery settings and revision        |
-| `campaign_delivery_update`   | `campaign.delivery.update`   | `campaign delivery update --input FILE --json`                                                  | `campaigns:read`, `campaigns:write` | ongoing Instagram delivery settings           |
+| MCP tool                     | HTTP tool                    | CLI suffix                                                                                      | Required scope                                        | Effect                                        |
+| ---------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------- |
+| `analytics_summary`          | `analytics.summary`          | `analytics summary --scope <scope> [--campaign ID_OR_NAME] --json`                              | `workspace:read`                                      | bounded read                                  |
+| `workspace_briefing`         | `workspace.briefing`         | `workspace briefing --json`                                                                     | `workspace:read`                                      | bounded read                                  |
+| `campaigns_list`             | `campaigns.list`             | `campaigns list [options] --json`                                                               | `campaigns:read`                                      | bounded read                                  |
+| `campaign_inspect`           | `campaign.inspect`           | `campaign inspect [campaign-id] --json`                                                         | `campaigns:read`                                      | bounded read                                  |
+| `sending_inspect`            | `sending.inspect`            | `sending inspect [campaign-id] --json`                                                          | `sending:read`                                        | bounded read                                  |
+| `replies_list`               | `replies.list`               | `replies list [campaign-id] [options] --json`                                                   | `inbox:read`                                          | bounded read                                  |
+| `conversations_list`         | `conversations.list`         | `conversations list --input FILE --json`                                                        | `inbox:read`                                          | paginated inbox conversation read             |
+| `conversation_inspect`       | `conversation.inspect`       | `conversation inspect --input FILE --json`                                                      | `inbox:read`                                          | actual message page read                      |
+| `conversation_update`        | `conversation.update`        | `conversation update --input FILE --json`                                                       | `inbox:read`, `inbox:write`                           | guarded inbox state update                    |
+| `conversation_reply`         | `conversation.reply`         | `conversation reply --input FILE --json`                                                        | `inbox:read`, `inbox:write`                           | exact instructed reply action                 |
+| `conversation_reply_inspect` | `conversation.reply.inspect` | `conversation reply inspect --input FILE --json`                                                | `inbox:read`                                          | durable reply delivery receipt                |
+| `campaign_followups_list`    | `campaign.followups.list`    | `campaign followups list --input FILE --json`                                                   | `sending:read`                                        | paginated follow-up jobs                      |
+| `campaign_followups_cancel`  | `campaign.followups.cancel`  | `campaign followups cancel --input FILE --json`                                                 | `campaigns:write`                                     | cancel queued prospect chains                 |
+| `campaign_outcomes_list`     | `campaign.outcomes.list`     | `campaign outcomes list --input FILE --json`                                                    | `sending:read`                                        | paginated send/skip/failure events            |
+| `senders_inspect`            | `senders.inspect`            | `senders inspect --json`                                                                        | `sending:read`                                        | browser and mailbox readiness                 |
+| `history_list`               | `history.list`               | `history list --input FILE --json`                                                              | `campaigns:read`, `sending:read`                      | paginated confirmed sends                     |
+| `pipeline_inspect`           | `pipeline.inspect`           | `pipeline inspect [campaign-id] --json`                                                         | `pipeline:read`                                       | bounded read                                  |
+| `pipeline_cards_list`        | `pipeline.cards.list`        | `pipeline cards list --input FILE --json`                                                       | `pipeline:read`                                       | paginated exact cards                         |
+| `pipeline_stage_update`      | `pipeline.stage.update`      | `pipeline stage update --input FILE --json`                                                     | `pipeline:read`, `pipeline:write`                     | guarded stage change                          |
+| `pipeline_note_list`         | `pipeline.note.list`         | `pipeline note list --input FILE --json`                                                        | `pipeline:read`                                       | exact card notes                              |
+| `pipeline_note_add`          | `pipeline.note.add`          | `pipeline note add --input FILE --json`                                                         | `pipeline:read`, `pipeline:write`                     | idempotent private note                       |
+| `company_timeline`           | `company.timeline`           | `company timeline <campaign-id> <outreach-id> --json`                                           | `pipeline:read`, `campaigns:read`                     | bounded read                                  |
+| `industry_lookup`            | `industry.lookup`            | `industry lookup <query> [options] --json`                                                      | `audiences:read`                                      | planning read                                 |
+| `campaign_validate`          | `campaign.validate`          | `campaign validate --state <file> --json`                                                       | `audiences:read`                                      | planning read                                 |
+| `audience_preview`           | `audience.preview`           | `audience preview --state <file> [--sample-size N] --json`                                      | `audiences:read`                                      | exact preview read                            |
+| `lists_list`                 | `lists.list`                 | `lists list [--query TEXT] [--limit N] [--offset N] --json`                                     | `campaigns:read`                                      | saved-list discovery                          |
+| `list_inspect`               | `list.inspect`               | `list inspect LIST_ID [--username HANDLE] [--limit N] [--offset N] --json`                      | `campaigns:read`                                      | exact audience and membership                 |
+| `list_target_remove`         | `list.target.remove`         | `list target remove LIST_ID --username HANDLE --expected-version TIMESTAMP --json`              | `campaigns:write`                                     | owner-only target removal                     |
+| `campaign_draft_prepare`     | `campaign.draft.prepare`     | `campaign draft prepare --input FILE --json`                                                    | `campaigns:read`, `campaigns:write`                   | disabled Instagram draft                      |
+| `campaign_draft_update`      | `campaign.draft.update`      | `campaign draft update --input FILE --json`                                                     | `campaigns:read`, `campaigns:write`                   | update an existing disabled draft             |
+| `list_import`                | `list.import`                | `list import --name NAME --file FILE [--idempotency-key KEY] --json`                            | `campaigns:write`                                     | private Instagram username import             |
+| `list_prepare`               | `list.prepare`               | `list prepare --state FILE --reviewed-audience PREVIEW_JSON [--idempotency-key KEY] --json`     | `audiences:read`, `campaigns:write`                   | private idempotent draft                      |
+| `campaign_prepare`           | `campaign.prepare`           | `campaign prepare --state FILE --reviewed-audience PREVIEW_JSON [--idempotency-key KEY] --json` | `audiences:read`, `campaigns:write`                   | private idempotent draft                      |
+| `campaign_launch_preflight`  | `campaign.launch.preflight`  | `campaign launch preflight <campaign-id> --idempotency-key KEY --json`                          | `campaigns:launch`                                    | readiness and approval request                |
+| `campaign_launch`            | `campaign.launch`            | `campaign launch <campaign-id> --idempotency-key KEY --authorization-id ID --json`              | `campaigns:launch`                                    | approved external action                      |
+| `campaign_pause_preflight`   | `campaign.pause.preflight`   | `campaign pause preflight <campaign-id> --idempotency-key KEY --json`                           | `campaigns:write`                                     | eligibility and approval request              |
+| `campaign_pause`             | `campaign.pause`             | `campaign pause <campaign-id> --idempotency-key KEY --authorization-id ID --json`               | `campaigns:write`                                     | approved workspace action                     |
+| `companies_filters`          | `companies.filters`          | `companies filters --input FILE --json`                                                         | `audiences:read`                                      | country-specific company filter options       |
+| `companies_search`           | `companies.search`           | `companies search --input FILE --json`                                                          | `audiences:read`                                      | company search with app filters               |
+| `company_inspect`            | `company.inspect`            | `company inspect --input FILE --json`                                                           | `audiences:read`                                      | full research and contact profile             |
+| `companies_fit_start`        | `companies.fit.start`        | `companies fit start --input FILE --json`                                                       | `campaigns:read`, `audiences:read`, `campaigns:write` | durable exact audience snapshot               |
+| `companies_fit_advance`      | `companies.fit.advance`      | `companies fit advance --input FILE --json`                                                     | `campaigns:read`, `audiences:read`, `campaigns:write` | bounded website evidence batch                |
+| `companies_fit_results`      | `companies.fit.results`      | `companies fit results --input FILE --json`                                                     | `campaigns:read`, `audiences:read`                    | paginated fit evidence and counts             |
+| `companies_fit_proposal`     | `companies.fit.proposal`     | `companies fit proposal --input FILE --json`                                                    | `campaigns:read`, `audiences:read`                    | exact dry-run refinement input                |
+| `companies_list_prepare`     | `companies.list.prepare`     | `companies list prepare --input FILE --json`                                                    | `audiences:read`, `campaigns:write`                   | private company shortlist with contact routes |
+| `companies_list_inspect`     | `companies.list.inspect`     | `companies list inspect --input FILE --json`                                                    | `campaigns:read`, `audiences:read`                    | saved company list inspection                 |
+| `companies_list_refine`      | `companies.list.refine`      | `companies list refine --input FILE --json`                                                     | `campaigns:read`, `campaigns:write`                   | vetted copy for one disabled draft            |
+| `campaign_operation_inspect` | `campaign.operation.inspect` | `campaign operation inspect --input FILE --json`                                                | `campaigns:read`                                      | browser operation receipt                     |
+| `campaign_delivery_inspect`  | `campaign.delivery.inspect`  | `campaign delivery inspect --input FILE --json`                                                 | `campaigns:read`                                      | current delivery settings and revision        |
+| `campaign_delivery_update`   | `campaign.delivery.update`   | `campaign delivery update --input FILE --json`                                                  | `campaigns:read`, `campaigns:write`                   | ongoing Instagram delivery settings           |
 
 ## Company research and saved contacts
 
@@ -84,7 +88,7 @@ then `companies_search` with the exact requested criteria. For example:
 }
 ```
 
-All six company tools accept a JSON file through CLI `--input FILE`. Search
+All ten company tools accept a JSON file through CLI `--input FILE`. Search
 pages contain at most 100 companies. Echo the returned `querySignature` and
 `expectedRevision` when paging; do not present the sample size as an exact total.
 Call `company_inspect` with returned country/businessId identities for full
@@ -121,6 +125,26 @@ unstarted draft. The original list stays available. A changed version, count,
 selection, or started campaign blocks the swap. Inspect both resources after
 any uncertain result and retry with the same key only if the draft is still
 unstarted. Neither preview nor application starts sending.
+
+`companies_fit_start` requires the disabled campaign and company list IDs,
+their inspected `updatedAt` values, exact company and target counts, a short
+description of the appointment-setting offer, and an idempotency key. It
+returns a durable `runId`. Repeated `companies_fit_advance` calls process at
+most 16 company websites each; `progress` reports exact pending, processing,
+complete, strong, possible, poor, and unknown counts. Calls can resume after
+interruption. A blocked site, missing website, weak evidence, or unavailable
+classification stays unknown; this is not evidence of poor fit.
+
+`companies_fit_results` pages through each reason and bounded source excerpt.
+When paging during a run, echo `progress.complete` as `expectedComplete` so
+advancing results cannot silently shift pages. Once all companies complete,
+`companies_fit_proposal` returns only high-confidence poor-fit identities and
+exact remaining company and route counts. If it returns a non-null
+`refinePreviewInput`, call `companies_list_refine` with that input, review the
+dry run with the user, then apply the reviewed digest when instructed.
+`refreshEvidence: true` at run start bypasses the seven-day workspace cache.
+Review runs and excerpts expire after 30 days; no static company-fit catalog
+is maintained.
 
 ## Saved-list workflow
 

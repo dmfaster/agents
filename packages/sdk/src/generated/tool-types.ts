@@ -41,6 +41,10 @@ export type AgentToolInputMap = {
   "companies.filters": operations["companyFilters"]["requestBody"]["content"]["application/json"];
   "companies.search": operations["companySearch"]["requestBody"]["content"]["application/json"];
   "company.inspect": operations["companyInspect"]["requestBody"]["content"]["application/json"];
+  "companies.fit.start": operations["companyFitStart"]["requestBody"]["content"]["application/json"];
+  "companies.fit.advance": operations["companyFitAdvance"]["requestBody"]["content"]["application/json"];
+  "companies.fit.results": operations["companyFitResults"]["requestBody"]["content"]["application/json"];
+  "companies.fit.proposal": operations["companyFitProposal"]["requestBody"]["content"]["application/json"];
   "companies.list.prepare": operations["companyListPrepare"]["requestBody"]["content"]["application/json"];
   "companies.list.inspect": operations["companyListInspect"]["requestBody"]["content"]["application/json"];
   "companies.list.refine": operations["companyListRefine"]["requestBody"]["content"]["application/json"];
@@ -168,6 +172,18 @@ export type AgentToolDataMap = {
   >;
   "company.inspect": NonNullable<
     operations["companyInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.fit.start": NonNullable<
+    operations["companyFitStart"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.fit.advance": NonNullable<
+    operations["companyFitAdvance"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.fit.results": NonNullable<
+    operations["companyFitResults"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.fit.proposal": NonNullable<
+    operations["companyFitProposal"]["responses"][200]["content"]["application/json"]["data"]
   >;
   "companies.list.prepare": NonNullable<
     operations["companyListPrepare"]["responses"][200]["content"]["application/json"]["data"]

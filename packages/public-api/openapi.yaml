@@ -1877,6 +1877,160 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/agent/tools/companies.fit.start:
+    post:
+      tags: [Agent tools]
+      operationId: companyFitStart
+      summary: Start a company fit review
+      description: Snapshot a disabled campaign's exact company list for a resumable website-evidence review. Creates no campaign changes and never sends messages.
+      x-dmfaster-effect: draft
+      x-dmfaster-required-scopes: [campaigns:read, audiences:read, campaigns:write]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: companies_fit_start
+        title: Start company fit review
+        description: Snapshot a disabled campaign's exact audience for a resumable website-evidence review. Never changes the audience or starts sending.
+        annotations:
+          {
+            readOnlyHint: false,
+            destructiveHint: false,
+            idempotentHint: true,
+            openWorldHint: false,
+          }
+      x-dmfaster-cli:
+        { section: B2B company prospecting, usage: "companies fit start --input FILE" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CompanyFitStartInput" }
+      responses:
+        "200":
+          description: Review run and exact progress
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CompanyFitStartResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/companies.fit.advance:
+    post:
+      tags: [Agent tools]
+      operationId: companyFitAdvance
+      summary: Review the next company batch
+      description: Claim and review up to 16 companies in a durable run. Repeated calls resume after interruption; concurrent callers cannot claim the same item. A missing or blocked site is unknown, not poor fit.
+      x-dmfaster-effect: draft
+      x-dmfaster-required-scopes: [campaigns:read, audiences:read, campaigns:write]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: companies_fit_advance
+        title: Review next company batch
+        description: Review up to 16 websites in a durable audience run. Repeat until pending and processing are zero; no audience write occurs.
+        annotations:
+          {
+            readOnlyHint: false,
+            destructiveHint: false,
+            idempotentHint: false,
+            openWorldHint: false,
+          }
+      x-dmfaster-cli:
+        { section: B2B company prospecting, usage: "companies fit advance --input FILE" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CompanyFitAdvanceInput" }
+      responses:
+        "200":
+          description: Exact review progress
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CompanyFitAdvanceResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/companies.fit.results:
+    post:
+      tags: [Agent tools]
+      operationId: companyFitResults
+      summary: Inspect company fit evidence
+      description: Paginated, private website evidence and conservative fit ratings for one run, with exact counts and stable run identity.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: [campaigns:read, audiences:read]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_fit_results
+        title: Inspect company fit evidence
+        description: Read paginated source excerpts, fit reasons, priority, and exact progress for one review run.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        { section: B2B company prospecting, usage: "companies fit results --input FILE" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CompanyFitResultsInput" }
+      responses:
+        "200":
+          description: Paginated fit evidence and exact progress
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CompanyFitResultsResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/companies.fit.proposal:
+    post:
+      tags: [Agent tools]
+      operationId: companyFitProposal
+      summary: Prepare reviewed audience refinement
+      description: After every company is reviewed, return high-confidence poor-fit exclusions and exact counts as a dry-run companies.list.refine input. The caller must preview and explicitly apply that separate operation.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: [campaigns:read, audiences:read]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_fit_proposal
+        title: Prepare fit-based audience refinement
+        description: Return exact guarded dry-run input for excluding only high-confidence poor fits. Never changes the campaign.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        { section: B2B company prospecting, usage: "companies fit proposal --input FILE" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CompanyFitProposalInput" }
+      responses:
+        "200":
+          description: Guarded refinement preview input
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CompanyFitProposalResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
   /api/v1/agent/tools/companies.list.prepare:
     post:
       tags:
@@ -2647,6 +2801,10 @@ components:
         - companies.filters
         - companies.search
         - company.inspect
+        - companies.fit.start
+        - companies.fit.advance
+        - companies.fit.results
+        - companies.fit.proposal
         - companies.list.prepare
         - companies.list.inspect
         - companies.list.refine
@@ -6079,6 +6237,202 @@ components:
               oneOf:
                 - $ref: "#/components/schemas/CompanyInspectData"
                 - type: "null"
+    CompanyFitStartInput:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          campaignId,
+          listId,
+          expectedCampaignUpdatedAt,
+          expectedListUpdatedAt,
+          expectedTotal,
+          expectedTargetCount,
+          offer,
+          idempotencyKey,
+        ]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        listId: { $ref: "#/components/schemas/ResourceId" }
+        expectedCampaignUpdatedAt: { type: string, minLength: 20, maxLength: 40 }
+        expectedListUpdatedAt: { type: string, minLength: 20, maxLength: 40 }
+        expectedTotal: { type: integer, minimum: 1, maximum: 25000 }
+        expectedTargetCount: { type: integer, minimum: 0, maximum: 125000 }
+        offer:
+          {
+            type: string,
+            minLength: 20,
+            maxLength: 500,
+            description: What B2B appointment-setting service is being sold to these companies.,
+          }
+        refreshEvidence:
+          {
+            type: boolean,
+            description: Ignore recent evidence from the same workspace and fetch websites anew.,
+          }
+        idempotencyKey: { $ref: "#/components/schemas/IdempotencyKey" }
+    CompanyFitAdvanceInput:
+      type: object
+      additionalProperties: false
+      required: [runId]
+      properties:
+        runId: { $ref: "#/components/schemas/ResourceId" }
+        limit: { type: integer, minimum: 1, maximum: 16 }
+    CompanyFitResultsInput:
+      type: object
+      additionalProperties: false
+      required: [runId]
+      properties:
+        runId: { $ref: "#/components/schemas/ResourceId" }
+        tier: { type: string, enum: [strong, possible, poor, unknown] }
+        offset: { type: integer, minimum: 0, maximum: 1000000 }
+        limit: { type: integer, minimum: 1, maximum: 100 }
+        sort: { type: string, enum: [priority, audience] }
+        expectedComplete:
+          type: integer
+          minimum: 0
+          maximum: 25000
+          description: Echo progress.complete from the first page when continuing so advancing runs cannot shift pages.
+    CompanyFitProposalInput:
+      type: object
+      additionalProperties: false
+      required: [runId]
+      properties:
+        runId: { $ref: "#/components/schemas/ResourceId" }
+    CompanyFitProgress:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          runId,
+          campaignId,
+          listId,
+          status,
+          total,
+          pending,
+          processing,
+          complete,
+          strong,
+          possible,
+          poor,
+          unknown,
+          readyForProposal,
+        ]
+      properties:
+        runId: { type: string }
+        campaignId: { type: string }
+        listId: { type: string }
+        status: { type: string, enum: [initializing, ready, stale] }
+        total: { type: integer, minimum: 1 }
+        pending: { type: integer, minimum: 0 }
+        processing: { type: integer, minimum: 0 }
+        complete: { type: integer, minimum: 0 }
+        strong: { type: integer, minimum: 0 }
+        possible: { type: integer, minimum: 0 }
+        poor: { type: integer, minimum: 0 }
+        unknown: { type: integer, minimum: 0 }
+        readyForProposal: { type: boolean }
+    CompanyFitEvidence:
+      type: object
+      additionalProperties: false
+      required: [url, text, observedAt]
+      properties:
+        url: { type: string }
+        text: { type: string }
+        observedAt: { type: string }
+    CompanyFitItem:
+      type: object
+      additionalProperties: false
+      required:
+        [country, businessId, companyName, websiteUrl, status, tier, priority, reason, evidence]
+      properties:
+        country: { type: string }
+        businessId: { type: string }
+        companyName: { type: string }
+        websiteUrl: { type: string }
+        status: { type: string, enum: [pending, processing, complete] }
+        tier: { type: string, enum: [strong, possible, poor, unknown] }
+        priority: { type: integer, minimum: 0, maximum: 100 }
+        reason: { type: string }
+        evidence: { type: array, items: { $ref: "#/components/schemas/CompanyFitEvidence" } }
+        checkedAt: { type: [string, "null"] }
+        modelVersion: { type: string }
+    CompanyFitStartData:
+      type: object
+      additionalProperties: false
+      required: [replayed, progress]
+      properties:
+        replayed: { type: boolean }
+        progress: { $ref: "#/components/schemas/CompanyFitProgress" }
+    CompanyFitAdvanceData:
+      type: object
+      additionalProperties: false
+      required: [processed, progress]
+      properties:
+        processed: { type: integer, minimum: 0, maximum: 16 }
+        progress: { $ref: "#/components/schemas/CompanyFitProgress" }
+    CompanyFitResultsData:
+      type: object
+      additionalProperties: false
+      required: [progress, totalMatching, items, nextOffset]
+      properties:
+        progress: { $ref: "#/components/schemas/CompanyFitProgress" }
+        totalMatching: { type: integer, minimum: 0 }
+        items: { type: array, items: { $ref: "#/components/schemas/CompanyFitItem" } }
+        nextOffset: { type: [integer, "null"] }
+    CompanyFitProposalData:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          progress,
+          proposedExclusions,
+          expectedRemaining,
+          expectedRemainingTargetCount,
+          refinePreviewInput,
+        ]
+      properties:
+        progress: { $ref: "#/components/schemas/CompanyFitProgress" }
+        proposedExclusions: { type: integer, minimum: 0 }
+        expectedRemaining: { type: integer, minimum: 1 }
+        expectedRemainingTargetCount: { type: integer, minimum: 0 }
+        refinePreviewInput:
+          oneOf:
+            - $ref: "#/components/schemas/CompanyListRefineInput"
+            - type: "null"
+    CompanyFitStartResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.fit.start }
+            data:
+              { oneOf: [{ $ref: "#/components/schemas/CompanyFitStartData" }, { type: "null" }] }
+    CompanyFitAdvanceResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.fit.advance }
+            data:
+              { oneOf: [{ $ref: "#/components/schemas/CompanyFitAdvanceData" }, { type: "null" }] }
+    CompanyFitResultsResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.fit.results }
+            data:
+              { oneOf: [{ $ref: "#/components/schemas/CompanyFitResultsData" }, { type: "null" }] }
+    CompanyFitProposalResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.fit.proposal }
+            data:
+              { oneOf: [{ $ref: "#/components/schemas/CompanyFitProposalData" }, { type: "null" }] }
+
     CompanyListPrepareInput:
       type: object
       additionalProperties: false

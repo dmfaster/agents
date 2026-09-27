@@ -462,6 +462,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/companies.fit.advance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Review the next company batch
+         * @description Claim and review up to 16 companies in a durable run. Repeated calls resume after interruption; concurrent callers cannot claim the same item. A missing or blocked site is unknown, not poor fit.
+         */
+        post: operations["companyFitAdvance"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.fit.proposal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Prepare reviewed audience refinement
+         * @description After every company is reviewed, return high-confidence poor-fit exclusions and exact counts as a dry-run companies.list.refine input. The caller must preview and explicitly apply that separate operation.
+         */
+        post: operations["companyFitProposal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.fit.results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect company fit evidence
+         * @description Paginated, private website evidence and conservative fit ratings for one run, with exact counts and stable run identity.
+         */
+        post: operations["companyFitResults"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.fit.start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start a company fit review
+         * @description Snapshot a disabled campaign's exact company list for a resumable website-evidence review. Creates no campaign changes and never sends messages.
+         */
+        post: operations["companyFitStart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/companies.list.inspect": {
         parameters: {
             query?: never;
@@ -1276,7 +1356,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -1878,6 +1958,114 @@ export interface components {
             data?: components["schemas"]["CompanyFiltersData"] | null;
             /** @constant */
             tool?: "companies.filters";
+        };
+        CompanyFitAdvanceData: {
+            processed: number;
+            progress: components["schemas"]["CompanyFitProgress"];
+        };
+        CompanyFitAdvanceInput: {
+            limit?: number;
+            runId: components["schemas"]["ResourceId"];
+        };
+        CompanyFitAdvanceResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyFitAdvanceData"] | null;
+            /** @constant */
+            tool?: "companies.fit.advance";
+        };
+        CompanyFitEvidence: {
+            observedAt: string;
+            text: string;
+            url: string;
+        };
+        CompanyFitItem: {
+            businessId: string;
+            checkedAt?: string | null;
+            companyName: string;
+            country: string;
+            evidence: components["schemas"]["CompanyFitEvidence"][];
+            modelVersion?: string;
+            priority: number;
+            reason: string;
+            /** @enum {string} */
+            status: "pending" | "processing" | "complete";
+            /** @enum {string} */
+            tier: "strong" | "possible" | "poor" | "unknown";
+            websiteUrl: string;
+        };
+        CompanyFitProgress: {
+            campaignId: string;
+            complete: number;
+            listId: string;
+            pending: number;
+            poor: number;
+            possible: number;
+            processing: number;
+            readyForProposal: boolean;
+            runId: string;
+            /** @enum {string} */
+            status: "initializing" | "ready" | "stale";
+            strong: number;
+            total: number;
+            unknown: number;
+        };
+        CompanyFitProposalData: {
+            expectedRemaining: number;
+            expectedRemainingTargetCount: number;
+            progress: components["schemas"]["CompanyFitProgress"];
+            proposedExclusions: number;
+            refinePreviewInput: components["schemas"]["CompanyListRefineInput"] | null;
+        };
+        CompanyFitProposalInput: {
+            runId: components["schemas"]["ResourceId"];
+        };
+        CompanyFitProposalResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyFitProposalData"] | null;
+            /** @constant */
+            tool?: "companies.fit.proposal";
+        };
+        CompanyFitResultsData: {
+            items: components["schemas"]["CompanyFitItem"][];
+            nextOffset: number | null;
+            progress: components["schemas"]["CompanyFitProgress"];
+            totalMatching: number;
+        };
+        CompanyFitResultsInput: {
+            /** @description Echo progress.complete from the first page when continuing so advancing runs cannot shift pages. */
+            expectedComplete?: number;
+            limit?: number;
+            offset?: number;
+            runId: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            sort?: "priority" | "audience";
+            /** @enum {string} */
+            tier?: "strong" | "possible" | "poor" | "unknown";
+        };
+        CompanyFitResultsResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyFitResultsData"] | null;
+            /** @constant */
+            tool?: "companies.fit.results";
+        };
+        CompanyFitStartData: {
+            progress: components["schemas"]["CompanyFitProgress"];
+            replayed: boolean;
+        };
+        CompanyFitStartInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            expectedCampaignUpdatedAt: string;
+            expectedListUpdatedAt: string;
+            expectedTargetCount: number;
+            expectedTotal: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            listId: components["schemas"]["ResourceId"];
+            /** @description What B2B appointment-setting service is being sold to these companies. */
+            offer: string;
+            /** @description Ignore recent evidence from the same workspace and fetch websites anew. */
+            refreshEvidence?: boolean;
+        };
+        CompanyFitStartResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyFitStartData"] | null;
+            /** @constant */
+            tool?: "companies.fit.start";
         };
         /** @description Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown. */
         CompanyInspectData: {
@@ -3654,6 +3842,126 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CompanyFiltersResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyFitAdvance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyFitAdvanceInput"];
+            };
+        };
+        responses: {
+            /** @description Exact review progress */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyFitAdvanceResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyFitProposal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyFitProposalInput"];
+            };
+        };
+        responses: {
+            /** @description Guarded refinement preview input */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyFitProposalResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyFitResults: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyFitResultsInput"];
+            };
+        };
+        responses: {
+            /** @description Paginated fit evidence and exact progress */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyFitResultsResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyFitStart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyFitStartInput"];
+            };
+        };
+        responses: {
+            /** @description Review run and exact progress */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyFitStartResult"];
                 };
             };
             400: components["responses"]["BadRequest"];
