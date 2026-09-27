@@ -56,7 +56,7 @@ missing links, small samples, unequal elapsed time and later sync limit comparis
 ## Calendar booking and calls
 
 The owner needs `calendar:read` for status/availability and `calendar:write`,
-`inbox:read`, `pipeline:write` for booking. Existing grants never expand silently.
+`calendar:read`, `inbox:read`, `pipeline:write` for booking. Existing grants never expand silently.
 Use the ordinary human-approved credential upgrade once when scopes are missing.
 
 Availability covers at most seven days, returns 15-minute start increments and
