@@ -14,7 +14,7 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-The 1.7.0 source candidate exposes 50 bounded domain tools. It adds durable,
+The 1.7.0 release exposes 50 bounded domain tools. It adds durable,
 website-backed company fit review for B2B appointment setting, exact progress,
 paginated source evidence, and a guarded audience refinement proposal. The
 earlier company/contact refinement, multichannel draft editing, inbox,
@@ -155,7 +155,7 @@ and workspace timezone. Edits preserve omitted settings and reject stale
 versions or started campaigns. Saving or toggling a draft window leaves it
 disabled; an explicitly instructed, authorized launch arms the schedule.
 
-## Agent 1.7.0 candidate
+## Agent 1.7.0 release
 
 Version 1.7.0 adds `companies_fit_start`, `companies_fit_advance`,
 `companies_fit_results`, and `companies_fit_proposal`. The review uses bounded

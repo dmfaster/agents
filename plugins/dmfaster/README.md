@@ -6,7 +6,7 @@ stdio MCP 2026-07-28 server definition. It includes the portable Agent Plugins
 Codex, Claude, and Cursor. Hosts that have not
 implemented that revision use the same skill through the version-pinned CLI.
 
-The 1.7.0 source candidate exposes 50 bounded domain tools plus an optional
+The 1.7.0 release exposes 50 bounded domain tools plus an optional
 portable MCP Apps campaign workspace. It covers company research, exact
 audience and draft preparation, inbox and pipeline work, follow-up control,
 sender readiness and paginated outcomes. Replies require the user's explicit
@@ -29,13 +29,9 @@ a legacy MCP downgrade.
 
 ## Release status
 
-This public source targets the version-pinned 1.7.0 candidate packages. Installed
-users receive the new tools only after the trusted package release and plugin update.
-
-Do not point users at the private monorepo as a public marketplace. Synchronize
-this plugin directory to the approved public repository after package, privacy,
-and platform review. That repository can act as a Codex/ChatGPT desktop repo
-marketplace and a Claude Code marketplace. It is not a universal
+The four version-pinned 1.7.0 packages are published through trusted npm
+publishing with provenance. This public repository is the Codex/ChatGPT desktop
+repo marketplace and Claude Code marketplace. It is not a universal
 ChatGPT/Codex Plugins Directory submission: that directory requires a publicly
 hosted MCP endpoint, while Agent 1.0 intentionally runs the version-pinned local
 stdio server.
