@@ -4,6 +4,7 @@ export const AGENT_TOOL_NAMES = [
   "workspace.briefing",
   "campaigns.list",
   "campaign.inspect",
+  "campaign.copy.inspect",
   "sending.inspect",
   "replies.list",
   "conversations.list",
@@ -79,6 +80,11 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     exposure: "public_api",
   },
   "campaign.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.copy.inspect": {
     effect: "read",
     approval: "none",
     exposure: "public_api",
@@ -374,6 +380,7 @@ export const AGENT_TOOL_SCOPES = {
   "workspace.briefing": ["workspace:read"],
   "campaigns.list": ["campaigns:read"],
   "campaign.inspect": ["campaigns:read"],
+  "campaign.copy.inspect": ["campaigns:read"],
   "sending.inspect": ["sending:read"],
   "replies.list": ["inbox:read"],
   "conversations.list": ["inbox:read"],
@@ -525,7 +532,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "campaign_inspect",
       title: "Inspect campaign",
       description:
-        "Read delivery, outcome, and pipeline facts for a campaign identifier returned by DM Faster.",
+        "Read saved social copy, delivery, outcomes, and pipeline facts for a campaign identifier returned by DM Faster. Use campaign_copy_inspect for LinkedIn invitation and accepted-message settings.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -537,6 +544,25 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "Workspace reads",
       usage: "campaign inspect [CAMPAIGN_ID]",
       command: ["campaign", "inspect"],
+    },
+  },
+  "campaign.copy.inspect": {
+    mcp: {
+      name: "campaign_copy_inspect",
+      title: "Inspect campaign copy and LinkedIn sequence",
+      description:
+        "Read exact saved social opening copy, LinkedIn invitation settings, both sequences and effective accepted-message variants for a campaign identifier returned by DM Faster.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Workspace reads",
+      usage: "campaign copy inspect CAMPAIGN_ID",
+      command: ["campaign", "copy", "inspect"],
     },
   },
   "sending.inspect": {
@@ -1009,9 +1035,9 @@ export const AGENT_TOOL_DEFINITIONS = {
   "campaign.draft.update": {
     mcp: {
       name: "campaign_draft_update",
-      title: "Update a saved Instagram campaign draft",
+      title: "Update a saved social campaign draft",
       description:
-        "Patch the name, messages, delivery cap, pacing, or automatic sending window of an existing disabled, unstarted Instagram draft. Echo campaign.inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale versions and started campaigns are rejected; saving a window never arms it. Inspect after an uncertain response before retrying. Never creates another campaign, enables sending, or launches.",
+        "Patch social copy, channel toggles, LinkedIn invitation and accepted-message sequence, delivery cap, pacing, or sending window of an existing disabled, unstarted social draft. Echo campaign.inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale versions and started campaigns are rejected; saving a window never arms it. Inspect after an uncertain response before retrying. Never creates another campaign, enables sending, or launches.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -1629,6 +1655,9 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   "campaign.inspect": {
     $ref: "#/components/schemas/CampaignInspectInput",
   },
+  "campaign.copy.inspect": {
+    $ref: "#/components/schemas/CampaignCopyInspectInput",
+  },
   "sending.inspect": {
     $ref: "#/components/schemas/SendingInspectInput",
   },
@@ -1885,6 +1914,16 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           },
         ],
         description: "Omit to use the selected, active, or most recent campaign.",
+      },
+    },
+  },
+  CampaignCopyInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
       },
     },
   },
@@ -3102,9 +3141,13 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
             maxLength: 300,
           },
           followUpSequence: {
+            description:
+              "Shared social follow-ups, or the accepted-message sequence for a LinkedIn-only campaign.",
             $ref: "#/components/schemas/CampaignFollowUpSequenceInput",
           },
           linkedinFollowUpSequence: {
+            description:
+              "For a mixed-channel campaign, step 1 is the message sent as soon as acceptance is verified, including an already-connected prospect. The required delayDays on step 1 does not delay that first message. Step 2, if present, uses its delayDays. A known human reply on another channel suppresses unsent LinkedIn steps.",
             $ref: "#/components/schemas/LinkedinFollowUpSequenceInput",
           },
           dailyCap: {

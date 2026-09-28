@@ -96,6 +96,7 @@ if (!existsSync(skillPath)) {
     "workspace_briefing",
     "campaigns_list",
     "campaign_inspect",
+    "campaign_copy_inspect",
     "sending_inspect",
     "replies_list",
     "pipeline_inspect",

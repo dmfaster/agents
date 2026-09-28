@@ -1,6 +1,6 @@
 # DM Faster MCP server
 
-Local stdio MCP server for the 33 DM Faster Agent 1.0 domain tools, one local
+Local stdio MCP server for the 62 DM Faster Agent 1.0 domain tools, one local
 `connection_status` tool, and one portable `campaign_workspace` presentation tool. It uses the MCP TypeScript SDK
 v2 serving entry in strict modern-only mode. MCP 2026-07-28 clients use the new
 per-request protocol; 2025-era initialization is explicitly rejected. The
@@ -21,7 +21,7 @@ or network access. It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 61 domain tools directly.
+continue to use all 62 domain tools directly.
 
 `audience_preview` returns a server-issued `reviewedAudience` identity with an
 exact, immutable search revision. The user must review that preview before a
@@ -43,13 +43,13 @@ tools satisfy the credential's scopes, with missing scopes for the others.
 Workspace role, plan, and action preconditions still apply when a tool runs.
 
 ```bash
-npx --yes @dmfaster/cli@1.8.0 auth login --json
-npx --yes @dmfaster/mcp-server@1.8.0
+npx --yes @dmfaster/cli@1.9.0 auth login --json
+npx --yes @dmfaster/mcp-server@1.9.0
 ```
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
-smaller ceiling. The MCP server can expose all 61 domain schemas and the
+smaller ceiling. The MCP server can expose all 62 domain schemas and the
 local connection and presentation schemas while the DM Faster API independently rejects
 domain tools outside the stored credential's scopes.
 
@@ -59,12 +59,13 @@ preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world. Domain tools also
 advertise output schemas generated from the public Agent API contract.
 
-The MCP names are the 61 domain tools:
+The MCP names are the 62 domain tools:
 
 - `analytics_summary`
 - `workspace_briefing`
 - `campaigns_list`
 - `campaign_inspect`
+- `campaign_copy_inspect`
 - `sending_inspect`
 - `replies_list`
 - `conversations_list`
@@ -151,7 +152,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.8.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.9.0"]
     }
   }
 }
@@ -205,6 +206,19 @@ Stale versions and started campaigns are rejected. After an uncertain
 response, inspect the campaign before retrying. No launch approval is needed to
 edit a disabled draft.
 
+For a mixed Instagram/Facebook/LinkedIn draft, use `campaign_copy_inspect` to
+read the exact invite mode, note, saved sequences, Instagram/Facebook
+`messageVariants`, and effective `linkedinAcceptedMessage`.
+To send an invitation without a note and then a DM, set `linkedinInviteMode` to
+`invite_only` and `linkedinFollowUpSequence` to an enabled sequence with a first
+LinkedIn step containing the DM text. That first step is queued as soon as the
+connection is accepted, or immediately if the person is already connected;
+its required `delayDays: 1` does not delay the acceptance message. Later steps
+use their configured delay. A known human reply on another campaign channel
+stops unsent LinkedIn steps, with a final check before sending. A LinkedIn-only
+campaign uses `followUpSequence` for these steps. Inspect after updating to
+verify the saved copy; editing never launches the draft.
+
 Automatic sending windows are also editable through `campaign.draft.update`:
 `instagramSendingWindowEnabled` is a boolean; `instagramSendingWindowStartMinute`
 is 0–1380; `instagramSendingWindowEndMinute` is 60–1440; and
@@ -241,7 +255,7 @@ Older lists are not automatically backfilled with contacts previously lost.
 This server behavior was available with the published 1.4.0 CLI and MCP server;
 saving a research list creates no campaign and sends nothing.
 
-## Review and meeting controls (1.8.0 source candidate)
+## Review and meeting controls (since 1.8.0)
 
 Review runs have durable status/history, cancellation, bounded coordination and
 best-N evidenced cohorts. Unknown research can check up to five current website

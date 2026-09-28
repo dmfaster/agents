@@ -16,7 +16,7 @@ authorizes launch or pause.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@1.8.0
+npx --yes @dmfaster/cli@1.9.0
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
@@ -29,6 +29,7 @@ only one input in a command may use `-`.
 | `workspace_briefing`         | `workspace.briefing`         | `workspace briefing --json`                                                                     | `workspace:read`                                      | bounded read                                  |
 | `campaigns_list`             | `campaigns.list`             | `campaigns list [options] --json`                                                               | `campaigns:read`                                      | bounded read                                  |
 | `campaign_inspect`           | `campaign.inspect`           | `campaign inspect [campaign-id] --json`                                                         | `campaigns:read`                                      | bounded read                                  |
+| `campaign_copy_inspect`      | `campaign.copy.inspect`      | `campaign copy inspect CAMPAIGN_ID --json`                                                      | `campaigns:read`                                      | exact copy and LinkedIn sequence read         |
 | `sending_inspect`            | `sending.inspect`            | `sending inspect [campaign-id] --json`                                                          | `sending:read`                                        | bounded read                                  |
 | `replies_list`               | `replies.list`               | `replies list [campaign-id] [options] --json`                                                   | `inbox:read`                                          | bounded read                                  |
 | `conversations_list`         | `conversations.list`         | `conversations list --input FILE --json`                                                        | `inbox:read`                                          | paginated inbox conversation read             |

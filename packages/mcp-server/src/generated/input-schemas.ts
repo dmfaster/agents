@@ -53,6 +53,7 @@ export const OptionalCampaignInputSchema = z
   })
   .strict();
 export const CampaignInspectInputSchema = OptionalCampaignInputSchema;
+export const CampaignCopyInspectInputSchema = z.object({ campaignId: ResourceIdSchema }).strict();
 export const SendingInspectInputSchema = OptionalCampaignInputSchema;
 export const RepliesListInputSchema = z
   .object({
@@ -625,8 +626,12 @@ export const CampaignDraftUpdateInputSchema = z
           .union([z.literal("invite_only"), z.literal("invite_with_note")])
           .optional(),
         linkedinInviteNote: z.string().max(300).optional(),
-        followUpSequence: CampaignFollowUpSequenceInputSchema.optional(),
-        linkedinFollowUpSequence: LinkedinFollowUpSequenceInputSchema.optional(),
+        followUpSequence: CampaignFollowUpSequenceInputSchema.describe(
+          "Shared social follow-ups, or the accepted-message sequence for a LinkedIn-only campaign.",
+        ).optional(),
+        linkedinFollowUpSequence: LinkedinFollowUpSequenceInputSchema.describe(
+          "For a mixed-channel campaign, step 1 is the message sent as soon as acceptance is verified, including an already-connected prospect. The required delayDays on step 1 does not delay that first message. Step 2, if present, uses its delayDays. A known human reply on another channel suppresses unsent LinkedIn steps.",
+        ).optional(),
         dailyCap: z.number().int().min(1).max(60).optional(),
         pacingSeconds: z.number().int().min(12).max(3600).optional(),
         instagramSendingWindowEnabled: z.boolean().optional(),
@@ -1020,6 +1025,7 @@ export const AGENT_INPUT_SCHEMAS = {
   "workspace.briefing": WorkspaceBriefingInputSchema,
   "campaigns.list": CampaignsListInputSchema,
   "campaign.inspect": CampaignInspectInputSchema,
+  "campaign.copy.inspect": CampaignCopyInspectInputSchema,
   "sending.inspect": SendingInspectInputSchema,
   "replies.list": RepliesListInputSchema,
   "conversations.list": ConversationsListInputSchema,

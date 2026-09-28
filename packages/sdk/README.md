@@ -10,7 +10,7 @@ scoped, workspace-bound `dmf_pat_…` token.
 > authorized source checkout.
 
 ```bash
-npm install @dmfaster/sdk@1.8.0
+npm install @dmfaster/sdk@1.9.0
 ```
 
 Non-loopback endpoints must use HTTPS. The client also refuses HTTP redirects so
@@ -101,7 +101,7 @@ Instagram campaigns always exclude known contacts: `onlyNewChats` and
 `skipPreviouslyMessaged` must both be `true`. Unsupported values are rejected
 before a draft is created.
 
-To change an existing disabled Instagram draft, use
+To change an existing disabled, unstarted social campaign draft, use
 `dmfaster campaign draft update --input update.json --json`. Supply `campaignId`,
 `expectedCampaignUpdatedAt` from campaign inspection, and a nonempty `updates`
 object containing any of `name`, `messageVariants`, `dailyCap` (1–60), or
@@ -109,6 +109,19 @@ object containing any of `name`, `messageVariants`, `dailyCap` (1–60), or
 Stale versions and started campaigns are rejected. After an uncertain
 response, inspect the campaign before retrying. No launch approval is needed to
 edit a disabled draft.
+
+For a mixed Instagram/Facebook/LinkedIn draft, call `campaign.copy.inspect`
+to read the exact invite mode, note, saved sequences, Instagram/Facebook
+`messageVariants`, and effective `linkedinAcceptedMessage`.
+To send an invitation without a note and then a DM, set `linkedinInviteMode` to
+`invite_only` and `linkedinFollowUpSequence` to an enabled sequence with a first
+LinkedIn step containing the DM text. That first step is queued as soon as the
+connection is accepted, or immediately if the person is already connected;
+its required `delayDays: 1` does not delay the acceptance message. Later steps
+use their configured delay. A known human reply on another campaign channel
+stops unsent LinkedIn steps, with a final check before sending. A LinkedIn-only
+campaign uses `followUpSequence` for these steps. Inspect after updating to
+verify the saved copy; editing never launches the draft.
 
 Automatic sending windows are also editable through `campaign.draft.update`:
 `instagramSendingWindowEnabled` is a boolean; `instagramSendingWindowStartMinute`
@@ -121,7 +134,7 @@ Send both endpoints when changing the interval. A saved window can be toggled
 on or off while the draft stays disabled; only the separate launch operation
 arms the schedule. Started campaigns cannot be edited with this draft tool.
 
-## Direct campaign control (1.8.0)
+## Direct campaign control (since 1.8.0)
 
 An owner can grant `campaigns:control` once when connecting an agent with the
 `full` profile. Explicit user instructions then suffice for launch or pause:
@@ -130,7 +143,7 @@ execution. The normal action scope is still required. Existing credentials
 retain per-action approval until the owner reconnects and grants this permission.
 Planning or preparing a campaign never authorizes launch.
 
-## Resumable reviews and complete exports (1.8.0 candidate)
+## Resumable reviews and complete exports (since 1.8.0)
 
 ```ts
 import { runCompanyFitReview, collectCompanyFitResults } from "@dmfaster/sdk";

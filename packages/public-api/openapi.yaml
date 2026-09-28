@@ -277,10 +277,12 @@ paths:
     post:
       tags: [Agent tools]
       operationId: campaignInspect
-      summary: Inspect campaign performance
+      summary: Inspect campaign settings and performance
       description: |
-        Returns execution and pipeline facts for a campaign. When campaignId is
-        omitted, the selected, active, or most recent campaign is used. Read-only.
+        Returns saved social copy and delivery settings alongside execution and
+        pipeline facts. When campaignId is omitted, the selected, active, or most
+        recent campaign is used. Read-only. Use campaign.copy.inspect for exact
+        LinkedIn invitation and accepted-message settings.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["campaigns:read"]
       x-dmfaster-approval: none
@@ -288,7 +290,7 @@ paths:
       x-dmfaster-mcp:
         name: campaign_inspect
         title: Inspect campaign
-        description: Read delivery, outcome, and pipeline facts for a campaign identifier returned by DM Faster.
+        description: Read saved social copy, delivery, outcomes, and pipeline facts for a campaign identifier returned by DM Faster. Use campaign_copy_inspect for LinkedIn invitation and accepted-message settings.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -315,6 +317,55 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CampaignInspectResult"
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/campaign.copy.inspect:
+    post:
+      tags: [Agent tools]
+      operationId: campaignCopyInspect
+      summary: Inspect exact social and LinkedIn campaign copy
+      description: |
+        Read the exact saved opening copy, LinkedIn invitation mode and note,
+        both follow-up sequences, and the effective first LinkedIn message.
+        The first LinkedIn message is queued on verified acceptance or when the
+        prospect is already connected; a recorded human reply on any channel
+        for the same company in this campaign suppresses unsent messages.
+        Read-only. Requires an exact campaign identifier returned by DM Faster.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["campaigns:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: campaign_copy_inspect
+        title: Inspect campaign copy and LinkedIn sequence
+        description: Read exact saved social opening copy, LinkedIn invitation settings, both sequences and effective accepted-message variants for a campaign identifier returned by DM Faster.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Workspace reads
+        usage: campaign copy inspect CAMPAIGN_ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignCopyInspectInput"
+      responses:
+        "200":
+          description: Exact campaign copy and LinkedIn settings.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignCopyInspectResult"
         "400": { $ref: "#/components/responses/BadRequest" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
@@ -1389,9 +1440,10 @@ paths:
       tags:
         - Agent tools
       operationId: campaignDraftUpdate
-      summary: Update a saved Instagram campaign draft
-      description: Patch the name, messages, delivery cap, pacing, or automatic sending window of an
-        existing disabled, unstarted Instagram draft. Echo campaign.inspect
+      summary: Update a saved social campaign draft
+      description: Patch social copy, channel toggles, LinkedIn invitation and
+        accepted-message sequence, delivery cap, pacing, or sending window of an
+        existing disabled, unstarted social draft. Echo campaign.inspect
         updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved.
         Stale versions and started campaigns are rejected; saving a window never arms it. Inspect
         after an uncertain response before retrying. Never creates another
@@ -1404,10 +1456,10 @@ paths:
       x-dmfaster-owner-only: true
       x-dmfaster-mcp:
         name: campaign_draft_update
-        title: Update a saved Instagram campaign draft
-        description:
-          Patch the name, messages, delivery cap, pacing, or automatic sending window of an
-          existing disabled, unstarted Instagram draft. Echo campaign.inspect
+        title: Update a saved social campaign draft
+        description: Patch social copy, channel toggles, LinkedIn invitation and
+          accepted-message sequence, delivery cap, pacing, or sending window of an
+          existing disabled, unstarted social draft. Echo campaign.inspect
           updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved.
           Stale versions and started campaigns are rejected; saving a window never arms it. Inspect
           after an uncertain response before retrying. Never creates another
@@ -3334,6 +3386,7 @@ components:
         - workspace.briefing
         - campaigns.list
         - campaign.inspect
+        - campaign.copy.inspect
         - sending.inspect
         - replies.list
         - conversations.list
@@ -3549,6 +3602,17 @@ components:
             data:
               oneOf:
                 - $ref: "#/components/schemas/CampaignInspectOutput"
+                - type: "null"
+
+    CampaignCopyInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: campaign.copy.inspect }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignCopyInspectOutput"
                 - type: "null"
 
     SendingInspectResult:
@@ -3800,6 +3864,14 @@ components:
 
     CampaignInspectInput:
       $ref: "#/components/schemas/OptionalCampaignInput"
+
+    CampaignCopyInspectInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId]
+      properties:
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
 
     SendingInspectInput:
       $ref: "#/components/schemas/OptionalCampaignInput"
@@ -4260,6 +4332,35 @@ components:
           type: array
           maxItems: 2
           items: { $ref: "#/components/schemas/CampaignFollowUpStepInput" }
+    CampaignFollowUpStepOutput:
+      type: object
+      additionalProperties: false
+      required: [stepIndex, delayDays, channel, fallbackChannel, subject, variants]
+      properties:
+        stepIndex: { type: integer, minimum: 1, maximum: 3 }
+        delayDays: { type: integer, minimum: 1, maximum: 30 }
+        channel:
+          type: string
+          enum: [inherit, instagram, facebook, linkedin, gmail]
+        fallbackChannel:
+          type: string
+          enum: [none, instagram, facebook, linkedin, gmail]
+        subject: { type: string }
+        variants:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items: { type: string }
+    CampaignFollowUpSequenceOutput:
+      type: object
+      additionalProperties: false
+      required: [enabled, steps]
+      properties:
+        enabled: { type: boolean }
+        steps:
+          type: array
+          maxItems: 3
+          items: { $ref: "#/components/schemas/CampaignFollowUpStepOutput" }
     CampaignDraftUpdateInput:
       type: object
       additionalProperties: false
@@ -4305,8 +4406,15 @@ components:
               type: string
               maxLength: 300
             followUpSequence:
+              description: Shared social follow-ups, or the accepted-message sequence for a LinkedIn-only campaign.
               $ref: "#/components/schemas/CampaignFollowUpSequenceInput"
             linkedinFollowUpSequence:
+              description: >-
+                For a mixed-channel campaign, step 1 is the message sent as soon
+                as acceptance is verified, including an already-connected
+                prospect. The required delayDays on step 1 does not delay that
+                first message. Step 2, if present, uses its delayDays. A known
+                human reply on another channel suppresses unsent LinkedIn steps.
               $ref: "#/components/schemas/LinkedinFollowUpSequenceInput"
             dailyCap:
               type: integer
@@ -5539,6 +5647,68 @@ components:
               minLength: 1
               maxLength: 500
             - type: "null"
+
+    CampaignCopyInspectOutput:
+      type: object
+      additionalProperties: false
+      required:
+        - campaignId
+        - campaignUpdatedAt
+        - name
+        - status
+        - channels
+        - messageVariants
+        - linkedinInviteMode
+        - linkedinInviteNote
+        - followUpSequence
+        - linkedinFollowUpSequence
+        - linkedinAcceptedMessage
+      properties:
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
+        campaignUpdatedAt:
+          $ref: "#/components/schemas/ResourceVersion"
+        name: { type: string }
+        status:
+          $ref: "#/components/schemas/CampaignStatus"
+        channels:
+          type: array
+          uniqueItems: true
+          items:
+            $ref: "#/components/schemas/TargetChannel"
+        messageVariants:
+          description: Saved Instagram/Facebook opening copy. This is not the LinkedIn accepted message.
+          type: array
+          items: { type: string }
+        linkedinInviteMode:
+          type: string
+          enum: [invite_only, invite_with_note]
+        linkedinInviteNote: { type: string }
+        followUpSequence:
+          oneOf:
+            - $ref: "#/components/schemas/CampaignFollowUpSequenceOutput"
+            - type: "null"
+        linkedinFollowUpSequence:
+          oneOf:
+            - $ref: "#/components/schemas/CampaignFollowUpSequenceOutput"
+            - type: "null"
+        linkedinAcceptedMessage:
+          type: object
+          additionalProperties: false
+          required: [configured, sequenceSource, messageVariants]
+          properties:
+            configured: { type: boolean }
+            sequenceSource:
+              type: string
+              enum: [none, followUpSequence, linkedinFollowUpSequence]
+            messageVariants:
+              type: array
+              items: { type: string }
+          description: >-
+            Step 1 is queued when acceptance is observed or when the prospect
+            is already connected, subject to sending controls and recorded
+            cross-channel human reply suppression. A required delayDays on
+            step 1 does not delay this accepted message.
 
     CampaignInspectOutput:
       type: object

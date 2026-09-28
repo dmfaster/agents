@@ -5,6 +5,7 @@ export type AgentToolInputMap = {
   "workspace.briefing": operations["workspaceBriefing"]["requestBody"]["content"]["application/json"];
   "campaigns.list": operations["campaignsList"]["requestBody"]["content"]["application/json"];
   "campaign.inspect": operations["campaignInspect"]["requestBody"]["content"]["application/json"];
+  "campaign.copy.inspect": operations["campaignCopyInspect"]["requestBody"]["content"]["application/json"];
   "sending.inspect": operations["sendingInspect"]["requestBody"]["content"]["application/json"];
   "replies.list": operations["repliesList"]["requestBody"]["content"]["application/json"];
   "conversations.list": operations["conversationsList"]["requestBody"]["content"]["application/json"];
@@ -75,6 +76,9 @@ export type AgentToolDataMap = {
   >;
   "campaign.inspect": NonNullable<
     operations["campaignInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.copy.inspect": NonNullable<
+    operations["campaignCopyInspect"]["responses"][200]["content"]["application/json"]["data"]
   >;
   "sending.inspect": NonNullable<
     operations["sendingInspect"]["responses"][200]["content"]["application/json"]["data"]
