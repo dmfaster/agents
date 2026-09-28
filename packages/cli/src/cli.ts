@@ -40,7 +40,7 @@ import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "1.8.0";
+export const CLI_VERSION = "1.9.0";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();
@@ -842,6 +842,12 @@ async function commandFromArgs(
   }
   if (tool === "campaign.inspect") {
     return { tool: "campaign.inspect", input: parseOptionalCampaignId(rest, "campaign inspect") };
+  }
+  if (tool === "campaign.copy.inspect") {
+    const input = parseOptionalCampaignId(rest, "campaign copy inspect");
+    if (!input.campaignId)
+      throw new UsageError("campaign copy inspect requires a campaign identifier.");
+    return { tool: "campaign.copy.inspect", input: { campaignId: input.campaignId } };
   }
   if (tool === "sending.inspect") {
     return { tool: "sending.inspect", input: parseOptionalCampaignId(rest, "sending inspect") };

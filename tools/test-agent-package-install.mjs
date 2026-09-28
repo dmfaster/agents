@@ -27,6 +27,7 @@ const expectedTools = [
   "analytics_summary",
   "audience_preview",
   "campaign_inspect",
+  "campaign_copy_inspect",
   "campaign_launch",
   "campaign_launch_preflight",
   "campaign_pause",
@@ -383,7 +384,7 @@ try {
     assert.deepEqual(
       listed.tools.map((tool) => tool.name).sort(),
       [...expectedTools].sort(),
-      "the packed MCP server must expose 61 domain tools, connection status, and the campaign workspace",
+      "the packed MCP server must expose 62 domain tools, connection status, and the campaign workspace",
     );
     for (const tool of listed.tools.filter(
       (candidate) => !["connection_status", "campaign_workspace"].includes(candidate.name),
@@ -410,7 +411,7 @@ try {
   }
 
   process.stdout.write(
-    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 with 50 Agent 1.0 domain tools plus connection status and the campaign workspace passed.\n",
+    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 with 62 Agent 1.0 domain tools plus connection status and the campaign workspace passed.\n",
   );
 } finally {
   const expectedPrefix = path.join(tmpdir(), "dmfaster-agent-packages-");

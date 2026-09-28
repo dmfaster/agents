@@ -18,6 +18,7 @@ const EXPECTED_TOOLS = new Map([
   ["workspace.briefing", { effect: "read", scopes: ["workspace:read"] }],
   ["campaigns.list", { effect: "read", scopes: ["campaigns:read"] }],
   ["campaign.inspect", { effect: "read", scopes: ["campaigns:read"] }],
+  ["campaign.copy.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["sending.inspect", { effect: "read", scopes: ["sending:read"] }],
   ["replies.list", { effect: "read", scopes: ["inbox:read"] }],
   ["conversations.list", { effect: "read", scopes: ["inbox:read"] }],

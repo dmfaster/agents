@@ -11,7 +11,7 @@ implementation, review, tests, migrations, or deployments, follow the
 repository's own development guidance unless the user explicitly asks for live
 workspace evidence.
 
-The suite has 61 narrow domain tools, including company-centric search,
+The suite has 62 narrow domain tools, including company-centric search,
 complete company research, private shortlists, operational reads, campaign
 planning, live delivery settings, authorized campaign controls, inspected inbox
 replies, pipeline updates, follow-up cancellation, and execution event pages.
@@ -149,6 +149,8 @@ Choose the narrowest read workflow that answers the request:
 - Use `workspace_briefing` for a broad update or priorities.
 - Use `campaigns_list` to discover and disambiguate campaigns.
 - Use `campaign_inspect` for delivery and outcome facts about one campaign.
+- Use `campaign_copy_inspect` for exact saved social copy, LinkedIn invitation
+  settings and the effective accepted-message sequence.
 - Use `sending_inspect` for queue, extension, browser-worker, or failed-send
   concerns.
 - Use `replies_list` for the older campaign reply-stage summary. It does not
@@ -274,6 +276,22 @@ uncertain response, inspect again before retrying; the previous version cannot
 overwrite a newer edit. Draft edits require no separate launch approval.
 Use a new preparation idempotency key only when intentionally creating another
 campaign; preparation retries never overwrite an edited or launched campaign.
+
+For LinkedIn invitation followed by a DM after acceptance in a mixed-channel
+draft, use `campaign_copy_inspect` to read `linkedinInviteMode`,
+`linkedinInviteNote`, and `linkedinFollowUpSequence` first. Set
+`linkedinInviteMode: "invite_only"` and an
+enabled `linkedinFollowUpSequence` whose first step has `channel: "linkedin"`
+and the exact reviewed DM in `variants`. The schema requires `delayDays: 1`
+for that step, but the first DM is eligible immediately after acceptance; an
+already-connected person goes straight to that DM. An optional second LinkedIn
+step uses its configured delay. In a LinkedIn-only campaign the sequence is
+stored in `followUpSequence` instead. `messageVariants` are the shared
+Instagram/Facebook openings, not the LinkedIn accepted DM. A recorded human
+reply from any channel in the same campaign stops unsent steps for that company;
+the final send permit checks again for replies. Call `campaign_copy_inspect`
+after an update to verify its exact LinkedIn copy and enabled sequence. The
+draft stays disabled until a separate explicit launch request.
 
 ## Import an Instagram list
 

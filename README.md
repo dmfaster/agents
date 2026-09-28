@@ -1,4 +1,4 @@
-> Release candidate: 1.8.0 source. The published baseline is 1.7.0.
+> Release candidate: 1.9.0 source.
 > Product deployment and package/plugin publication require guarded release
 > approval and verification before these new controls can be called live.
 
@@ -18,10 +18,10 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-The 1.8.0 candidate exposes 61 bounded domain tools. It adds resumable,
-website-backed company fit review for B2B appointment setting, exact progress,
-paginated source evidence, and a guarded audience refinement proposal. The
-earlier company/contact refinement, multichannel draft editing, inbox,
+The 1.9.0 candidate exposes 62 bounded domain tools. It adds exact saved
+campaign copy inspection, including LinkedIn invitation settings and the
+effective message sent after acceptance or to an existing connection. Earlier
+website-backed company fit review, multichannel draft editing, inbox,
 pipeline, follow-up, sender, outcome and history tools remain available.
 Reply actions report queued and confirmed delivery separately.
 Launch and pause still require an explicit user instruction and the owner's
@@ -66,7 +66,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.8.0 auth login --json
+npx --yes @dmfaster/cli@1.9.0 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -88,12 +88,13 @@ the owner approves the replacement. Credentials are never upgraded silently.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.8.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.8.0 conversations list --filter unread --limit 25 --json
-npx --yes @dmfaster/mcp-server@1.8.0
+npx --yes @dmfaster/cli@1.9.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.9.0 campaign copy inspect campaign_123 --json
+npx --yes @dmfaster/cli@1.9.0 conversations list --filter unread --limit 25 --json
+npx --yes @dmfaster/mcp-server@1.9.0
 ```
 
-The 61 MCP domain tools cover workspace, campaign, sending, reply, inbox,
+The 62 MCP domain tools cover workspace, campaign, sending, reply, inbox,
 pipeline, company-history, industry, validation, exact-audience preview,
 private draft, launch, and pause workflows. Compliant MCP Apps hosts can also render the
 read-only `campaign_workspace` presentation tool inline. Headless hosts receive
@@ -141,7 +142,7 @@ private product source or trademarks.
 All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
 
 ```bash
-npx --yes @dmfaster/cli@1.8.0 list import --name "My prospects" --file usernames.csv --json
+npx --yes @dmfaster/cli@1.9.0 list import --name "My prospects" --file usernames.csv --json
 ```
 
 The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
@@ -200,16 +201,17 @@ codex plugin add dmfaster@dmfaster-agents
 Start a new session to load the refreshed skill and MCP configuration. Updating
 plugin files does not change the permissions of an existing DM Faster connection.
 
-## Agent 1.8.0 candidate
+## Agent 1.9.0 candidate
 
-The candidate adds compact review status/history, cancellation, bounded run
-coordination, deeper current website research for unknowns, ranked best-N cohorts
-and complete exports. Historical copy reports use exact sent text and explicit
-observational attribution limits. Calendar status/availability and instructed
-booking reuse Product services with durable request guards. Call reads preserve
-the app's current permissions. Product migration 0343 and guarded deployment must
-precede package/plugin publication. Older clients retain their existing response
-shapes. See the shared review and booking reference for workflow details.
+The candidate adds `campaign.copy.inspect` without changing the existing
+`campaign.inspect` response shape. It returns exact Instagram/Facebook openings,
+LinkedIn invitation mode and note, both saved sequences, and the effective
+accepted-message variants. `campaign.draft.update` can already configure those
+fields on a disabled, unstarted social draft. Product checks for a recorded
+same-company human reply before queueing the accepted message and again before
+provider handoff. An already-connected prospect is eligible for the first
+message directly. Guarded Product deployment must precede package/plugin
+publication; neither step starts a campaign.
 
 The local Codex 0.149.0 fixture check passed using the CLI fallback after an
 incompatible MCP handshake. Claude Code was unavailable and is unverified.

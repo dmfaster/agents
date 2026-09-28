@@ -221,6 +221,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/campaign.copy.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect exact social and LinkedIn campaign copy
+         * @description Read the exact saved opening copy, LinkedIn invitation mode and note,
+         *     both follow-up sequences, and the effective first LinkedIn message.
+         *     The first LinkedIn message is queued on verified acceptance or when the
+         *     prospect is already connected; a recorded human reply on any channel
+         *     for the same company in this campaign suppresses unsent messages.
+         *     Read-only. Requires an exact campaign identifier returned by DM Faster.
+         */
+        post: operations["campaignCopyInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/campaign.delivery.inspect": {
         parameters: {
             query?: never;
@@ -291,8 +316,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Update a saved Instagram campaign draft
-         * @description Patch the name, messages, delivery cap, pacing, or automatic sending window of an existing disabled, unstarted Instagram draft. Echo campaign.inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale versions and started campaigns are rejected; saving a window never arms it. Inspect after an uncertain response before retrying. Never creates another campaign, enables sending, or launches.
+         * Update a saved social campaign draft
+         * @description Patch social copy, channel toggles, LinkedIn invitation and accepted-message sequence, delivery cap, pacing, or sending window of an existing disabled, unstarted social draft. Echo campaign.inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale versions and started campaigns are rejected; saving a window never arms it. Inspect after an uncertain response before retrying. Never creates another campaign, enables sending, or launches.
          */
         post: operations["campaignDraftUpdate"];
         delete?: never;
@@ -351,9 +376,11 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Inspect campaign performance
-         * @description Returns execution and pipeline facts for a campaign. When campaignId is
-         *     omitted, the selected, active, or most recent campaign is used. Read-only.
+         * Inspect campaign settings and performance
+         * @description Returns saved social copy and delivery settings alongside execution and
+         *     pipeline facts. When campaignId is omitted, the selected, active, or most
+         *     recent campaign is used. Read-only. Use campaign.copy.inspect for exact
+         *     LinkedIn invitation and accepted-message settings.
          */
         post: operations["campaignInspect"];
         delete?: never;
@@ -1576,7 +1603,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -1850,6 +1877,35 @@ export interface components {
              */
             status: "ready";
         };
+        CampaignCopyInspectInput: {
+            campaignId: components["schemas"]["ResourceId"];
+        };
+        CampaignCopyInspectOutput: {
+            campaignId: components["schemas"]["ResourceId"];
+            campaignUpdatedAt: components["schemas"]["ResourceVersion"];
+            channels: components["schemas"]["TargetChannel"][];
+            followUpSequence: components["schemas"]["CampaignFollowUpSequenceOutput"] | null;
+            /** @description Step 1 is queued when acceptance is observed or when the prospect is already connected, subject to sending controls and recorded cross-channel human reply suppression. A required delayDays on step 1 does not delay this accepted message. */
+            linkedinAcceptedMessage: {
+                configured: boolean;
+                messageVariants: string[];
+                /** @enum {string} */
+                sequenceSource: "none" | "followUpSequence" | "linkedinFollowUpSequence";
+            };
+            linkedinFollowUpSequence: components["schemas"]["CampaignFollowUpSequenceOutput"] | null;
+            /** @enum {string} */
+            linkedinInviteMode: "invite_only" | "invite_with_note";
+            linkedinInviteNote: string;
+            /** @description Saved Instagram/Facebook opening copy. This is not the LinkedIn accepted message. */
+            messageVariants: string[];
+            name: string;
+            status: components["schemas"]["CampaignStatus"];
+        };
+        CampaignCopyInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignCopyInspectOutput"] | null;
+            /** @constant */
+            tool?: "campaign.copy.inspect";
+        };
         CampaignCounts: {
             Completed: number;
             Cooldown: number;
@@ -1993,6 +2049,7 @@ export interface components {
                 dailyCap?: number;
                 description?: string;
                 facebookEnabled?: boolean;
+                /** @description Shared social follow-ups, or the accepted-message sequence for a LinkedIn-only campaign. */
                 followUpSequence?: components["schemas"]["CampaignFollowUpSequenceInput"];
                 instagramEnabled?: boolean;
                 instagramSendingWindowEnabled?: boolean;
@@ -2000,6 +2057,7 @@ export interface components {
                 instagramSendingWindowStartMinute?: number;
                 instagramSendingWindowWeekdays?: number;
                 linkedinEnabled?: boolean;
+                /** @description For a mixed-channel campaign, step 1 is the message sent as soon as acceptance is verified, including an already-connected prospect. The required delayDays on step 1 does not delay that first message. Step 2, if present, uses its delayDays. A known human reply on another channel suppresses unsent LinkedIn steps. */
                 linkedinFollowUpSequence?: components["schemas"]["LinkedinFollowUpSequenceInput"];
                 /** @enum {string} */
                 linkedinInviteMode?: "invite_only" | "invite_with_note";
@@ -2034,6 +2092,10 @@ export interface components {
         CampaignFollowUpSequenceInput: {
             enabled: boolean;
             steps: components["schemas"]["CampaignFollowUpStepInput"][];
+        };
+        CampaignFollowUpSequenceOutput: {
+            enabled: boolean;
+            steps: components["schemas"]["CampaignFollowUpStepOutput"][];
         };
         CampaignFollowupsListInput: {
             campaignId: components["schemas"]["ResourceId"];
@@ -2081,6 +2143,16 @@ export interface components {
             /** @enum {string} */
             fallbackChannel?: "none" | "instagram" | "facebook" | "linkedin" | "gmail";
             subject?: string;
+            variants: string[];
+        };
+        CampaignFollowUpStepOutput: {
+            /** @enum {string} */
+            channel: "inherit" | "instagram" | "facebook" | "linkedin" | "gmail";
+            delayDays: number;
+            /** @enum {string} */
+            fallbackChannel: "none" | "instagram" | "facebook" | "linkedin" | "gmail";
+            stepIndex: number;
+            subject: string;
             variants: string[];
         };
         CampaignInspectInput: components["schemas"]["OptionalCampaignInput"];
@@ -3934,6 +4006,37 @@ export interface operations {
             400: components["responses"]["BadRequest"];
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    campaignCopyInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignCopyInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Exact campaign copy and LinkedIn settings. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignCopyInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];

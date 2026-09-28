@@ -519,6 +519,21 @@ test("rejects an explicitly empty optional campaign identifier", async () => {
   assert.match(stderr.read(), /Campaign identifiers cannot be empty/);
 });
 
+test("campaign copy inspection requires and passes through an exact campaign ID", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const context = configuredContext(calls);
+  assert.equal(await runCli(["campaign", "copy", "inspect", "campaign_123"], context), 0);
+  assert.deepEqual(calls, [
+    { tool: "campaign.copy.inspect", input: { campaignId: "campaign_123" } },
+  ]);
+  const stderr = output();
+  assert.equal(
+    await runCli(["campaign", "copy", "inspect"], { ...context, stderr: stderr.stream }),
+    2,
+  );
+  assert.match(stderr.read(), /requires a campaign identifier/);
+});
+
 test("prints typed retry metadata from SDK transport failures", async () => {
   const stderr = output();
   const exitCode = await runCli(["--json", "workspace", "briefing"], {

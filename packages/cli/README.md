@@ -3,38 +3,39 @@
 CLI for DM Faster Agent 1.0. Run the version-pinned package, then authenticate
 through the focused DM Faster browser approval page.
 
-This source prepares the version-pinned 1.8.0 runtime. The published baseline
-remains 1.7.0 until the coordinated Product and package release.
+This source prepares the version-pinned 1.9.0 runtime. Verify the coordinated
+Product and package release before using these new commands against production.
 
 ```bash
-npx --yes @dmfaster/cli@1.8.0 auth login --json
-npx --yes @dmfaster/cli@1.8.0 auth login --access plan --json
-npx --yes @dmfaster/cli@1.8.0 auth status --json
-npx --yes @dmfaster/cli@1.8.0 doctor --json
-npx --yes @dmfaster/cli@1.8.0 describe companies search
+npx --yes @dmfaster/cli@1.9.0 auth login --json
+npx --yes @dmfaster/cli@1.9.0 auth login --access plan --json
+npx --yes @dmfaster/cli@1.9.0 auth status --json
+npx --yes @dmfaster/cli@1.9.0 doctor --json
+npx --yes @dmfaster/cli@1.9.0 describe companies search
 
-npx --yes @dmfaster/cli@1.8.0 analytics summary --scope today --json
-npx --yes @dmfaster/cli@1.8.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.8.0 campaigns list --status Running --limit 10 --json
-npx --yes @dmfaster/cli@1.8.0 conversations list --filter unread --channel linkedin --limit 25 --json
-npx --yes @dmfaster/cli@1.8.0 conversation inspect conversation_123 --limit 40 --json
-npx --yes @dmfaster/cli@1.8.0 replies list campaign_123 --limit 5 --query "Visio" --json
-npx --yes @dmfaster/cli@1.8.0 company timeline campaign_123 outreach_456 --json
-npx --yes @dmfaster/cli@1.8.0 companies list refine --input reviewed-refinement.json --json
-npx --yes @dmfaster/cli@1.8.0 companies fit start --input fit-review.json --json
-npx --yes @dmfaster/cli@1.8.0 companies fit advance --input fit-run.json --json
-npx --yes @dmfaster/cli@1.8.0 companies fit results --input fit-page.json --json
-npx --yes @dmfaster/cli@1.8.0 companies fit proposal --input fit-run.json --json
-npx --yes @dmfaster/cli@1.8.0 history export campaign_123 > campaign-history.jsonl
+npx --yes @dmfaster/cli@1.9.0 analytics summary --scope today --json
+npx --yes @dmfaster/cli@1.9.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.9.0 campaigns list --status Running --limit 10 --json
+npx --yes @dmfaster/cli@1.9.0 campaign copy inspect campaign_123 --json
+npx --yes @dmfaster/cli@1.9.0 conversations list --filter unread --channel linkedin --limit 25 --json
+npx --yes @dmfaster/cli@1.9.0 conversation inspect conversation_123 --limit 40 --json
+npx --yes @dmfaster/cli@1.9.0 replies list campaign_123 --limit 5 --query "Visio" --json
+npx --yes @dmfaster/cli@1.9.0 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@1.9.0 companies list refine --input reviewed-refinement.json --json
+npx --yes @dmfaster/cli@1.9.0 companies fit start --input fit-review.json --json
+npx --yes @dmfaster/cli@1.9.0 companies fit advance --input fit-run.json --json
+npx --yes @dmfaster/cli@1.9.0 companies fit results --input fit-page.json --json
+npx --yes @dmfaster/cli@1.9.0 companies fit proposal --input fit-run.json --json
+npx --yes @dmfaster/cli@1.9.0 history export campaign_123 > campaign-history.jsonl
 
-npx --yes @dmfaster/cli@1.8.0 campaign validate --state campaign-state.json --json
-npx --yes @dmfaster/cli@1.8.0 audience preview --state campaign-state.json --json > audience-preview.json
+npx --yes @dmfaster/cli@1.9.0 campaign validate --state campaign-state.json --json
+npx --yes @dmfaster/cli@1.9.0 audience preview --state campaign-state.json --json > audience-preview.json
 # Review the exact count and sample in audience-preview.json before continuing.
-npx --yes @dmfaster/cli@1.8.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
-npx --yes @dmfaster/cli@1.8.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
-npx --yes @dmfaster/cli@1.8.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
+npx --yes @dmfaster/cli@1.9.0 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
+npx --yes @dmfaster/cli@1.9.0 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
+npx --yes @dmfaster/cli@1.9.0 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
 
-npx --yes @dmfaster/cli@1.8.0 auth logout --json
+npx --yes @dmfaster/cli@1.9.0 auth logout --json
 ```
 
 `auth login` creates a short-lived PKCE device request, prints a confirmation
@@ -209,6 +210,20 @@ Stale versions and started campaigns are rejected. After an uncertain
 response, inspect the campaign before retrying. No launch approval is needed to
 edit a disabled draft.
 
+For a mixed Instagram/Facebook/LinkedIn draft, use
+`campaign copy inspect CAMPAIGN_ID --json` to read the exact invite mode, note,
+saved sequences, Instagram/Facebook `messageVariants`, and effective
+`linkedinAcceptedMessage`.
+To send an invitation without a note and then a DM, set `linkedinInviteMode` to
+`invite_only` and `linkedinFollowUpSequence` to an enabled sequence with a first
+LinkedIn step containing the DM text. That first step is queued as soon as the
+connection is accepted, or immediately if the person is already connected;
+its required `delayDays: 1` does not delay the acceptance message. Later steps
+use their configured delay. A known human reply on another campaign channel
+stops unsent LinkedIn steps, with a final check before sending. A LinkedIn-only
+campaign uses `followUpSequence` for these steps. Inspect after updating to
+verify the saved copy; editing never launches the draft.
+
 Automatic sending windows are also editable through `campaign.draft.update`:
 `instagramSendingWindowEnabled` is a boolean; `instagramSendingWindowStartMinute`
 is 0–1380; `instagramSendingWindowEndMinute` is 60–1440; and
@@ -244,11 +259,11 @@ Older lists are not automatically backfilled with contacts previously lost.
 This server behavior was available with the published 1.4.0 CLI and MCP server;
 saving a research list creates no campaign and sends nothing.
 
-## Resumable reviews (1.8.0 candidate)
+## Resumable reviews (since 1.8.0)
 
 ```bash
-npx --yes @dmfaster/cli@1.8.0 companies fit run --input run.json --until-complete --max-seconds 1800
-npx --yes @dmfaster/cli@1.8.0 companies fit export fit_RETURNED_ID --output complete-review.json
+npx --yes @dmfaster/cli@1.9.0 companies fit run --input run.json --until-complete --max-seconds 1800
+npx --yes @dmfaster/cli@1.9.0 companies fit export fit_RETURNED_ID --output complete-review.json
 ```
 
 `run.json` holds the returned `runId` and optional `limit` (1–8). Transient
