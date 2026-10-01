@@ -8,7 +8,7 @@ export const CAMPAIGN_WORKSPACE_HTML = `<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DM Faster campaign workspace</title>
+  <title>DM Faster workspace</title>
   <style>${CAMPAIGN_WORKSPACE_APP_CSS}</style>
 </head>
 <body>

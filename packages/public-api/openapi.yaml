@@ -39,6 +39,9 @@ x-dmfaster-scopes:
   "calendar:read": Inspect calendar connection and bounded availability.
   "calendar:write": Book explicitly instructed meetings and send calendar invitations.
   "calls:read": Read authorized meeting details and outcomes.
+  leads:read: Read social prospecting jobs, profile enrichment and exact lead credit balance.
+  leads:write: Spend lead credits on explicitly instructed social extraction and profile enrichment
+    jobs. Requires the workspace owner.
 paths:
   /api/v1/agent/auth/device:
     post:
@@ -1832,6 +1835,46 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/agent/tools/companies.suggest:
+    post:
+      tags: [Agent tools]
+      operationId: companySuggestions
+      summary: Suggest company identities
+      description: Bounded company suggestions for entity selection. No audience total or exhaustive result is returned. Use companies.search for exact filtered totals and pagination, and company.inspect for a current profile. This read never creates a list or spends credits.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: [audiences:read]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_suggest
+        title: Suggest company identities
+        description: Find a few company identities for selection or composer mentions. These are suggestions, not an audience or a complete inventory search. Use companies_search for exact totals.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: B2B company prospecting
+        usage: companies suggest --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CompanySuggestionsInput" }
+      responses:
+        "200":
+          description: Bounded company suggestions without an audience total
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CompanySuggestionsResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
   /api/v1/agent/tools/companies.search:
     post:
       tags:
@@ -1881,6 +1924,250 @@ paths:
           $ref: "#/components/responses/InternalServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/companies.evidence.search:
+    post:
+      tags:
+        - Agent tools
+      operationId: companyEvidenceSearch
+      summary: Preview website evidence shortlist
+      description:
+        Fast bounded preview only. For every fitting company use companies.evidence.start and companies.evidence.results. Search saved company website passages for arbitrary ICP criteria,
+        preserving seller/service/buyer relationships. Agent-supplied source-language
+        text retrieval with bounded JEV relationship verification. Advertised
+        offerings, portfolio-only evidence, inference and unknown are distinct.
+        Ranked shortlist has no audience total. Echo cursor, querySignature and
+        expectedRevision to continue. Supply Finnish keywords and synonyms per criterion. Original passages allow
+        independent assistant inspection. No OpenAI API or embeddings are required.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - audiences:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_evidence_search
+        title: Preview website evidence shortlist
+        description:
+          Fast bounded preview only. For every fitting company use companies.evidence.start and companies.evidence.results. Search saved company website passages for arbitrary ICP criteria,
+          preserving seller/service/buyer relationships. Agent-supplied source-language
+          text retrieval with bounded JEV relationship verification. Advertised
+          offerings, portfolio-only evidence, inference and unknown are distinct.
+          Ranked shortlist has no audience total. Echo cursor, querySignature and
+          expectedRevision to continue. Supply Finnish keywords and synonyms per criterion. Original passages allow
+          independent assistant inspection. No OpenAI API or embeddings are required.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: B2B company prospecting
+        usage: companies evidence search --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyEvidenceSearchInput"
+      responses:
+        "200":
+          description: Search companies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyEvidenceSearchResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /api/v1/agent/tools/companies.evidence.start:
+    post:
+      tags: [Agent tools]
+      operationId: companyEvidenceStart
+      summary: Start complete website evidence scan
+      description: Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. All fresh retained passages are checked in resumable chunks; keywords only prioritize work. Processing continues in the background. Return every confirmed match through results; unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: [audiences:read]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_evidence_start
+        title: Start complete website evidence scan
+        description: Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. All fresh retained passages are checked in resumable chunks; keywords only prioritize work. Processing continues in the background. Return every confirmed match through results; unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        { section: B2B company prospecting, usage: "companies evidence start --input FILE" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CompanyEvidenceStartInput" }
+      responses:
+        "200":
+          description: Complete scan progress and result page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CompanyEvidenceStartResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/companies.evidence.advance:
+    post:
+      tags: [Agent tools]
+      operationId: companyEvidenceAdvance
+      summary: Advance complete website evidence scan
+      description: Advance bounded chunks of a complete website-evidence scan. Repeated calls never impose a lifetime company or passage limit. Background processing also continues. Echo runId and expectedRevision.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: [audiences:read]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_evidence_advance
+        title: Advance complete website evidence scan
+        description: Advance bounded chunks of a complete website-evidence scan. Repeated calls never impose a lifetime company or passage limit. Background processing also continues. Echo runId and expectedRevision.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        { section: B2B company prospecting, usage: "companies evidence advance --input FILE" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CompanyEvidenceAdvanceInput" }
+      responses:
+        "200":
+          description: Complete scan progress and result page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CompanyEvidenceAdvanceResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/companies.evidence.status:
+    post:
+      tags: [Agent tools]
+      operationId: companyEvidenceStatus
+      summary: Status complete website evidence scan
+      description: Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory and fresh retained passages, not uncrawled websites.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: [audiences:read]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_evidence_status
+        title: Status complete website evidence scan
+        description: Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory and fresh retained passages, not uncrawled websites.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        { section: B2B company prospecting, usage: "companies evidence status --input FILE" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CompanyEvidenceStatusInput" }
+      responses:
+        "200":
+          description: Complete scan progress and result page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CompanyEvidenceStatusResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/companies.evidence.results:
+    post:
+      tags: [Agent tools]
+      operationId: companyEvidenceResults
+      summary: Results complete website evidence scan
+      description: Page all finalized confirmed matches or unresolved companies from a private complete scan. Keep nextCursor even when a partial page is empty; later discoveries are appended in commit order. scanComplete distinguishes a provisional page from final results. Echo runId and expectedRevision.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: [audiences:read]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_evidence_results
+        title: Results complete website evidence scan
+        description: Page all finalized confirmed matches or unresolved companies from a private complete scan. Keep nextCursor even when a partial page is empty; later discoveries are appended in commit order. scanComplete distinguishes a provisional page from final results. Echo runId and expectedRevision.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        { section: B2B company prospecting, usage: "companies evidence results --input FILE" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CompanyEvidenceResultsInput" }
+      responses:
+        "200":
+          description: Complete scan progress and result page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CompanyEvidenceResultsResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/companies.evidence.cancel:
+    post:
+      tags: [Agent tools]
+      operationId: companyEvidenceCancel
+      summary: Cancel complete website evidence scan
+      description: Cancel a private website-evidence scan and fence in-flight workers. Repeated cancellation is safe; no campaign or outreach is changed.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: [audiences:read]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_evidence_cancel
+        title: Cancel complete website evidence scan
+        description: Cancel a private website-evidence scan and fence in-flight workers. Repeated cancellation is safe; no campaign or outreach is changed.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        { section: B2B company prospecting, usage: "companies evidence cancel --input FILE" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CompanyEvidenceCancelInput" }
+      responses:
+        "200":
+          description: Complete scan progress and result page
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CompanyEvidenceCancelResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
 
   /api/v1/agent/tools/company.inspect:
     post:
@@ -2964,6 +3251,497 @@ paths:
           $ref: "#/components/responses/InternalServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.status:
+    post:
+      tags:
+        - Agent tools
+      operationId: leadsStatus
+      summary: Read social prospecting and lead credits
+      description:
+        Read exact credit balance and paginated recent social extractions. When credits are
+        exhausted, show the purchase URL. A page is not the complete history.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: leads_status
+        title: Read social prospecting and lead credits
+        description:
+          Read exact credit balance and paginated recent social extractions. When credits are
+          exhausted, show the purchase URL. A page is not the complete history.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads status --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadsStatusInput"
+      responses:
+        "200":
+          description: Read social prospecting and lead credits
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadsStatusResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.extract.quote:
+    post:
+      tags:
+        - Agent tools
+      operationId: leadExtractionQuote
+      summary: Estimate a social extraction
+      description: Estimate one credit per saved profile without calling Hiker or spending credits.
+        Followers/following require a positive count; omitting count for likers/commenters requests
+        all available results within the credit balance.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: leads_extract_quote
+        title: Estimate a social extraction
+        description:
+          Estimate one credit per saved profile without calling Hiker or spending credits.
+          Followers/following require a positive count; omitting count for likers/commenters requests
+          all available results within the credit balance.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads extract quote --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadExtractionQuoteInput"
+      responses:
+        "200":
+          description: Estimate a social extraction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadExtractionQuoteResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.extract.start:
+    post:
+      tags:
+        - Agent tools
+      operationId: leadExtractionStart
+      summary: Start social prospecting
+      description:
+        On explicit instructions, queue a credit-bounded Instagram followers, following, likers
+        or commenters job. Return promptly with a durable job ID. Reuse the same idempotency key on
+        retries, inspect actual saved results and settled credits, and subscribe to its completion
+        event when the user requests an update. Does not start a campaign or send messages.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - leads:read
+        - leads:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: leads_extract_start
+        title: Start social prospecting
+        description:
+          On explicit instructions, queue a credit-bounded Instagram followers, following, likers
+          or commenters job. Return promptly with a durable job ID. Reuse the same idempotency key on
+          retries, inspect actual saved results and settled credits, and subscribe to its completion
+          event when the user requests an update. Does not start a campaign or send messages.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads extract start --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadExtractionStartInput"
+      responses:
+        "200":
+          description: Start social prospecting
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadExtractionStartResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.extract.inspect:
+    post:
+      tags:
+        - Agent tools
+      operationId: leadExtractionInspect
+      summary: Inspect a social extraction
+      description:
+        Read stored progress by durable job ID without advancing Hiker or spending credits.
+        Distinguish queued acceptance, saved profiles and final settled cost. Follow pollAfterMs if
+        the host does not support completion events.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: leads_extract_inspect
+        title: Inspect a social extraction
+        description:
+          Read stored progress by durable job ID without advancing Hiker or spending credits.
+          Distinguish queued acceptance, saved profiles and final settled cost. Follow pollAfterMs if
+          the host does not support completion events.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads extract inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadExtractionInspectInput"
+      responses:
+        "200":
+          description: Inspect a social extraction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadExtractionInspectResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.extract.refresh:
+    post:
+      tags:
+        - Agent tools
+      operationId: leadExtractionRefresh
+      summary: Refresh a social extraction
+      description:
+        Advance only the existing reserved extraction when explicitly requested or its progress
+        is stale. Does not start another paid extraction.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - leads:read
+        - leads:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: leads_extract_refresh
+        title: Refresh a social extraction
+        description:
+          Advance only the existing reserved extraction when explicitly requested or its progress
+          is stale. Does not start another paid extraction.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads extract refresh --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadExtractionRefreshInput"
+      responses:
+        "200":
+          description: Refresh a social extraction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadExtractionRefreshResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.extract.continue:
+    post:
+      tags:
+        - Agent tools
+      operationId: leadExtractionContinue
+      summary: Continue a social extraction
+      description:
+        On explicit instructions, queue the next available page as a separately credit-bounded
+        job. Use its inspected job ID and a new stable idempotency key. Count defaults to the original
+        batch size; no fixed product cap applies.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - leads:read
+        - leads:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: leads_extract_continue
+        title: Continue a social extraction
+        description:
+          On explicit instructions, queue the next available page as a separately credit-bounded
+          job. Use its inspected job ID and a new stable idempotency key. Count defaults to the
+          original batch size; no fixed product cap applies.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads extract continue --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadExtractionContinueInput"
+      responses:
+        "200":
+          description: Continue a social extraction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadExtractionContinueResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.enrich.preview:
+    post:
+      tags:
+        - Agent tools
+      operationId: leadEnrichmentPreview
+      summary: Estimate social profile enrichment
+      description:
+        Read the current count of missing eligible profiles and its separate credit estimate.
+        Reuses the same list eligibility and pricing as the app. Does not spend credits.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: leads_enrich_preview
+        title: Estimate social profile enrichment
+        description:
+          Read the current count of missing eligible profiles and its separate credit estimate.
+          Reuses the same list eligibility and pricing as the app. Does not spend credits.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads enrich preview --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadEnrichmentPreviewInput"
+      responses:
+        "200":
+          description: Estimate social profile enrichment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadEnrichmentPreviewResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.enrich.start:
+    post:
+      tags:
+        - Agent tools
+      operationId: leadEnrichmentStart
+      summary: Start social profile enrichment
+      description: On explicit instructions, queue missing-profile enrichment for a saved social
+        prospecting list. One successful enrichment costs one credit; unused credits are returned. An
+        optional instructed maxCredits budget is enforced before charging. Reuse the request key on
+        retry and inspect the durable job ID.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - leads:read
+        - leads:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: leads_enrich_start
+        title: Start social profile enrichment
+        description: On explicit instructions, queue missing-profile enrichment for a saved social
+          prospecting list. One successful enrichment costs one credit; unused credits are returned.
+          An optional instructed maxCredits budget is enforced before charging. Reuse the request key
+          on retry and inspect the durable job ID.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads enrich start --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadEnrichmentStartInput"
+      responses:
+        "200":
+          description: Start social profile enrichment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadEnrichmentStartResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.enrich.inspect:
+    post:
+      tags:
+        - Agent tools
+      operationId: leadEnrichmentInspect
+      summary: Inspect social profile enrichment
+      description: Read exact progress and credit refunds for the specific durable enrichment job. A
+        reservation is not a final charge and an accepted job is not completion.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: leads_enrich_inspect
+        title: Inspect social profile enrichment
+        description:
+          Read exact progress and credit refunds for the specific durable enrichment job. A
+          reservation is not a final charge and an accepted job is not completion.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads enrich inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadEnrichmentInspectInput"
+      responses:
+        "200":
+          description: Inspect social profile enrichment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadEnrichmentInspectResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 
 components:
   securitySchemes:
@@ -3161,6 +3939,8 @@ components:
         - calendar:read
         - calendar:write
         - calls:read
+        - leads:read
+        - leads:write
 
     AgentDeviceAuthorizationInput:
       type: object
@@ -3379,6 +4159,588 @@ components:
               minLength: 1
               maxLength: 500
 
+    WebsiteEvidenceCriterion:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 60
+        statement:
+          type: string
+          minLength: 1
+          maxLength: 800
+        requirement:
+          type: string
+          enum:
+            - advertised
+            - any_support
+        retrievalTerms:
+          description: Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 100
+          minItems: 1
+          maxItems: 12
+        retrievalGroups:
+          description: Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion.
+          type: array
+          minItems: 2
+          maxItems: 4
+          items:
+            type: array
+            minItems: 1
+            maxItems: 12
+            items:
+              type: string
+              minLength: 1
+              maxLength: 100
+      required:
+        - id
+        - statement
+        - requirement
+        - retrievalTerms
+    CompanyEvidenceStartInput:
+      type: object
+      additionalProperties: false
+      properties:
+        country: { type: string, enum: [FI] }
+        query: { type: string, minLength: 1, maxLength: 1500 }
+        criteria:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items: { $ref: "#/components/schemas/WebsiteEvidenceCriterion" }
+        filters: { $ref: "#/components/schemas/CompanySearchFilters" }
+        maxAgeDays: { type: integer, minimum: 1, maximum: 90 }
+        idempotencyKey: { type: string, minLength: 1, maxLength: 100 }
+      required: [country, query, criteria, idempotencyKey]
+    CompanyEvidenceAdvanceInput:
+      type: object
+      additionalProperties: false
+      properties:
+        runId: { type: string, minLength: 36, maxLength: 36 }
+        expectedRevision: { type: string, minLength: 64, maxLength: 64 }
+        batchSize: { type: integer, minimum: 1, maximum: 16 }
+      required: [runId, expectedRevision]
+    CompanyEvidenceStatusInput:
+      type: object
+      additionalProperties: false
+      properties:
+        runId: { type: string, minLength: 36, maxLength: 36 }
+        expectedRevision: { type: string, minLength: 64, maxLength: 64 }
+      required: [runId, expectedRevision]
+    CompanyEvidenceResultsInput:
+      type: object
+      additionalProperties: false
+      properties:
+        runId: { type: string, minLength: 36, maxLength: 36 }
+        expectedRevision: { type: string, minLength: 64, maxLength: 64 }
+        cursor: { type: string, minLength: 1, maxLength: 200 }
+        pageSize: { type: integer, minimum: 1, maximum: 20 }
+        view: { type: string, enum: [matches, unresolved, all] }
+      required: [runId, expectedRevision]
+    CompanyEvidenceCancelInput:
+      type: object
+      additionalProperties: false
+      properties:
+        runId: { type: string, minLength: 36, maxLength: 36 }
+        expectedRevision: { type: string, minLength: 64, maxLength: 64 }
+      required: [runId, expectedRevision]
+    CompanyEvidenceRunData:
+      type: object
+      additionalProperties: false
+      properties:
+        runId: { type: string }
+        expectedRevision: { type: string }
+        querySignature: { type: string }
+        status: { type: string, enum: [initializing, running, complete, cancelled, stale] }
+        scanComplete: { type: boolean }
+        country: { type: string, const: FI }
+        query: { type: string }
+        appliedCriteria:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items: { $ref: "#/components/schemas/WebsiteEvidenceCriterion" }
+        appliedFilters:
+          anyOf:
+            - $ref: "#/components/schemas/CompanySearchFilters"
+            - type: "null"
+        expiresAt: { type: string, format: date-time }
+        companies:
+          type: array
+          minItems: 0
+          maxItems: 20
+          items: { $ref: "#/components/schemas/WebsiteEvidenceCompany" }
+        view: { type: string, enum: [matches, unresolved, all] }
+        nextCursor: { type: string }
+        hasNextPage: { type: boolean }
+        awaitingMoreResults: { type: boolean }
+        total: { type: "null" }
+        totalExact: { type: boolean, const: false }
+        totalStatus: { type: string, const: unavailable }
+        progress:
+          type: object
+          additionalProperties: false
+          properties:
+            eligibleCompanies: { type: integer, minimum: 0 }
+            enqueuedCompanies: { type: integer, minimum: 0 }
+            processedCompanies: { type: integer, minimum: 0 }
+            pendingCompanies: { type: integer, minimum: 0 }
+            processingCompanies: { type: integer, minimum: 0 }
+            confirmedMatches: { type: integer, minimum: 0 }
+            contradictedCompanies: { type: integer, minimum: 0 }
+            unresolvedCompanies: { type: integer, minimum: 0 }
+            missingEvidenceCompanies: { type: integer, minimum: 0 }
+            staleEvidenceCompanies: { type: integer, minimum: 0 }
+            retryingCompanies: { type: integer, minimum: 0 }
+            checkedPassages: { type: integer, minimum: 0 }
+          required:
+            [
+              eligibleCompanies,
+              enqueuedCompanies,
+              processedCompanies,
+              pendingCompanies,
+              processingCompanies,
+              confirmedMatches,
+              contradictedCompanies,
+              unresolvedCompanies,
+              missingEvidenceCompanies,
+              staleEvidenceCompanies,
+              retryingCompanies,
+              checkedPassages,
+            ]
+        retryFailures:
+          type: array
+          maxItems: 20
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              code: { type: string }
+              companies: { type: integer, minimum: 1 }
+              retryAt: { type: string, format: date-time }
+            required: [code, companies, retryAt]
+        usage:
+          type: object
+          additionalProperties: false
+          properties:
+            providerRequests: { type: integer, minimum: 0 }
+            inputTokens: { type: integer, minimum: 0 }
+            outputTokens: { type: integer, minimum: 0 }
+            cachedDecisions: { type: integer, minimum: 0 }
+            usageMissingRequests: { type: integer, minimum: 0 }
+            providerDurationMs: { type: integer, minimum: 0 }
+            elapsedMs: { type: integer, minimum: 0 }
+          required:
+            [
+              providerRequests,
+              inputTokens,
+              outputTokens,
+              cachedDecisions,
+              usageMissingRequests,
+              providerDurationMs,
+              elapsedMs,
+            ]
+        limitations:
+          type: array
+          items: { type: string }
+      required:
+        [
+          runId,
+          expectedRevision,
+          querySignature,
+          status,
+          scanComplete,
+          country,
+          query,
+          appliedCriteria,
+          appliedFilters,
+          expiresAt,
+          companies,
+          view,
+          nextCursor,
+          hasNextPage,
+          awaitingMoreResults,
+          total,
+          totalExact,
+          totalStatus,
+          progress,
+          retryFailures,
+          usage,
+          limitations,
+        ]
+    CompanyEvidenceStartResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.evidence.start }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyEvidenceRunData"
+                - type: "null"
+    CompanyEvidenceAdvanceResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.evidence.advance }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyEvidenceRunData"
+                - type: "null"
+    CompanyEvidenceStatusResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.evidence.status }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyEvidenceRunData"
+                - type: "null"
+    CompanyEvidenceResultsResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.evidence.results }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyEvidenceRunData"
+                - type: "null"
+    CompanyEvidenceCancelResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.evidence.cancel }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyEvidenceRunData"
+                - type: "null"
+    CompanyEvidenceSearchInput:
+      type: object
+      additionalProperties: false
+      properties:
+        country:
+          type: string
+          enum:
+            - FI
+        query:
+          type: string
+          minLength: 1
+          maxLength: 1500
+        criteria:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebsiteEvidenceCriterion"
+          minItems: 1
+          maxItems: 4
+        filters:
+          $ref: "#/components/schemas/CompanySearchFilters"
+          description: Optional deterministic Companies app filters, applied before text candidate limits. Country must remain FI. Numeric and registry constraints use company data, not website judgments.
+        includePassages:
+          type: boolean
+          description: Include up to six full original retrieval contexts per company. By default verified quotes are returned with each judgment, and unknown-only companies retain one original context for inspection.
+        candidateLimit:
+          type: integer
+          minimum: 1
+          maximum: 30
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 20
+        maxAgeDays:
+          type: integer
+          minimum: 1
+          maximum: 90
+        cursor:
+          type: string
+          minLength: 1
+          maxLength: 200
+        expectedRevision:
+          type: string
+          minLength: 1
+          maxLength: 200
+        querySignature:
+          type: string
+          minLength: 1
+          maxLength: 200
+      required:
+        - country
+        - query
+        - criteria
+    WebsiteEvidenceQuote:
+      type: object
+      additionalProperties: false
+      properties:
+        url:
+          type: string
+          format: uri
+        observedAt:
+          type: string
+          format: date-time
+        contentHash:
+          type: string
+          minLength: 1
+          maxLength: 64
+        heading:
+          type: string
+        text:
+          type: string
+          minLength: 1
+          maxLength: 1800
+        language:
+          type: string
+          minLength: 1
+          maxLength: 35
+        extractionVersion:
+          type: string
+          minLength: 1
+          maxLength: 100
+      required:
+        - url
+        - observedAt
+        - contentHash
+        - heading
+        - text
+        - language
+        - extractionVersion
+    WebsiteCriterionJudgment:
+      type: object
+      additionalProperties: false
+      properties:
+        criterionId:
+          type: string
+          minLength: 1
+          maxLength: 60
+        status:
+          type: string
+          enum:
+            - supported
+            - inferred
+            - portfolio
+            - contradicted
+            - unknown
+        probability:
+          type: number
+          minimum: 0
+          maximum: 1
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        evidence:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebsiteEvidenceQuote"
+          minItems: 0
+          maxItems: 3
+      required:
+        - criterionId
+        - status
+        - probability
+        - reason
+        - evidence
+    WebsiteEvidenceCompany:
+      type: object
+      additionalProperties: false
+      properties:
+        country:
+          type: string
+        businessId:
+          type: string
+          minLength: 1
+          maxLength: 192
+        name:
+          type: string
+        websiteUrl:
+          type: string
+        selection:
+          oneOf:
+            - type: object
+              additionalProperties: false
+              description: Ready input item for companies.list.prepare, using its shared current-profile revision contract.
+              properties:
+                country: { $ref: "#/components/schemas/SupportedCountry" }
+                businessId: { type: string, minLength: 1, maxLength: 192 }
+                expectedRevision: { type: string, minLength: 64, maxLength: 64 }
+              required: [country, businessId, expectedRevision]
+            - type: "null"
+        passages:
+          type: array
+          description: Fresh original retrieved passages for independent assistant inspection, including unknown cases.
+          items:
+            $ref: "#/components/schemas/WebsiteEvidenceQuote"
+          minItems: 0
+          maxItems: 6
+        matches:
+          type: boolean
+        criteria:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebsiteCriterionJudgment"
+          minItems: 1
+          maxItems: 4
+      required:
+        - country
+        - businessId
+        - name
+        - websiteUrl
+        - passages
+        - matches
+        - selection
+        - criteria
+    CompanyEvidenceSearchData:
+      type: object
+      additionalProperties: false
+      properties:
+        companies:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebsiteEvidenceCompany"
+          minItems: 0
+          maxItems: 20
+        appliedCriteria:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebsiteEvidenceCriterion"
+          minItems: 1
+          maxItems: 4
+        appliedFilters:
+          anyOf:
+            - $ref: "#/components/schemas/CompanySearchFilters"
+            - type: "null"
+        unresolvedCriteria:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 60
+          minItems: 0
+          maxItems: 4
+        query:
+          type: string
+          minLength: 1
+          maxLength: 1500
+        country:
+          type: string
+        querySignature:
+          type: string
+          minLength: 1
+          maxLength: 200
+        expectedRevision:
+          type: string
+          minLength: 1
+          maxLength: 200
+        expiresAt:
+          type: string
+          format: date-time
+        hasNextPage:
+          type: boolean
+        nextCursor:
+          type: string
+        total:
+          type: "null"
+        totalExact:
+          type: boolean
+          const: false
+        totalStatus:
+          type: string
+          const: unavailable
+        coverage:
+          type: object
+          additionalProperties: false
+          properties:
+            mode:
+              type: string
+              const: text_shortlist
+            exhaustive:
+              type: boolean
+              const: false
+            retrievedCompanies:
+              type: integer
+              minimum: 0
+            evaluatedCompanies:
+              type: integer
+              minimum: 0
+            corpusCompanies:
+              type: integer
+              minimum: 0
+            verification:
+              type: string
+              const: jev
+            limitations:
+              type: array
+              items:
+                type: string
+                minLength: 1
+                maxLength: 600
+              minItems: 0
+              maxItems: 100
+          required:
+            - mode
+            - exhaustive
+            - retrievedCompanies
+            - evaluatedCompanies
+            - corpusCompanies
+            - verification
+            - limitations
+        timing:
+          type: object
+          additionalProperties: false
+          properties:
+            retrievalMs:
+              type: number
+            providerRequests:
+              type: integer
+              minimum: 0
+              maximum: 30
+            verificationMs:
+              type: number
+            cached:
+              type: boolean
+          required:
+            - retrievalMs
+            - providerRequests
+            - verificationMs
+            - cached
+      required:
+        - companies
+        - appliedCriteria
+        - appliedFilters
+        - unresolvedCriteria
+        - query
+        - country
+        - querySignature
+        - expectedRevision
+        - expiresAt
+        - hasNextPage
+        - nextCursor
+        - total
+        - totalExact
+        - totalStatus
+        - coverage
+        - timing
+    CompanyEvidenceSearchResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: companies.evidence.search
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanyEvidenceSearchData"
+                - type: "null"
+
     AgentToolName:
       type: string
       enum:
@@ -3421,7 +4783,14 @@ components:
         - campaign.pause.preflight
         - campaign.pause
         - companies.filters
+        - companies.suggest
         - companies.search
+        - companies.evidence.search
+        - companies.evidence.start
+        - companies.evidence.advance
+        - companies.evidence.status
+        - companies.evidence.results
+        - companies.evidence.cancel
         - company.inspect
         - companies.fit.start
         - companies.fit.advance
@@ -3444,6 +4813,15 @@ components:
         - calendar.meeting.book
         - calls.list
         - call.inspect
+        - leads.status
+        - leads.extract.quote
+        - leads.extract.start
+        - leads.extract.inspect
+        - leads.extract.refresh
+        - leads.extract.continue
+        - leads.enrich.preview
+        - leads.enrich.start
+        - leads.enrich.inspect
 
     AgentToolPolicy:
       type: object
@@ -6436,6 +7814,9 @@ components:
               jobId: { type: string }
               sentTo: { type: string }
               targetName: { type: string }
+              targetUrl:
+                type: string
+                description: Stored recipient profile URL. Older records may recover it through an exact profile match in the original saved audience; empty when unavailable.
               targetCompanyName: { type: string }
               sentFrom: { type: string }
               sentAt: { type: string }
@@ -6711,6 +8092,7 @@ components:
           maxLength: 10
         technologies:
           type: array
+          description: Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.
           items:
             type: string
             maxLength: 80
@@ -6796,7 +8178,25 @@ components:
       required:
         [metadata, filterFields, defaults, technologies, fundingSources, availability, restrictions]
       properties:
-        metadata: { type: object, additionalProperties: true }
+        metadata:
+          type: object
+          additionalProperties: true
+          properties:
+            technologyAvailability:
+              oneOf:
+                - type: object
+                  required: [country, options]
+                  properties:
+                    country: { type: string }
+                    options:
+                      type: array
+                      items:
+                        type: object
+                        required: [value, companyCount]
+                        properties:
+                          value: { type: string }
+                          companyCount: { type: integer, minimum: 50 }
+                - type: "null"
         filterFields: { type: array, items: { type: string } }
         defaults: { $ref: "#/components/schemas/CompanySearchFilters" }
         technologies:
@@ -6809,6 +8209,20 @@ components:
                 properties: { value: { type: string }, label: { type: string } },
               },
           }
+        technologyMatching:
+          type: object
+          required: [withinSubsection, betweenSubsections, groups]
+          properties:
+            withinSubsection: { type: string, const: any }
+            betweenSubsections: { type: string, const: all }
+            groups:
+              type: array
+              items:
+                type: object
+                required: [key, values]
+                properties:
+                  key: { type: string }
+                  values: { type: array, items: { type: string } }
         fundingSources:
           {
             type: array,
@@ -6859,6 +8273,46 @@ components:
           maxLength: 200
       required:
         - filters
+    CompanySuggestionsInput:
+      type: object
+      additionalProperties: false
+      required: [query, countries]
+      properties:
+        query: { type: string, minLength: 2, maxLength: 120 }
+        countries:
+          type: array
+          minItems: 1
+          maxItems: 32
+          items: { $ref: "#/components/schemas/SupportedCountry" }
+        limit: { type: integer, minimum: 1, maximum: 10 }
+    CompanySuggestionsData:
+      type: object
+      additionalProperties: false
+      required: [query, suggestions]
+      properties:
+        query: { type: string }
+        suggestions:
+          type: array
+          maxItems: 10
+          items:
+            type: object
+            additionalProperties: false
+            required: [country, businessId, name]
+            properties:
+              country: { $ref: "#/components/schemas/SupportedCountry" }
+              businessId: { type: string, minLength: 1, maxLength: 192 }
+              name: { type: string }
+      description: Bounded entity suggestions only. There is deliberately no total, audience size, cursor or claim of complete coverage.
+    CompanySuggestionsResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.suggest }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CompanySuggestionsData"
+                - type: "null"
     CompanySearchData:
       type: object
       additionalProperties: true
@@ -8577,4 +10031,435 @@ components:
             data:
               oneOf:
                 - $ref: "#/components/schemas/CallInspectData"
+                - type: "null"
+    LeadCreditBalance:
+      type: object
+      additionalProperties: false
+      required:
+        - active
+        - remaining
+        - monthlyAllowance
+        - used
+        - purchasedRemaining
+        - cycleEndsAt
+        - purchaseUrl
+      properties:
+        active:
+          type: boolean
+        remaining: &a1
+          type: integer
+          minimum: 0
+        monthlyAllowance: *a1
+        used: *a1
+        purchasedRemaining: *a1
+        cycleEndsAt:
+          anyOf:
+            - type: string
+            - type: "null"
+        purchaseUrl:
+          type: string
+    LeadExtractionPublic:
+      type: object
+      additionalProperties: false
+      required:
+        - extractionId
+        - status
+        - type
+        - identifier
+        - requestedCount
+        - collectedCount
+        - savedCount
+        - listId
+        - listUrl
+        - creditCost
+        - creditState
+        - hasMore
+        - updatedAt
+        - error
+      properties:
+        extractionId:
+          type: string
+        status:
+          type: string
+          enum:
+            - queued
+            - pending
+            - processing
+            - completed
+            - failed
+        type:
+          type: string
+        identifier:
+          type: string
+        requestedCount: *a1
+        collectedCount: *a1
+        savedCount:
+          anyOf:
+            - *a1
+            - type: "null"
+        listId:
+          anyOf:
+            - type: string
+            - type: "null"
+        listUrl:
+          anyOf:
+            - type: string
+            - type: "null"
+        creditCost: *a1
+        creditState:
+          type: string
+          enum:
+            - reserved
+            - settled
+        hasMore:
+          type: boolean
+        updatedAt:
+          type: string
+        error:
+          type: string
+    LeadEnrichmentPublic:
+      type: object
+      additionalProperties: false
+      required:
+        - enrichmentId
+        - listId
+        - status
+        - requestedCount
+        - processedCount
+        - enrichedCount
+        - creditCost
+        - creditRefunded
+        - netCreditCost
+        - creditState
+        - updatedAt
+        - error
+      properties:
+        enrichmentId:
+          type: string
+        listId:
+          type: string
+        status:
+          type: string
+        requestedCount: *a1
+        processedCount: *a1
+        enrichedCount: *a1
+        creditCost: *a1
+        creditRefunded: *a1
+        netCreditCost: *a1
+        creditState:
+          type: string
+          enum:
+            - reserved
+            - settled
+        updatedAt:
+          type: string
+        error:
+          type: string
+    LeadProspectingData:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - message
+        - credits
+        - requiredCredits
+        - jobId
+        - extraction
+        - enrichment
+        - estimatedCredits
+        - recentExtractions
+        - nextCursor
+        - pollAfterMs
+        - nextAction
+        - purchaseUrl
+      properties:
+        status:
+          type: string
+          enum:
+            - ready
+            - queued
+            - running
+            - completed
+            - failed
+            - blocked
+        message:
+          type: string
+        credits:
+          anyOf:
+            - $ref: "#/components/schemas/LeadCreditBalance"
+            - type: "null"
+        requiredCredits:
+          anyOf:
+            - *a1
+            - type: "null"
+        jobId:
+          anyOf:
+            - type: string
+            - type: "null"
+        extraction:
+          anyOf:
+            - $ref: "#/components/schemas/LeadExtractionPublic"
+            - type: "null"
+        enrichment:
+          anyOf:
+            - $ref: "#/components/schemas/LeadEnrichmentPublic"
+            - type: "null"
+        estimatedCredits:
+          anyOf:
+            - *a1
+            - type: "null"
+        recentExtractions:
+          type: array
+          items:
+            $ref: "#/components/schemas/LeadExtractionPublic"
+        nextCursor:
+          anyOf:
+            - type: string
+            - type: "null"
+        pollAfterMs:
+          anyOf:
+            - *a1
+            - type: "null"
+        nextAction:
+          type: string
+          enum:
+            - inspect
+            - buy_credits
+            - enable_billing
+            - open_list
+            - enrich
+            - none
+        purchaseUrl:
+          type: string
+    LeadsStatusInput:
+      type: object
+      additionalProperties: false
+      required: []
+      properties:
+        cursor:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          x-dmfaster-trim: true
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 50
+    LeadExtractionQuoteInput:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - identifier
+      properties:
+        type: &a2
+          type: string
+          enum:
+            - followers
+            - following
+            - likers
+            - commenters
+        identifier: &a3
+          type: string
+          minLength: 1
+          maxLength: 300
+          x-dmfaster-trim: true
+        count: &a4
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        postUrls: &a5
+          type: array
+          minItems: 1
+          items:
+            type: string
+            minLength: 1
+            maxLength: 300
+            x-dmfaster-trim: true
+        priority: &a6
+          type: string
+          enum:
+            - high
+            - normal
+            - low
+        feedType: &a7
+          type: string
+          enum:
+            - top
+            - recent
+    LeadExtractionStartInput:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - identifier
+        - idempotencyKey
+      properties:
+        type: *a2
+        identifier: *a3
+        count: *a4
+        postUrls: *a5
+        priority: *a6
+        feedType: *a7
+        idempotencyKey: &a8
+          type: string
+          minLength: 1
+          maxLength: 160
+          x-dmfaster-trim: true
+          pattern: ^[A-Za-z0-9._:-]{1,160}$
+    LeadExtractionInspectInput:
+      type: object
+      additionalProperties: false
+      required:
+        - jobId
+      properties:
+        jobId:
+          $ref: "#/components/schemas/ResourceId"
+    LeadExtractionRefreshInput:
+      type: object
+      additionalProperties: false
+      required:
+        - jobId
+      properties:
+        jobId:
+          $ref: "#/components/schemas/ResourceId"
+    LeadExtractionContinueInput:
+      type: object
+      additionalProperties: false
+      required:
+        - jobId
+        - idempotencyKey
+      properties:
+        jobId:
+          $ref: "#/components/schemas/ResourceId"
+        count: *a4
+        idempotencyKey: *a8
+    LeadEnrichmentPreviewInput:
+      type: object
+      additionalProperties: false
+      required:
+        - listId
+      properties:
+        listId:
+          $ref: "#/components/schemas/ResourceId"
+    LeadEnrichmentStartInput:
+      type: object
+      additionalProperties: false
+      required:
+        - listId
+        - idempotencyKey
+      properties:
+        listId:
+          $ref: "#/components/schemas/ResourceId"
+        maxCredits:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        idempotencyKey: *a8
+    LeadEnrichmentInspectInput:
+      type: object
+      additionalProperties: false
+      required:
+        - jobId
+      properties:
+        jobId:
+          $ref: "#/components/schemas/ResourceId"
+    LeadsStatusResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/LeadProspectingData"
+                - type: "null"
+    LeadExtractionQuoteResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/LeadProspectingData"
+                - type: "null"
+    LeadExtractionStartResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/LeadProspectingData"
+                - type: "null"
+    LeadExtractionInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/LeadProspectingData"
+                - type: "null"
+    LeadExtractionRefreshResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/LeadProspectingData"
+                - type: "null"
+    LeadExtractionContinueResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/LeadProspectingData"
+                - type: "null"
+    LeadEnrichmentPreviewResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/LeadProspectingData"
+                - type: "null"
+    LeadEnrichmentStartResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/LeadProspectingData"
+                - type: "null"
+    LeadEnrichmentInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/LeadProspectingData"
                 - type: "null"

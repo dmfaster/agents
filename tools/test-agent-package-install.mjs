@@ -18,7 +18,9 @@ const packageNames = [
   "@dmfaster/mcp-server",
 ];
 const mcpClientPackage = "@modelcontextprotocol/client@2.0.0";
-const campaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v1.html";
+const campaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v3.html";
+const previousCampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v2.html";
+const legacyCampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v1.html";
 const mcpAppMimeType = "text/html;profile=mcp-app";
 const releaseVersion = JSON.parse(
   readFileSync(path.join(repoRoot, "packages", "local-auth", "package.json"), "utf8"),
@@ -35,6 +37,9 @@ const expectedTools = [
   "campaign_prepare",
   "campaign_validate",
   "campaign_workspace",
+  "companies_workspace",
+  "workspace_open",
+  "workspace_mentions",
   "campaigns_list",
   "conversations_list",
   "conversation_inspect",
@@ -65,6 +70,14 @@ const expectedTools = [
   "workspace_briefing",
   "companies_filters",
   "companies_search",
+  "companies_suggest",
+  "companies_evidence_search",
+  "companies_evidence_start",
+  "companies_evidence_advance",
+  "companies_evidence_status",
+  "companies_evidence_results",
+  "companies_evidence_cancel",
+
   "company_inspect",
   "companies_fit_start",
   "companies_fit_advance",
@@ -81,6 +94,15 @@ const expectedTools = [
   "calendar_meeting_book",
   "calls_list",
   "call_inspect",
+  "leads_status",
+  "leads_extract_quote",
+  "leads_extract_start",
+  "leads_extract_inspect",
+  "leads_extract_refresh",
+  "leads_extract_continue",
+  "leads_enrich_preview",
+  "leads_enrich_start",
+  "leads_enrich_inspect",
   "companies_list_prepare",
   "companies_list_inspect",
   "companies_list_refine",
@@ -384,22 +406,31 @@ try {
     assert.deepEqual(
       listed.tools.map((tool) => tool.name).sort(),
       [...expectedTools].sort(),
-      "the packed MCP server must expose 62 domain tools, connection status, and the campaign workspace",
+      "the packed MCP server must expose every domain tool, connection status, and the Companies/campaign views",
     );
     for (const tool of listed.tools.filter(
-      (candidate) => !["connection_status", "campaign_workspace"].includes(candidate.name),
+      (candidate) =>
+        ![
+          "connection_status",
+          "campaign_workspace",
+          "companies_workspace",
+          "workspace_open",
+        ].includes(candidate.name),
     )) {
       assert.equal(tool.outputSchema?.type, "object", `${tool.name} must describe its output`);
     }
     const workspaceTool = listed.tools.find((tool) => tool.name === "campaign_workspace");
     assert.equal(workspaceTool?._meta?.ui?.resourceUri, campaignWorkspaceUri);
     assert.equal(workspaceTool?._meta?.["openai/outputTemplate"], campaignWorkspaceUri);
+    const companiesTool = listed.tools.find((tool) => tool.name === "companies_workspace");
+    assert.equal(companiesTool?._meta?.ui?.resourceUri, campaignWorkspaceUri);
+    assert.equal(companiesTool?.annotations?.readOnlyHint, true);
 
     const listedResources = await client.listResources();
     assert.deepEqual(
       listedResources.resources.map((resource) => resource.uri),
-      [campaignWorkspaceUri],
-      "the packed MCP server must expose its campaign workspace resource",
+      [campaignWorkspaceUri, previousCampaignWorkspaceUri, legacyCampaignWorkspaceUri],
+      "the packed MCP server must expose its current workspace and compatibility resources",
     );
     assert.equal(listedResources.resources[0]?.mimeType, mcpAppMimeType);
     const workspaceResource = await client.readResource({ uri: campaignWorkspaceUri });
@@ -411,7 +442,7 @@ try {
   }
 
   process.stdout.write(
-    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 with 62 Agent 1.0 domain tools plus connection status and the campaign workspace passed.\n",
+    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 domain tools, connection status and Companies/campaign views passed.\n",
   );
 } finally {
   const expectedPrefix = path.join(tmpdir(), "dmfaster-agent-packages-");

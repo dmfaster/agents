@@ -1,13 +1,15 @@
 # DM Faster Agent 1.0 tools
 
-Agent 1.0 exposes exactly 61 bounded domain tools. Each credential is bound to one
+Agent 1.0 exposes bounded domain tools. Each credential is bound to one
 workspace, and every tool requires the exact scopes shown below; scopes are not
 inherited from `workspace:read`. MCP names use underscores and HTTP contract
 names use dots.
 
-The MCP server also exposes `connection_status` for local authentication and
-`campaign_workspace`, a read-only presentation tool with no HTTP or CLI
-equivalent. In an MCP Apps host, call the latter with the complete
+The MCP server also exposes `connection_status` for authentication,
+`workspace_open` for the global Companies entry, `companies_workspace` for a
+prospect search, and `campaign_workspace` for campaign browsing and planning.
+Presentation tools have no HTTP or CLI equivalent. In an MCP Apps host, call
+`campaign_workspace` with the complete
 latest state after planning or revision to render the interactive editor. In a
 headless host, its structured fallback returns that same state. It does not
 replace validation, preview, preparation, preflight, or action tools and never
@@ -16,7 +18,7 @@ authorizes launch or pause.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@1.9.0
+npx --yes @dmfaster/cli@1.10.0
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
@@ -88,6 +90,15 @@ only one input in a command may use `-`.
 | `calendar_meeting_book` | `calendar.meeting.book` | `calendar meeting book --input FILE --json` | `calendar:write`, `calendar:read`, `inbox:read`, `pipeline:write` | Book a conversation meeting |
 | `calls_list` | `calls.list` | `calls list --input FILE --json` | `calls:read` | List authorized meetings |
 | `call_inspect` | `call.inspect` | `call inspect --input FILE --json` | `calls:read` | Inspect meeting and outcomes |
+| `leads_status` | `leads.status` | `leads status --input FILE --json` | `leads:read` | Read exact credits and recent jobs |
+| `leads_extract_quote` | `leads.extract.quote` | `leads extract quote --input FILE --json` | `leads:read` | Estimate social extraction credits |
+| `leads_extract_start` | `leads.extract.start` | `leads extract start --input FILE --json` | `leads:read`, `leads:write` | Queue a durable extraction |
+| `leads_extract_inspect` | `leads.extract.inspect` | `leads extract inspect --input FILE --json` | `leads:read` | Read saved results and settled cost |
+| `leads_extract_refresh` | `leads.extract.refresh` | `leads extract refresh --input FILE --json` | `leads:read`, `leads:write` | Wake the same reserved extraction |
+| `leads_extract_continue` | `leads.extract.continue` | `leads extract continue --input FILE --json` | `leads:read`, `leads:write` | Queue separately charged continuation |
+| `leads_enrich_preview` | `leads.enrich.preview` | `leads enrich preview --input FILE --json` | `leads:read` | Estimate missing-profile enrichment |
+| `leads_enrich_start` | `leads.enrich.start` | `leads enrich start --input FILE --json` | `leads:read`, `leads:write` | Queue requested enrichment |
+| `leads_enrich_inspect` | `leads.enrich.inspect` | `leads enrich inspect --input FILE --json` | `leads:read` | Read enrichment progress and refunds |
 
 See [reviews-and-bookings.md](reviews-and-bookings.md) for runner, cohort, copy attribution and invitation workflows.
 

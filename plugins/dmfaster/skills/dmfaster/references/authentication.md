@@ -19,14 +19,14 @@ repository, or MCP configuration.
 Check the current credential without a global install:
 
 ```bash
-npx --yes @dmfaster/cli@1.9.0 auth status --json
-npx --yes @dmfaster/cli@1.9.0 doctor --json
+npx --yes @dmfaster/cli@1.10.0 auth status --json
+npx --yes @dmfaster/cli@1.10.0 doctor --json
 ```
 
 When authentication is required:
 
 ```bash
-npx --yes @dmfaster/cli@1.9.0 auth login --json
+npx --yes @dmfaster/cli@1.10.0 auth login --json
 ```
 
 The CLI prints an `authorization_required` JSON event and a human-readable
@@ -45,7 +45,7 @@ the human.
 Agent 1.0 defines these bounded scopes: `workspace:read`, `campaigns:read`,
 `sending:read`, `inbox:read`, `pipeline:read`, `audiences:read`, `campaigns:write`,
 `campaigns:launch`, `campaigns:control`, `inbox:write`, `pipeline:write`,
-`calendar:read`, `calendar:write`, and `calls:read`.
+`calendar:read`, `calendar:write`, `calls:read`, `leads:read`, and `leads:write`.
 Login defaults to the `full` profile.
 The owner approves this connection once. With `campaigns:control`, explicit user
 instructions authorize launch and pause without another approval page per action;
@@ -60,9 +60,10 @@ agent must not operate it for them.
 
 Use `--access read`, `--access plan`, or `--access draft` for smaller grants.
 These profiles add operational reads, planning, and private drafts respectively.
-Campaign write/launch/control and calendar write are owner-only. Calendar tools
+Campaign write/launch/control, calendar write and lead-credit spending are owner-only. Calendar tools
 also require the owner at execution time. Read/plan/draft profiles include
-calendar and call reads; only full includes calendar booking. Connections without
+calendar, call and social prospecting reads; only full includes calendar booking
+and lead-credit spending. Connections without
 `campaigns:control` retain the per-action browser approval workflow.
 
 If the pinned package is unavailable, report that DM Faster Agent 1.0 is not

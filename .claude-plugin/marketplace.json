@@ -4,20 +4,15 @@
     "name": "DM Faster",
     "url": "https://dmfaster.com"
   },
-  "description": "Official DM Faster Agent 1.0 campaign planning and authorized operations for agents.",
+  "description": "Official DM Faster prospecting and sales tools for agents.",
   "plugins": [
     {
       "name": "dmfaster",
       "displayName": "DM Faster",
       "source": "./plugins/dmfaster",
-      "description": "Plan campaigns, prepare private drafts, inspect live sales activity, and run authorized campaign controls through DM Faster Agent 1.0.",
+      "description": "Find prospects, research companies, extract Instagram audiences, and run authorized sales workflows with DM Faster.",
       "category": "Productivity",
-      "tags": [
-        "sales",
-        "outreach",
-        "campaigns",
-        "mcp"
-      ],
+      "tags": ["sales", "prospecting", "companies", "instagram", "mcp"],
       "strict": true
     }
   ]

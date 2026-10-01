@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "dmfaster",
-  "version": "1.9.0",
-  "description": "Plan campaigns, prepare private drafts, inspect live sales activity, and run authorized campaign controls through DM Faster Agent 1.0.",
+  "version": "1.10.0",
+  "description": "Find prospects, research companies, extract Instagram audiences, and run authorized sales workflows with DM Faster.",
   "author": {
     "name": "DM Faster",
     "url": "https://dmfaster.com"
@@ -10,7 +10,7 @@
   "homepage": "https://dmfaster.com/docs/agents",
   "repository": "https://github.com/dmfaster/agents",
   "license": "Apache-2.0",
-  "keywords": ["sales", "outreach", "campaigns", "mcp", "agent"],
+  "keywords": ["sales", "prospecting", "companies", "instagram", "outreach", "mcp", "agent"],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"
 }

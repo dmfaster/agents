@@ -137,7 +137,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -160,6 +167,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -595,7 +611,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -618,6 +641,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -1029,7 +1061,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -1052,6 +1091,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -1372,7 +1420,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -1395,6 +1450,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -1869,7 +1933,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -1892,6 +1963,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -2288,7 +2368,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -2311,6 +2398,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -2693,7 +2789,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -2716,6 +2819,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -3029,7 +3141,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -3052,6 +3171,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -3467,7 +3595,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -3490,6 +3625,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -3964,7 +4108,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -3987,6 +4138,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -4318,7 +4478,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -4341,6 +4508,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -4608,7 +4784,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -4631,6 +4814,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -4916,7 +5108,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -4939,6 +5138,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -5288,7 +5496,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -5311,6 +5526,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -5559,7 +5783,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -5582,6 +5813,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -5875,7 +6115,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -5898,6 +6145,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -6252,7 +6508,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -6275,6 +6538,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -6389,6 +6661,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
                 },
                 targetName: {
                   type: "string",
+                },
+                targetUrl: {
+                  type: "string",
+                  description:
+                    "Stored recipient profile URL. Older records may recover it through an exact profile match in the original saved audience; empty when unavailable.",
                 },
                 targetCompanyName: {
                   type: "string",
@@ -6568,7 +6845,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -6591,6 +6875,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -6926,7 +7219,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -6949,6 +7249,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -7324,7 +7633,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -7347,6 +7663,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -7676,7 +8001,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -7699,6 +8031,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -7969,7 +8310,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -7992,6 +8340,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -8258,7 +8615,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -8281,6 +8645,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -8580,7 +8953,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -8603,6 +8983,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -8943,7 +9332,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -8966,6 +9362,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -9300,7 +9705,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -9323,6 +9735,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -9732,7 +10153,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -9755,6 +10183,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -10015,7 +10452,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -10038,6 +10482,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -10330,7 +10783,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -10353,6 +10813,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -10622,7 +11091,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -10645,6 +11121,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -10966,7 +11451,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -10989,6 +11481,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -11347,7 +11848,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -11370,6 +11878,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -11637,7 +12154,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -11660,6 +12184,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -11994,7 +12527,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -12017,6 +12557,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -12351,7 +12900,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -12374,6 +12930,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -12880,7 +13445,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -12903,6 +13475,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -13258,7 +13839,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -13281,6 +13869,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -13663,7 +14260,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -13686,6 +14290,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -14038,7 +14651,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -14061,6 +14681,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -14164,6 +14793,40 @@ export const AGENT_OUTPUT_SCHEMAS = {
           metadata: {
             type: "object",
             additionalProperties: true,
+            properties: {
+              technologyAvailability: {
+                oneOf: [
+                  {
+                    type: "object",
+                    required: ["country", "options"],
+                    properties: {
+                      country: {
+                        type: "string",
+                      },
+                      options: {
+                        type: "array",
+                        items: {
+                          type: "object",
+                          required: ["value", "companyCount"],
+                          properties: {
+                            value: {
+                              type: "string",
+                            },
+                            companyCount: {
+                              type: "integer",
+                              minimum: 50,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
           },
           filterFields: {
             type: "array",
@@ -14185,6 +14848,38 @@ export const AGENT_OUTPUT_SCHEMAS = {
                 },
                 label: {
                   type: "string",
+                },
+              },
+            },
+          },
+          technologyMatching: {
+            type: "object",
+            required: ["withinSubsection", "betweenSubsections", "groups"],
+            properties: {
+              withinSubsection: {
+                type: "string",
+                const: "any",
+              },
+              betweenSubsections: {
+                type: "string",
+                const: "all",
+              },
+              groups: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: ["key", "values"],
+                  properties: {
+                    key: {
+                      type: "string",
+                    },
+                    values: {
+                      type: "array",
+                      items: {
+                        type: "string",
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -14345,6 +15040,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           technologies: {
             type: "array",
+            description:
+              "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
             items: {
               type: "string",
               maxLength: 80,
@@ -14415,6 +15112,338 @@ export const AGENT_OUTPUT_SCHEMAS = {
         required: ["countries"],
         description:
           "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+      },
+      SupportedCountry: {
+        type: "string",
+        enum: [
+          "FI",
+          "NO",
+          "EE",
+          "SE",
+          "DK",
+          "UK",
+          "IE",
+          "AE",
+          "AT",
+          "BE",
+          "CA",
+          "NL",
+          "NZ",
+          "ES",
+          "FR",
+          "HK",
+          "IL",
+          "LV",
+          "LT",
+          "IT",
+          "CH",
+          "PT",
+          "SA",
+          "SG",
+          "IS",
+          "AU",
+          "DE",
+          "US",
+          "ZA",
+        ],
+      },
+    },
+  }),
+  "companies.suggest": z.fromJSONSchema({
+    $ref: "#/$defs/CompanySuggestionsResult",
+    $defs: {
+      CompanySuggestionsResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "companies.suggest",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/CompanySuggestionsData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      CompanySuggestionsData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["query", "suggestions"],
+        properties: {
+          query: {
+            type: "string",
+          },
+          suggestions: {
+            type: "array",
+            maxItems: 10,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["country", "businessId", "name"],
+              properties: {
+                country: {
+                  $ref: "#/$defs/SupportedCountry",
+                },
+                businessId: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 192,
+                },
+                name: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+        description:
+          "Bounded entity suggestions only. There is deliberately no total, audience size, cursor or claim of complete coverage.",
       },
       SupportedCountry: {
         type: "string",
@@ -14588,7 +15617,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -14611,6 +15647,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -14928,6 +15973,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           technologies: {
             type: "array",
+            description:
+              "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
             items: {
               type: "string",
               maxLength: 80,
@@ -14998,6 +16045,5641 @@ export const AGENT_OUTPUT_SCHEMAS = {
         required: ["countries"],
         description:
           "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+      },
+    },
+  }),
+  "companies.evidence.search": z.fromJSONSchema({
+    $ref: "#/$defs/CompanyEvidenceSearchResult",
+    $defs: {
+      CompanyEvidenceSearchResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "companies.evidence.search",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/CompanyEvidenceSearchData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      CompanyEvidenceSearchData: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          companies: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCompany",
+            },
+            minItems: 0,
+            maxItems: 20,
+          },
+          appliedCriteria: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCriterion",
+            },
+            minItems: 1,
+            maxItems: 4,
+          },
+          appliedFilters: {
+            anyOf: [
+              {
+                $ref: "#/$defs/CompanySearchFilters",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          unresolvedCriteria: {
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 60,
+            },
+            minItems: 0,
+            maxItems: 4,
+          },
+          query: {
+            type: "string",
+            minLength: 1,
+            maxLength: 1500,
+          },
+          country: {
+            type: "string",
+          },
+          querySignature: {
+            type: "string",
+            minLength: 1,
+            maxLength: 200,
+          },
+          expectedRevision: {
+            type: "string",
+            minLength: 1,
+            maxLength: 200,
+          },
+          expiresAt: {
+            type: "string",
+            format: "date-time",
+          },
+          hasNextPage: {
+            type: "boolean",
+          },
+          nextCursor: {
+            type: "string",
+          },
+          total: {
+            type: "null",
+          },
+          totalExact: {
+            type: "boolean",
+            const: false,
+          },
+          totalStatus: {
+            type: "string",
+            const: "unavailable",
+          },
+          coverage: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              mode: {
+                type: "string",
+                const: "text_shortlist",
+              },
+              exhaustive: {
+                type: "boolean",
+                const: false,
+              },
+              retrievedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              evaluatedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              corpusCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              verification: {
+                type: "string",
+                const: "jev",
+              },
+              limitations: {
+                type: "array",
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 600,
+                },
+                minItems: 0,
+                maxItems: 100,
+              },
+            },
+            required: [
+              "mode",
+              "exhaustive",
+              "retrievedCompanies",
+              "evaluatedCompanies",
+              "corpusCompanies",
+              "verification",
+              "limitations",
+            ],
+          },
+          timing: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              retrievalMs: {
+                type: "number",
+              },
+              providerRequests: {
+                type: "integer",
+                minimum: 0,
+                maximum: 30,
+              },
+              verificationMs: {
+                type: "number",
+              },
+              cached: {
+                type: "boolean",
+              },
+            },
+            required: ["retrievalMs", "providerRequests", "verificationMs", "cached"],
+          },
+        },
+        required: [
+          "companies",
+          "appliedCriteria",
+          "appliedFilters",
+          "unresolvedCriteria",
+          "query",
+          "country",
+          "querySignature",
+          "expectedRevision",
+          "expiresAt",
+          "hasNextPage",
+          "nextCursor",
+          "total",
+          "totalExact",
+          "totalStatus",
+          "coverage",
+          "timing",
+        ],
+      },
+      WebsiteEvidenceCompany: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            type: "string",
+          },
+          businessId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 192,
+          },
+          name: {
+            type: "string",
+          },
+          websiteUrl: {
+            type: "string",
+          },
+          selection: {
+            oneOf: [
+              {
+                type: "object",
+                additionalProperties: false,
+                description:
+                  "Ready input item for companies.list.prepare, using its shared current-profile revision contract.",
+                properties: {
+                  country: {
+                    $ref: "#/$defs/SupportedCountry",
+                  },
+                  businessId: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 192,
+                  },
+                  expectedRevision: {
+                    type: "string",
+                    minLength: 64,
+                    maxLength: 64,
+                  },
+                },
+                required: ["country", "businessId", "expectedRevision"],
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          passages: {
+            type: "array",
+            description:
+              "Fresh original retrieved passages for independent assistant inspection, including unknown cases.",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 6,
+          },
+          matches: {
+            type: "boolean",
+          },
+          criteria: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteCriterionJudgment",
+            },
+            minItems: 1,
+            maxItems: 4,
+          },
+        },
+        required: [
+          "country",
+          "businessId",
+          "name",
+          "websiteUrl",
+          "passages",
+          "matches",
+          "selection",
+          "criteria",
+        ],
+      },
+      SupportedCountry: {
+        type: "string",
+        enum: [
+          "FI",
+          "NO",
+          "EE",
+          "SE",
+          "DK",
+          "UK",
+          "IE",
+          "AE",
+          "AT",
+          "BE",
+          "CA",
+          "NL",
+          "NZ",
+          "ES",
+          "FR",
+          "HK",
+          "IL",
+          "LV",
+          "LT",
+          "IT",
+          "CH",
+          "PT",
+          "SA",
+          "SG",
+          "IS",
+          "AU",
+          "DE",
+          "US",
+          "ZA",
+        ],
+      },
+      WebsiteEvidenceQuote: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          url: {
+            type: "string",
+            format: "uri",
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          contentHash: {
+            type: "string",
+            minLength: 1,
+            maxLength: 64,
+          },
+          heading: {
+            type: "string",
+          },
+          text: {
+            type: "string",
+            minLength: 1,
+            maxLength: 1800,
+          },
+          language: {
+            type: "string",
+            minLength: 1,
+            maxLength: 35,
+          },
+          extractionVersion: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+        },
+        required: [
+          "url",
+          "observedAt",
+          "contentHash",
+          "heading",
+          "text",
+          "language",
+          "extractionVersion",
+        ],
+      },
+      WebsiteCriterionJudgment: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          criterionId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          status: {
+            type: "string",
+            enum: ["supported", "inferred", "portfolio", "contradicted", "unknown"],
+          },
+          probability: {
+            type: "number",
+            minimum: 0,
+            maximum: 1,
+          },
+          reason: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 3,
+          },
+        },
+        required: ["criterionId", "status", "probability", "reason", "evidence"],
+      },
+      WebsiteEvidenceCriterion: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          id: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          statement: {
+            type: "string",
+            minLength: 1,
+            maxLength: 800,
+          },
+          requirement: {
+            type: "string",
+            enum: ["advertised", "any_support"],
+          },
+          retrievalTerms: {
+            description:
+              "Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.",
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+            },
+            minItems: 1,
+            maxItems: 12,
+          },
+          retrievalGroups: {
+            description:
+              "Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion.",
+            type: "array",
+            minItems: 2,
+            maxItems: 4,
+            items: {
+              type: "array",
+              minItems: 1,
+              maxItems: 12,
+              items: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+            },
+          },
+        },
+        required: ["id", "statement", "requirement", "retrievalTerms"],
+      },
+      CompanySearchFilters: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            $ref: "#/$defs/SupportedCountry",
+          },
+          countries: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/SupportedCountry",
+            },
+            maxItems: 32,
+            minItems: 1,
+          },
+          q: {
+            type: "string",
+            maxLength: 120,
+          },
+          industryCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          industryCodeSelections: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                classification: {
+                  const: "TOL",
+                },
+                version: {
+                  enum: ["2008", "2025"],
+                },
+                codes: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    maxLength: 5,
+                  },
+                  maxItems: 64,
+                },
+              },
+              required: ["classification", "version", "codes"],
+            },
+            maxItems: 2,
+          },
+          tolCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          companyForm: {
+            type: "string",
+            maxLength: 4096,
+          },
+          states: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          cities: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          registrationDateEnabled: {
+            type: "boolean",
+          },
+          registrationDateStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          registrationDateEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          revenueMinEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          revenueMaxEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          employeeRanges: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          employeeMin: {
+            type: "string",
+            maxLength: 10,
+          },
+          employeeMax: {
+            type: "string",
+            maxLength: 10,
+          },
+          technologies: {
+            type: "array",
+            description:
+              "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 40,
+          },
+          hasExhibitionParticipation: {
+            type: "boolean",
+          },
+          exhibitionEventKeys: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 160,
+            },
+            maxItems: 32,
+          },
+          exhibitionMinEditions: {
+            type: "string",
+            maxLength: 8,
+          },
+          hasPublicFunding: {
+            type: "boolean",
+          },
+          fundingSources: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 40,
+            },
+            maxItems: 5,
+          },
+          fundingFromYear: {
+            type: "string",
+            maxLength: 4,
+          },
+          googleAdsActivityWindow: {
+            enum: [null, "last_30_days", "last_90_days", "last_12_months"],
+          },
+          metaAdsActiveOnly: {
+            type: "boolean",
+          },
+          metaAdsMinimumEuReach: {
+            type: "string",
+            maxLength: 10,
+          },
+          metaAdsTargetAge: {
+            type: "string",
+            maxLength: 3,
+          },
+          metaAdsTargetGender: {
+            enum: ["", "all", "men", "women"],
+          },
+          metaAdsTargetLocation: {
+            type: "string",
+            maxLength: 80,
+          },
+          metaAdsIncludeUncorroborated: {
+            type: "boolean",
+          },
+          hasWebsite: {
+            type: "boolean",
+          },
+          activeOnly: {
+            type: "boolean",
+          },
+        },
+        required: ["countries"],
+        description:
+          "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+      },
+    },
+  }),
+  "companies.evidence.start": z.fromJSONSchema({
+    $ref: "#/$defs/CompanyEvidenceStartResult",
+    $defs: {
+      CompanyEvidenceStartResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "companies.evidence.start",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/CompanyEvidenceRunData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      CompanyEvidenceRunData: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          runId: {
+            type: "string",
+          },
+          expectedRevision: {
+            type: "string",
+          },
+          querySignature: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["initializing", "running", "complete", "cancelled", "stale"],
+          },
+          scanComplete: {
+            type: "boolean",
+          },
+          country: {
+            type: "string",
+            const: "FI",
+          },
+          query: {
+            type: "string",
+          },
+          appliedCriteria: {
+            type: "array",
+            minItems: 1,
+            maxItems: 4,
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCriterion",
+            },
+          },
+          appliedFilters: {
+            anyOf: [
+              {
+                $ref: "#/$defs/CompanySearchFilters",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          expiresAt: {
+            type: "string",
+            format: "date-time",
+          },
+          companies: {
+            type: "array",
+            minItems: 0,
+            maxItems: 20,
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCompany",
+            },
+          },
+          view: {
+            type: "string",
+            enum: ["matches", "unresolved", "all"],
+          },
+          nextCursor: {
+            type: "string",
+          },
+          hasNextPage: {
+            type: "boolean",
+          },
+          awaitingMoreResults: {
+            type: "boolean",
+          },
+          total: {
+            type: "null",
+          },
+          totalExact: {
+            type: "boolean",
+            const: false,
+          },
+          totalStatus: {
+            type: "string",
+            const: "unavailable",
+          },
+          progress: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              eligibleCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              enqueuedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              processedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              pendingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              processingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              confirmedMatches: {
+                type: "integer",
+                minimum: 0,
+              },
+              contradictedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              unresolvedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              missingEvidenceCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              staleEvidenceCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              retryingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              checkedPassages: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+            required: [
+              "eligibleCompanies",
+              "enqueuedCompanies",
+              "processedCompanies",
+              "pendingCompanies",
+              "processingCompanies",
+              "confirmedMatches",
+              "contradictedCompanies",
+              "unresolvedCompanies",
+              "missingEvidenceCompanies",
+              "staleEvidenceCompanies",
+              "retryingCompanies",
+              "checkedPassages",
+            ],
+          },
+          retryFailures: {
+            type: "array",
+            maxItems: 20,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                code: {
+                  type: "string",
+                },
+                companies: {
+                  type: "integer",
+                  minimum: 1,
+                },
+                retryAt: {
+                  type: "string",
+                  format: "date-time",
+                },
+              },
+              required: ["code", "companies", "retryAt"],
+            },
+          },
+          usage: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              providerRequests: {
+                type: "integer",
+                minimum: 0,
+              },
+              inputTokens: {
+                type: "integer",
+                minimum: 0,
+              },
+              outputTokens: {
+                type: "integer",
+                minimum: 0,
+              },
+              cachedDecisions: {
+                type: "integer",
+                minimum: 0,
+              },
+              usageMissingRequests: {
+                type: "integer",
+                minimum: 0,
+              },
+              providerDurationMs: {
+                type: "integer",
+                minimum: 0,
+              },
+              elapsedMs: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+            required: [
+              "providerRequests",
+              "inputTokens",
+              "outputTokens",
+              "cachedDecisions",
+              "usageMissingRequests",
+              "providerDurationMs",
+              "elapsedMs",
+            ],
+          },
+          limitations: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+        required: [
+          "runId",
+          "expectedRevision",
+          "querySignature",
+          "status",
+          "scanComplete",
+          "country",
+          "query",
+          "appliedCriteria",
+          "appliedFilters",
+          "expiresAt",
+          "companies",
+          "view",
+          "nextCursor",
+          "hasNextPage",
+          "awaitingMoreResults",
+          "total",
+          "totalExact",
+          "totalStatus",
+          "progress",
+          "retryFailures",
+          "usage",
+          "limitations",
+        ],
+      },
+      WebsiteEvidenceCriterion: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          id: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          statement: {
+            type: "string",
+            minLength: 1,
+            maxLength: 800,
+          },
+          requirement: {
+            type: "string",
+            enum: ["advertised", "any_support"],
+          },
+          retrievalTerms: {
+            description:
+              "Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.",
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+            },
+            minItems: 1,
+            maxItems: 12,
+          },
+          retrievalGroups: {
+            description:
+              "Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion.",
+            type: "array",
+            minItems: 2,
+            maxItems: 4,
+            items: {
+              type: "array",
+              minItems: 1,
+              maxItems: 12,
+              items: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+            },
+          },
+        },
+        required: ["id", "statement", "requirement", "retrievalTerms"],
+      },
+      CompanySearchFilters: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            $ref: "#/$defs/SupportedCountry",
+          },
+          countries: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/SupportedCountry",
+            },
+            maxItems: 32,
+            minItems: 1,
+          },
+          q: {
+            type: "string",
+            maxLength: 120,
+          },
+          industryCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          industryCodeSelections: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                classification: {
+                  const: "TOL",
+                },
+                version: {
+                  enum: ["2008", "2025"],
+                },
+                codes: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    maxLength: 5,
+                  },
+                  maxItems: 64,
+                },
+              },
+              required: ["classification", "version", "codes"],
+            },
+            maxItems: 2,
+          },
+          tolCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          companyForm: {
+            type: "string",
+            maxLength: 4096,
+          },
+          states: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          cities: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          registrationDateEnabled: {
+            type: "boolean",
+          },
+          registrationDateStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          registrationDateEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          revenueMinEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          revenueMaxEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          employeeRanges: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          employeeMin: {
+            type: "string",
+            maxLength: 10,
+          },
+          employeeMax: {
+            type: "string",
+            maxLength: 10,
+          },
+          technologies: {
+            type: "array",
+            description:
+              "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 40,
+          },
+          hasExhibitionParticipation: {
+            type: "boolean",
+          },
+          exhibitionEventKeys: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 160,
+            },
+            maxItems: 32,
+          },
+          exhibitionMinEditions: {
+            type: "string",
+            maxLength: 8,
+          },
+          hasPublicFunding: {
+            type: "boolean",
+          },
+          fundingSources: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 40,
+            },
+            maxItems: 5,
+          },
+          fundingFromYear: {
+            type: "string",
+            maxLength: 4,
+          },
+          googleAdsActivityWindow: {
+            enum: [null, "last_30_days", "last_90_days", "last_12_months"],
+          },
+          metaAdsActiveOnly: {
+            type: "boolean",
+          },
+          metaAdsMinimumEuReach: {
+            type: "string",
+            maxLength: 10,
+          },
+          metaAdsTargetAge: {
+            type: "string",
+            maxLength: 3,
+          },
+          metaAdsTargetGender: {
+            enum: ["", "all", "men", "women"],
+          },
+          metaAdsTargetLocation: {
+            type: "string",
+            maxLength: 80,
+          },
+          metaAdsIncludeUncorroborated: {
+            type: "boolean",
+          },
+          hasWebsite: {
+            type: "boolean",
+          },
+          activeOnly: {
+            type: "boolean",
+          },
+        },
+        required: ["countries"],
+        description:
+          "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+      },
+      SupportedCountry: {
+        type: "string",
+        enum: [
+          "FI",
+          "NO",
+          "EE",
+          "SE",
+          "DK",
+          "UK",
+          "IE",
+          "AE",
+          "AT",
+          "BE",
+          "CA",
+          "NL",
+          "NZ",
+          "ES",
+          "FR",
+          "HK",
+          "IL",
+          "LV",
+          "LT",
+          "IT",
+          "CH",
+          "PT",
+          "SA",
+          "SG",
+          "IS",
+          "AU",
+          "DE",
+          "US",
+          "ZA",
+        ],
+      },
+      WebsiteEvidenceCompany: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            type: "string",
+          },
+          businessId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 192,
+          },
+          name: {
+            type: "string",
+          },
+          websiteUrl: {
+            type: "string",
+          },
+          selection: {
+            oneOf: [
+              {
+                type: "object",
+                additionalProperties: false,
+                description:
+                  "Ready input item for companies.list.prepare, using its shared current-profile revision contract.",
+                properties: {
+                  country: {
+                    $ref: "#/$defs/SupportedCountry",
+                  },
+                  businessId: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 192,
+                  },
+                  expectedRevision: {
+                    type: "string",
+                    minLength: 64,
+                    maxLength: 64,
+                  },
+                },
+                required: ["country", "businessId", "expectedRevision"],
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          passages: {
+            type: "array",
+            description:
+              "Fresh original retrieved passages for independent assistant inspection, including unknown cases.",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 6,
+          },
+          matches: {
+            type: "boolean",
+          },
+          criteria: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteCriterionJudgment",
+            },
+            minItems: 1,
+            maxItems: 4,
+          },
+        },
+        required: [
+          "country",
+          "businessId",
+          "name",
+          "websiteUrl",
+          "passages",
+          "matches",
+          "selection",
+          "criteria",
+        ],
+      },
+      WebsiteEvidenceQuote: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          url: {
+            type: "string",
+            format: "uri",
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          contentHash: {
+            type: "string",
+            minLength: 1,
+            maxLength: 64,
+          },
+          heading: {
+            type: "string",
+          },
+          text: {
+            type: "string",
+            minLength: 1,
+            maxLength: 1800,
+          },
+          language: {
+            type: "string",
+            minLength: 1,
+            maxLength: 35,
+          },
+          extractionVersion: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+        },
+        required: [
+          "url",
+          "observedAt",
+          "contentHash",
+          "heading",
+          "text",
+          "language",
+          "extractionVersion",
+        ],
+      },
+      WebsiteCriterionJudgment: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          criterionId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          status: {
+            type: "string",
+            enum: ["supported", "inferred", "portfolio", "contradicted", "unknown"],
+          },
+          probability: {
+            type: "number",
+            minimum: 0,
+            maximum: 1,
+          },
+          reason: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 3,
+          },
+        },
+        required: ["criterionId", "status", "probability", "reason", "evidence"],
+      },
+    },
+  }),
+  "companies.evidence.advance": z.fromJSONSchema({
+    $ref: "#/$defs/CompanyEvidenceAdvanceResult",
+    $defs: {
+      CompanyEvidenceAdvanceResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "companies.evidence.advance",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/CompanyEvidenceRunData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      CompanyEvidenceRunData: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          runId: {
+            type: "string",
+          },
+          expectedRevision: {
+            type: "string",
+          },
+          querySignature: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["initializing", "running", "complete", "cancelled", "stale"],
+          },
+          scanComplete: {
+            type: "boolean",
+          },
+          country: {
+            type: "string",
+            const: "FI",
+          },
+          query: {
+            type: "string",
+          },
+          appliedCriteria: {
+            type: "array",
+            minItems: 1,
+            maxItems: 4,
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCriterion",
+            },
+          },
+          appliedFilters: {
+            anyOf: [
+              {
+                $ref: "#/$defs/CompanySearchFilters",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          expiresAt: {
+            type: "string",
+            format: "date-time",
+          },
+          companies: {
+            type: "array",
+            minItems: 0,
+            maxItems: 20,
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCompany",
+            },
+          },
+          view: {
+            type: "string",
+            enum: ["matches", "unresolved", "all"],
+          },
+          nextCursor: {
+            type: "string",
+          },
+          hasNextPage: {
+            type: "boolean",
+          },
+          awaitingMoreResults: {
+            type: "boolean",
+          },
+          total: {
+            type: "null",
+          },
+          totalExact: {
+            type: "boolean",
+            const: false,
+          },
+          totalStatus: {
+            type: "string",
+            const: "unavailable",
+          },
+          progress: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              eligibleCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              enqueuedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              processedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              pendingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              processingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              confirmedMatches: {
+                type: "integer",
+                minimum: 0,
+              },
+              contradictedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              unresolvedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              missingEvidenceCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              staleEvidenceCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              retryingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              checkedPassages: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+            required: [
+              "eligibleCompanies",
+              "enqueuedCompanies",
+              "processedCompanies",
+              "pendingCompanies",
+              "processingCompanies",
+              "confirmedMatches",
+              "contradictedCompanies",
+              "unresolvedCompanies",
+              "missingEvidenceCompanies",
+              "staleEvidenceCompanies",
+              "retryingCompanies",
+              "checkedPassages",
+            ],
+          },
+          retryFailures: {
+            type: "array",
+            maxItems: 20,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                code: {
+                  type: "string",
+                },
+                companies: {
+                  type: "integer",
+                  minimum: 1,
+                },
+                retryAt: {
+                  type: "string",
+                  format: "date-time",
+                },
+              },
+              required: ["code", "companies", "retryAt"],
+            },
+          },
+          usage: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              providerRequests: {
+                type: "integer",
+                minimum: 0,
+              },
+              inputTokens: {
+                type: "integer",
+                minimum: 0,
+              },
+              outputTokens: {
+                type: "integer",
+                minimum: 0,
+              },
+              cachedDecisions: {
+                type: "integer",
+                minimum: 0,
+              },
+              usageMissingRequests: {
+                type: "integer",
+                minimum: 0,
+              },
+              providerDurationMs: {
+                type: "integer",
+                minimum: 0,
+              },
+              elapsedMs: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+            required: [
+              "providerRequests",
+              "inputTokens",
+              "outputTokens",
+              "cachedDecisions",
+              "usageMissingRequests",
+              "providerDurationMs",
+              "elapsedMs",
+            ],
+          },
+          limitations: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+        required: [
+          "runId",
+          "expectedRevision",
+          "querySignature",
+          "status",
+          "scanComplete",
+          "country",
+          "query",
+          "appliedCriteria",
+          "appliedFilters",
+          "expiresAt",
+          "companies",
+          "view",
+          "nextCursor",
+          "hasNextPage",
+          "awaitingMoreResults",
+          "total",
+          "totalExact",
+          "totalStatus",
+          "progress",
+          "retryFailures",
+          "usage",
+          "limitations",
+        ],
+      },
+      WebsiteEvidenceCriterion: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          id: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          statement: {
+            type: "string",
+            minLength: 1,
+            maxLength: 800,
+          },
+          requirement: {
+            type: "string",
+            enum: ["advertised", "any_support"],
+          },
+          retrievalTerms: {
+            description:
+              "Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.",
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+            },
+            minItems: 1,
+            maxItems: 12,
+          },
+          retrievalGroups: {
+            description:
+              "Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion.",
+            type: "array",
+            minItems: 2,
+            maxItems: 4,
+            items: {
+              type: "array",
+              minItems: 1,
+              maxItems: 12,
+              items: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+            },
+          },
+        },
+        required: ["id", "statement", "requirement", "retrievalTerms"],
+      },
+      CompanySearchFilters: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            $ref: "#/$defs/SupportedCountry",
+          },
+          countries: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/SupportedCountry",
+            },
+            maxItems: 32,
+            minItems: 1,
+          },
+          q: {
+            type: "string",
+            maxLength: 120,
+          },
+          industryCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          industryCodeSelections: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                classification: {
+                  const: "TOL",
+                },
+                version: {
+                  enum: ["2008", "2025"],
+                },
+                codes: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    maxLength: 5,
+                  },
+                  maxItems: 64,
+                },
+              },
+              required: ["classification", "version", "codes"],
+            },
+            maxItems: 2,
+          },
+          tolCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          companyForm: {
+            type: "string",
+            maxLength: 4096,
+          },
+          states: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          cities: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          registrationDateEnabled: {
+            type: "boolean",
+          },
+          registrationDateStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          registrationDateEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          revenueMinEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          revenueMaxEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          employeeRanges: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          employeeMin: {
+            type: "string",
+            maxLength: 10,
+          },
+          employeeMax: {
+            type: "string",
+            maxLength: 10,
+          },
+          technologies: {
+            type: "array",
+            description:
+              "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 40,
+          },
+          hasExhibitionParticipation: {
+            type: "boolean",
+          },
+          exhibitionEventKeys: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 160,
+            },
+            maxItems: 32,
+          },
+          exhibitionMinEditions: {
+            type: "string",
+            maxLength: 8,
+          },
+          hasPublicFunding: {
+            type: "boolean",
+          },
+          fundingSources: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 40,
+            },
+            maxItems: 5,
+          },
+          fundingFromYear: {
+            type: "string",
+            maxLength: 4,
+          },
+          googleAdsActivityWindow: {
+            enum: [null, "last_30_days", "last_90_days", "last_12_months"],
+          },
+          metaAdsActiveOnly: {
+            type: "boolean",
+          },
+          metaAdsMinimumEuReach: {
+            type: "string",
+            maxLength: 10,
+          },
+          metaAdsTargetAge: {
+            type: "string",
+            maxLength: 3,
+          },
+          metaAdsTargetGender: {
+            enum: ["", "all", "men", "women"],
+          },
+          metaAdsTargetLocation: {
+            type: "string",
+            maxLength: 80,
+          },
+          metaAdsIncludeUncorroborated: {
+            type: "boolean",
+          },
+          hasWebsite: {
+            type: "boolean",
+          },
+          activeOnly: {
+            type: "boolean",
+          },
+        },
+        required: ["countries"],
+        description:
+          "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+      },
+      SupportedCountry: {
+        type: "string",
+        enum: [
+          "FI",
+          "NO",
+          "EE",
+          "SE",
+          "DK",
+          "UK",
+          "IE",
+          "AE",
+          "AT",
+          "BE",
+          "CA",
+          "NL",
+          "NZ",
+          "ES",
+          "FR",
+          "HK",
+          "IL",
+          "LV",
+          "LT",
+          "IT",
+          "CH",
+          "PT",
+          "SA",
+          "SG",
+          "IS",
+          "AU",
+          "DE",
+          "US",
+          "ZA",
+        ],
+      },
+      WebsiteEvidenceCompany: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            type: "string",
+          },
+          businessId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 192,
+          },
+          name: {
+            type: "string",
+          },
+          websiteUrl: {
+            type: "string",
+          },
+          selection: {
+            oneOf: [
+              {
+                type: "object",
+                additionalProperties: false,
+                description:
+                  "Ready input item for companies.list.prepare, using its shared current-profile revision contract.",
+                properties: {
+                  country: {
+                    $ref: "#/$defs/SupportedCountry",
+                  },
+                  businessId: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 192,
+                  },
+                  expectedRevision: {
+                    type: "string",
+                    minLength: 64,
+                    maxLength: 64,
+                  },
+                },
+                required: ["country", "businessId", "expectedRevision"],
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          passages: {
+            type: "array",
+            description:
+              "Fresh original retrieved passages for independent assistant inspection, including unknown cases.",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 6,
+          },
+          matches: {
+            type: "boolean",
+          },
+          criteria: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteCriterionJudgment",
+            },
+            minItems: 1,
+            maxItems: 4,
+          },
+        },
+        required: [
+          "country",
+          "businessId",
+          "name",
+          "websiteUrl",
+          "passages",
+          "matches",
+          "selection",
+          "criteria",
+        ],
+      },
+      WebsiteEvidenceQuote: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          url: {
+            type: "string",
+            format: "uri",
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          contentHash: {
+            type: "string",
+            minLength: 1,
+            maxLength: 64,
+          },
+          heading: {
+            type: "string",
+          },
+          text: {
+            type: "string",
+            minLength: 1,
+            maxLength: 1800,
+          },
+          language: {
+            type: "string",
+            minLength: 1,
+            maxLength: 35,
+          },
+          extractionVersion: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+        },
+        required: [
+          "url",
+          "observedAt",
+          "contentHash",
+          "heading",
+          "text",
+          "language",
+          "extractionVersion",
+        ],
+      },
+      WebsiteCriterionJudgment: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          criterionId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          status: {
+            type: "string",
+            enum: ["supported", "inferred", "portfolio", "contradicted", "unknown"],
+          },
+          probability: {
+            type: "number",
+            minimum: 0,
+            maximum: 1,
+          },
+          reason: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 3,
+          },
+        },
+        required: ["criterionId", "status", "probability", "reason", "evidence"],
+      },
+    },
+  }),
+  "companies.evidence.status": z.fromJSONSchema({
+    $ref: "#/$defs/CompanyEvidenceStatusResult",
+    $defs: {
+      CompanyEvidenceStatusResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "companies.evidence.status",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/CompanyEvidenceRunData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      CompanyEvidenceRunData: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          runId: {
+            type: "string",
+          },
+          expectedRevision: {
+            type: "string",
+          },
+          querySignature: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["initializing", "running", "complete", "cancelled", "stale"],
+          },
+          scanComplete: {
+            type: "boolean",
+          },
+          country: {
+            type: "string",
+            const: "FI",
+          },
+          query: {
+            type: "string",
+          },
+          appliedCriteria: {
+            type: "array",
+            minItems: 1,
+            maxItems: 4,
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCriterion",
+            },
+          },
+          appliedFilters: {
+            anyOf: [
+              {
+                $ref: "#/$defs/CompanySearchFilters",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          expiresAt: {
+            type: "string",
+            format: "date-time",
+          },
+          companies: {
+            type: "array",
+            minItems: 0,
+            maxItems: 20,
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCompany",
+            },
+          },
+          view: {
+            type: "string",
+            enum: ["matches", "unresolved", "all"],
+          },
+          nextCursor: {
+            type: "string",
+          },
+          hasNextPage: {
+            type: "boolean",
+          },
+          awaitingMoreResults: {
+            type: "boolean",
+          },
+          total: {
+            type: "null",
+          },
+          totalExact: {
+            type: "boolean",
+            const: false,
+          },
+          totalStatus: {
+            type: "string",
+            const: "unavailable",
+          },
+          progress: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              eligibleCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              enqueuedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              processedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              pendingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              processingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              confirmedMatches: {
+                type: "integer",
+                minimum: 0,
+              },
+              contradictedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              unresolvedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              missingEvidenceCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              staleEvidenceCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              retryingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              checkedPassages: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+            required: [
+              "eligibleCompanies",
+              "enqueuedCompanies",
+              "processedCompanies",
+              "pendingCompanies",
+              "processingCompanies",
+              "confirmedMatches",
+              "contradictedCompanies",
+              "unresolvedCompanies",
+              "missingEvidenceCompanies",
+              "staleEvidenceCompanies",
+              "retryingCompanies",
+              "checkedPassages",
+            ],
+          },
+          retryFailures: {
+            type: "array",
+            maxItems: 20,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                code: {
+                  type: "string",
+                },
+                companies: {
+                  type: "integer",
+                  minimum: 1,
+                },
+                retryAt: {
+                  type: "string",
+                  format: "date-time",
+                },
+              },
+              required: ["code", "companies", "retryAt"],
+            },
+          },
+          usage: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              providerRequests: {
+                type: "integer",
+                minimum: 0,
+              },
+              inputTokens: {
+                type: "integer",
+                minimum: 0,
+              },
+              outputTokens: {
+                type: "integer",
+                minimum: 0,
+              },
+              cachedDecisions: {
+                type: "integer",
+                minimum: 0,
+              },
+              usageMissingRequests: {
+                type: "integer",
+                minimum: 0,
+              },
+              providerDurationMs: {
+                type: "integer",
+                minimum: 0,
+              },
+              elapsedMs: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+            required: [
+              "providerRequests",
+              "inputTokens",
+              "outputTokens",
+              "cachedDecisions",
+              "usageMissingRequests",
+              "providerDurationMs",
+              "elapsedMs",
+            ],
+          },
+          limitations: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+        required: [
+          "runId",
+          "expectedRevision",
+          "querySignature",
+          "status",
+          "scanComplete",
+          "country",
+          "query",
+          "appliedCriteria",
+          "appliedFilters",
+          "expiresAt",
+          "companies",
+          "view",
+          "nextCursor",
+          "hasNextPage",
+          "awaitingMoreResults",
+          "total",
+          "totalExact",
+          "totalStatus",
+          "progress",
+          "retryFailures",
+          "usage",
+          "limitations",
+        ],
+      },
+      WebsiteEvidenceCriterion: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          id: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          statement: {
+            type: "string",
+            minLength: 1,
+            maxLength: 800,
+          },
+          requirement: {
+            type: "string",
+            enum: ["advertised", "any_support"],
+          },
+          retrievalTerms: {
+            description:
+              "Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.",
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+            },
+            minItems: 1,
+            maxItems: 12,
+          },
+          retrievalGroups: {
+            description:
+              "Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion.",
+            type: "array",
+            minItems: 2,
+            maxItems: 4,
+            items: {
+              type: "array",
+              minItems: 1,
+              maxItems: 12,
+              items: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+            },
+          },
+        },
+        required: ["id", "statement", "requirement", "retrievalTerms"],
+      },
+      CompanySearchFilters: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            $ref: "#/$defs/SupportedCountry",
+          },
+          countries: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/SupportedCountry",
+            },
+            maxItems: 32,
+            minItems: 1,
+          },
+          q: {
+            type: "string",
+            maxLength: 120,
+          },
+          industryCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          industryCodeSelections: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                classification: {
+                  const: "TOL",
+                },
+                version: {
+                  enum: ["2008", "2025"],
+                },
+                codes: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    maxLength: 5,
+                  },
+                  maxItems: 64,
+                },
+              },
+              required: ["classification", "version", "codes"],
+            },
+            maxItems: 2,
+          },
+          tolCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          companyForm: {
+            type: "string",
+            maxLength: 4096,
+          },
+          states: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          cities: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          registrationDateEnabled: {
+            type: "boolean",
+          },
+          registrationDateStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          registrationDateEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          revenueMinEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          revenueMaxEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          employeeRanges: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          employeeMin: {
+            type: "string",
+            maxLength: 10,
+          },
+          employeeMax: {
+            type: "string",
+            maxLength: 10,
+          },
+          technologies: {
+            type: "array",
+            description:
+              "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 40,
+          },
+          hasExhibitionParticipation: {
+            type: "boolean",
+          },
+          exhibitionEventKeys: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 160,
+            },
+            maxItems: 32,
+          },
+          exhibitionMinEditions: {
+            type: "string",
+            maxLength: 8,
+          },
+          hasPublicFunding: {
+            type: "boolean",
+          },
+          fundingSources: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 40,
+            },
+            maxItems: 5,
+          },
+          fundingFromYear: {
+            type: "string",
+            maxLength: 4,
+          },
+          googleAdsActivityWindow: {
+            enum: [null, "last_30_days", "last_90_days", "last_12_months"],
+          },
+          metaAdsActiveOnly: {
+            type: "boolean",
+          },
+          metaAdsMinimumEuReach: {
+            type: "string",
+            maxLength: 10,
+          },
+          metaAdsTargetAge: {
+            type: "string",
+            maxLength: 3,
+          },
+          metaAdsTargetGender: {
+            enum: ["", "all", "men", "women"],
+          },
+          metaAdsTargetLocation: {
+            type: "string",
+            maxLength: 80,
+          },
+          metaAdsIncludeUncorroborated: {
+            type: "boolean",
+          },
+          hasWebsite: {
+            type: "boolean",
+          },
+          activeOnly: {
+            type: "boolean",
+          },
+        },
+        required: ["countries"],
+        description:
+          "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+      },
+      SupportedCountry: {
+        type: "string",
+        enum: [
+          "FI",
+          "NO",
+          "EE",
+          "SE",
+          "DK",
+          "UK",
+          "IE",
+          "AE",
+          "AT",
+          "BE",
+          "CA",
+          "NL",
+          "NZ",
+          "ES",
+          "FR",
+          "HK",
+          "IL",
+          "LV",
+          "LT",
+          "IT",
+          "CH",
+          "PT",
+          "SA",
+          "SG",
+          "IS",
+          "AU",
+          "DE",
+          "US",
+          "ZA",
+        ],
+      },
+      WebsiteEvidenceCompany: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            type: "string",
+          },
+          businessId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 192,
+          },
+          name: {
+            type: "string",
+          },
+          websiteUrl: {
+            type: "string",
+          },
+          selection: {
+            oneOf: [
+              {
+                type: "object",
+                additionalProperties: false,
+                description:
+                  "Ready input item for companies.list.prepare, using its shared current-profile revision contract.",
+                properties: {
+                  country: {
+                    $ref: "#/$defs/SupportedCountry",
+                  },
+                  businessId: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 192,
+                  },
+                  expectedRevision: {
+                    type: "string",
+                    minLength: 64,
+                    maxLength: 64,
+                  },
+                },
+                required: ["country", "businessId", "expectedRevision"],
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          passages: {
+            type: "array",
+            description:
+              "Fresh original retrieved passages for independent assistant inspection, including unknown cases.",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 6,
+          },
+          matches: {
+            type: "boolean",
+          },
+          criteria: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteCriterionJudgment",
+            },
+            minItems: 1,
+            maxItems: 4,
+          },
+        },
+        required: [
+          "country",
+          "businessId",
+          "name",
+          "websiteUrl",
+          "passages",
+          "matches",
+          "selection",
+          "criteria",
+        ],
+      },
+      WebsiteEvidenceQuote: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          url: {
+            type: "string",
+            format: "uri",
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          contentHash: {
+            type: "string",
+            minLength: 1,
+            maxLength: 64,
+          },
+          heading: {
+            type: "string",
+          },
+          text: {
+            type: "string",
+            minLength: 1,
+            maxLength: 1800,
+          },
+          language: {
+            type: "string",
+            minLength: 1,
+            maxLength: 35,
+          },
+          extractionVersion: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+        },
+        required: [
+          "url",
+          "observedAt",
+          "contentHash",
+          "heading",
+          "text",
+          "language",
+          "extractionVersion",
+        ],
+      },
+      WebsiteCriterionJudgment: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          criterionId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          status: {
+            type: "string",
+            enum: ["supported", "inferred", "portfolio", "contradicted", "unknown"],
+          },
+          probability: {
+            type: "number",
+            minimum: 0,
+            maximum: 1,
+          },
+          reason: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 3,
+          },
+        },
+        required: ["criterionId", "status", "probability", "reason", "evidence"],
+      },
+    },
+  }),
+  "companies.evidence.results": z.fromJSONSchema({
+    $ref: "#/$defs/CompanyEvidenceResultsResult",
+    $defs: {
+      CompanyEvidenceResultsResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "companies.evidence.results",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/CompanyEvidenceRunData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      CompanyEvidenceRunData: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          runId: {
+            type: "string",
+          },
+          expectedRevision: {
+            type: "string",
+          },
+          querySignature: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["initializing", "running", "complete", "cancelled", "stale"],
+          },
+          scanComplete: {
+            type: "boolean",
+          },
+          country: {
+            type: "string",
+            const: "FI",
+          },
+          query: {
+            type: "string",
+          },
+          appliedCriteria: {
+            type: "array",
+            minItems: 1,
+            maxItems: 4,
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCriterion",
+            },
+          },
+          appliedFilters: {
+            anyOf: [
+              {
+                $ref: "#/$defs/CompanySearchFilters",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          expiresAt: {
+            type: "string",
+            format: "date-time",
+          },
+          companies: {
+            type: "array",
+            minItems: 0,
+            maxItems: 20,
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCompany",
+            },
+          },
+          view: {
+            type: "string",
+            enum: ["matches", "unresolved", "all"],
+          },
+          nextCursor: {
+            type: "string",
+          },
+          hasNextPage: {
+            type: "boolean",
+          },
+          awaitingMoreResults: {
+            type: "boolean",
+          },
+          total: {
+            type: "null",
+          },
+          totalExact: {
+            type: "boolean",
+            const: false,
+          },
+          totalStatus: {
+            type: "string",
+            const: "unavailable",
+          },
+          progress: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              eligibleCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              enqueuedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              processedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              pendingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              processingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              confirmedMatches: {
+                type: "integer",
+                minimum: 0,
+              },
+              contradictedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              unresolvedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              missingEvidenceCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              staleEvidenceCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              retryingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              checkedPassages: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+            required: [
+              "eligibleCompanies",
+              "enqueuedCompanies",
+              "processedCompanies",
+              "pendingCompanies",
+              "processingCompanies",
+              "confirmedMatches",
+              "contradictedCompanies",
+              "unresolvedCompanies",
+              "missingEvidenceCompanies",
+              "staleEvidenceCompanies",
+              "retryingCompanies",
+              "checkedPassages",
+            ],
+          },
+          retryFailures: {
+            type: "array",
+            maxItems: 20,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                code: {
+                  type: "string",
+                },
+                companies: {
+                  type: "integer",
+                  minimum: 1,
+                },
+                retryAt: {
+                  type: "string",
+                  format: "date-time",
+                },
+              },
+              required: ["code", "companies", "retryAt"],
+            },
+          },
+          usage: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              providerRequests: {
+                type: "integer",
+                minimum: 0,
+              },
+              inputTokens: {
+                type: "integer",
+                minimum: 0,
+              },
+              outputTokens: {
+                type: "integer",
+                minimum: 0,
+              },
+              cachedDecisions: {
+                type: "integer",
+                minimum: 0,
+              },
+              usageMissingRequests: {
+                type: "integer",
+                minimum: 0,
+              },
+              providerDurationMs: {
+                type: "integer",
+                minimum: 0,
+              },
+              elapsedMs: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+            required: [
+              "providerRequests",
+              "inputTokens",
+              "outputTokens",
+              "cachedDecisions",
+              "usageMissingRequests",
+              "providerDurationMs",
+              "elapsedMs",
+            ],
+          },
+          limitations: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+        required: [
+          "runId",
+          "expectedRevision",
+          "querySignature",
+          "status",
+          "scanComplete",
+          "country",
+          "query",
+          "appliedCriteria",
+          "appliedFilters",
+          "expiresAt",
+          "companies",
+          "view",
+          "nextCursor",
+          "hasNextPage",
+          "awaitingMoreResults",
+          "total",
+          "totalExact",
+          "totalStatus",
+          "progress",
+          "retryFailures",
+          "usage",
+          "limitations",
+        ],
+      },
+      WebsiteEvidenceCriterion: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          id: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          statement: {
+            type: "string",
+            minLength: 1,
+            maxLength: 800,
+          },
+          requirement: {
+            type: "string",
+            enum: ["advertised", "any_support"],
+          },
+          retrievalTerms: {
+            description:
+              "Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.",
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+            },
+            minItems: 1,
+            maxItems: 12,
+          },
+          retrievalGroups: {
+            description:
+              "Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion.",
+            type: "array",
+            minItems: 2,
+            maxItems: 4,
+            items: {
+              type: "array",
+              minItems: 1,
+              maxItems: 12,
+              items: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+            },
+          },
+        },
+        required: ["id", "statement", "requirement", "retrievalTerms"],
+      },
+      CompanySearchFilters: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            $ref: "#/$defs/SupportedCountry",
+          },
+          countries: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/SupportedCountry",
+            },
+            maxItems: 32,
+            minItems: 1,
+          },
+          q: {
+            type: "string",
+            maxLength: 120,
+          },
+          industryCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          industryCodeSelections: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                classification: {
+                  const: "TOL",
+                },
+                version: {
+                  enum: ["2008", "2025"],
+                },
+                codes: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    maxLength: 5,
+                  },
+                  maxItems: 64,
+                },
+              },
+              required: ["classification", "version", "codes"],
+            },
+            maxItems: 2,
+          },
+          tolCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          companyForm: {
+            type: "string",
+            maxLength: 4096,
+          },
+          states: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          cities: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          registrationDateEnabled: {
+            type: "boolean",
+          },
+          registrationDateStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          registrationDateEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          revenueMinEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          revenueMaxEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          employeeRanges: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          employeeMin: {
+            type: "string",
+            maxLength: 10,
+          },
+          employeeMax: {
+            type: "string",
+            maxLength: 10,
+          },
+          technologies: {
+            type: "array",
+            description:
+              "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 40,
+          },
+          hasExhibitionParticipation: {
+            type: "boolean",
+          },
+          exhibitionEventKeys: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 160,
+            },
+            maxItems: 32,
+          },
+          exhibitionMinEditions: {
+            type: "string",
+            maxLength: 8,
+          },
+          hasPublicFunding: {
+            type: "boolean",
+          },
+          fundingSources: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 40,
+            },
+            maxItems: 5,
+          },
+          fundingFromYear: {
+            type: "string",
+            maxLength: 4,
+          },
+          googleAdsActivityWindow: {
+            enum: [null, "last_30_days", "last_90_days", "last_12_months"],
+          },
+          metaAdsActiveOnly: {
+            type: "boolean",
+          },
+          metaAdsMinimumEuReach: {
+            type: "string",
+            maxLength: 10,
+          },
+          metaAdsTargetAge: {
+            type: "string",
+            maxLength: 3,
+          },
+          metaAdsTargetGender: {
+            enum: ["", "all", "men", "women"],
+          },
+          metaAdsTargetLocation: {
+            type: "string",
+            maxLength: 80,
+          },
+          metaAdsIncludeUncorroborated: {
+            type: "boolean",
+          },
+          hasWebsite: {
+            type: "boolean",
+          },
+          activeOnly: {
+            type: "boolean",
+          },
+        },
+        required: ["countries"],
+        description:
+          "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+      },
+      SupportedCountry: {
+        type: "string",
+        enum: [
+          "FI",
+          "NO",
+          "EE",
+          "SE",
+          "DK",
+          "UK",
+          "IE",
+          "AE",
+          "AT",
+          "BE",
+          "CA",
+          "NL",
+          "NZ",
+          "ES",
+          "FR",
+          "HK",
+          "IL",
+          "LV",
+          "LT",
+          "IT",
+          "CH",
+          "PT",
+          "SA",
+          "SG",
+          "IS",
+          "AU",
+          "DE",
+          "US",
+          "ZA",
+        ],
+      },
+      WebsiteEvidenceCompany: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            type: "string",
+          },
+          businessId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 192,
+          },
+          name: {
+            type: "string",
+          },
+          websiteUrl: {
+            type: "string",
+          },
+          selection: {
+            oneOf: [
+              {
+                type: "object",
+                additionalProperties: false,
+                description:
+                  "Ready input item for companies.list.prepare, using its shared current-profile revision contract.",
+                properties: {
+                  country: {
+                    $ref: "#/$defs/SupportedCountry",
+                  },
+                  businessId: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 192,
+                  },
+                  expectedRevision: {
+                    type: "string",
+                    minLength: 64,
+                    maxLength: 64,
+                  },
+                },
+                required: ["country", "businessId", "expectedRevision"],
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          passages: {
+            type: "array",
+            description:
+              "Fresh original retrieved passages for independent assistant inspection, including unknown cases.",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 6,
+          },
+          matches: {
+            type: "boolean",
+          },
+          criteria: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteCriterionJudgment",
+            },
+            minItems: 1,
+            maxItems: 4,
+          },
+        },
+        required: [
+          "country",
+          "businessId",
+          "name",
+          "websiteUrl",
+          "passages",
+          "matches",
+          "selection",
+          "criteria",
+        ],
+      },
+      WebsiteEvidenceQuote: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          url: {
+            type: "string",
+            format: "uri",
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          contentHash: {
+            type: "string",
+            minLength: 1,
+            maxLength: 64,
+          },
+          heading: {
+            type: "string",
+          },
+          text: {
+            type: "string",
+            minLength: 1,
+            maxLength: 1800,
+          },
+          language: {
+            type: "string",
+            minLength: 1,
+            maxLength: 35,
+          },
+          extractionVersion: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+        },
+        required: [
+          "url",
+          "observedAt",
+          "contentHash",
+          "heading",
+          "text",
+          "language",
+          "extractionVersion",
+        ],
+      },
+      WebsiteCriterionJudgment: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          criterionId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          status: {
+            type: "string",
+            enum: ["supported", "inferred", "portfolio", "contradicted", "unknown"],
+          },
+          probability: {
+            type: "number",
+            minimum: 0,
+            maximum: 1,
+          },
+          reason: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 3,
+          },
+        },
+        required: ["criterionId", "status", "probability", "reason", "evidence"],
+      },
+    },
+  }),
+  "companies.evidence.cancel": z.fromJSONSchema({
+    $ref: "#/$defs/CompanyEvidenceCancelResult",
+    $defs: {
+      CompanyEvidenceCancelResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "companies.evidence.cancel",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/CompanyEvidenceRunData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      CompanyEvidenceRunData: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          runId: {
+            type: "string",
+          },
+          expectedRevision: {
+            type: "string",
+          },
+          querySignature: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["initializing", "running", "complete", "cancelled", "stale"],
+          },
+          scanComplete: {
+            type: "boolean",
+          },
+          country: {
+            type: "string",
+            const: "FI",
+          },
+          query: {
+            type: "string",
+          },
+          appliedCriteria: {
+            type: "array",
+            minItems: 1,
+            maxItems: 4,
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCriterion",
+            },
+          },
+          appliedFilters: {
+            anyOf: [
+              {
+                $ref: "#/$defs/CompanySearchFilters",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          expiresAt: {
+            type: "string",
+            format: "date-time",
+          },
+          companies: {
+            type: "array",
+            minItems: 0,
+            maxItems: 20,
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceCompany",
+            },
+          },
+          view: {
+            type: "string",
+            enum: ["matches", "unresolved", "all"],
+          },
+          nextCursor: {
+            type: "string",
+          },
+          hasNextPage: {
+            type: "boolean",
+          },
+          awaitingMoreResults: {
+            type: "boolean",
+          },
+          total: {
+            type: "null",
+          },
+          totalExact: {
+            type: "boolean",
+            const: false,
+          },
+          totalStatus: {
+            type: "string",
+            const: "unavailable",
+          },
+          progress: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              eligibleCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              enqueuedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              processedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              pendingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              processingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              confirmedMatches: {
+                type: "integer",
+                minimum: 0,
+              },
+              contradictedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              unresolvedCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              missingEvidenceCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              staleEvidenceCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              retryingCompanies: {
+                type: "integer",
+                minimum: 0,
+              },
+              checkedPassages: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+            required: [
+              "eligibleCompanies",
+              "enqueuedCompanies",
+              "processedCompanies",
+              "pendingCompanies",
+              "processingCompanies",
+              "confirmedMatches",
+              "contradictedCompanies",
+              "unresolvedCompanies",
+              "missingEvidenceCompanies",
+              "staleEvidenceCompanies",
+              "retryingCompanies",
+              "checkedPassages",
+            ],
+          },
+          retryFailures: {
+            type: "array",
+            maxItems: 20,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                code: {
+                  type: "string",
+                },
+                companies: {
+                  type: "integer",
+                  minimum: 1,
+                },
+                retryAt: {
+                  type: "string",
+                  format: "date-time",
+                },
+              },
+              required: ["code", "companies", "retryAt"],
+            },
+          },
+          usage: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              providerRequests: {
+                type: "integer",
+                minimum: 0,
+              },
+              inputTokens: {
+                type: "integer",
+                minimum: 0,
+              },
+              outputTokens: {
+                type: "integer",
+                minimum: 0,
+              },
+              cachedDecisions: {
+                type: "integer",
+                minimum: 0,
+              },
+              usageMissingRequests: {
+                type: "integer",
+                minimum: 0,
+              },
+              providerDurationMs: {
+                type: "integer",
+                minimum: 0,
+              },
+              elapsedMs: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+            required: [
+              "providerRequests",
+              "inputTokens",
+              "outputTokens",
+              "cachedDecisions",
+              "usageMissingRequests",
+              "providerDurationMs",
+              "elapsedMs",
+            ],
+          },
+          limitations: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+        required: [
+          "runId",
+          "expectedRevision",
+          "querySignature",
+          "status",
+          "scanComplete",
+          "country",
+          "query",
+          "appliedCriteria",
+          "appliedFilters",
+          "expiresAt",
+          "companies",
+          "view",
+          "nextCursor",
+          "hasNextPage",
+          "awaitingMoreResults",
+          "total",
+          "totalExact",
+          "totalStatus",
+          "progress",
+          "retryFailures",
+          "usage",
+          "limitations",
+        ],
+      },
+      WebsiteEvidenceCriterion: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          id: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          statement: {
+            type: "string",
+            minLength: 1,
+            maxLength: 800,
+          },
+          requirement: {
+            type: "string",
+            enum: ["advertised", "any_support"],
+          },
+          retrievalTerms: {
+            description:
+              "Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.",
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 100,
+            },
+            minItems: 1,
+            maxItems: 12,
+          },
+          retrievalGroups: {
+            description:
+              "Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion.",
+            type: "array",
+            minItems: 2,
+            maxItems: 4,
+            items: {
+              type: "array",
+              minItems: 1,
+              maxItems: 12,
+              items: {
+                type: "string",
+                minLength: 1,
+                maxLength: 100,
+              },
+            },
+          },
+        },
+        required: ["id", "statement", "requirement", "retrievalTerms"],
+      },
+      CompanySearchFilters: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            $ref: "#/$defs/SupportedCountry",
+          },
+          countries: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/SupportedCountry",
+            },
+            maxItems: 32,
+            minItems: 1,
+          },
+          q: {
+            type: "string",
+            maxLength: 120,
+          },
+          industryCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          industryCodeSelections: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                classification: {
+                  const: "TOL",
+                },
+                version: {
+                  enum: ["2008", "2025"],
+                },
+                codes: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    maxLength: 5,
+                  },
+                  maxItems: 64,
+                },
+              },
+              required: ["classification", "version", "codes"],
+            },
+            maxItems: 2,
+          },
+          tolCodes: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 8,
+          },
+          companyForm: {
+            type: "string",
+            maxLength: 4096,
+          },
+          states: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          cities: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          registrationDateEnabled: {
+            type: "boolean",
+          },
+          registrationDateStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          registrationDateEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationStart: {
+            type: "string",
+            maxLength: 10,
+          },
+          businessIdRegistrationEnd: {
+            type: "string",
+            maxLength: 10,
+          },
+          revenueMinEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          revenueMaxEur: {
+            type: "string",
+            maxLength: 16,
+          },
+          employeeRanges: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 32,
+          },
+          employeeMin: {
+            type: "string",
+            maxLength: 10,
+          },
+          employeeMax: {
+            type: "string",
+            maxLength: 10,
+          },
+          technologies: {
+            type: "array",
+            description:
+              "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
+            items: {
+              type: "string",
+              maxLength: 80,
+            },
+            maxItems: 40,
+          },
+          hasExhibitionParticipation: {
+            type: "boolean",
+          },
+          exhibitionEventKeys: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 160,
+            },
+            maxItems: 32,
+          },
+          exhibitionMinEditions: {
+            type: "string",
+            maxLength: 8,
+          },
+          hasPublicFunding: {
+            type: "boolean",
+          },
+          fundingSources: {
+            type: "array",
+            items: {
+              type: "string",
+              maxLength: 40,
+            },
+            maxItems: 5,
+          },
+          fundingFromYear: {
+            type: "string",
+            maxLength: 4,
+          },
+          googleAdsActivityWindow: {
+            enum: [null, "last_30_days", "last_90_days", "last_12_months"],
+          },
+          metaAdsActiveOnly: {
+            type: "boolean",
+          },
+          metaAdsMinimumEuReach: {
+            type: "string",
+            maxLength: 10,
+          },
+          metaAdsTargetAge: {
+            type: "string",
+            maxLength: 3,
+          },
+          metaAdsTargetGender: {
+            enum: ["", "all", "men", "women"],
+          },
+          metaAdsTargetLocation: {
+            type: "string",
+            maxLength: 80,
+          },
+          metaAdsIncludeUncorroborated: {
+            type: "boolean",
+          },
+          hasWebsite: {
+            type: "boolean",
+          },
+          activeOnly: {
+            type: "boolean",
+          },
+        },
+        required: ["countries"],
+        description:
+          "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+      },
+      SupportedCountry: {
+        type: "string",
+        enum: [
+          "FI",
+          "NO",
+          "EE",
+          "SE",
+          "DK",
+          "UK",
+          "IE",
+          "AE",
+          "AT",
+          "BE",
+          "CA",
+          "NL",
+          "NZ",
+          "ES",
+          "FR",
+          "HK",
+          "IL",
+          "LV",
+          "LT",
+          "IT",
+          "CH",
+          "PT",
+          "SA",
+          "SG",
+          "IS",
+          "AU",
+          "DE",
+          "US",
+          "ZA",
+        ],
+      },
+      WebsiteEvidenceCompany: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          country: {
+            type: "string",
+          },
+          businessId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 192,
+          },
+          name: {
+            type: "string",
+          },
+          websiteUrl: {
+            type: "string",
+          },
+          selection: {
+            oneOf: [
+              {
+                type: "object",
+                additionalProperties: false,
+                description:
+                  "Ready input item for companies.list.prepare, using its shared current-profile revision contract.",
+                properties: {
+                  country: {
+                    $ref: "#/$defs/SupportedCountry",
+                  },
+                  businessId: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 192,
+                  },
+                  expectedRevision: {
+                    type: "string",
+                    minLength: 64,
+                    maxLength: 64,
+                  },
+                },
+                required: ["country", "businessId", "expectedRevision"],
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          passages: {
+            type: "array",
+            description:
+              "Fresh original retrieved passages for independent assistant inspection, including unknown cases.",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 6,
+          },
+          matches: {
+            type: "boolean",
+          },
+          criteria: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteCriterionJudgment",
+            },
+            minItems: 1,
+            maxItems: 4,
+          },
+        },
+        required: [
+          "country",
+          "businessId",
+          "name",
+          "websiteUrl",
+          "passages",
+          "matches",
+          "selection",
+          "criteria",
+        ],
+      },
+      WebsiteEvidenceQuote: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          url: {
+            type: "string",
+            format: "uri",
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          contentHash: {
+            type: "string",
+            minLength: 1,
+            maxLength: 64,
+          },
+          heading: {
+            type: "string",
+          },
+          text: {
+            type: "string",
+            minLength: 1,
+            maxLength: 1800,
+          },
+          language: {
+            type: "string",
+            minLength: 1,
+            maxLength: 35,
+          },
+          extractionVersion: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+        },
+        required: [
+          "url",
+          "observedAt",
+          "contentHash",
+          "heading",
+          "text",
+          "language",
+          "extractionVersion",
+        ],
+      },
+      WebsiteCriterionJudgment: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          criterionId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 60,
+          },
+          status: {
+            type: "string",
+            enum: ["supported", "inferred", "portfolio", "contradicted", "unknown"],
+          },
+          probability: {
+            type: "number",
+            minimum: 0,
+            maximum: 1,
+          },
+          reason: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/WebsiteEvidenceQuote",
+            },
+            minItems: 0,
+            maxItems: 3,
+          },
+        },
+        required: ["criterionId", "status", "probability", "reason", "evidence"],
       },
     },
   }),
@@ -15137,7 +21819,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -15160,6 +21849,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -15509,7 +22207,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -15532,6 +22237,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -15839,7 +22553,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -15862,6 +22583,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -16171,7 +22901,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -16194,6 +22931,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -16591,7 +23337,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -16614,6 +23367,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -17127,7 +23889,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -17150,6 +23919,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -17410,7 +24188,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -17433,6 +24218,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -17690,7 +24484,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -17713,6 +24514,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -18017,7 +24827,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -18040,6 +24857,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -18327,7 +25153,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -18350,6 +25183,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -18598,7 +25440,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -18621,6 +25470,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -18874,7 +25732,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -18897,6 +25762,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -19223,7 +26097,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -19246,6 +26127,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -19572,7 +26462,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -19595,6 +26492,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -19959,7 +26865,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -19982,6 +26895,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -20317,7 +27239,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -20340,6 +27269,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -20959,7 +27897,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -20982,6 +27927,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -21330,7 +28284,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -21353,6 +28314,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -21604,7 +28574,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -21627,6 +28604,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -21904,7 +28890,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -21927,6 +28920,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -22191,7 +29193,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -22214,6 +29223,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -22529,7 +29547,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause.preflight",
           "campaign.pause",
           "companies.filters",
+          "companies.suggest",
           "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
           "company.inspect",
           "companies.fit.start",
           "companies.fit.advance",
@@ -22552,6 +29577,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "calendar.meeting.book",
           "calls.list",
           "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
         ],
       },
       AgentToolPolicy: {
@@ -22820,6 +29854,5289 @@ export const AGENT_OUTPUT_SCHEMAS = {
             type: "string",
             minLength: 1,
             maxLength: 160,
+          },
+        },
+      },
+    },
+  }),
+  "leads.status": z.fromJSONSchema({
+    $ref: "#/$defs/LeadsStatusResult",
+    $defs: {
+      LeadsStatusResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: [],
+            properties: {
+              data: {
+                anyOf: [
+                  {
+                    $ref: "#/$defs/LeadProspectingData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      LeadProspectingData: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "status",
+          "message",
+          "credits",
+          "requiredCredits",
+          "jobId",
+          "extraction",
+          "enrichment",
+          "estimatedCredits",
+          "recentExtractions",
+          "nextCursor",
+          "pollAfterMs",
+          "nextAction",
+          "purchaseUrl",
+        ],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["ready", "queued", "running", "completed", "failed", "blocked"],
+          },
+          message: {
+            type: "string",
+          },
+          credits: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadCreditBalance",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          requiredCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          jobId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          extraction: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadExtractionPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          enrichment: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadEnrichmentPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          estimatedCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          recentExtractions: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/LeadExtractionPublic",
+            },
+          },
+          nextCursor: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          pollAfterMs: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          nextAction: {
+            type: "string",
+            enum: ["inspect", "buy_credits", "enable_billing", "open_list", "enrich", "none"],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadCreditBalance: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "active",
+          "remaining",
+          "monthlyAllowance",
+          "used",
+          "purchasedRemaining",
+          "cycleEndsAt",
+          "purchaseUrl",
+        ],
+        properties: {
+          active: {
+            type: "boolean",
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          monthlyAllowance: {
+            type: "integer",
+            minimum: 0,
+          },
+          used: {
+            type: "integer",
+            minimum: 0,
+          },
+          purchasedRemaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          cycleEndsAt: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadExtractionPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "extractionId",
+          "status",
+          "type",
+          "identifier",
+          "requestedCount",
+          "collectedCount",
+          "savedCount",
+          "listId",
+          "listUrl",
+          "creditCost",
+          "creditState",
+          "hasMore",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          extractionId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["queued", "pending", "processing", "completed", "failed"],
+          },
+          type: {
+            type: "string",
+          },
+          identifier: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          collectedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          savedCount: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listUrl: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+      LeadEnrichmentPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "enrichmentId",
+          "listId",
+          "status",
+          "requestedCount",
+          "processedCount",
+          "enrichedCount",
+          "creditCost",
+          "creditRefunded",
+          "netCreditCost",
+          "creditState",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          enrichmentId: {
+            type: "string",
+          },
+          listId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          processedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          enrichedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditRefunded: {
+            type: "integer",
+            minimum: 0,
+          },
+          netCreditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+    },
+  }),
+  "leads.extract.quote": z.fromJSONSchema({
+    $ref: "#/$defs/LeadExtractionQuoteResult",
+    $defs: {
+      LeadExtractionQuoteResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: [],
+            properties: {
+              data: {
+                anyOf: [
+                  {
+                    $ref: "#/$defs/LeadProspectingData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      LeadProspectingData: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "status",
+          "message",
+          "credits",
+          "requiredCredits",
+          "jobId",
+          "extraction",
+          "enrichment",
+          "estimatedCredits",
+          "recentExtractions",
+          "nextCursor",
+          "pollAfterMs",
+          "nextAction",
+          "purchaseUrl",
+        ],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["ready", "queued", "running", "completed", "failed", "blocked"],
+          },
+          message: {
+            type: "string",
+          },
+          credits: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadCreditBalance",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          requiredCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          jobId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          extraction: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadExtractionPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          enrichment: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadEnrichmentPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          estimatedCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          recentExtractions: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/LeadExtractionPublic",
+            },
+          },
+          nextCursor: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          pollAfterMs: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          nextAction: {
+            type: "string",
+            enum: ["inspect", "buy_credits", "enable_billing", "open_list", "enrich", "none"],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadCreditBalance: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "active",
+          "remaining",
+          "monthlyAllowance",
+          "used",
+          "purchasedRemaining",
+          "cycleEndsAt",
+          "purchaseUrl",
+        ],
+        properties: {
+          active: {
+            type: "boolean",
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          monthlyAllowance: {
+            type: "integer",
+            minimum: 0,
+          },
+          used: {
+            type: "integer",
+            minimum: 0,
+          },
+          purchasedRemaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          cycleEndsAt: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadExtractionPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "extractionId",
+          "status",
+          "type",
+          "identifier",
+          "requestedCount",
+          "collectedCount",
+          "savedCount",
+          "listId",
+          "listUrl",
+          "creditCost",
+          "creditState",
+          "hasMore",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          extractionId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["queued", "pending", "processing", "completed", "failed"],
+          },
+          type: {
+            type: "string",
+          },
+          identifier: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          collectedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          savedCount: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listUrl: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+      LeadEnrichmentPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "enrichmentId",
+          "listId",
+          "status",
+          "requestedCount",
+          "processedCount",
+          "enrichedCount",
+          "creditCost",
+          "creditRefunded",
+          "netCreditCost",
+          "creditState",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          enrichmentId: {
+            type: "string",
+          },
+          listId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          processedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          enrichedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditRefunded: {
+            type: "integer",
+            minimum: 0,
+          },
+          netCreditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+    },
+  }),
+  "leads.extract.start": z.fromJSONSchema({
+    $ref: "#/$defs/LeadExtractionStartResult",
+    $defs: {
+      LeadExtractionStartResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: [],
+            properties: {
+              data: {
+                anyOf: [
+                  {
+                    $ref: "#/$defs/LeadProspectingData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      LeadProspectingData: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "status",
+          "message",
+          "credits",
+          "requiredCredits",
+          "jobId",
+          "extraction",
+          "enrichment",
+          "estimatedCredits",
+          "recentExtractions",
+          "nextCursor",
+          "pollAfterMs",
+          "nextAction",
+          "purchaseUrl",
+        ],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["ready", "queued", "running", "completed", "failed", "blocked"],
+          },
+          message: {
+            type: "string",
+          },
+          credits: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadCreditBalance",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          requiredCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          jobId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          extraction: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadExtractionPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          enrichment: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadEnrichmentPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          estimatedCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          recentExtractions: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/LeadExtractionPublic",
+            },
+          },
+          nextCursor: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          pollAfterMs: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          nextAction: {
+            type: "string",
+            enum: ["inspect", "buy_credits", "enable_billing", "open_list", "enrich", "none"],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadCreditBalance: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "active",
+          "remaining",
+          "monthlyAllowance",
+          "used",
+          "purchasedRemaining",
+          "cycleEndsAt",
+          "purchaseUrl",
+        ],
+        properties: {
+          active: {
+            type: "boolean",
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          monthlyAllowance: {
+            type: "integer",
+            minimum: 0,
+          },
+          used: {
+            type: "integer",
+            minimum: 0,
+          },
+          purchasedRemaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          cycleEndsAt: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadExtractionPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "extractionId",
+          "status",
+          "type",
+          "identifier",
+          "requestedCount",
+          "collectedCount",
+          "savedCount",
+          "listId",
+          "listUrl",
+          "creditCost",
+          "creditState",
+          "hasMore",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          extractionId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["queued", "pending", "processing", "completed", "failed"],
+          },
+          type: {
+            type: "string",
+          },
+          identifier: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          collectedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          savedCount: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listUrl: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+      LeadEnrichmentPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "enrichmentId",
+          "listId",
+          "status",
+          "requestedCount",
+          "processedCount",
+          "enrichedCount",
+          "creditCost",
+          "creditRefunded",
+          "netCreditCost",
+          "creditState",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          enrichmentId: {
+            type: "string",
+          },
+          listId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          processedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          enrichedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditRefunded: {
+            type: "integer",
+            minimum: 0,
+          },
+          netCreditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+    },
+  }),
+  "leads.extract.inspect": z.fromJSONSchema({
+    $ref: "#/$defs/LeadExtractionInspectResult",
+    $defs: {
+      LeadExtractionInspectResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: [],
+            properties: {
+              data: {
+                anyOf: [
+                  {
+                    $ref: "#/$defs/LeadProspectingData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      LeadProspectingData: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "status",
+          "message",
+          "credits",
+          "requiredCredits",
+          "jobId",
+          "extraction",
+          "enrichment",
+          "estimatedCredits",
+          "recentExtractions",
+          "nextCursor",
+          "pollAfterMs",
+          "nextAction",
+          "purchaseUrl",
+        ],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["ready", "queued", "running", "completed", "failed", "blocked"],
+          },
+          message: {
+            type: "string",
+          },
+          credits: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadCreditBalance",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          requiredCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          jobId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          extraction: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadExtractionPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          enrichment: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadEnrichmentPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          estimatedCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          recentExtractions: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/LeadExtractionPublic",
+            },
+          },
+          nextCursor: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          pollAfterMs: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          nextAction: {
+            type: "string",
+            enum: ["inspect", "buy_credits", "enable_billing", "open_list", "enrich", "none"],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadCreditBalance: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "active",
+          "remaining",
+          "monthlyAllowance",
+          "used",
+          "purchasedRemaining",
+          "cycleEndsAt",
+          "purchaseUrl",
+        ],
+        properties: {
+          active: {
+            type: "boolean",
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          monthlyAllowance: {
+            type: "integer",
+            minimum: 0,
+          },
+          used: {
+            type: "integer",
+            minimum: 0,
+          },
+          purchasedRemaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          cycleEndsAt: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadExtractionPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "extractionId",
+          "status",
+          "type",
+          "identifier",
+          "requestedCount",
+          "collectedCount",
+          "savedCount",
+          "listId",
+          "listUrl",
+          "creditCost",
+          "creditState",
+          "hasMore",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          extractionId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["queued", "pending", "processing", "completed", "failed"],
+          },
+          type: {
+            type: "string",
+          },
+          identifier: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          collectedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          savedCount: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listUrl: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+      LeadEnrichmentPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "enrichmentId",
+          "listId",
+          "status",
+          "requestedCount",
+          "processedCount",
+          "enrichedCount",
+          "creditCost",
+          "creditRefunded",
+          "netCreditCost",
+          "creditState",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          enrichmentId: {
+            type: "string",
+          },
+          listId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          processedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          enrichedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditRefunded: {
+            type: "integer",
+            minimum: 0,
+          },
+          netCreditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+    },
+  }),
+  "leads.extract.refresh": z.fromJSONSchema({
+    $ref: "#/$defs/LeadExtractionRefreshResult",
+    $defs: {
+      LeadExtractionRefreshResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: [],
+            properties: {
+              data: {
+                anyOf: [
+                  {
+                    $ref: "#/$defs/LeadProspectingData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      LeadProspectingData: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "status",
+          "message",
+          "credits",
+          "requiredCredits",
+          "jobId",
+          "extraction",
+          "enrichment",
+          "estimatedCredits",
+          "recentExtractions",
+          "nextCursor",
+          "pollAfterMs",
+          "nextAction",
+          "purchaseUrl",
+        ],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["ready", "queued", "running", "completed", "failed", "blocked"],
+          },
+          message: {
+            type: "string",
+          },
+          credits: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadCreditBalance",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          requiredCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          jobId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          extraction: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadExtractionPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          enrichment: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadEnrichmentPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          estimatedCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          recentExtractions: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/LeadExtractionPublic",
+            },
+          },
+          nextCursor: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          pollAfterMs: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          nextAction: {
+            type: "string",
+            enum: ["inspect", "buy_credits", "enable_billing", "open_list", "enrich", "none"],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadCreditBalance: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "active",
+          "remaining",
+          "monthlyAllowance",
+          "used",
+          "purchasedRemaining",
+          "cycleEndsAt",
+          "purchaseUrl",
+        ],
+        properties: {
+          active: {
+            type: "boolean",
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          monthlyAllowance: {
+            type: "integer",
+            minimum: 0,
+          },
+          used: {
+            type: "integer",
+            minimum: 0,
+          },
+          purchasedRemaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          cycleEndsAt: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadExtractionPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "extractionId",
+          "status",
+          "type",
+          "identifier",
+          "requestedCount",
+          "collectedCount",
+          "savedCount",
+          "listId",
+          "listUrl",
+          "creditCost",
+          "creditState",
+          "hasMore",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          extractionId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["queued", "pending", "processing", "completed", "failed"],
+          },
+          type: {
+            type: "string",
+          },
+          identifier: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          collectedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          savedCount: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listUrl: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+      LeadEnrichmentPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "enrichmentId",
+          "listId",
+          "status",
+          "requestedCount",
+          "processedCount",
+          "enrichedCount",
+          "creditCost",
+          "creditRefunded",
+          "netCreditCost",
+          "creditState",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          enrichmentId: {
+            type: "string",
+          },
+          listId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          processedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          enrichedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditRefunded: {
+            type: "integer",
+            minimum: 0,
+          },
+          netCreditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+    },
+  }),
+  "leads.extract.continue": z.fromJSONSchema({
+    $ref: "#/$defs/LeadExtractionContinueResult",
+    $defs: {
+      LeadExtractionContinueResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: [],
+            properties: {
+              data: {
+                anyOf: [
+                  {
+                    $ref: "#/$defs/LeadProspectingData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      LeadProspectingData: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "status",
+          "message",
+          "credits",
+          "requiredCredits",
+          "jobId",
+          "extraction",
+          "enrichment",
+          "estimatedCredits",
+          "recentExtractions",
+          "nextCursor",
+          "pollAfterMs",
+          "nextAction",
+          "purchaseUrl",
+        ],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["ready", "queued", "running", "completed", "failed", "blocked"],
+          },
+          message: {
+            type: "string",
+          },
+          credits: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadCreditBalance",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          requiredCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          jobId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          extraction: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadExtractionPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          enrichment: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadEnrichmentPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          estimatedCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          recentExtractions: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/LeadExtractionPublic",
+            },
+          },
+          nextCursor: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          pollAfterMs: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          nextAction: {
+            type: "string",
+            enum: ["inspect", "buy_credits", "enable_billing", "open_list", "enrich", "none"],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadCreditBalance: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "active",
+          "remaining",
+          "monthlyAllowance",
+          "used",
+          "purchasedRemaining",
+          "cycleEndsAt",
+          "purchaseUrl",
+        ],
+        properties: {
+          active: {
+            type: "boolean",
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          monthlyAllowance: {
+            type: "integer",
+            minimum: 0,
+          },
+          used: {
+            type: "integer",
+            minimum: 0,
+          },
+          purchasedRemaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          cycleEndsAt: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadExtractionPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "extractionId",
+          "status",
+          "type",
+          "identifier",
+          "requestedCount",
+          "collectedCount",
+          "savedCount",
+          "listId",
+          "listUrl",
+          "creditCost",
+          "creditState",
+          "hasMore",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          extractionId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["queued", "pending", "processing", "completed", "failed"],
+          },
+          type: {
+            type: "string",
+          },
+          identifier: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          collectedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          savedCount: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listUrl: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+      LeadEnrichmentPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "enrichmentId",
+          "listId",
+          "status",
+          "requestedCount",
+          "processedCount",
+          "enrichedCount",
+          "creditCost",
+          "creditRefunded",
+          "netCreditCost",
+          "creditState",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          enrichmentId: {
+            type: "string",
+          },
+          listId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          processedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          enrichedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditRefunded: {
+            type: "integer",
+            minimum: 0,
+          },
+          netCreditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+    },
+  }),
+  "leads.enrich.preview": z.fromJSONSchema({
+    $ref: "#/$defs/LeadEnrichmentPreviewResult",
+    $defs: {
+      LeadEnrichmentPreviewResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: [],
+            properties: {
+              data: {
+                anyOf: [
+                  {
+                    $ref: "#/$defs/LeadProspectingData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      LeadProspectingData: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "status",
+          "message",
+          "credits",
+          "requiredCredits",
+          "jobId",
+          "extraction",
+          "enrichment",
+          "estimatedCredits",
+          "recentExtractions",
+          "nextCursor",
+          "pollAfterMs",
+          "nextAction",
+          "purchaseUrl",
+        ],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["ready", "queued", "running", "completed", "failed", "blocked"],
+          },
+          message: {
+            type: "string",
+          },
+          credits: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadCreditBalance",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          requiredCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          jobId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          extraction: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadExtractionPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          enrichment: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadEnrichmentPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          estimatedCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          recentExtractions: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/LeadExtractionPublic",
+            },
+          },
+          nextCursor: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          pollAfterMs: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          nextAction: {
+            type: "string",
+            enum: ["inspect", "buy_credits", "enable_billing", "open_list", "enrich", "none"],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadCreditBalance: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "active",
+          "remaining",
+          "monthlyAllowance",
+          "used",
+          "purchasedRemaining",
+          "cycleEndsAt",
+          "purchaseUrl",
+        ],
+        properties: {
+          active: {
+            type: "boolean",
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          monthlyAllowance: {
+            type: "integer",
+            minimum: 0,
+          },
+          used: {
+            type: "integer",
+            minimum: 0,
+          },
+          purchasedRemaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          cycleEndsAt: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadExtractionPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "extractionId",
+          "status",
+          "type",
+          "identifier",
+          "requestedCount",
+          "collectedCount",
+          "savedCount",
+          "listId",
+          "listUrl",
+          "creditCost",
+          "creditState",
+          "hasMore",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          extractionId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["queued", "pending", "processing", "completed", "failed"],
+          },
+          type: {
+            type: "string",
+          },
+          identifier: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          collectedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          savedCount: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listUrl: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+      LeadEnrichmentPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "enrichmentId",
+          "listId",
+          "status",
+          "requestedCount",
+          "processedCount",
+          "enrichedCount",
+          "creditCost",
+          "creditRefunded",
+          "netCreditCost",
+          "creditState",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          enrichmentId: {
+            type: "string",
+          },
+          listId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          processedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          enrichedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditRefunded: {
+            type: "integer",
+            minimum: 0,
+          },
+          netCreditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+    },
+  }),
+  "leads.enrich.start": z.fromJSONSchema({
+    $ref: "#/$defs/LeadEnrichmentStartResult",
+    $defs: {
+      LeadEnrichmentStartResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: [],
+            properties: {
+              data: {
+                anyOf: [
+                  {
+                    $ref: "#/$defs/LeadProspectingData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      LeadProspectingData: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "status",
+          "message",
+          "credits",
+          "requiredCredits",
+          "jobId",
+          "extraction",
+          "enrichment",
+          "estimatedCredits",
+          "recentExtractions",
+          "nextCursor",
+          "pollAfterMs",
+          "nextAction",
+          "purchaseUrl",
+        ],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["ready", "queued", "running", "completed", "failed", "blocked"],
+          },
+          message: {
+            type: "string",
+          },
+          credits: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadCreditBalance",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          requiredCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          jobId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          extraction: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadExtractionPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          enrichment: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadEnrichmentPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          estimatedCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          recentExtractions: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/LeadExtractionPublic",
+            },
+          },
+          nextCursor: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          pollAfterMs: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          nextAction: {
+            type: "string",
+            enum: ["inspect", "buy_credits", "enable_billing", "open_list", "enrich", "none"],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadCreditBalance: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "active",
+          "remaining",
+          "monthlyAllowance",
+          "used",
+          "purchasedRemaining",
+          "cycleEndsAt",
+          "purchaseUrl",
+        ],
+        properties: {
+          active: {
+            type: "boolean",
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          monthlyAllowance: {
+            type: "integer",
+            minimum: 0,
+          },
+          used: {
+            type: "integer",
+            minimum: 0,
+          },
+          purchasedRemaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          cycleEndsAt: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadExtractionPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "extractionId",
+          "status",
+          "type",
+          "identifier",
+          "requestedCount",
+          "collectedCount",
+          "savedCount",
+          "listId",
+          "listUrl",
+          "creditCost",
+          "creditState",
+          "hasMore",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          extractionId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["queued", "pending", "processing", "completed", "failed"],
+          },
+          type: {
+            type: "string",
+          },
+          identifier: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          collectedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          savedCount: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listUrl: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+      LeadEnrichmentPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "enrichmentId",
+          "listId",
+          "status",
+          "requestedCount",
+          "processedCount",
+          "enrichedCount",
+          "creditCost",
+          "creditRefunded",
+          "netCreditCost",
+          "creditState",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          enrichmentId: {
+            type: "string",
+          },
+          listId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          processedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          enrichedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditRefunded: {
+            type: "integer",
+            minimum: 0,
+          },
+          netCreditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+    },
+  }),
+  "leads.enrich.inspect": z.fromJSONSchema({
+    $ref: "#/$defs/LeadEnrichmentInspectResult",
+    $defs: {
+      LeadEnrichmentInspectResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: [],
+            properties: {
+              data: {
+                anyOf: [
+                  {
+                    $ref: "#/$defs/LeadProspectingData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+        },
+      },
+      LeadProspectingData: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "status",
+          "message",
+          "credits",
+          "requiredCredits",
+          "jobId",
+          "extraction",
+          "enrichment",
+          "estimatedCredits",
+          "recentExtractions",
+          "nextCursor",
+          "pollAfterMs",
+          "nextAction",
+          "purchaseUrl",
+        ],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["ready", "queued", "running", "completed", "failed", "blocked"],
+          },
+          message: {
+            type: "string",
+          },
+          credits: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadCreditBalance",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          requiredCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          jobId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          extraction: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadExtractionPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          enrichment: {
+            anyOf: [
+              {
+                $ref: "#/$defs/LeadEnrichmentPublic",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          estimatedCredits: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          recentExtractions: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/LeadExtractionPublic",
+            },
+          },
+          nextCursor: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          pollAfterMs: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          nextAction: {
+            type: "string",
+            enum: ["inspect", "buy_credits", "enable_billing", "open_list", "enrich", "none"],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadCreditBalance: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "active",
+          "remaining",
+          "monthlyAllowance",
+          "used",
+          "purchasedRemaining",
+          "cycleEndsAt",
+          "purchaseUrl",
+        ],
+        properties: {
+          active: {
+            type: "boolean",
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          monthlyAllowance: {
+            type: "integer",
+            minimum: 0,
+          },
+          used: {
+            type: "integer",
+            minimum: 0,
+          },
+          purchasedRemaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          cycleEndsAt: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          purchaseUrl: {
+            type: "string",
+          },
+        },
+      },
+      LeadExtractionPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "extractionId",
+          "status",
+          "type",
+          "identifier",
+          "requestedCount",
+          "collectedCount",
+          "savedCount",
+          "listId",
+          "listUrl",
+          "creditCost",
+          "creditState",
+          "hasMore",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          extractionId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+            enum: ["queued", "pending", "processing", "completed", "failed"],
+          },
+          type: {
+            type: "string",
+          },
+          identifier: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          collectedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          savedCount: {
+            anyOf: [
+              {
+                type: "integer",
+                minimum: 0,
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listId: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          listUrl: {
+            anyOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          hasMore: {
+            type: "boolean",
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
+          },
+        },
+      },
+      LeadEnrichmentPublic: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "enrichmentId",
+          "listId",
+          "status",
+          "requestedCount",
+          "processedCount",
+          "enrichedCount",
+          "creditCost",
+          "creditRefunded",
+          "netCreditCost",
+          "creditState",
+          "updatedAt",
+          "error",
+        ],
+        properties: {
+          enrichmentId: {
+            type: "string",
+          },
+          listId: {
+            type: "string",
+          },
+          status: {
+            type: "string",
+          },
+          requestedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          processedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          enrichedCount: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditRefunded: {
+            type: "integer",
+            minimum: 0,
+          },
+          netCreditCost: {
+            type: "integer",
+            minimum: 0,
+          },
+          creditState: {
+            type: "string",
+            enum: ["reserved", "settled"],
+          },
+          updatedAt: {
+            type: "string",
+          },
+          error: {
+            type: "string",
           },
         },
       },

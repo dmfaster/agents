@@ -6,14 +6,21 @@ stdio MCP 2026-07-28 server definition. It includes the portable Agent Plugins
 Codex, Claude, and Cursor. Hosts that have not
 implemented that revision use the same skill through the version-pinned CLI.
 
-The 1.9.0 source candidate exposes 62 bounded domain tools plus an optional
-portable MCP Apps campaign workspace. It covers company research, exact
+The 1.10.0 source candidate exposes 78 bounded domain tools plus an optional
+portable MCP Apps Companies and campaign workspaces. It covers social prospecting, company research, exact
 audience and draft preparation, inbox and pipeline work, follow-up control,
 sender readiness and paginated outcomes. Replies require the user's explicit
 instruction for the exact text and report delivery state. Campaign launch and
 pause require the owner's direct-control grant or the existing per-action
 approval path. The interface does not expose provider credentials or bypass
 the browser extension's execution boundary.
+
+Instagram follower, following, liker and commenter extraction uses existing
+lead credits: one credit per saved profile. Enrichment is separate. Durable job
+receipts report saved lists, final costs and refunds; retries recover the same
+job. Company and saved-list composer mentions use the host's native extension
+when supported, while every profile/list read keeps the current workspace
+permissions. Selecting a mention never grants action permission.
 
 A first-time paid user can state the campaign goal without learning DM Faster's
 screens or tool names. The agent carries the plan through validation, exact
@@ -23,13 +30,13 @@ resume call; the user only completes the browser-store installation/link and
 any approval explicitly required by the returned connection or action state.
 
 Compliant MCP Apps hosts can render the campaign workspace inline. Modern
-headless hosts use the same complete campaign state and 62 domain tools without
+headless hosts use the same complete campaign state and 78 domain tools without
 losing any server capability or safety guarantee; older clients do not receive
 a legacy MCP downgrade.
 
 ## Release status
 
-This public source targets the version-pinned 1.9.0 candidate packages. Installed
+This public source targets the version-pinned 1.10.0 candidate packages. Installed
 users receive the new tools only after the trusted package release and plugin update.
 
 Do not point users at the private monorepo as a public marketplace. Synchronize
@@ -50,7 +57,7 @@ Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@1.9.0 auth login --json
+npx --yes @dmfaster/cli@1.10.0 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use

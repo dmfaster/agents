@@ -1,6 +1,6 @@
 # Reviews, cohorts, historical copy and bookings
 
-These controls were introduced in 1.8.0. The commands below use the 1.9.0
+These controls were introduced in 1.8.0. The commands below use the 1.10.0
 candidate; verify Product and package publication before using that version.
 
 ## Review coordination and exports
@@ -12,8 +12,8 @@ After `companies.fit.start`, save its run ID in a small JSON file:
 ```
 
 ```bash
-npx --yes @dmfaster/cli@1.9.0 companies fit run --input run.json --until-complete --max-seconds 1800
-npx --yes @dmfaster/cli@1.9.0 companies fit export fit_RETURNED_ID --output complete-review.json
+npx --yes @dmfaster/cli@1.10.0 companies fit run --input run.json --until-complete --max-seconds 1800
+npx --yes @dmfaster/cli@1.10.0 companies fit export fit_RETURNED_ID --output complete-review.json
 ```
 
 The coordinator writes compact progress to stderr and one final receipt to stdout.

@@ -63,7 +63,7 @@ function successfulExchange(token: string) {
     tokenType: "Bearer",
     expiresAt: "2026-08-28T12:00:00.000Z",
     scope:
-      "workspace:read campaigns:read sending:read inbox:read pipeline:read audiences:read campaigns:write campaigns:launch campaigns:control inbox:write pipeline:write calendar:read calendar:write calls:read",
+      "workspace:read campaigns:read sending:read inbox:read pipeline:read audiences:read campaigns:write campaigns:launch campaigns:control inbox:write pipeline:write calendar:read calendar:write calls:read leads:read leads:write",
     credential: {
       id: `agent_cred_${randomBytes(8).toString("hex")}`,
       name: "DM Faster CLI",
@@ -83,6 +83,8 @@ function successfulExchange(token: string) {
         "calendar:read",
         "calendar:write",
         "calls:read",
+        "leads:read",
+        "leads:write",
       ],
       expiresAt: "2026-08-28T12:00:00.000Z",
     },
@@ -255,6 +257,7 @@ test("browser login can request the plan-only access profile", async () => {
     "audiences:read",
     "calendar:read",
     "calls:read",
+    "leads:read",
   ]);
 });
 

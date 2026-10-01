@@ -5,26 +5,83 @@ description: Inspect and safely operate a user's live DM Faster sales workspace 
 
 # DM Faster
 
+For Instagram follower, following, liker or commenter prospecting and credit costs,
+read [social-prospecting.md](references/social-prospecting.md).
+
 Use DM Faster's public agent interface as the only source for live product data
 and actions. This skill is a customer workspace interface, not a repository-development interface. For source-checkout debugging,
 implementation, review, tests, migrations, or deployments, follow the
 repository's own development guidance unless the user explicitly asks for live
 workspace evidence.
 
-The suite has 62 narrow domain tools, including company-centric search,
-complete company research, private shortlists, operational reads, campaign
+The suite has 77 narrow domain tools, including company-centric search,
+complete company research, private shortlists, social extraction and enrichment, operational reads, campaign
 planning, live delivery settings, authorized campaign controls, inspected inbox
 replies, pipeline updates, follow-up cancellation, and execution event pages.
 It does not expose generic mutation, browser-worker credentials,
 or database access.
 
 The MCP server also offers `connection_status` for local authentication and
-workspace identity, plus the read-only `campaign_workspace` presentation tool.
+workspace identity. `workspace_open` opens Companies from the sidebar;
+`companies_workspace` opens a prospect search beside chat with the same complete
+filters as `companies_search`. Empty arguments browse active companies in Finland.
+Use current country-specific options from `companies_filters`; never invent taxonomy.
+The view preserves exact counts, filters and selected company evidence for discussion.
+`campaign_workspace` browses campaigns with empty arguments, inspects a saved
+campaign with `campaignId`, or presents a complete supplied `state`. All use
+existing permissions. Sharing a selection is context, never authorization to save
+lists, spend research credits, change data, launch, pause or send.
 When the host supports MCP Apps, use the campaign view after assembling or
 revising a complete campaign state when an inline editor would help the user
 review audience, delivery, and messages. Never require it: Codex and other
 headless hosts should continue with the domain tools and the same complete
 state. The view does not authorize or execute launch or pause.
+
+For website-verifiable ICPs, default to `companies_evidence_start` for ordinary
+requests such as “marketing companies with references, country Finland” or
+“every fitting company.” Preserve the original query and every criterion, with
+deterministic restrictions in `filters`. Supply a stable `idempotencyKey` and
+source-language `retrievalTerms`; terms prioritize processing and never exclude
+companies from the complete inventory. The private scan runs in the background.
+Use `companies_evidence_status` and, when useful, `companies_evidence_advance`
+to continue bounded processing. There is no lifetime company or passage cutoff.
+
+Page `companies_evidence_results` with the returned `runId`, `expectedRevision`
+and `nextCursor`. Keep the cursor even after an empty provisional page: later
+matches append in commit order. Finish pagination after `scanComplete` and
+`hasNextPage: false`. Before completion, identify results as provisional and
+report exact progress. Use `view: unresolved` for missing, stale, ambiguous or
+conflicting source evidence; provider failures remain pending with retry counts.
+Never treat an uncertain company as a proven non-fit. `companies_evidence_cancel`
+stops this private scan when requested. Source revisions are pinned; a changed
+revision requires a new run and key. Freshness is fixed as of the original run
+start, and completed runs can be reused briefly while that pin remains valid.
+
+Keep seller, service and buyer sector together in one criterion. Set
+`requirement: advertised` for an advertised offering. A delivered client project
+supports `portfolio`, and does not by itself prove an advertised sector offering.
+Use `any_support` only when the user accepts portfolio or inferred support.
+Do not weaken the criterion to obtain more matches. JEV checks all fresh retained
+passages in bounded chunks; an unrelated or unknown chunk cannot erase explicit
+support, and a later conflicting denial prevents acceptance. Preserve original
+quotations, headings and dates. Missing pages and uncertain model judgments mean
+complete processing of the saved corpus is not perfect real-world recall.
+Exact confirmed-match counts describe completed decisions; the audience total
+remains unavailable. Never turn observed matches into an exact market count.
+
+`companies_evidence_search` is an explicitly requested fast preview of a bounded
+ranked shortlist. It must not silently replace the complete workflow or serve as
+the final answer to an unbounded prospecting request. Its optional
+`retrievalGroups` can improve preview precision but still miss relevant providers.
+Keep proper names out of retrieval unless the user requested that company.
+No server-side OpenAI calls or embeddings are required by either workflow.
+
+Use `companies_filters` for employees, revenue, location, industry and other
+Companies app restrictions. These filter the complete published inventory using
+company data, rather than website judgments. To save matched companies, inspect
+their current profile revisions before `companies_list_prepare`; a complete scan
+returns `selection: null`. List preparation uses existing permissions and never
+starts outreach.
 
 ## B2B company prospecting
 
@@ -116,9 +173,15 @@ and arbitrary call mutations remain outside this interface.
 
 ## Connect
 
-The MCP server requires the stateless MCP 2026-07-28 protocol and rejects the
-2025 initialization flow. If the current host has not implemented that revision,
-use the CLI fallback below; do not attempt to force a legacy MCP session.
+For a hosted connection, use the HTTPS server URL shown in DM Faster under
+Settings → AI agents → Connect or manage agents. The hosted server supports
+OAuth sign-in and stateless compatibility with Codex's 2025 protocol. Let the
+human review and approve the host's sign-in page; do not request or copy tokens.
+Hosted credentials belong to the AI host, independently of the local CLI login.
+
+The local stdio package requires MCP 2026-07-28 and rejects the 2025 initialization
+flow. When a local host cannot use that revision, use the version-pinned CLI
+fallback below. Do not confuse local package limitations with the hosted endpoint.
 
 1. Prefer the official DM Faster MCP tools. Call the narrowest useful tool
    directly; use `connection_status` when connection or workspace identity is

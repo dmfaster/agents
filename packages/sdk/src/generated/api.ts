@@ -569,6 +569,126 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/companies.evidence.advance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Advance complete website evidence scan
+         * @description Advance bounded chunks of a complete website-evidence scan. Repeated calls never impose a lifetime company or passage limit. Background processing also continues. Echo runId and expectedRevision.
+         */
+        post: operations["companyEvidenceAdvance"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.evidence.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel complete website evidence scan
+         * @description Cancel a private website-evidence scan and fence in-flight workers. Repeated cancellation is safe; no campaign or outreach is changed.
+         */
+        post: operations["companyEvidenceCancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.evidence.results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Results complete website evidence scan
+         * @description Page all finalized confirmed matches or unresolved companies from a private complete scan. Keep nextCursor even when a partial page is empty; later discoveries are appended in commit order. scanComplete distinguishes a provisional page from final results. Echo runId and expectedRevision.
+         */
+        post: operations["companyEvidenceResults"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.evidence.search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview website evidence shortlist
+         * @description Fast bounded preview only. For every fitting company use companies.evidence.start and companies.evidence.results. Search saved company website passages for arbitrary ICP criteria, preserving seller/service/buyer relationships. Agent-supplied source-language text retrieval with bounded JEV relationship verification. Advertised offerings, portfolio-only evidence, inference and unknown are distinct. Ranked shortlist has no audience total. Echo cursor, querySignature and expectedRevision to continue. Supply Finnish keywords and synonyms per criterion. Original passages allow independent assistant inspection. No OpenAI API or embeddings are required.
+         */
+        post: operations["companyEvidenceSearch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.evidence.start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start complete website evidence scan
+         * @description Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. All fresh retained passages are checked in resumable chunks; keywords only prioritize work. Processing continues in the background. Return every confirmed match through results; unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.
+         */
+        post: operations["companyEvidenceStart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.evidence.status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Status complete website evidence scan
+         * @description Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory and fresh retained passages, not uncrawled websites.
+         */
+        post: operations["companyEvidenceStatus"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/companies.filters": {
         parameters: {
             query?: never;
@@ -849,6 +969,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/companies.suggest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Suggest company identities
+         * @description Bounded company suggestions for entity selection. No audience total or exhaustive result is returned. Use companies.search for exact filtered totals and pagination, and company.inspect for a current profile. This read never creates a list or spends credits.
+         */
+        post: operations["companySuggestions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/company.inspect": {
         parameters: {
             query?: never;
@@ -1043,6 +1183,186 @@ export interface paths {
          * @description Returns a grounded resolution, clarification, or unsupported verdict. Read-only.
          */
         post: operations["industryLookup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.enrich.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect social profile enrichment
+         * @description Read exact progress and credit refunds for the specific durable enrichment job. A reservation is not a final charge and an accepted job is not completion.
+         */
+        post: operations["leadEnrichmentInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.enrich.preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Estimate social profile enrichment
+         * @description Read the current count of missing eligible profiles and its separate credit estimate. Reuses the same list eligibility and pricing as the app. Does not spend credits.
+         */
+        post: operations["leadEnrichmentPreview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.enrich.start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start social profile enrichment
+         * @description On explicit instructions, queue missing-profile enrichment for a saved social prospecting list. One successful enrichment costs one credit; unused credits are returned. An optional instructed maxCredits budget is enforced before charging. Reuse the request key on retry and inspect the durable job ID.
+         */
+        post: operations["leadEnrichmentStart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.extract.continue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Continue a social extraction
+         * @description On explicit instructions, queue the next available page as a separately credit-bounded job. Use its inspected job ID and a new stable idempotency key. Count defaults to the original batch size; no fixed product cap applies.
+         */
+        post: operations["leadExtractionContinue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.extract.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect a social extraction
+         * @description Read stored progress by durable job ID without advancing Hiker or spending credits. Distinguish queued acceptance, saved profiles and final settled cost. Follow pollAfterMs if the host does not support completion events.
+         */
+        post: operations["leadExtractionInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.extract.quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Estimate a social extraction
+         * @description Estimate one credit per saved profile without calling Hiker or spending credits. Followers/following require a positive count; omitting count for likers/commenters requests all available results within the credit balance.
+         */
+        post: operations["leadExtractionQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.extract.refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh a social extraction
+         * @description Advance only the existing reserved extraction when explicitly requested or its progress is stale. Does not start another paid extraction.
+         */
+        post: operations["leadExtractionRefresh"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.extract.start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start social prospecting
+         * @description On explicit instructions, queue a credit-bounded Instagram followers, following, likers or commenters job. Return promptly with a durable job ID. Reuse the same idempotency key on retries, inspect actual saved results and settled credits, and subscribe to its completion event when the user requests an update. Does not start a campaign or send messages.
+         */
+        post: operations["leadExtractionStart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read social prospecting and lead credits
+         * @description Read exact credit balance and paginated recent social extractions. When credits are exhausted, show the purchase URL. A page is not the complete history.
+         */
+        post: operations["leadsStatus"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1361,7 +1681,7 @@ export interface components {
             targetListId: string;
         };
         /** @enum {string} */
-        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "inbox:write" | "pipeline:write" | "calendar:read" | "calendar:write" | "calls:read";
+        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "inbox:write" | "pipeline:write" | "calendar:read" | "calendar:write" | "calls:read" | "leads:read" | "leads:write";
         AgentAuthenticatedParty: {
             /** Format: email */
             email: string;
@@ -1603,7 +1923,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.search" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -2325,6 +2645,175 @@ export interface components {
             /** @constant */
             tool?: "campaign.validate";
         };
+        CompanyEvidenceAdvanceInput: {
+            batchSize?: number;
+            expectedRevision: string;
+            runId: string;
+        };
+        CompanyEvidenceAdvanceResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyEvidenceRunData"] | null;
+            /** @constant */
+            tool?: "companies.evidence.advance";
+        };
+        CompanyEvidenceCancelInput: {
+            expectedRevision: string;
+            runId: string;
+        };
+        CompanyEvidenceCancelResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyEvidenceRunData"] | null;
+            /** @constant */
+            tool?: "companies.evidence.cancel";
+        };
+        CompanyEvidenceResultsInput: {
+            cursor?: string;
+            expectedRevision: string;
+            pageSize?: number;
+            runId: string;
+            /** @enum {string} */
+            view?: "matches" | "unresolved" | "all";
+        };
+        CompanyEvidenceResultsResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyEvidenceRunData"] | null;
+            /** @constant */
+            tool?: "companies.evidence.results";
+        };
+        CompanyEvidenceRunData: {
+            appliedCriteria: components["schemas"]["WebsiteEvidenceCriterion"][];
+            appliedFilters: components["schemas"]["CompanySearchFilters"] | null;
+            awaitingMoreResults: boolean;
+            companies: components["schemas"]["WebsiteEvidenceCompany"][];
+            /** @constant */
+            country: "FI";
+            expectedRevision: string;
+            /** Format: date-time */
+            expiresAt: string;
+            hasNextPage: boolean;
+            limitations: string[];
+            nextCursor: string;
+            progress: {
+                checkedPassages: number;
+                confirmedMatches: number;
+                contradictedCompanies: number;
+                eligibleCompanies: number;
+                enqueuedCompanies: number;
+                missingEvidenceCompanies: number;
+                pendingCompanies: number;
+                processedCompanies: number;
+                processingCompanies: number;
+                retryingCompanies: number;
+                staleEvidenceCompanies: number;
+                unresolvedCompanies: number;
+            };
+            query: string;
+            querySignature: string;
+            retryFailures: {
+                code: string;
+                companies: number;
+                /** Format: date-time */
+                retryAt: string;
+            }[];
+            runId: string;
+            scanComplete: boolean;
+            /** @enum {string} */
+            status: "initializing" | "running" | "complete" | "cancelled" | "stale";
+            total: null;
+            /** @constant */
+            totalExact: false;
+            /** @constant */
+            totalStatus: "unavailable";
+            usage: {
+                cachedDecisions: number;
+                elapsedMs: number;
+                inputTokens: number;
+                outputTokens: number;
+                providerDurationMs: number;
+                providerRequests: number;
+                usageMissingRequests: number;
+            };
+            /** @enum {string} */
+            view: "matches" | "unresolved" | "all";
+        };
+        CompanyEvidenceSearchData: {
+            appliedCriteria: components["schemas"]["WebsiteEvidenceCriterion"][];
+            appliedFilters: components["schemas"]["CompanySearchFilters"] | null;
+            companies: components["schemas"]["WebsiteEvidenceCompany"][];
+            country: string;
+            coverage: {
+                corpusCompanies: number;
+                evaluatedCompanies: number;
+                /** @constant */
+                exhaustive: false;
+                limitations: string[];
+                /** @constant */
+                mode: "text_shortlist";
+                retrievedCompanies: number;
+                /** @constant */
+                verification: "jev";
+            };
+            expectedRevision: string;
+            /** Format: date-time */
+            expiresAt: string;
+            hasNextPage: boolean;
+            nextCursor: string;
+            query: string;
+            querySignature: string;
+            timing: {
+                cached: boolean;
+                providerRequests: number;
+                retrievalMs: number;
+                verificationMs: number;
+            };
+            total: null;
+            /** @constant */
+            totalExact: false;
+            /** @constant */
+            totalStatus: "unavailable";
+            unresolvedCriteria: string[];
+        };
+        CompanyEvidenceSearchInput: {
+            candidateLimit?: number;
+            /** @enum {string} */
+            country: "FI";
+            criteria: components["schemas"]["WebsiteEvidenceCriterion"][];
+            cursor?: string;
+            expectedRevision?: string;
+            /** @description Optional deterministic Companies app filters, applied before text candidate limits. Country must remain FI. Numeric and registry constraints use company data, not website judgments. */
+            filters?: components["schemas"]["CompanySearchFilters"];
+            /** @description Include up to six full original retrieval contexts per company. By default verified quotes are returned with each judgment, and unknown-only companies retain one original context for inspection. */
+            includePassages?: boolean;
+            maxAgeDays?: number;
+            pageSize?: number;
+            query: string;
+            querySignature?: string;
+        };
+        CompanyEvidenceSearchResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyEvidenceSearchData"] | null;
+            /** @constant */
+            tool?: "companies.evidence.search";
+        };
+        CompanyEvidenceStartInput: {
+            /** @enum {string} */
+            country: "FI";
+            criteria: components["schemas"]["WebsiteEvidenceCriterion"][];
+            filters?: components["schemas"]["CompanySearchFilters"];
+            idempotencyKey: string;
+            maxAgeDays?: number;
+            query: string;
+        };
+        CompanyEvidenceStartResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyEvidenceRunData"] | null;
+            /** @constant */
+            tool?: "companies.evidence.start";
+        };
+        CompanyEvidenceStatusInput: {
+            expectedRevision: string;
+            runId: string;
+        };
+        CompanyEvidenceStatusResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyEvidenceRunData"] | null;
+            /** @constant */
+            tool?: "companies.evidence.status";
+        };
         /** @description Read all live Companies filter fields, country-specific options and restrictions. No campaign state required. */
         CompanyFiltersData: {
             availability: {
@@ -2339,6 +2828,14 @@ export interface components {
                 [key: string]: unknown;
             })[];
             metadata: {
+                technologyAvailability?: {
+                    country: string;
+                    options: {
+                        companyCount: number;
+                        value: string;
+                    }[];
+                } | null;
+            } & {
                 [key: string]: unknown;
             };
             restrictions: string[];
@@ -2348,6 +2845,16 @@ export interface components {
             } & {
                 [key: string]: unknown;
             })[];
+            technologyMatching?: {
+                /** @constant */
+                betweenSubsections: "all";
+                groups: {
+                    key: string;
+                    values: string[];
+                }[];
+                /** @constant */
+                withinSubsection: "any";
+            };
         } & {
             [key: string]: unknown;
         };
@@ -2796,6 +3303,7 @@ export interface components {
             revenueMaxEur?: string;
             revenueMinEur?: string;
             states?: string[];
+            /** @description Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable. */
             technologies?: string[];
             tolCodes?: string[];
         };
@@ -2811,6 +3319,25 @@ export interface components {
             data?: components["schemas"]["CompanySearchData"] | null;
             /** @constant */
             tool?: "companies.search";
+        };
+        /** @description Bounded entity suggestions only. There is deliberately no total, audience size, cursor or claim of complete coverage. */
+        CompanySuggestionsData: {
+            query: string;
+            suggestions: {
+                businessId: string;
+                country: components["schemas"]["SupportedCountry"];
+                name: string;
+            }[];
+        };
+        CompanySuggestionsInput: {
+            countries: components["schemas"]["SupportedCountry"][];
+            limit?: number;
+            query: string;
+        };
+        CompanySuggestionsResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanySuggestionsData"] | null;
+            /** @constant */
+            tool?: "companies.suggest";
         };
         CompanyTimelineEvent: {
             channel?: components["schemas"]["TargetChannel"];
@@ -3009,6 +3536,8 @@ export interface components {
                 state: "Sent";
                 targetCompanyName?: string;
                 targetName: string;
+                /** @description Stored recipient profile URL. Older records may recover it through an exact profile match in the original saved audience; empty when unavailable. */
+                targetUrl?: string;
             }[];
             hasMore: boolean;
             nextCursor: string | null;
@@ -3102,6 +3631,141 @@ export interface components {
             data?: components["schemas"]["IndustryLookupOutput"] | null;
             /** @constant */
             tool?: "industry.lookup";
+        };
+        LeadCreditBalance: {
+            active: boolean;
+            cycleEndsAt: string | null;
+            monthlyAllowance: number;
+            purchasedRemaining: number;
+            purchaseUrl: string;
+            remaining: number;
+            used: number;
+        };
+        LeadEnrichmentInspectInput: {
+            jobId: components["schemas"]["ResourceId"];
+        };
+        LeadEnrichmentInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["LeadProspectingData"] | null;
+        };
+        LeadEnrichmentPreviewInput: {
+            listId: components["schemas"]["ResourceId"];
+        };
+        LeadEnrichmentPreviewResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["LeadProspectingData"] | null;
+        };
+        LeadEnrichmentPublic: {
+            creditCost: number;
+            creditRefunded: number;
+            /** @enum {string} */
+            creditState: "reserved" | "settled";
+            enrichedCount: number;
+            enrichmentId: string;
+            error: string;
+            listId: string;
+            netCreditCost: number;
+            processedCount: number;
+            requestedCount: number;
+            status: string;
+            updatedAt: string;
+        };
+        LeadEnrichmentStartInput: {
+            idempotencyKey: string;
+            listId: components["schemas"]["ResourceId"];
+            maxCredits?: number;
+        };
+        LeadEnrichmentStartResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["LeadProspectingData"] | null;
+        };
+        LeadExtractionContinueInput: {
+            count?: number;
+            idempotencyKey: string;
+            jobId: components["schemas"]["ResourceId"];
+        };
+        LeadExtractionContinueResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["LeadProspectingData"] | null;
+        };
+        LeadExtractionInspectInput: {
+            jobId: components["schemas"]["ResourceId"];
+        };
+        LeadExtractionInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["LeadProspectingData"] | null;
+        };
+        LeadExtractionPublic: {
+            collectedCount: number;
+            creditCost: number;
+            /** @enum {string} */
+            creditState: "reserved" | "settled";
+            error: string;
+            extractionId: string;
+            hasMore: boolean;
+            identifier: string;
+            listId: string | null;
+            listUrl: string | null;
+            requestedCount: number;
+            savedCount: number | null;
+            /** @enum {string} */
+            status: "queued" | "pending" | "processing" | "completed" | "failed";
+            type: string;
+            updatedAt: string;
+        };
+        LeadExtractionQuoteInput: {
+            count?: number;
+            /** @enum {string} */
+            feedType?: "top" | "recent";
+            identifier: string;
+            postUrls?: string[];
+            /** @enum {string} */
+            priority?: "high" | "normal" | "low";
+            /** @enum {string} */
+            type: "followers" | "following" | "likers" | "commenters";
+        };
+        LeadExtractionQuoteResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["LeadProspectingData"] | null;
+        };
+        LeadExtractionRefreshInput: {
+            jobId: components["schemas"]["ResourceId"];
+        };
+        LeadExtractionRefreshResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["LeadProspectingData"] | null;
+        };
+        LeadExtractionStartInput: {
+            count?: number;
+            /** @enum {string} */
+            feedType?: "top" | "recent";
+            idempotencyKey: string;
+            identifier: string;
+            postUrls?: string[];
+            /** @enum {string} */
+            priority?: "high" | "normal" | "low";
+            /** @enum {string} */
+            type: "followers" | "following" | "likers" | "commenters";
+        };
+        LeadExtractionStartResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["LeadProspectingData"] | null;
+        };
+        LeadProspectingData: {
+            credits: components["schemas"]["LeadCreditBalance"] | null;
+            enrichment: components["schemas"]["LeadEnrichmentPublic"] | null;
+            estimatedCredits: number | null;
+            extraction: components["schemas"]["LeadExtractionPublic"] | null;
+            jobId: string | null;
+            message: string;
+            /** @enum {string} */
+            nextAction: "inspect" | "buy_credits" | "enable_billing" | "open_list" | "enrich" | "none";
+            nextCursor: string | null;
+            pollAfterMs: number | null;
+            purchaseUrl: string;
+            recentExtractions: components["schemas"]["LeadExtractionPublic"][];
+            requiredCredits: number | null;
+            /** @enum {string} */
+            status: "ready" | "queued" | "running" | "completed" | "failed" | "blocked";
+        };
+        LeadsStatusInput: {
+            cursor?: string;
+            limit?: number;
+        };
+        LeadsStatusResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["LeadProspectingData"] | null;
         };
         LinkedinFollowUpSequenceInput: {
             enabled: boolean;
@@ -3449,6 +4113,50 @@ export interface components {
         TargetChannel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
         /** @enum {string} */
         TolVersion: "2008" | "2025";
+        WebsiteCriterionJudgment: {
+            criterionId: string;
+            evidence: components["schemas"]["WebsiteEvidenceQuote"][];
+            probability: number;
+            reason: string;
+            /** @enum {string} */
+            status: "supported" | "inferred" | "portfolio" | "contradicted" | "unknown";
+        };
+        WebsiteEvidenceCompany: {
+            businessId: string;
+            country: string;
+            criteria: components["schemas"]["WebsiteCriterionJudgment"][];
+            matches: boolean;
+            name: string;
+            /** @description Fresh original retrieved passages for independent assistant inspection, including unknown cases. */
+            passages: components["schemas"]["WebsiteEvidenceQuote"][];
+            selection: {
+                businessId: string;
+                country: components["schemas"]["SupportedCountry"];
+                expectedRevision: string;
+            } | null;
+            websiteUrl: string;
+        };
+        WebsiteEvidenceCriterion: {
+            id: string;
+            /** @enum {string} */
+            requirement: "advertised" | "any_support";
+            /** @description Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion. */
+            retrievalGroups?: string[][];
+            /** @description Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI. */
+            retrievalTerms: string[];
+            statement: string;
+        };
+        WebsiteEvidenceQuote: {
+            contentHash: string;
+            extractionVersion: string;
+            heading: string;
+            language: string;
+            /** Format: date-time */
+            observedAt: string;
+            text: string;
+            /** Format: uri */
+            url: string;
+        };
         WorkspaceBriefingInput: Record<string, never>;
         WorkspaceBriefingOutput: {
             campaignCounts: components["schemas"]["CampaignCounts"];
@@ -4532,6 +5240,186 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    companyEvidenceAdvance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyEvidenceAdvanceInput"];
+            };
+        };
+        responses: {
+            /** @description Complete scan progress and result page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyEvidenceAdvanceResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyEvidenceCancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyEvidenceCancelInput"];
+            };
+        };
+        responses: {
+            /** @description Complete scan progress and result page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyEvidenceCancelResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyEvidenceResults: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyEvidenceResultsInput"];
+            };
+        };
+        responses: {
+            /** @description Complete scan progress and result page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyEvidenceResultsResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyEvidenceSearch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyEvidenceSearchInput"];
+            };
+        };
+        responses: {
+            /** @description Search companies */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyEvidenceSearchResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyEvidenceStart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyEvidenceStartInput"];
+            };
+        };
+        responses: {
+            /** @description Complete scan progress and result page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyEvidenceStartResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    companyEvidenceStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyEvidenceStatusInput"];
+            };
+        };
+        responses: {
+            /** @description Complete scan progress and result page */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyEvidenceStatusResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     companyFilters: {
         parameters: {
             query?: never;
@@ -4952,6 +5840,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    companySuggestions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanySuggestionsInput"];
+            };
+        };
+        responses: {
+            /** @description Bounded company suggestions without an audience total */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanySuggestionsResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     companyInspect: {
         parameters: {
             query?: never;
@@ -5246,6 +6164,276 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["IndustryLookupResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    leadEnrichmentInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadEnrichmentInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect social profile enrichment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadEnrichmentInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    leadEnrichmentPreview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadEnrichmentPreviewInput"];
+            };
+        };
+        responses: {
+            /** @description Estimate social profile enrichment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadEnrichmentPreviewResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    leadEnrichmentStart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadEnrichmentStartInput"];
+            };
+        };
+        responses: {
+            /** @description Start social profile enrichment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadEnrichmentStartResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    leadExtractionContinue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadExtractionContinueInput"];
+            };
+        };
+        responses: {
+            /** @description Continue a social extraction */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadExtractionContinueResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    leadExtractionInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadExtractionInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect a social extraction */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadExtractionInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    leadExtractionQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadExtractionQuoteInput"];
+            };
+        };
+        responses: {
+            /** @description Estimate a social extraction */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadExtractionQuoteResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    leadExtractionRefresh: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadExtractionRefreshInput"];
+            };
+        };
+        responses: {
+            /** @description Refresh a social extraction */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadExtractionRefreshResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    leadExtractionStart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadExtractionStartInput"];
+            };
+        };
+        responses: {
+            /** @description Start social prospecting */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadExtractionStartResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    leadsStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadsStatusInput"];
+            };
+        };
+        responses: {
+            /** @description Read social prospecting and lead credits */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadsStatusResult"];
                 };
             };
             400: components["responses"]["BadRequest"];

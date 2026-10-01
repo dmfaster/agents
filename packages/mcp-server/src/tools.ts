@@ -13,7 +13,12 @@ export const MCP_AGENT_TOOL_NAMES = AGENT_TOOL_NAMES.map(
   (name) => AGENT_TOOL_DEFINITIONS[name].mcp.name,
 );
 
-export const MCP_PRESENTATION_TOOL_NAMES = ["campaign_workspace"] as const;
+export const MCP_PRESENTATION_TOOL_NAMES = [
+  "campaign_workspace",
+  "companies_workspace",
+  "workspace_open",
+  "workspace_mentions",
+] as const;
 export const MCP_LOCAL_TOOL_NAMES = ["connection_status"] as const;
 
 export const MCP_TOOL_NAMES = [
