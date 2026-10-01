@@ -41,9 +41,14 @@ not necessarily enriched.
 The owner needs `leads:read` and `leads:write` to spend credits. Existing grants
 never expand automatically. Owner instructions and the existing grant require
 no additional action approval page. If `nextAction` is `buy_credits` or
-`enable_billing`, explain the available and required credits and show
-`purchaseUrl`. Never buy credits automatically. An explicit retry after a top-up
-resumes the same unstarted blocked request; a top-up alone does not resume it.
+`enable_billing`, explain the exact available and required credits and why the
+requested feature is unavailable. In OpenAI directory hosts, link only to the
+[informational agent guide](https://dmfaster.com/docs/agents#social-prospecting)
+for entitlement options; do not promote upgrades or initiate a checkout or
+purchase flow. In other hosts, the server's `purchaseUrl` identifies the normal
+account page for explicitly requested credit management. Never buy credits
+automatically. An explicit retry after a top-up resumes the same unstarted
+blocked request; a top-up alone does not resume it.
 
 Hosted MCP supports `prospecting.extraction.finished`,
 `prospecting.enrichment.finished` and `credits.exhausted` through MCP Events

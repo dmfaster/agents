@@ -15,6 +15,10 @@ headless host, its structured fallback returns that same state. It does not
 replace validation, preview, preparation, preflight, or action tools and never
 authorizes launch or pause.
 
+`workspace_mentions` is app-only composer discovery. A selected mention reads a
+freshly authorized `dmfaster://` workspace resource; it is context, not permission
+to perform an action. It has no domain HTTP or CLI operation.
+
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
@@ -99,6 +103,13 @@ only one input in a command may use `-`.
 | `leads_enrich_preview` | `leads.enrich.preview` | `leads enrich preview --input FILE --json` | `leads:read` | Estimate missing-profile enrichment |
 | `leads_enrich_start` | `leads.enrich.start` | `leads enrich start --input FILE --json` | `leads:read`, `leads:write` | Queue requested enrichment |
 | `leads_enrich_inspect` | `leads.enrich.inspect` | `leads enrich inspect --input FILE --json` | `leads:read` | Read enrichment progress and refunds |
+| `companies_suggest` | `companies.suggest` | `companies suggest --input FILE --json` | `audiences:read` | Suggest company identities without an audience total |
+| `companies_evidence_search` | `companies.evidence.search` | `companies evidence search --input FILE --json` | `audiences:read` | Search saved company website evidence |
+| `companies_evidence_start` | `companies.evidence.start` | `companies evidence start --input FILE --json` | `audiences:read` | Start private website research |
+| `companies_evidence_advance` | `companies.evidence.advance` | `companies evidence advance --input FILE --json` | `audiences:read` | Advance a bounded research batch |
+| `companies_evidence_status` | `companies.evidence.status` | `companies evidence status --input FILE --json` | `audiences:read` | Inspect durable research progress |
+| `companies_evidence_results` | `companies.evidence.results` | `companies evidence results --input FILE --json` | `audiences:read` | Page source-backed results and exact progress |
+| `companies_evidence_cancel` | `companies.evidence.cancel` | `companies evidence cancel --input FILE --json` | `audiences:read` | Cancel pending research and retain saved evidence |
 
 See [reviews-and-bookings.md](reviews-and-bookings.md) for runner, cohort, copy attribution and invitation workflows.
 
@@ -114,7 +125,7 @@ then `companies_search` with the exact requested criteria. For example:
 }
 ```
 
-All ten company tools accept a JSON file through CLI `--input FILE`. Search
+Company tools accept a JSON file through CLI `--input FILE`. Search
 pages contain at most 100 companies. Echo the returned `querySignature` and
 `expectedRevision` when paging; do not present the sample size as an exact total.
 Call `company_inspect` with returned country/businessId identities for full
