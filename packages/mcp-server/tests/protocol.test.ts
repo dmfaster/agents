@@ -10,6 +10,8 @@ import { MCP_SERVER_INSTRUCTIONS, serveDmfasterStdio } from "../src/server.ts";
 import { MCP_TOOL_NAMES, type AgentInvoker } from "../src/tools.ts";
 import {
   CAMPAIGN_WORKSPACE_RESOURCE_URI,
+  LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+  PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI,
   MCP_APP_RESOURCE_MIME_TYPE,
 } from "../src/campaign-workspace.ts";
 
@@ -86,6 +88,57 @@ const modernEnvelope = {
   "io.modelcontextprotocol/clientInfo": { name: "dmfaster-test", version: "1.1.0" },
   "io.modelcontextprotocol/clientCapabilities": {},
 };
+
+test("mention resource templates reach the current domain client with decoded identities", async (t) => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  let allowed = true;
+  const client: AgentInvoker = {
+    async invoke(tool, input) {
+      calls.push({ tool, input });
+      const receipt = result(tool);
+      receipt.ok = allowed;
+      receipt.data = allowed
+        ? {
+            list: {
+              listId: "list/one%two",
+              name: "Current list",
+              updatedAt: "2026-10-01",
+              total: 1,
+            },
+            usernames: ["one"],
+            nextOffset: null,
+            membership: null,
+          }
+        : null;
+      return receipt;
+    },
+  };
+  const wire = createWire(client);
+  t.after(() => wire.close());
+  const uri = "dmfaster://lists/list%2Fone%25two";
+  wire.send({
+    jsonrpc: "2.0",
+    id: 1,
+    method: "resources/read",
+    params: { uri, _meta: modernEnvelope },
+  });
+  const response = await wire.receive();
+  assert.equal(response.error, undefined);
+  const contents = (response.result as JsonObject).contents as Array<JsonObject>;
+  assert.equal(contents[0]?.uri, uri);
+  assert.equal(JSON.parse(String(contents[0]?.text)).contextOnly, true);
+  assert.deepEqual(calls, [{ tool: "list.inspect", input: { listId: "list/one%two", limit: 25 } }]);
+  allowed = false;
+  wire.send({
+    jsonrpc: "2.0",
+    id: 2,
+    method: "resources/read",
+    params: { uri, _meta: modernEnvelope },
+  });
+  const denied = await wire.receive();
+  assert.ok(denied.error);
+  assert.equal(calls.length, 2);
+});
 
 const campaignState = {
   profile: {
@@ -170,12 +223,32 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
     MCP_TOOL_NAMES,
   );
   for (const tool of tools.filter(
-    (candidate) => !["connection_status", "campaign_workspace"].includes(String(candidate.name)),
+    (candidate) =>
+      ![
+        "connection_status",
+        "campaign_workspace",
+        "companies_workspace",
+        "workspace_open",
+      ].includes(String(candidate.name)),
   )) {
     const outputSchema = tool.outputSchema as JsonObject;
     assert.equal(outputSchema.type, "object", `${tool.name} must advertise a result schema`);
     assert.ok(outputSchema.properties, `${tool.name} must describe its result fields`);
   }
+  for (const tool of tools)
+    assert.ok(tool.outputSchema, `${tool.name} must advertise a result schema`);
+  assert.equal(
+    (tools.find((tool) => tool.name === "campaign_launch")?._meta as JsonObject)[
+      "openai/widgetAccessible"
+    ],
+    false,
+  );
+  assert.equal(
+    (tools.find((tool) => tool.name === "campaign_prepare")?._meta as JsonObject)[
+      "openai/widgetAccessible"
+    ],
+    true,
+  );
   const workspaceTool = tools.find((tool) => tool.name === "campaign_workspace");
   assert.ok(workspaceTool);
   assert.equal(
@@ -223,9 +296,36 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   const resources = (resourcesResponse.result as JsonObject).resources as Array<JsonObject>;
   assert.deepEqual(
     resources.map((resource) => resource.uri),
-    [CAMPAIGN_WORKSPACE_RESOURCE_URI],
+    [
+      CAMPAIGN_WORKSPACE_RESOURCE_URI,
+      PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+      LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+    ],
   );
   assert.equal(resources[0]?.mimeType, MCP_APP_RESOURCE_MIME_TYPE);
+
+  const mentionsTool = tools.find((tool) => tool.name === "workspace_mentions");
+  assert.ok(mentionsTool);
+  assert.deepEqual((mentionsTool._meta as JsonObject)["openai/extensions"], {
+    "mentions/search": {},
+  });
+  assert.deepEqual(((mentionsTool._meta as JsonObject).ui as JsonObject).visibility, ["app"]);
+  wire.send({
+    jsonrpc: "2.0",
+    id: 41,
+    method: "resources/templates/list",
+    params: { _meta: modernEnvelope },
+  });
+  const templatesResponse = await wire.receive();
+  const templates = (templatesResponse.result as JsonObject).resourceTemplates as Array<JsonObject>;
+  assert.deepEqual(
+    templates.map((template) => template.uriTemplate),
+    [
+      "dmfaster://companies/{country}/{businessId}",
+      "dmfaster://lists/{listId}",
+      "dmfaster://company-lists/{listId}",
+    ],
+  );
 
   wire.send({
     jsonrpc: "2.0",
@@ -238,6 +338,20 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   assert.equal(contents[0]?.mimeType, MCP_APP_RESOURCE_MIME_TYPE);
   assert.match(String(contents[0]?.text), /ui\/initialize/u);
   assert.match(String(contents[0]?.text), /campaign_prepare/u);
+  assert.equal(
+    ((contents[0]?._meta as JsonObject).ui as JsonObject).domain,
+    "https://app.dmfaster.com",
+  );
+  wire.send({
+    jsonrpc: "2.0",
+    id: 51,
+    method: "resources/read",
+    params: { uri: LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI, _meta: modernEnvelope },
+  });
+  const legacyResource = await wire.receive();
+  const legacyContents = (legacyResource.result as JsonObject).contents as Array<JsonObject>;
+  assert.equal(legacyContents[0]?.uri, LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI);
+  assert.equal(legacyContents[0]?.text, contents[0]?.text);
 
   wire.send({
     jsonrpc: "2.0",
@@ -282,4 +396,110 @@ test("rejects the 2025 initialize flow and remains available for stateless MCP",
   });
   const discovered = await wire.receive();
   assert.deepEqual((discovered.result as JsonObject).supportedVersions, ["2026-07-28"]);
+});
+
+for (const name of ["workspace_open", "companies_workspace", "campaign_workspace"]) {
+  test(`${name} opens with empty arguments and reads only the authenticated first page`, async (context) => {
+    const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+    const wire = createWire(fakeClient(calls));
+    context.after(() => wire.close());
+    wire.send({ jsonrpc: "2.0", id: 1, method: "tools/list", params: { _meta: modernEnvelope } });
+    const listed = (await wire.receive()).result as JsonObject;
+    const tool = (listed.tools as JsonObject[]).find((item) => item.name === name)!;
+    assert.deepEqual((tool._meta as JsonObject)["openai/ui"], {
+      entrypoints: [{ type: name === "workspace_open" ? "global" : "thread" }],
+    });
+    assert.ok(!((tool.inputSchema as JsonObject).required as string[] | undefined)?.length);
+    wire.send({
+      jsonrpc: "2.0",
+      id: 2,
+      method: "tools/call",
+      params: { name, arguments: {}, _meta: modernEnvelope },
+    });
+    const opened = (await wire.receive()).result as JsonObject;
+    assert.equal(opened.isError, undefined);
+    assert.equal((opened.structuredContent as JsonObject).view, "dmfaster.workspace");
+    assert.deepEqual(
+      calls,
+      name === "campaign_workspace"
+        ? [{ tool: "campaigns.list", input: { limit: 20 } }]
+        : [
+            {
+              tool: "companies.search",
+              input: { filters: { countries: ["FI"], activeOnly: true }, pageSize: 20 },
+            },
+          ],
+    );
+  });
+}
+
+test("company presentation preserves complex filters and domain reads stay headless and app-callable", async (context) => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const wire = createWire(fakeClient(calls));
+  context.after(() => wire.close());
+  wire.send({ jsonrpc: "2.0", id: 1, method: "tools/list", params: { _meta: modernEnvelope } });
+  const tools = ((await wire.receive()).result as JsonObject).tools as JsonObject[];
+  for (const name of ["companies_filters", "companies_search", "company_inspect"]) {
+    const meta = tools.find((item) => item.name === name)!._meta as JsonObject;
+    assert.equal(meta["openai/widgetAccessible"], true);
+    assert.equal(meta["openai/outputTemplate"], undefined);
+    assert.deepEqual((meta.ui as JsonObject).visibility, ["model", "app"]);
+  }
+  for (const name of ["companies_fit_start", "companies_list_prepare", "campaign_launch"]) {
+    assert.equal(
+      (tools.find((item) => item.name === name)!._meta as JsonObject)["openai/widgetAccessible"],
+      false,
+    );
+  }
+  const filters = {
+    countries: ["FI", "SE"],
+    activeOnly: true,
+    technologies: ["shopify"],
+    hasWebsite: true,
+    employeeMin: "2",
+    industryCodeSelections: [{ classification: "TOL", version: "2025", codes: ["62010"] }],
+  };
+  wire.send({
+    jsonrpc: "2.0",
+    id: 2,
+    method: "tools/call",
+    params: {
+      name: "companies_workspace",
+      arguments: { filters, pageSize: 5 },
+      _meta: modernEnvelope,
+    },
+  });
+  const response = (await wire.receive()).result as JsonObject;
+  assert.equal(response.isError, undefined);
+  assert.equal((response.structuredContent as JsonObject).section, "companies");
+  assert.deepEqual(calls, [{ tool: "companies.search", input: { filters, pageSize: 5 } }]);
+});
+
+test("saved campaign entrypoint delegates exact identity and preserves read failures", async (context) => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const wire = createWire({
+    async invoke(tool, input) {
+      calls.push({ tool, input });
+      throw new Error("Campaign access denied");
+    },
+  });
+  context.after(() => wire.close());
+  wire.send({
+    jsonrpc: "2.0",
+    id: 1,
+    method: "tools/call",
+    params: {
+      name: "campaign_workspace",
+      arguments: { campaignId: "campaign_owned_123" },
+      _meta: modernEnvelope,
+    },
+  });
+  const opened = (await wire.receive()).result as JsonObject;
+  assert.equal(opened.isError, true);
+  assert.deepEqual(calls, [
+    { tool: "campaign.inspect", input: { campaignId: "campaign_owned_123" } },
+  ]);
+  const payload = opened.structuredContent as JsonObject;
+  assert.equal((payload.result as JsonObject).ok, false);
+  assert.match(JSON.stringify(payload), /Campaign access denied/);
 });

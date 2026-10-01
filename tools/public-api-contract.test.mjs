@@ -53,10 +53,23 @@ const EXPECTED_TOOLS = new Map([
   ["campaign.pause.preflight", { effect: "write", scopes: ["campaigns:write"] }],
   ["campaign.pause", { effect: "write", scopes: ["campaigns:write"] }],
   ["companies.filters", { effect: "read", scopes: ["audiences:read"] }],
+  ["companies.suggest", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.search", { effect: "read", scopes: ["audiences:read"] }],
+  ["companies.evidence.search", { effect: "read", scopes: ["audiences:read"] }],
+  ["companies.evidence.start", { effect: "read", scopes: ["audiences:read"] }],
+  ["companies.evidence.advance", { effect: "read", scopes: ["audiences:read"] }],
+  ["companies.evidence.status", { effect: "read", scopes: ["audiences:read"] }],
+  ["companies.evidence.results", { effect: "read", scopes: ["audiences:read"] }],
+  ["companies.evidence.cancel", { effect: "read", scopes: ["audiences:read"] }],
   ["company.inspect", { effect: "read", scopes: ["audiences:read"] }],
-  ["companies.fit.start", { effect: "draft", scopes: ["campaigns:read", "audiences:read", "campaigns:write"] }],
-  ["companies.fit.advance", { effect: "draft", scopes: ["campaigns:read", "audiences:read", "campaigns:write"] }],
+  [
+    "companies.fit.start",
+    { effect: "draft", scopes: ["campaigns:read", "audiences:read", "campaigns:write"] },
+  ],
+  [
+    "companies.fit.advance",
+    { effect: "draft", scopes: ["campaigns:read", "audiences:read", "campaigns:write"] },
+  ],
   ["companies.fit.results", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
   ["companies.fit.proposal", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
   ["companies.list.prepare", { effect: "draft", scopes: ["audiences:read", "campaigns:write"] }],
@@ -66,16 +79,40 @@ const EXPECTED_TOOLS = new Map([
   ["campaign.delivery.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["campaign.delivery.update", { effect: "write", scopes: ["campaigns:read", "campaigns:write"] }],
   ["companies.fit.status", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
-  ["companies.fit.cancel", { effect: "write", scopes: ["campaigns:read", "audiences:read", "campaigns:write"] }],
+  [
+    "companies.fit.cancel",
+    { effect: "write", scopes: ["campaigns:read", "audiences:read", "campaigns:write"] },
+  ],
   ["companies.fit.runs.list", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
-  ["companies.fit.run", { effect: "draft", scopes: ["campaigns:read", "audiences:read", "campaigns:write"] }],
+  [
+    "companies.fit.run",
+    { effect: "draft", scopes: ["campaigns:read", "audiences:read", "campaigns:write"] },
+  ],
   ["companies.fit.cohort", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
-  ["copy.performance", { effect: "read", scopes: ["campaigns:read", "sending:read", "inbox:read", "calendar:read"] }],
+  [
+    "copy.performance",
+    { effect: "read", scopes: ["campaigns:read", "sending:read", "inbox:read", "calendar:read"] },
+  ],
   ["calendar.status", { effect: "read", scopes: ["calendar:read"] }],
   ["calendar.availability", { effect: "read", scopes: ["calendar:read"] }],
-  ["calendar.meeting.book", { effect: "external", scopes: ["calendar:write", "calendar:read", "inbox:read", "pipeline:write"] }],
+  [
+    "calendar.meeting.book",
+    {
+      effect: "external",
+      scopes: ["calendar:write", "calendar:read", "inbox:read", "pipeline:write"],
+    },
+  ],
   ["calls.list", { effect: "read", scopes: ["calls:read"] }],
   ["call.inspect", { effect: "read", scopes: ["calls:read"] }],
+  ["leads.status", { effect: "read", scopes: ["leads:read"] }],
+  ["leads.extract.quote", { effect: "read", scopes: ["leads:read"] }],
+  ["leads.extract.start", { effect: "write", scopes: ["leads:read", "leads:write"] }],
+  ["leads.extract.inspect", { effect: "read", scopes: ["leads:read"] }],
+  ["leads.extract.refresh", { effect: "write", scopes: ["leads:read", "leads:write"] }],
+  ["leads.extract.continue", { effect: "write", scopes: ["leads:read", "leads:write"] }],
+  ["leads.enrich.preview", { effect: "read", scopes: ["leads:read"] }],
+  ["leads.enrich.start", { effect: "write", scopes: ["leads:read", "leads:write"] }],
+  ["leads.enrich.inspect", { effect: "read", scopes: ["leads:read"] }],
 ]);
 
 const EXPECTED_AUTH_METHODS = new Map([
@@ -100,6 +137,8 @@ const EXPECTED_SCOPE_NAMES = [
   "calendar:read",
   "calendar:write",
   "calls:read",
+  "leads:read",
+  "leads:write",
 ];
 
 function sourceSlice(source, start, end) {
@@ -205,7 +244,8 @@ test("the public Agent API exposes exactly the approved Agent 1.0 operations", a
       `${tool} effect drift`,
     );
 
-    const scopes = parse(source).paths[`/api/v1/agent/tools/${tool}`].post["x-dmfaster-required-scopes"];
+    const scopes =
+      parse(source).paths[`/api/v1/agent/tools/${tool}`].post["x-dmfaster-required-scopes"];
     assert.deepEqual(scopes, EXPECTED_TOOLS.get(tool).scopes, `${tool} scope drift`);
   }
 

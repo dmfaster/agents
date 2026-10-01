@@ -39,7 +39,14 @@ export const AGENT_TOOL_NAMES = [
   "campaign.pause.preflight",
   "campaign.pause",
   "companies.filters",
+  "companies.suggest",
   "companies.search",
+  "companies.evidence.search",
+  "companies.evidence.start",
+  "companies.evidence.advance",
+  "companies.evidence.status",
+  "companies.evidence.results",
+  "companies.evidence.cancel",
   "company.inspect",
   "companies.fit.start",
   "companies.fit.advance",
@@ -62,6 +69,15 @@ export const AGENT_TOOL_NAMES = [
   "calendar.meeting.book",
   "calls.list",
   "call.inspect",
+  "leads.status",
+  "leads.extract.quote",
+  "leads.extract.start",
+  "leads.extract.inspect",
+  "leads.extract.refresh",
+  "leads.extract.continue",
+  "leads.enrich.preview",
+  "leads.enrich.start",
+  "leads.enrich.inspect",
 ] as const;
 export const AGENT_TOOL_POLICIES = Object.freeze({
   "analytics.summary": {
@@ -259,7 +275,42 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "companies.suggest": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
   "companies.search": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.evidence.search": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.evidence.start": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.evidence.advance": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.evidence.status": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.evidence.results": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.evidence.cancel": {
     effect: "read",
     approval: "none",
     exposure: "public_api",
@@ -374,6 +425,51 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "leads.status": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.extract.quote": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.extract.start": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.extract.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.extract.refresh": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.extract.continue": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.enrich.preview": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.enrich.start": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.enrich.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
 } as const);
 export const AGENT_TOOL_SCOPES = {
   "analytics.summary": ["workspace:read"],
@@ -415,7 +511,14 @@ export const AGENT_TOOL_SCOPES = {
   "campaign.pause.preflight": ["campaigns:write"],
   "campaign.pause": ["campaigns:write"],
   "companies.filters": ["audiences:read"],
+  "companies.suggest": ["audiences:read"],
   "companies.search": ["audiences:read"],
+  "companies.evidence.search": ["audiences:read"],
+  "companies.evidence.start": ["audiences:read"],
+  "companies.evidence.advance": ["audiences:read"],
+  "companies.evidence.status": ["audiences:read"],
+  "companies.evidence.results": ["audiences:read"],
+  "companies.evidence.cancel": ["audiences:read"],
   "company.inspect": ["audiences:read"],
   "companies.fit.start": ["campaigns:read", "audiences:read", "campaigns:write"],
   "companies.fit.advance": ["campaigns:read", "audiences:read", "campaigns:write"],
@@ -438,6 +541,15 @@ export const AGENT_TOOL_SCOPES = {
   "calendar.meeting.book": ["calendar:write", "calendar:read", "inbox:read", "pipeline:write"],
   "calls.list": ["calls:read"],
   "call.inspect": ["calls:read"],
+  "leads.status": ["leads:read"],
+  "leads.extract.quote": ["leads:read"],
+  "leads.extract.start": ["leads:read", "leads:write"],
+  "leads.extract.inspect": ["leads:read"],
+  "leads.extract.refresh": ["leads:read", "leads:write"],
+  "leads.extract.continue": ["leads:read", "leads:write"],
+  "leads.enrich.preview": ["leads:read"],
+  "leads.enrich.start": ["leads:read", "leads:write"],
+  "leads.enrich.inspect": ["leads:read"],
 } as const;
 export const AGENT_OWNER_ONLY_TOOLS = [
   "conversation.update",
@@ -466,6 +578,12 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "calendar.status",
   "calendar.availability",
   "calendar.meeting.book",
+  "leads.extract.start",
+  "leads.extract.refresh",
+  "leads.extract.continue",
+  "leads.enrich.preview",
+  "leads.enrich.start",
+  "leads.enrich.inspect",
 ] as const;
 export const AGENT_TOOL_DEFINITIONS = {
   "analytics.summary": {
@@ -1204,6 +1322,25 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["companies", "filters"],
     },
   },
+  "companies.suggest": {
+    mcp: {
+      name: "companies_suggest",
+      title: "Suggest company identities",
+      description:
+        "Find a few company identities for selection or composer mentions. These are suggestions, not an audience or a complete inventory search. Use companies_search for exact totals.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies suggest --input FILE",
+      command: ["companies", "suggest"],
+    },
+  },
   "companies.search": {
     mcp: {
       name: "companies_search",
@@ -1221,6 +1358,120 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "B2B company prospecting",
       usage: "companies search --input FILE",
       command: ["companies", "search"],
+    },
+  },
+  "companies.evidence.search": {
+    mcp: {
+      name: "companies_evidence_search",
+      title: "Preview website evidence shortlist",
+      description:
+        "Fast bounded preview only. For every fitting company use companies.evidence.start and companies.evidence.results. Search saved company website passages for arbitrary ICP criteria, preserving seller/service/buyer relationships. Agent-supplied source-language text retrieval with bounded JEV relationship verification. Advertised offerings, portfolio-only evidence, inference and unknown are distinct. Ranked shortlist has no audience total. Echo cursor, querySignature and expectedRevision to continue. Supply Finnish keywords and synonyms per criterion. Original passages allow independent assistant inspection. No OpenAI API or embeddings are required.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies evidence search --input FILE",
+      command: ["companies", "evidence", "search"],
+    },
+  },
+  "companies.evidence.start": {
+    mcp: {
+      name: "companies_evidence_start",
+      title: "Start complete website evidence scan",
+      description:
+        "Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. All fresh retained passages are checked in resumable chunks; keywords only prioritize work. Processing continues in the background. Return every confirmed match through results; unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies evidence start --input FILE",
+      command: ["companies", "evidence", "start"],
+    },
+  },
+  "companies.evidence.advance": {
+    mcp: {
+      name: "companies_evidence_advance",
+      title: "Advance complete website evidence scan",
+      description:
+        "Advance bounded chunks of a complete website-evidence scan. Repeated calls never impose a lifetime company or passage limit. Background processing also continues. Echo runId and expectedRevision.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies evidence advance --input FILE",
+      command: ["companies", "evidence", "advance"],
+    },
+  },
+  "companies.evidence.status": {
+    mcp: {
+      name: "companies_evidence_status",
+      title: "Status complete website evidence scan",
+      description:
+        "Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory and fresh retained passages, not uncrawled websites.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies evidence status --input FILE",
+      command: ["companies", "evidence", "status"],
+    },
+  },
+  "companies.evidence.results": {
+    mcp: {
+      name: "companies_evidence_results",
+      title: "Results complete website evidence scan",
+      description:
+        "Page all finalized confirmed matches or unresolved companies from a private complete scan. Keep nextCursor even when a partial page is empty; later discoveries are appended in commit order. scanComplete distinguishes a provisional page from final results. Echo runId and expectedRevision.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies evidence results --input FILE",
+      command: ["companies", "evidence", "results"],
+    },
+  },
+  "companies.evidence.cancel": {
+    mcp: {
+      name: "companies_evidence_cancel",
+      title: "Cancel complete website evidence scan",
+      description:
+        "Cancel a private website-evidence scan and fence in-flight workers. Repeated cancellation is safe; no campaign or outreach is changed.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies evidence cancel --input FILE",
+      command: ["companies", "evidence", "cancel"],
     },
   },
   "company.inspect": {
@@ -1641,6 +1892,177 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["call", "inspect"],
     },
   },
+  "leads.status": {
+    mcp: {
+      name: "leads_status",
+      title: "Read social prospecting and lead credits",
+      description:
+        "Read exact credit balance and paginated recent social extractions. When credits are exhausted, show the purchase URL. A page is not the complete history.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads status --input FILE",
+      command: ["leads", "status"],
+    },
+  },
+  "leads.extract.quote": {
+    mcp: {
+      name: "leads_extract_quote",
+      title: "Estimate a social extraction",
+      description:
+        "Estimate one credit per saved profile without calling Hiker or spending credits. Followers/following require a positive count; omitting count for likers/commenters requests all available results within the credit balance.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads extract quote --input FILE",
+      command: ["leads", "extract", "quote"],
+    },
+  },
+  "leads.extract.start": {
+    mcp: {
+      name: "leads_extract_start",
+      title: "Start social prospecting",
+      description:
+        "On explicit instructions, queue a credit-bounded Instagram followers, following, likers or commenters job. Return promptly with a durable job ID. Reuse the same idempotency key on retries, inspect actual saved results and settled credits, and subscribe to its completion event when the user requests an update. Does not start a campaign or send messages.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads extract start --input FILE",
+      command: ["leads", "extract", "start"],
+    },
+  },
+  "leads.extract.inspect": {
+    mcp: {
+      name: "leads_extract_inspect",
+      title: "Inspect a social extraction",
+      description:
+        "Read stored progress by durable job ID without advancing Hiker or spending credits. Distinguish queued acceptance, saved profiles and final settled cost. Follow pollAfterMs if the host does not support completion events.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads extract inspect --input FILE",
+      command: ["leads", "extract", "inspect"],
+    },
+  },
+  "leads.extract.refresh": {
+    mcp: {
+      name: "leads_extract_refresh",
+      title: "Refresh a social extraction",
+      description:
+        "Advance only the existing reserved extraction when explicitly requested or its progress is stale. Does not start another paid extraction.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads extract refresh --input FILE",
+      command: ["leads", "extract", "refresh"],
+    },
+  },
+  "leads.extract.continue": {
+    mcp: {
+      name: "leads_extract_continue",
+      title: "Continue a social extraction",
+      description:
+        "On explicit instructions, queue the next available page as a separately credit-bounded job. Use its inspected job ID and a new stable idempotency key. Count defaults to the original batch size; no fixed product cap applies.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads extract continue --input FILE",
+      command: ["leads", "extract", "continue"],
+    },
+  },
+  "leads.enrich.preview": {
+    mcp: {
+      name: "leads_enrich_preview",
+      title: "Estimate social profile enrichment",
+      description:
+        "Read the current count of missing eligible profiles and its separate credit estimate. Reuses the same list eligibility and pricing as the app. Does not spend credits.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads enrich preview --input FILE",
+      command: ["leads", "enrich", "preview"],
+    },
+  },
+  "leads.enrich.start": {
+    mcp: {
+      name: "leads_enrich_start",
+      title: "Start social profile enrichment",
+      description:
+        "On explicit instructions, queue missing-profile enrichment for a saved social prospecting list. One successful enrichment costs one credit; unused credits are returned. An optional instructed maxCredits budget is enforced before charging. Reuse the request key on retry and inspect the durable job ID.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads enrich start --input FILE",
+      command: ["leads", "enrich", "start"],
+    },
+  },
+  "leads.enrich.inspect": {
+    mcp: {
+      name: "leads_enrich_inspect",
+      title: "Inspect social profile enrichment",
+      description:
+        "Read exact progress and credit refunds for the specific durable enrichment job. A reservation is not a final charge and an accepted job is not completion.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads enrich inspect --input FILE",
+      command: ["leads", "enrich", "inspect"],
+    },
+  },
 } as const;
 export const AGENT_TOOL_INPUT_SCHEMAS = {
   "analytics.summary": {
@@ -1760,8 +2182,29 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   "companies.filters": {
     $ref: "#/components/schemas/CompanyFiltersInput",
   },
+  "companies.suggest": {
+    $ref: "#/components/schemas/CompanySuggestionsInput",
+  },
   "companies.search": {
     $ref: "#/components/schemas/CompanySearchInput",
+  },
+  "companies.evidence.search": {
+    $ref: "#/components/schemas/CompanyEvidenceSearchInput",
+  },
+  "companies.evidence.start": {
+    $ref: "#/components/schemas/CompanyEvidenceStartInput",
+  },
+  "companies.evidence.advance": {
+    $ref: "#/components/schemas/CompanyEvidenceAdvanceInput",
+  },
+  "companies.evidence.status": {
+    $ref: "#/components/schemas/CompanyEvidenceStatusInput",
+  },
+  "companies.evidence.results": {
+    $ref: "#/components/schemas/CompanyEvidenceResultsInput",
+  },
+  "companies.evidence.cancel": {
+    $ref: "#/components/schemas/CompanyEvidenceCancelInput",
   },
   "company.inspect": {
     $ref: "#/components/schemas/CompanyInspectInput",
@@ -1828,6 +2271,33 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "call.inspect": {
     $ref: "#/components/schemas/CallInspectInput",
+  },
+  "leads.status": {
+    $ref: "#/components/schemas/LeadsStatusInput",
+  },
+  "leads.extract.quote": {
+    $ref: "#/components/schemas/LeadExtractionQuoteInput",
+  },
+  "leads.extract.start": {
+    $ref: "#/components/schemas/LeadExtractionStartInput",
+  },
+  "leads.extract.inspect": {
+    $ref: "#/components/schemas/LeadExtractionInspectInput",
+  },
+  "leads.extract.refresh": {
+    $ref: "#/components/schemas/LeadExtractionRefreshInput",
+  },
+  "leads.extract.continue": {
+    $ref: "#/components/schemas/LeadExtractionContinueInput",
+  },
+  "leads.enrich.preview": {
+    $ref: "#/components/schemas/LeadEnrichmentPreviewInput",
+  },
+  "leads.enrich.start": {
+    $ref: "#/components/schemas/LeadEnrichmentStartInput",
+  },
+  "leads.enrich.inspect": {
+    $ref: "#/components/schemas/LeadEnrichmentInspectInput",
   },
 } as const;
 export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
@@ -3393,6 +3863,31 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     },
     required: ["countries"],
   },
+  CompanySuggestionsInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["query", "countries"],
+    properties: {
+      query: {
+        type: "string",
+        minLength: 2,
+        maxLength: 120,
+      },
+      countries: {
+        type: "array",
+        minItems: 1,
+        maxItems: 32,
+        items: {
+          $ref: "#/components/schemas/SupportedCountry",
+        },
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 10,
+      },
+    },
+  },
   CompanySearchInput: {
     type: "object",
     additionalProperties: false,
@@ -3550,6 +4045,8 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
       technologies: {
         type: "array",
+        description:
+          "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
         items: {
           type: "string",
           maxLength: 80,
@@ -3620,6 +4117,244 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     required: ["countries"],
     description:
       "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+  },
+  CompanyEvidenceSearchInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      country: {
+        type: "string",
+        enum: ["FI"],
+      },
+      query: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1500,
+      },
+      criteria: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/WebsiteEvidenceCriterion",
+        },
+        minItems: 1,
+        maxItems: 4,
+      },
+      filters: {
+        $ref: "#/components/schemas/CompanySearchFilters",
+        description:
+          "Optional deterministic Companies app filters, applied before text candidate limits. Country must remain FI. Numeric and registry constraints use company data, not website judgments.",
+      },
+      includePassages: {
+        type: "boolean",
+        description:
+          "Include up to six full original retrieval contexts per company. By default verified quotes are returned with each judgment, and unknown-only companies retain one original context for inspection.",
+      },
+      candidateLimit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 30,
+      },
+      pageSize: {
+        type: "integer",
+        minimum: 1,
+        maximum: 20,
+      },
+      maxAgeDays: {
+        type: "integer",
+        minimum: 1,
+        maximum: 90,
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 200,
+      },
+      expectedRevision: {
+        type: "string",
+        minLength: 1,
+        maxLength: 200,
+      },
+      querySignature: {
+        type: "string",
+        minLength: 1,
+        maxLength: 200,
+      },
+    },
+    required: ["country", "query", "criteria"],
+  },
+  WebsiteEvidenceCriterion: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      id: {
+        type: "string",
+        minLength: 1,
+        maxLength: 60,
+      },
+      statement: {
+        type: "string",
+        minLength: 1,
+        maxLength: 800,
+      },
+      requirement: {
+        type: "string",
+        enum: ["advertised", "any_support"],
+      },
+      retrievalTerms: {
+        description:
+          "Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.",
+        type: "array",
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 100,
+        },
+        minItems: 1,
+        maxItems: 12,
+      },
+      retrievalGroups: {
+        description:
+          "Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion.",
+        type: "array",
+        minItems: 2,
+        maxItems: 4,
+        items: {
+          type: "array",
+          minItems: 1,
+          maxItems: 12,
+          items: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+        },
+      },
+    },
+    required: ["id", "statement", "requirement", "retrievalTerms"],
+  },
+  CompanyEvidenceStartInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      country: {
+        type: "string",
+        enum: ["FI"],
+      },
+      query: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1500,
+      },
+      criteria: {
+        type: "array",
+        minItems: 1,
+        maxItems: 4,
+        items: {
+          $ref: "#/components/schemas/WebsiteEvidenceCriterion",
+        },
+      },
+      filters: {
+        $ref: "#/components/schemas/CompanySearchFilters",
+      },
+      maxAgeDays: {
+        type: "integer",
+        minimum: 1,
+        maximum: 90,
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+      },
+    },
+    required: ["country", "query", "criteria", "idempotencyKey"],
+  },
+  CompanyEvidenceAdvanceInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      runId: {
+        type: "string",
+        minLength: 36,
+        maxLength: 36,
+      },
+      expectedRevision: {
+        type: "string",
+        minLength: 64,
+        maxLength: 64,
+      },
+      batchSize: {
+        type: "integer",
+        minimum: 1,
+        maximum: 16,
+      },
+    },
+    required: ["runId", "expectedRevision"],
+  },
+  CompanyEvidenceStatusInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      runId: {
+        type: "string",
+        minLength: 36,
+        maxLength: 36,
+      },
+      expectedRevision: {
+        type: "string",
+        minLength: 64,
+        maxLength: 64,
+      },
+    },
+    required: ["runId", "expectedRevision"],
+  },
+  CompanyEvidenceResultsInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      runId: {
+        type: "string",
+        minLength: 36,
+        maxLength: 36,
+      },
+      expectedRevision: {
+        type: "string",
+        minLength: 64,
+        maxLength: 64,
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 200,
+      },
+      pageSize: {
+        type: "integer",
+        minimum: 1,
+        maximum: 20,
+      },
+      view: {
+        type: "string",
+        enum: ["matches", "unresolved", "all"],
+      },
+    },
+    required: ["runId", "expectedRevision"],
+  },
+  CompanyEvidenceCancelInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      runId: {
+        type: "string",
+        minLength: 36,
+        maxLength: 36,
+      },
+      expectedRevision: {
+        type: "string",
+        minLength: 64,
+        maxLength: 64,
+      },
+    },
+    required: ["runId", "expectedRevision"],
   },
   CompanyInspectInput: {
     type: "object",
@@ -4313,6 +5048,195 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     required: ["meetingId"],
     properties: {
       meetingId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
+  },
+  LeadsStatusInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [],
+    properties: {
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1000,
+        "x-dmfaster-trim": true,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 50,
+      },
+    },
+  },
+  LeadExtractionQuoteInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["type", "identifier"],
+    properties: {
+      type: {
+        type: "string",
+        enum: ["followers", "following", "likers", "commenters"],
+      },
+      identifier: {
+        type: "string",
+        minLength: 1,
+        maxLength: 300,
+        "x-dmfaster-trim": true,
+      },
+      count: {
+        type: "integer",
+        minimum: 1,
+        maximum: 2147483647,
+      },
+      postUrls: {
+        type: "array",
+        minItems: 1,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 300,
+          "x-dmfaster-trim": true,
+        },
+      },
+      priority: {
+        type: "string",
+        enum: ["high", "normal", "low"],
+      },
+      feedType: {
+        type: "string",
+        enum: ["top", "recent"],
+      },
+    },
+  },
+  LeadExtractionStartInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["type", "identifier", "idempotencyKey"],
+    properties: {
+      type: {
+        type: "string",
+        enum: ["followers", "following", "likers", "commenters"],
+      },
+      identifier: {
+        type: "string",
+        minLength: 1,
+        maxLength: 300,
+        "x-dmfaster-trim": true,
+      },
+      count: {
+        type: "integer",
+        minimum: 1,
+        maximum: 2147483647,
+      },
+      postUrls: {
+        type: "array",
+        minItems: 1,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 300,
+          "x-dmfaster-trim": true,
+        },
+      },
+      priority: {
+        type: "string",
+        enum: ["high", "normal", "low"],
+      },
+      feedType: {
+        type: "string",
+        enum: ["top", "recent"],
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+        "x-dmfaster-trim": true,
+        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+      },
+    },
+  },
+  LeadExtractionInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["jobId"],
+    properties: {
+      jobId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
+  },
+  LeadExtractionRefreshInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["jobId"],
+    properties: {
+      jobId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
+  },
+  LeadExtractionContinueInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["jobId", "idempotencyKey"],
+    properties: {
+      jobId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      count: {
+        type: "integer",
+        minimum: 1,
+        maximum: 2147483647,
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+        "x-dmfaster-trim": true,
+        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+      },
+    },
+  },
+  LeadEnrichmentPreviewInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["listId"],
+    properties: {
+      listId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
+  },
+  LeadEnrichmentStartInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["listId", "idempotencyKey"],
+    properties: {
+      listId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      maxCredits: {
+        type: "integer",
+        minimum: 0,
+        maximum: 2147483647,
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+        "x-dmfaster-trim": true,
+        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+      },
+    },
+  },
+  LeadEnrichmentInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["jobId"],
+    properties: {
+      jobId: {
         $ref: "#/components/schemas/ResourceId",
       },
     },

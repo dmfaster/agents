@@ -1,31 +1,95 @@
 @import "tailwindcss";
 @source "./app.tsx";
+@source "./workspace-home.tsx";
+@source "./workspace-details.tsx";
+@source "./workspace.tsx";
+@source "./companies-workspace.tsx";
+@source "./company-profile.tsx";
+@source "./company-filters.tsx";
 @source "../../../product-ui/src";
 
+/* Host variables are delivered by MCP Apps; fallbacks also support older hosts. */
+:root {
+  color-scheme: light dark;
+  --dm-background: var(--color-background-primary, light-dark(#ffffff, #212121));
+  --dm-surface: var(--color-background-secondary, light-dark(#f7f7f7, #2b2b2b));
+  --dm-text: var(--color-text-primary, light-dark(#202124, #eeeeee));
+  --dm-secondary: var(--color-text-secondary, light-dark(#52565b, #c3c3c3));
+  --dm-muted: var(--color-text-secondary, light-dark(#646970, #b5b5b5));
+  --dm-line: var(--color-border-primary, light-dark(#e7e8e9, #454545));
+  --dm-line-strong: var(--color-border-secondary, light-dark(#b7b9bc, #707070));
+  --dm-focus: var(--color-ring-primary, light-dark(#52565b, #d0d0d0));
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
 @theme inline {
-  --color-background: #f4f7fb;
-  --color-foreground: #101522;
-  --color-muted: #5f6f86;
-  --color-line: rgba(16, 21, 34, 0.1);
-  --color-panel: rgba(255, 255, 255, 0.86);
-  --color-panel-strong: #ffffff;
-  --color-panel-soft: #eef3fb;
-  --color-brand: #101522;
-  --color-brand-soft: #d9e6ff;
-  --color-highlight: #2c78ff;
-  --color-success: #1ea971;
-  --color-warm: #ffb86b;
-  --color-deep: #0b1020;
-  --font-sans: "DM Sans Variable", "DM Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --color-background: var(--dm-background);
+  --color-foreground: var(--dm-text);
+  --color-muted: var(--dm-muted);
+  --color-line: var(--dm-line);
+  --color-panel: var(--dm-background);
+  --color-panel-strong: var(--dm-background);
+  --color-panel-soft: var(--dm-surface);
+  --color-brand: var(--dm-text);
+  --color-brand-soft: var(--dm-surface);
+  --color-deep: var(--dm-text);
+  /* Shared editor primitives keep their layout; these neutral roles follow the host. */
+  --color-white: var(--dm-background);
+  --color-slate-50: var(--dm-surface);
+  --color-slate-100: var(--dm-background);
+  --color-slate-200: var(--dm-line);
+  --color-slate-300: var(--dm-line-strong);
+  --color-slate-400: var(--dm-muted);
+  --color-slate-500: var(--dm-muted);
+  --color-slate-600: var(--dm-secondary);
+  --color-slate-700: var(--dm-secondary);
+  --color-slate-800: var(--dm-text);
+  --color-slate-900: var(--dm-text);
+  --color-slate-950: var(--dm-text);
+  --color-red-50: var(--color-background-danger, light-dark(#fef2f2, #3b2424));
+  --color-red-100: var(--color-background-danger, light-dark(#fee2e2, #492929));
+  --color-red-200: var(--color-border-danger, light-dark(#fecaca, #854444));
+  --color-red-600: var(--color-text-danger, light-dark(#b91c1c, #ffb4b4));
+  --color-red-700: var(--color-text-danger, light-dark(#b91c1c, #ffb4b4));
+  --color-red-800: var(--color-text-danger, light-dark(#991b1b, #ffb4b4));
+  --color-amber-50: var(--dm-surface);
+  --color-amber-200: var(--dm-line);
+  --color-amber-300: var(--dm-line-strong);
+  --color-amber-700: var(--dm-text);
+  --color-amber-800: var(--dm-text);
+  --color-amber-900: var(--dm-text);
+  --color-blue-50: var(--dm-surface);
+  --color-blue-200: var(--dm-line);
+  --color-blue-300: var(--dm-line-strong);
+  --color-blue-700: var(--dm-text);
+  --color-blue-800: var(--dm-text);
+  --color-blue-950: var(--dm-text);
+  --color-emerald-50: var(--dm-surface);
+  --color-emerald-200: var(--dm-line);
+  --color-emerald-700: var(--dm-text);
+  --color-emerald-900: var(--dm-text);
+  --font-sans: var(
+    --font-sans-host,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif
+  );
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 @layer base {
   :root {
-    color-scheme: light;
     font-family: var(--font-sans);
-    background: #f8fafc;
-    color: #0f172a;
+    background: var(--dm-background);
+    color: var(--dm-text);
     font-synthesis: none;
   }
 
@@ -36,13 +100,13 @@
   html,
   body,
   #root {
-    min-width: 300px;
+    min-width: 0;
     min-height: 100%;
     margin: 0;
   }
 
   body {
-    background: #f8fafc;
+    background: var(--dm-background);
     -webkit-font-smoothing: antialiased;
   }
 
@@ -61,5 +125,484 @@
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* The native workspace uses a single reading surface and progressive disclosure. */
+.native-workspace {
+  min-height: 100%;
+  background: var(--dm-background);
+  color: var(--dm-text);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.workspace-shell {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 28px;
+}
+.workspace-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.workspace-header h1 {
+  font-size: 1.375rem;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+.workspace-header p {
+  margin-top: 6px;
+  font-size: 0.75rem;
+}
+.workspace-link {
+  color: var(--dm-muted);
+  font-size: 0.75rem;
+  padding: 6px 0;
+  text-underline-offset: 4px;
+}
+.workspace-link:hover {
+  color: var(--dm-text);
+  text-decoration: underline;
+}
+.native-workspace button {
+  cursor: pointer;
+}
+.native-workspace button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+.native-workspace :is(button, input, select, a, summary):focus-visible {
+  outline: 2px solid var(--dm-focus);
+  outline-offset: 4px;
+}
+.workspace-back {
+  display: block;
+  margin-bottom: 14px;
+}
+.workspace-muted,
+.workspace-count {
+  color: var(--dm-muted);
+}
+.workspace-count {
+  font-size: 0.75rem;
+  margin: 20px 0 8px;
+}
+.workspace-search {
+  display: flex;
+  gap: 16px;
+  border-bottom: 1px solid var(--dm-line);
+  padding-bottom: 9px;
+}
+.workspace-search input {
+  min-width: 0;
+  flex: 1;
+  background: transparent;
+  outline: none;
+  font-size: 0.875rem;
+}
+.workspace-campaigns {
+  list-style: none;
+}
+.workspace-campaigns li + li {
+  border-top: 1px solid var(--dm-line);
+}
+.workspace-campaigns button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  gap: 20px;
+  width: 100%;
+  padding: 18px 0;
+}
+.workspace-campaigns button:hover strong {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.workspace-campaigns strong {
+  font-weight: 500;
+  display: block;
+  overflow-wrap: anywhere;
+}
+.workspace-campaigns small {
+  display: block;
+  color: var(--dm-muted);
+  margin-top: 3px;
+  font-size: 0.75rem;
+}
+.workspace-campaigns button > .workspace-muted {
+  font-size: 0.75rem;
+}
+.workspace-pagination {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+}
+.workspace-metrics {
+  display: flex;
+  gap: 48px;
+  margin: 12px 0 28px;
+}
+.workspace-metrics dt {
+  color: var(--dm-muted);
+  font-size: 0.75rem;
+}
+.workspace-metrics dd {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-top: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.workspace-button {
+  border: 1px solid var(--dm-line-strong);
+  border-radius: 6px;
+  padding: 8px 13px;
+  font-size: 0.75rem;
+  background: transparent;
+}
+.workspace-button:hover {
+  background: var(--dm-surface);
+}
+.workspace-sections {
+  margin-top: 36px;
+}
+.workspace-disclosure {
+  border-top: 1px solid var(--dm-line);
+}
+.workspace-disclosure summary {
+  cursor: pointer;
+  padding: 16px 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+.workspace-disclosure-body {
+  color: var(--dm-secondary);
+  font-size: 0.8125rem;
+  padding: 0 0 18px;
+}
+.workspace-disclosure-body > * + * {
+  margin-top: 14px;
+}
+.workspace-facts > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 4px 0;
+}
+.workspace-facts dd {
+  text-align: right;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.workspace-facts dt {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.workspace-copy h3 {
+  color: var(--dm-muted);
+  font-size: 0.75rem;
+  margin-bottom: 8px;
+}
+.workspace-message {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--dm-text);
+  border-left: 2px solid var(--dm-line);
+  padding-left: 16px;
+  margin-bottom: 16px;
+}
+.workspace-replies li {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 7px 0;
+}
+.workspace-replies span {
+  color: var(--dm-muted);
+  font-size: 0.75rem;
+}
+.workspace-notice {
+  font-size: 0.75rem;
+  color: var(--dm-secondary);
+  margin: -12px 0 24px;
+}
+.workspace-empty {
+  padding: 32px 0;
+}
+.workspace-empty h2 {
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+.workspace-empty p {
+  color: var(--dm-muted);
+  margin-top: 4px;
+}
+.native-workspace footer {
+  margin-top: 48px;
+}
+.native-workspace footer summary {
+  color: var(--dm-muted);
+  font-size: 0.75rem;
+}
+@media (max-width: 480px) {
+  .workspace-shell {
+    padding: 24px 20px;
+  }
+  .workspace-header {
+    gap: 16px;
+  }
+  .workspace-metrics {
+    gap: 32px;
+  }
+}
+
+.workspace-metrics,
+.workspace-header {
+  flex-wrap: wrap;
+}
+.workspace-replies li > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.workspace-tabs {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 36px;
+  border-bottom: 1px solid var(--dm-line);
+}
+.workspace-tabs button {
+  font-size: 0.75rem;
+  color: var(--dm-muted);
+  padding: 0 0 12px;
+  border-bottom: 1px solid transparent;
+}
+.workspace-tabs button[aria-current="page"] {
+  color: var(--dm-text);
+  border-color: var(--dm-text);
+}
+.companies-shell {
+  max-width: 1040px;
+}
+.company-filter-panel {
+  border-bottom: 1px solid var(--dm-line);
+  padding: 20px 0;
+  font-size: 0.75rem;
+}
+.company-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.company-filter-grid label {
+  color: var(--dm-muted);
+}
+.company-filter-grid :is(input, select) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin-top: 6px;
+  background: var(--dm-background);
+  color: var(--dm-text);
+  border: 1px solid var(--dm-line);
+  border-radius: 4px;
+  padding: 7px 8px;
+}
+.company-filter-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin: 20px 0 12px;
+}
+.company-filter-checks label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.native-workspace input[type="checkbox"] {
+  accent-color: var(--dm-text);
+  width: 14px;
+  height: 14px;
+}
+.company-filter-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 16px;
+  font-size: 0.6875rem;
+  color: var(--dm-muted);
+}
+.company-filter-chips button {
+  border: 1px solid var(--dm-line);
+  border-radius: 4px;
+  padding: 2px 7px;
+}
+.company-filter-chips button:hover {
+  color: var(--dm-text);
+}
+.company-market {
+  margin-right: 4px;
+}
+.company-results-bar {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 20px 0 8px;
+}
+.company-results-bar .workspace-count {
+  margin: 0;
+}
+.company-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.company-table th {
+  color: var(--dm-muted);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  text-align: left;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--dm-line);
+}
+.company-table td {
+  vertical-align: middle;
+  border-bottom: 1px solid var(--dm-line);
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+  padding: 16px 12px 16px 0;
+}
+.company-table th.company-select,
+.company-table td.company-select {
+  width: 30px;
+}
+.company-table th.company-location {
+  width: 16%;
+}
+.company-table th.company-employees {
+  width: 13%;
+}
+.company-table th.company-revenue {
+  width: 13%;
+}
+.company-table td:is(.company-employees, .company-revenue) {
+  font-variant-numeric: tabular-nums;
+}
+.company-row-link {
+  width: 100%;
+  text-align: left;
+  display: block;
+  padding: 0;
+}
+.company-row-link strong {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--dm-text);
+}
+.company-row-link:hover strong {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.company-row-link small {
+  display: block;
+  color: var(--dm-muted);
+  font-size: 0.6875rem;
+  margin-top: 3px;
+}
+.company-row-link .company-mobile-summary {
+  display: none;
+}
+.company-table-wrap[aria-busy="true"] tbody {
+  opacity: 0.6;
+}
+.company-page-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: baseline;
+  font-size: 0.6875rem;
+  margin-top: 16px;
+}
+.company-page-footer .workspace-pagination {
+  margin-top: 0;
+}
+.company-chat-action {
+  margin-bottom: 28px;
+}
+.company-description {
+  max-width: 70ch;
+  color: var(--dm-secondary);
+  margin-bottom: 24px;
+}
+.company-overview-facts {
+  max-width: 640px;
+  font-size: 0.8125rem;
+}
+.company-overview-facts dt {
+  color: var(--dm-muted);
+}
+.company-loading {
+  margin-top: 28px;
+  font-size: 0.75rem;
+  color: var(--dm-muted);
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+}
+.company-error {
+  font-size: 0.75rem;
+  margin: 14px 0;
+}
+.company-contacts li {
+  padding: 10px 0;
+}
+.company-contacts strong {
+  font-weight: 500;
+}
+.company-contact-routes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 20px;
+  overflow-wrap: anywhere;
+}
+.company-financials {
+  width: 100%;
+  max-width: 640px;
+  text-align: left;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.company-financials :is(th, td) {
+  padding: 6px 12px 6px 0;
+  border-bottom: 1px solid var(--dm-line);
+}
+.company-financials th {
+  font-weight: 400;
+  color: var(--dm-muted);
+}
+@media (max-width: 680px) {
+  .company-filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .company-table :is(.company-location, .company-revenue, .company-employees) {
+    display: none;
+  }
+  .company-row-link .company-mobile-summary {
+    display: block;
+  }
+  .company-results-bar {
+    flex-wrap: wrap;
+    gap: 4px 16px;
+  }
+  .company-metrics {
+    gap: 24px;
   }
 }

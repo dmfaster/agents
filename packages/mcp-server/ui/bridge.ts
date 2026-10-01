@@ -22,9 +22,11 @@ export type HostCapabilities = {
 };
 
 type OpenAiCompatibility = {
+  theme?: "light" | "dark";
   toolInput?: unknown;
+  toolOutput?: unknown;
   callTool?: (name: string, input: unknown) => Promise<unknown>;
-  setWidgetState?: (value: unknown) => Promise<void>;
+  setWidgetState?: (value: unknown) => void;
   openExternal?: (value: { href: string }) => void;
 };
 
@@ -48,6 +50,11 @@ export class McpAppBridge {
   context: HostContext = {};
 
   constructor() {
+    window.addEventListener("openai:set_globals", (event) => {
+      if (this.standard) return;
+      const globals = (event as CustomEvent<{ globals?: OpenAiCompatibility }>).detail?.globals;
+      if (globals?.theme) this.applyHostContext({ theme: globals.theme });
+    });
     window.addEventListener("message", (event) => {
       if (event.source !== window.parent) return;
       const message = event.data as JsonObject | null;
@@ -110,7 +117,7 @@ export class McpAppBridge {
       const initialized = (await this.request(
         "ui/initialize",
         {
-          appInfo: { name: "DM Faster campaign workspace", version: "1.9.0" },
+          appInfo: { name: "DM Faster campaign workspace", version: "1.10.0" },
           appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] },
           protocolVersion: MCP_APP_PROTOCOL_VERSION,
         },
@@ -124,22 +131,37 @@ export class McpAppBridge {
       this.context = initialized.hostContext || {};
       this.applyHostContext(this.context);
       this.notify("ui/notifications/initialized");
-      return { mode: "standard" as const, input: null };
+      return { mode: "standard" as const, input: null, output: null };
     } catch {
-      if (window.openai && (window.openai.toolInput || window.openai.callTool)) {
+      if (
+        window.openai &&
+        (window.openai.toolInput || window.openai.toolOutput || window.openai.callTool)
+      ) {
         this.standard = false;
-        return { mode: "openai" as const, input: window.openai.toolInput || null };
+        this.applyHostContext({ theme: window.openai.theme });
+        return {
+          mode: "openai" as const,
+          input: window.openai.toolInput || null,
+          output: window.openai.toolOutput || null,
+        };
       }
-      return { mode: "headless" as const, input: null };
+      return { mode: "headless" as const, input: null, output: null };
     }
   }
 
   applyHostContext(context: HostContext) {
     this.context = { ...this.context, ...context };
+    if (this.context.theme === "light" || this.context.theme === "dark")
+      document.documentElement.dataset.theme = this.context.theme;
     const variables = this.context.styles?.variables;
     if (variables) {
       Object.entries(variables).forEach(([name, value]) => {
-        if (typeof value === "string") document.documentElement.style.setProperty(name, value);
+        if (typeof value !== "string" || !name.startsWith("--")) return;
+        // Tailwind owns --font-sans, so preserve the host font under an alias.
+        document.documentElement.style.setProperty(
+          name === "--font-sans" ? "--font-sans-host" : name,
+          value,
+        );
       });
     }
   }
@@ -168,7 +190,7 @@ export class McpAppBridge {
             .map((part) => String(asJsonObject(part).text || ""))
             .filter(Boolean)
             .join("\n")
-        : "The user updated the DM Faster campaign workspace.";
+        : "The user updated the DM Faster workspace context.";
       return this.request("ui/message", {
         role: "user",
         content: [
@@ -176,13 +198,19 @@ export class McpAppBridge {
         ],
       });
     }
-    throw new Error("This host cannot add the edited campaign state back to model context.");
+    throw new Error("This host cannot add the workspace selection back to model context.");
   }
 
   async openLink(url: string) {
     if (this.standard && this.capabilities.openLinks) return this.request("ui/open-link", { url });
     if (window.openai?.openExternal) return window.openai.openExternal({ href: url });
     throw new Error("This host cannot open the approval page.");
+  }
+
+  canOpenLinks() {
+    return this.standard
+      ? Boolean(this.capabilities.openLinks)
+      : Boolean(window.openai?.openExternal);
   }
 
   async toggleDisplayMode() {

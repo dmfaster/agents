@@ -1,4 +1,4 @@
-> Release candidate: 1.9.0 source.
+> Release candidate: 1.10.0 source. The published npm baseline is 1.9.0.
 > Product deployment and package/plugin publication require guarded release
 > approval and verification before these new controls can be called live.
 
@@ -11,17 +11,20 @@ This repository is the public source for
 - secure browser authorization backed by the operating-system credential store;
 - the typed JavaScript SDK and `dmfaster` CLI;
 - the stateless MCP 2026-07-28 stdio server;
-- a portable MCP Apps campaign workspace built from DM Faster's product UI;
+- portable MCP Apps Companies and campaign views built from DM Faster's product UI;
+- company and saved-list context mentions for compatible hosts;
 - the shared Codex, Claude, and Cursor plugin and skill.
 
 The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-The 1.9.0 candidate exposes 62 bounded domain tools. It adds exact saved
-campaign copy inspection, including LinkedIn invitation settings and the
-effective message sent after acceptance or to an existing connection. Earlier
-website-backed company fit review, multichannel draft editing, inbox,
+The 1.10.0 candidate exposes 78 typed domain tools. It adds Basic-plan Instagram
+prospecting and separately charged enrichment, quiet Companies views, website
+evidence, bounded company suggestions, and company and saved-list mentions.
+Extraction reports exact saved counts and settled credit costs. A same-key retry
+recovers the same job instead of starting another paid extraction. Existing
+campaign copy inspection, company fit review, multichannel drafts, inbox,
 pipeline, follow-up, sender, outcome and history tools remain available.
 Reply actions report queued and confirmed delivery separately.
 Launch and pause still require an explicit user instruction and the owner's
@@ -94,10 +97,13 @@ npx --yes @dmfaster/cli@1.9.0 conversations list --filter unread --limit 25 --js
 npx --yes @dmfaster/mcp-server@1.9.0
 ```
 
-The 62 MCP domain tools cover workspace, campaign, sending, reply, inbox,
+The 78 candidate MCP domain tools cover prospecting, workspace, campaign, sending, reply, inbox,
 pipeline, company-history, industry, validation, exact-audience preview,
-private draft, launch, and pause workflows. Compliant MCP Apps hosts can also render the
-read-only `campaign_workspace` presentation tool inline. Headless hosts receive
+private draft, launch, and pause workflows. Compatible MCP Apps hosts can render
+`workspace_open`, `companies_workspace`, and `campaign_workspace`. Selecting a
+company or saved-list mention reads its current authorized context and grants
+no action permission. Suggestions are a bounded selection list and contain no
+audience total; use `companies_search` for an exact audience. Headless hosts receive
 the same complete state and keep every domain capability.
 
 The MCP server is deliberately stateless: send the complete latest campaign
@@ -201,9 +207,9 @@ codex plugin add dmfaster@dmfaster-agents
 Start a new session to load the refreshed skill and MCP configuration. Updating
 plugin files does not change the permissions of an existing DM Faster connection.
 
-## Agent 1.9.0 candidate
+## Agent 1.9.0 release (published baseline)
 
-The candidate adds `campaign.copy.inspect` without changing the existing
+Version 1.9.0 adds `campaign.copy.inspect` without changing the existing
 `campaign.inspect` response shape. It returns exact Instagram/Facebook openings,
 LinkedIn invitation mode and note, both saved sequences, and the effective
 accepted-message variants. `campaign.draft.update` can already configure those
@@ -216,3 +222,18 @@ publication; neither step starts a campaign.
 The local Codex 0.149.0 fixture check passed using the CLI fallback after an
 incompatible MCP handshake. Claude Code was unavailable and is unverified.
 Stateless MCP 2026-07-28 and clean package consumers have separate automated checks.
+
+## Agent 1.10.0 candidate
+
+The candidate adds `leads_status`, extraction quote/start/inspect/refresh/continue,
+and enrichment preview/start/inspect. One saved profile costs one DM Faster credit;
+enrichment is a separate charge. Exact available credits control extraction volume.
+Credit blocks return a purchase link for the user; agents never buy credits automatically.
+Prospecting saves private lists and does not start campaigns or send messages.
+
+Hosted MCP Events can deliver a subscribed extraction or enrichment completion to
+a compatible host. The local stdio server uses status reads. Protocol tests do not
+prove native composer rendering or ChatGPT completion delivery; real host evidence
+must be recorded separately. The hosted endpoint is deployed independently of npm.
+The new `companies.suggest` operation must be deployed and verified before publishing
+these clients. Native directory review and public npm release are separate steps.

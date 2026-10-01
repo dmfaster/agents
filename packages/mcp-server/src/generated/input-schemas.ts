@@ -697,6 +697,13 @@ export const CompanyFiltersInputSchema = z
     citySearch: z.string().max(120).optional(),
   })
   .strict();
+export const CompanySuggestionsInputSchema = z
+  .object({
+    query: z.string().min(2).max(120),
+    countries: z.array(SupportedCountrySchema).min(1).max(32),
+    limit: z.number().int().min(1).max(10).optional(),
+  })
+  .strict();
 export const CompanySearchFiltersSchema = z
   .object({
     country: SupportedCountrySchema.optional(),
@@ -729,7 +736,13 @@ export const CompanySearchFiltersSchema = z
     employeeRanges: z.array(z.string().max(80)).max(32).optional(),
     employeeMin: z.string().max(10).optional(),
     employeeMax: z.string().max(10).optional(),
-    technologies: z.array(z.string().max(80)).max(40).optional(),
+    technologies: z
+      .array(z.string().max(80))
+      .max(40)
+      .describe(
+        "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
+      )
+      .optional(),
     hasExhibitionParticipation: z.boolean().optional(),
     exhibitionEventKeys: z.array(z.string().max(160)).max(32).optional(),
     exhibitionMinEditions: z.string().max(8).optional(),
@@ -768,6 +781,82 @@ export const CompanySearchInputSchema = z
     expectedRevision: z.string().max(200).optional(),
     querySignature: z.string().max(200).optional(),
   })
+  .strict();
+export const WebsiteEvidenceCriterionSchema = z
+  .object({
+    id: z.string().min(1).max(60),
+    statement: z.string().min(1).max(800),
+    requirement: z.union([z.literal("advertised"), z.literal("any_support")]),
+    retrievalTerms: z
+      .array(z.string().min(1).max(100))
+      .min(1)
+      .max(12)
+      .describe(
+        "Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.",
+      ),
+    retrievalGroups: z
+      .array(z.array(z.string().min(1).max(100)).min(1).max(12))
+      .min(2)
+      .max(4)
+      .describe(
+        "Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion.",
+      )
+      .optional(),
+  })
+  .strict();
+export const CompanyEvidenceSearchInputSchema = z
+  .object({
+    country: z.union([z.literal("FI")]),
+    query: z.string().min(1).max(1500),
+    criteria: z.array(WebsiteEvidenceCriterionSchema).min(1).max(4),
+    filters: CompanySearchFiltersSchema.describe(
+      "Optional deterministic Companies app filters, applied before text candidate limits. Country must remain FI. Numeric and registry constraints use company data, not website judgments.",
+    ).optional(),
+    includePassages: z
+      .boolean()
+      .describe(
+        "Include up to six full original retrieval contexts per company. By default verified quotes are returned with each judgment, and unknown-only companies retain one original context for inspection.",
+      )
+      .optional(),
+    candidateLimit: z.number().int().min(1).max(30).optional(),
+    pageSize: z.number().int().min(1).max(20).optional(),
+    maxAgeDays: z.number().int().min(1).max(90).optional(),
+    cursor: z.string().min(1).max(200).optional(),
+    expectedRevision: z.string().min(1).max(200).optional(),
+    querySignature: z.string().min(1).max(200).optional(),
+  })
+  .strict();
+export const CompanyEvidenceStartInputSchema = z
+  .object({
+    country: z.union([z.literal("FI")]),
+    query: z.string().min(1).max(1500),
+    criteria: z.array(WebsiteEvidenceCriterionSchema).min(1).max(4),
+    filters: CompanySearchFiltersSchema.optional(),
+    maxAgeDays: z.number().int().min(1).max(90).optional(),
+    idempotencyKey: z.string().min(1).max(100),
+  })
+  .strict();
+export const CompanyEvidenceAdvanceInputSchema = z
+  .object({
+    runId: z.string().min(36).max(36),
+    expectedRevision: z.string().min(64).max(64),
+    batchSize: z.number().int().min(1).max(16).optional(),
+  })
+  .strict();
+export const CompanyEvidenceStatusInputSchema = z
+  .object({ runId: z.string().min(36).max(36), expectedRevision: z.string().min(64).max(64) })
+  .strict();
+export const CompanyEvidenceResultsInputSchema = z
+  .object({
+    runId: z.string().min(36).max(36),
+    expectedRevision: z.string().min(64).max(64),
+    cursor: z.string().min(1).max(200).optional(),
+    pageSize: z.number().int().min(1).max(20).optional(),
+    view: z.union([z.literal("matches"), z.literal("unresolved"), z.literal("all")]).optional(),
+  })
+  .strict();
+export const CompanyEvidenceCancelInputSchema = z
+  .object({ runId: z.string().min(36).max(36), expectedRevision: z.string().min(64).max(64) })
   .strict();
 export const CompanyInspectInputSchema = z
   .object({ country: SupportedCountrySchema, businessId: z.string().min(1).max(192) })
@@ -1020,6 +1109,61 @@ export const CallsListInputSchema = z
   })
   .strict();
 export const CallInspectInputSchema = z.object({ meetingId: ResourceIdSchema }).strict();
+export const LeadsStatusInputSchema = z
+  .object({
+    cursor: z.string().trim().min(1).max(1000).optional(),
+    limit: z.number().int().min(1).max(50).optional(),
+  })
+  .strict();
+export const LeadExtractionQuoteInputSchema = z
+  .object({
+    type: z.union([
+      z.literal("followers"),
+      z.literal("following"),
+      z.literal("likers"),
+      z.literal("commenters"),
+    ]),
+    identifier: z.string().trim().min(1).max(300),
+    count: z.number().int().min(1).max(2147483647).optional(),
+    postUrls: z.array(z.string().trim().min(1).max(300)).min(1).optional(),
+    priority: z.union([z.literal("high"), z.literal("normal"), z.literal("low")]).optional(),
+    feedType: z.union([z.literal("top"), z.literal("recent")]).optional(),
+  })
+  .strict();
+export const LeadExtractionStartInputSchema = z
+  .object({
+    type: z.union([
+      z.literal("followers"),
+      z.literal("following"),
+      z.literal("likers"),
+      z.literal("commenters"),
+    ]),
+    identifier: z.string().trim().min(1).max(300),
+    count: z.number().int().min(1).max(2147483647).optional(),
+    postUrls: z.array(z.string().trim().min(1).max(300)).min(1).optional(),
+    priority: z.union([z.literal("high"), z.literal("normal"), z.literal("low")]).optional(),
+    feedType: z.union([z.literal("top"), z.literal("recent")]).optional(),
+    idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+  })
+  .strict();
+export const LeadExtractionInspectInputSchema = z.object({ jobId: ResourceIdSchema }).strict();
+export const LeadExtractionRefreshInputSchema = z.object({ jobId: ResourceIdSchema }).strict();
+export const LeadExtractionContinueInputSchema = z
+  .object({
+    jobId: ResourceIdSchema,
+    count: z.number().int().min(1).max(2147483647).optional(),
+    idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+  })
+  .strict();
+export const LeadEnrichmentPreviewInputSchema = z.object({ listId: ResourceIdSchema }).strict();
+export const LeadEnrichmentStartInputSchema = z
+  .object({
+    listId: ResourceIdSchema,
+    maxCredits: z.number().int().min(0).max(2147483647).optional(),
+    idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+  })
+  .strict();
+export const LeadEnrichmentInspectInputSchema = z.object({ jobId: ResourceIdSchema }).strict();
 export const AGENT_INPUT_SCHEMAS = {
   "analytics.summary": AnalyticsSummaryInputSchema,
   "workspace.briefing": WorkspaceBriefingInputSchema,
@@ -1060,7 +1204,14 @@ export const AGENT_INPUT_SCHEMAS = {
   "campaign.pause.preflight": CampaignActionPreflightInputSchema,
   "campaign.pause": CampaignActionInputSchema,
   "companies.filters": CompanyFiltersInputSchema,
+  "companies.suggest": CompanySuggestionsInputSchema,
   "companies.search": CompanySearchInputSchema,
+  "companies.evidence.search": CompanyEvidenceSearchInputSchema,
+  "companies.evidence.start": CompanyEvidenceStartInputSchema,
+  "companies.evidence.advance": CompanyEvidenceAdvanceInputSchema,
+  "companies.evidence.status": CompanyEvidenceStatusInputSchema,
+  "companies.evidence.results": CompanyEvidenceResultsInputSchema,
+  "companies.evidence.cancel": CompanyEvidenceCancelInputSchema,
   "company.inspect": CompanyInspectInputSchema,
   "companies.fit.start": CompanyFitStartInputSchema,
   "companies.fit.advance": CompanyFitAdvanceInputSchema,
@@ -1083,4 +1234,13 @@ export const AGENT_INPUT_SCHEMAS = {
   "calendar.meeting.book": CalendarMeetingBookInputSchema,
   "calls.list": CallsListInputSchema,
   "call.inspect": CallInspectInputSchema,
+  "leads.status": LeadsStatusInputSchema,
+  "leads.extract.quote": LeadExtractionQuoteInputSchema,
+  "leads.extract.start": LeadExtractionStartInputSchema,
+  "leads.extract.inspect": LeadExtractionInspectInputSchema,
+  "leads.extract.refresh": LeadExtractionRefreshInputSchema,
+  "leads.extract.continue": LeadExtractionContinueInputSchema,
+  "leads.enrich.preview": LeadEnrichmentPreviewInputSchema,
+  "leads.enrich.start": LeadEnrichmentStartInputSchema,
+  "leads.enrich.inspect": LeadEnrichmentInspectInputSchema,
 } as const;

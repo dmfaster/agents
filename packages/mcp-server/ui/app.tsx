@@ -21,6 +21,8 @@ import {
 
 import { McpAppBridge, type BridgeNotification } from "./bridge.ts";
 
+import { Workspace, type WorkspacePayload } from "./workspace.tsx";
+
 type WorkspaceInput = {
   state: AgentCampaignState;
   campaignId?: string | null;
@@ -945,6 +947,7 @@ function CompanyPreview({ companies }: { companies: PreviewCompany[] }) {
 }
 
 function App() {
+  const [home, setHome] = useState<WorkspacePayload | null>(null);
   const [state, setState] = useState<AgentCampaignState | null>(null);
   const [campaignId, setCampaignId] = useState<string | null>(null);
   const [connection, setConnection] = useState<
@@ -964,6 +967,7 @@ function App() {
   const load = useCallback((inputValue: unknown) => {
     const input = workspaceInput(inputValue);
     if (!input) return;
+    setHome(null);
     setState(input.state);
     setCampaignId(input.campaignId || null);
     setDirty(false);
@@ -983,6 +987,8 @@ function App() {
       if (notification.method === "ui/notifications/tool-result") {
         const payload = toolPayload(notification.params);
         if (payload.view === "dmfaster.campaign_workspace" && payload.state) load(payload);
+        if (payload.view === "dmfaster.workspace" && payload.result)
+          setHome(payload as WorkspacePayload);
       }
       if (notification.method === "ui/notifications/host-context-changed")
         bridge.applyHostContext(notification.params || {});
@@ -993,6 +999,10 @@ function App() {
       if (initialized.mode === "openai") {
         setConnection("compatibility");
         load(initialized.input);
+        const output = toolPayload(initialized.output);
+        if (output.view === "dmfaster.campaign_workspace" && output.state) load(output);
+        if (output.view === "dmfaster.workspace" && output.result)
+          setHome(output as WorkspacePayload);
       }
       if (initialized.mode === "headless") setConnection("headless");
     });
@@ -1234,6 +1244,8 @@ function App() {
     }
   }, [busy, campaignId, state]);
 
+  if (home) return <Workspace initial={home} bridge={bridge} />;
+
   if (!state) {
     return (
       <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-950">
@@ -1257,10 +1269,10 @@ function App() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="min-h-screen bg-white text-slate-950">
       <div className="mx-auto max-w-[1180px] space-y-3 px-3 py-4 sm:px-5 lg:px-6">
         <PageIntro
-          eyebrow="DM Faster · Agent workspace"
+          eyebrow="Campaign plan"
           title={state.profile.businessName || "Campaign workspace"}
           body={
             state.brief.objective ||
@@ -1268,20 +1280,7 @@ function App() {
           }
           actions={
             <>
-              <TonePill
-                tone={
-                  connection === "connected" || connection === "compatibility" ? "green" : "slate"
-                }
-              >
-                {connection === "connected" || connection === "compatibility"
-                  ? "Campaign assistant"
-                  : connection === "headless"
-                    ? "Headless host"
-                    : "Connecting"}
-              </TonePill>
-              <TonePill tone={dirty ? "amber" : "green"}>
-                {dirty ? "Unsynced edits" : "State synced"}
-              </TonePill>
+              {dirty ? <span className="text-xs text-slate-500">Unsynced edits</span> : null}
               {bridge.context.availableDisplayModes?.includes("fullscreen") ? (
                 <button
                   type="button"
@@ -1295,58 +1294,63 @@ function App() {
           }
         />
 
-        <section
-          className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
-          aria-label="Campaign plan summary"
-        >
-          <AnalyticsMetricCard
-            label="Exact audience"
-            value={exactAudience === null ? "—" : formatNumber(exactAudience)}
-            detail={exactAudience === null ? "Exact count required" : "Authoritative company total"}
-            accent="bg-highlight"
-          />
-          <AnalyticsMetricCard
-            label="Estimated duration"
-            value={forecast?.calendarDays === null ? "—" : `${forecast?.calendarDays || 0} days`}
-            detail={
-              exactAudience === null
-                ? "Preview the audience to calculate"
-                : "At the confirmed schedule"
-            }
-            accent="bg-slate-950"
-          />
-          <AnalyticsMetricCard
-            label="Daily company limit"
-            value={formatNumber(state.brief.deliverySettings.dailyCap)}
-            detail={`${state.brief.deliverySettings.windowStart}–${state.brief.deliverySettings.windowEnd} · ${state.brief.deliverySettings.timezone}`}
-            accent="bg-amber-400"
-          />
-          <AnalyticsMetricCard
-            label="Channels"
-            value={String(state.brief.requestedChannels.length)}
-            detail={
-              state.brief.requestedChannels.length
-                ? state.brief.requestedChannels.join(", ")
-                : "No channel selected"
-            }
-            accent="bg-emerald-500"
-          />
-        </section>
+        <details className="workspace-disclosure">
+          <summary>Audience & forecast</summary>
+          <section
+            className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
+            aria-label="Campaign plan summary"
+          >
+            <AnalyticsMetricCard
+              label="Exact audience"
+              value={exactAudience === null ? "—" : formatNumber(exactAudience)}
+              detail={
+                exactAudience === null ? "Exact count required" : "Authoritative company total"
+              }
+              accent="bg-highlight"
+            />
+            <AnalyticsMetricCard
+              label="Estimated duration"
+              value={forecast?.calendarDays === null ? "—" : `${forecast?.calendarDays || 0} days`}
+              detail={
+                exactAudience === null
+                  ? "Preview the audience to calculate"
+                  : "At the confirmed schedule"
+              }
+              accent="bg-slate-950"
+            />
+            <AnalyticsMetricCard
+              label="Daily company limit"
+              value={formatNumber(state.brief.deliverySettings.dailyCap)}
+              detail={`${state.brief.deliverySettings.windowStart}–${state.brief.deliverySettings.windowEnd} · ${state.brief.deliverySettings.timezone}`}
+              accent="bg-amber-400"
+            />
+            <AnalyticsMetricCard
+              label="Channels"
+              value={String(state.brief.requestedChannels.length)}
+              detail={
+                state.brief.requestedChannels.length
+                  ? state.brief.requestedChannels.join(", ")
+                  : "No channel selected"
+              }
+              accent="bg-emerald-500"
+            />
+          </section>
 
-        <AnalyticsLineChartCard
-          title="Projected outreach cadence"
-          description="Daily planned messages under the selected sending window and weekday limits."
-          data={forecast?.data || []}
-          series={forecastSeries}
-          emptyLabel="Set a daily limit and at least one sending day to build the forecast."
-          note={
-            exactAudience === null
-              ? "This is capacity, not an audience estimate. Preview the exact audience before preparing a draft."
-              : `The forecast uses the exact ${formatNumber(exactAudience)}-company audience and stops when that audience is exhausted.`
-          }
-          formatValue={(value) => formatNumber(value)}
-          formatCompactValue={(value) => formatNumber(value)}
-        />
+          <AnalyticsLineChartCard
+            title="Projected outreach cadence"
+            description="Daily planned messages under the selected sending window and weekday limits."
+            data={forecast?.data || []}
+            series={forecastSeries}
+            emptyLabel="Set a daily limit and at least one sending day to build the forecast."
+            note={
+              exactAudience === null
+                ? "This is capacity, not an audience estimate. Preview the exact audience before preparing a draft."
+                : `The forecast uses the exact ${formatNumber(exactAudience)}-company audience and stops when that audience is exhausted.`
+            }
+            formatValue={(value) => formatNumber(value)}
+            formatCompactValue={(value) => formatNumber(value)}
+          />
+        </details>
 
         <div className="grid gap-3 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,.75fr)] xl:items-start">
           <div className="space-y-3">
@@ -1409,7 +1413,7 @@ function App() {
                     </strong>
                   </div>
                 </div>
-                <p className="rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-xs leading-5 text-blue-800">
+                <p className="text-xs leading-5 text-slate-500">
                   Prepare creates a private disabled draft. It never starts sending.
                 </p>
                 <button
@@ -1440,7 +1444,7 @@ function App() {
                 </div>
                 <button
                   type="button"
-                  className={`${subtleButtonClass} w-full border-amber-200 bg-amber-50 text-amber-800 hover:bg-amber-100`}
+                  className={`${subtleButtonClass} w-full`}
                   disabled={!canCall || Boolean(busy) || !campaignId}
                   onClick={() => void runAction("preflight")}
                 >

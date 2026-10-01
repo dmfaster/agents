@@ -1,7 +1,7 @@
 # DM Faster MCP server
 
-Local stdio MCP server for the 62 DM Faster Agent 1.0 domain tools, one local
-`connection_status` tool, and one portable `campaign_workspace` presentation tool. It uses the MCP TypeScript SDK
+Local stdio MCP server for 78 DM Faster Agent 1.0 domain tools, one local
+`connection_status` tool, and portable `companies_workspace`, `campaign_workspace` and `workspace_open` views. It uses the MCP TypeScript SDK
 v2 serving entry in strict modern-only mode. MCP 2026-07-28 clients use the new
 per-request protocol; 2025-era initialization is explicitly rejected. The
 server is deliberately stateless; the caller sends the complete latest campaign
@@ -15,13 +15,30 @@ preview, private draft preparation, browser setup, and owner-approved launch.
 
 Hosts implementing the standard MCP Apps extension render
 `campaign_workspace` as an inline campaign editor. The self-contained
-`ui://dmfaster/campaign-workspace/v1.html` resource uses the MCP Apps
+`ui://dmfaster/campaign-workspace/v3.html` resource uses the MCP Apps
 `2026-01-26` bridge and requires no external scripts, styles, frames, cookies,
 or network access. It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 62 domain tools directly.
+continue to use all 78 domain tools directly.
+
+OpenAI hosts that support composer mentions discover `workspace_mentions` as an
+app-only search tool. It suggests companies across the supported countries and
+saved prospect or company lists. Company suggestions use `companies_suggest`,
+a bounded compact read with no audience total; `companies_search` still returns
+an exact total. Opening a mention reads the current profile or list through
+authenticated resource templates, with pagination preserved. A mention is
+context only and never authorizes spending credits, changing lists or sending.
+Native host availability needs a separate host check; protocol metadata alone
+does not establish that the composer will render it.
+
+Social prospecting uses `leads_status`, quote/start/inspect/refresh/continue tools,
+and separate enrichment preview/start/inspect tools. Exact saved counts and
+settled costs come from the durable job receipt. Hosted MCP Events can deliver
+completion updates to subscribed capable hosts; local stdio clients inspect the
+same job. The hosted endpoint also supports the compatibility protocol needed
+by current legacy clients; this local stdio package remains modern-only.
 
 `audience_preview` returns a server-issued `reviewedAudience` identity with an
 exact, immutable search revision. The user must review that preview before a
@@ -43,13 +60,13 @@ tools satisfy the credential's scopes, with missing scopes for the others.
 Workspace role, plan, and action preconditions still apply when a tool runs.
 
 ```bash
-npx --yes @dmfaster/cli@1.9.0 auth login --json
-npx --yes @dmfaster/mcp-server@1.9.0
+npx --yes @dmfaster/cli@1.10.0 auth login --json
+npx --yes @dmfaster/mcp-server@1.10.0
 ```
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
-smaller ceiling. The MCP server can expose all 62 domain schemas and the
+smaller ceiling. The MCP server can expose all 78 domain schemas and the
 local connection and presentation schemas while the DM Faster API independently rejects
 domain tools outside the stored credential's scopes.
 
@@ -59,7 +76,7 @@ preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world. Domain tools also
 advertise output schemas generated from the public Agent API contract.
 
-The MCP names are the 62 domain tools:
+The MCP names are the 78 domain tools:
 
 - `analytics_summary`
 - `workspace_briefing`
@@ -100,7 +117,14 @@ The MCP names are the 62 domain tools:
 - `campaign_pause_preflight`
 - `campaign_pause`
 - `companies_filters`
+- `companies_suggest`
 - `companies_search`
+- `companies_evidence_search`
+- `companies_evidence_start`
+- `companies_evidence_advance`
+- `companies_evidence_status`
+- `companies_evidence_results`
+- `companies_evidence_cancel`
 - `company_inspect`
 - `companies_fit_start`
 - `companies_fit_advance`
@@ -112,7 +136,6 @@ The MCP names are the 62 domain tools:
 - `campaign_operation_inspect`
 - `campaign_delivery_inspect`
 - `campaign_delivery_update`
-
 - `companies_fit_status`
 - `companies_fit_cancel`
 - `companies_fit_runs_list`
@@ -124,11 +147,18 @@ The MCP names are the 62 domain tools:
 - `calendar_meeting_book`
 - `calls_list`
 - `call_inspect`
+- `leads_status`
+- `leads_extract_quote`
+- `leads_extract_start`
+- `leads_extract_inspect`
+- `leads_extract_refresh`
+- `leads_extract_continue`
+- `leads_enrich_preview`
+- `leads_enrich_start`
+- `leads_enrich_inspect`
 
-The two additional MCP tools are:
-
-- `connection_status` (local authentication and workspace identity)
-- `campaign_workspace`
+Additional MCP tools are `connection_status`, `campaign_workspace`,
+`companies_workspace`, `workspace_open`, and the app-only `workspace_mentions`.
 
 Planning and preview tools do not mutate the workspace. Preparation creates
 private drafts with a stable idempotency key. Launch and pause use a two-step
@@ -152,7 +182,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.9.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.10.0"]
     }
   }
 }
@@ -264,3 +294,50 @@ Historical copy reports return exact sent text and observed attribution limits.
 Calendar booking reuses the app service and sends invitations only under exact
 user instructions and owner calendar scopes. Call reads preserve app permissions.
 See the shared plugin review and booking reference for full workflow limits.
+
+## Native workspace entrypoints
+
+`workspace_open({})` advertises a global sidebar entry and returns the first exact
+Companies page. `companies_workspace({ filters, pageSize })` opens a prospect
+search beside chat using every typed Companies filter. Empty arguments browse
+active companies in Finland. `campaign_workspace({})` opens the first authenticated
+campaign page. The UI does not repeat the initial read. Users can search, filter,
+page and share their current search or selected company evidence with chat.
+Company profiles show their existing row summary immediately; full details load
+without blocking navigation. Back retains the search, and view-local reads are
+deduplicated and cached for 30 seconds. Refresh performs a fresh domain read;
+the shared server profile retains its existing five-minute freshness policy.
+The visual filter controls cover common criteria; other typed criteria stay intact
+and visible as removable chips. The assistant can refine every supported filter.
+Supplying `state`
+to `campaign_workspace` preserves the existing plan editor. Supplying only
+`campaignId` inspects that saved campaign. Selection is context, never authorization
+to mutate or send. Domain tools retain their scope, ownership, plan and audit checks.
+
+Company selection is discussion context, never authorization to save, spend
+research credits or execute outreach. Full typed company data stays in
+`structuredContent`; brief text summaries avoid duplicating it in the response.
+These extensions require a supporting host. Metadata and local tests are not proof
+of public directory listing, production deployment, or native host availability.
+
+Run `npm run test:agent:workspace-ui` from the repository root for the standalone
+Chromium MCP-host simulation (no app server or database). It covers first-result
+rendering, search, cursor pagination, selection context, empty and denied states,
+read errors, stale-response fencing, exact-count failures, native company profiles,
+filter preservation and narrow-layout overflow. It stays outside `test:tooling` so fast
+checks never launch a browser. `npm run dev:agent:workspace` opens a loopback-only
+review preview with disposable Companies fixture data. Add `?theme=dark` for dark mode.
+
+The native view keeps messages, delivery, replies/pipeline, sending health, and
+connection details in collapsed disclosures. Extra reads run only when opened;
+permission failures stay local to the section. Reply contacts are a labelled
+bounded sample, not inbox message text. Sending health uses the server's assessment
+and does not present workspace-wide counters as campaign totals. The plan editor
+keeps its audience and forecast summary collapsed until requested.
+
+The view follows host theme and font tokens, with light/dark fallbacks. The original
+`v1.html` and `v2.html` resources remain readable for existing conversations. All presentation
+and connection tools declare output schemas. Hosted tool descriptors declare OAuth
+scopes and return renewal challenges for expired or insufficient grants; ownership
+and role denials do not trigger an unhelpful reconnect. Local stdio authentication
+keeps its existing flow. Only tools used by the view permit iframe invocation.

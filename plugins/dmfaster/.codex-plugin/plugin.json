@@ -1,7 +1,7 @@
 {
   "name": "dmfaster",
-  "version": "1.9.0",
-  "description": "Plan campaigns, prepare private drafts, inspect live sales activity, and run authorized campaign controls through DM Faster Agent 1.0.",
+  "version": "1.10.0",
+  "description": "Find prospects, research companies, extract Instagram audiences, and run authorized sales workflows with DM Faster.",
   "author": {
     "name": "DM Faster",
     "url": "https://dmfaster.com"
@@ -9,13 +9,13 @@
   "homepage": "https://dmfaster.com/docs/agents",
   "repository": "https://github.com/dmfaster/agents",
   "license": "Apache-2.0",
-  "keywords": ["sales", "outreach", "campaigns", "mcp", "agent"],
+  "keywords": ["sales", "prospecting", "companies", "instagram", "outreach", "mcp", "agent"],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "DM Faster",
-    "shortDescription": "Plan and operate DM Faster campaigns safely",
-    "longDescription": "Connect a live DM Faster workspace to Codex, build grounded campaign plans, preview exact audiences, prepare private lists and campaign drafts, inspect sales activity, and launch or pause on explicit user instructions with a one-time owner-granted control permission, or per-action approval for older connections. Every action stays bound to the exact campaign version.",
+    "shortDescription": "Find and research prospects",
+    "longDescription": "Connect your DM Faster workspace to research companies, browse saved lists, and extract Instagram followers, following, likers or commenters into private prospect lists. Inspect exact saved counts and settled credit costs; profile enrichment is separately charged. Plan campaigns with exact audience previews and run campaign controls on explicit instructions within your granted permissions.",
     "developerName": "DM Faster",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
@@ -23,11 +23,9 @@
     "privacyPolicyURL": "https://dmfaster.com/privacy",
     "termsOfServiceURL": "https://dmfaster.com/terms",
     "defaultPrompt": [
-      "Show what needs attention in my DM Faster workspace.",
-      "Plan a campaign and preview its exact audience before creating anything.",
-      "Prepare this approved campaign as a private draft.",
-      "Check why my DM Faster campaign is not sending.",
-      "Summarize priority replies and pipeline activity."
+      "Find companies that match my ideal customer profile.",
+      "Extract Instagram followers and report the saved list and final credit cost.",
+      "Show my saved prospect lists and help me choose whom to contact."
     ],
     "brandColor": "#171717",
     "composerIcon": "./assets/dm-icon.png",
