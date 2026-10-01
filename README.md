@@ -1,6 +1,6 @@
-> Release candidate: 1.10.0 source. The published npm baseline is 1.9.0.
-> Product deployment and package/plugin publication require guarded release
-> approval and verification before these new controls can be called live.
+> Published runtime: 1.10.0. Hosted API checks, package provenance and a clean
+> registry install are verified. Native ChatGPT composer rendering and Events
+> delivery remain unverified; directory review is a separate publication step.
 
 # DM Faster for agents
 
@@ -19,7 +19,7 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-The 1.10.0 candidate exposes 78 typed domain tools. It adds Basic-plan Instagram
+The 1.10.0 release exposes 78 typed domain tools. It adds Basic-plan Instagram
 prospecting and separately charged enrichment, quiet Companies views, website
 evidence, bounded company suggestions, and company and saved-list mentions.
 Extraction reports exact saved counts and settled credit costs. A same-key retry
@@ -34,6 +34,18 @@ execution boundary.
 
 This repository intentionally contains no DM Faster application server,
 database, browser extension, sending runtime, or private product source.
+
+## Hosted connection
+
+For a host that supports remote MCP with browser OAuth, connect
+`https://app.dmfaster.com/mcp`, sign in to DM Faster, and approve the exact workspace
+and scopes. Hosted connections require no local Node.js installation or copied
+token. They use the same domain controls and account entitlements as the local
+clients. Existing grants never expand automatically.
+
+The hosted package is separate from this repository's stdio plugin. It is not
+listed in the universal OpenAI directory yet. Native views, mentions and Events
+need compatible host support and their own verification.
 
 ## Install the plugin
 
@@ -69,7 +81,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.9.0 auth login --json
+npx --yes @dmfaster/cli@1.10.0 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -91,13 +103,13 @@ the owner approves the replacement. Credentials are never upgraded silently.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.9.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.9.0 campaign copy inspect campaign_123 --json
-npx --yes @dmfaster/cli@1.9.0 conversations list --filter unread --limit 25 --json
-npx --yes @dmfaster/mcp-server@1.9.0
+npx --yes @dmfaster/cli@1.10.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.10.0 campaign copy inspect campaign_123 --json
+npx --yes @dmfaster/cli@1.10.0 conversations list --filter unread --limit 25 --json
+npx --yes @dmfaster/mcp-server@1.10.0
 ```
 
-The 78 candidate MCP domain tools cover prospecting, workspace, campaign, sending, reply, inbox,
+The 78 MCP domain tools cover prospecting, workspace, campaign, sending, reply, inbox,
 pipeline, company-history, industry, validation, exact-audience preview,
 private draft, launch, and pause workflows. Compatible MCP Apps hosts can render
 `workspace_open`, `companies_workspace`, and `campaign_workspace`. Selecting a
@@ -148,7 +160,7 @@ private product source or trademarks.
 All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
 
 ```bash
-npx --yes @dmfaster/cli@1.9.0 list import --name "My prospects" --file usernames.csv --json
+npx --yes @dmfaster/cli@1.10.0 list import --name "My prospects" --file usernames.csv --json
 ```
 
 The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
@@ -166,7 +178,7 @@ and workspace timezone. Edits preserve omitted settings and reject stale
 versions or started campaigns. Saving or toggling a draft window leaves it
 disabled; an explicitly instructed, authorized launch arms the schedule.
 
-## Agent 1.7.0 release (published baseline)
+## Agent 1.7.0 release
 
 Version 1.7.0 adds `companies_fit_start`, `companies_fit_advance`,
 `companies_fit_results`, and `companies_fit_proposal`. The review uses bounded
@@ -207,7 +219,7 @@ codex plugin add dmfaster@dmfaster-agents
 Start a new session to load the refreshed skill and MCP configuration. Updating
 plugin files does not change the permissions of an existing DM Faster connection.
 
-## Agent 1.9.0 release (published baseline)
+## Agent 1.9.0 release
 
 Version 1.9.0 adds `campaign.copy.inspect` without changing the existing
 `campaign.inspect` response shape. It returns exact Instagram/Facebook openings,
@@ -223,9 +235,9 @@ The local Codex 0.149.0 fixture check passed using the CLI fallback after an
 incompatible MCP handshake. Claude Code was unavailable and is unverified.
 Stateless MCP 2026-07-28 and clean package consumers have separate automated checks.
 
-## Agent 1.10.0 candidate
+## Agent 1.10.0 release
 
-The candidate adds `leads_status`, extraction quote/start/inspect/refresh/continue,
+Version 1.10.0 adds `leads_status`, extraction quote/start/inspect/refresh/continue,
 and enrichment preview/start/inspect. One saved profile costs one DM Faster credit;
 enrichment is a separate charge. Exact available credits control extraction volume.
 Credit blocks return a purchase link for the user; agents never buy credits automatically.
@@ -235,5 +247,7 @@ Hosted MCP Events can deliver a subscribed extraction or enrichment completion t
 a compatible host. The local stdio server uses status reads. Protocol tests do not
 prove native composer rendering or ChatGPT completion delivery; real host evidence
 must be recorded separately. The hosted endpoint is deployed independently of npm.
-The new `companies.suggest` operation must be deployed and verified before publishing
-these clients. Native directory review and public npm release are separate steps.
+The `companies.suggest` operation is deployed and verified, as are authenticated
+mention selection and resource reads. An approved Basic-plan canary saved ten
+followers for ten settled credits; a same-key retry created no replacement job
+or extra charge. Native directory review and public npm release are separate steps.
