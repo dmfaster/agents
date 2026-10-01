@@ -14,12 +14,31 @@ implementation, review, tests, migrations, or deployments, follow the
 repository's own development guidance unless the user explicitly asks for live
 workspace evidence.
 
-The suite has 77 narrow domain tools, including company-centric search,
+The suite has 78 narrow domain tools, including company-centric search,
 complete company research, private shortlists, social extraction and enrichment, operational reads, campaign
 planning, live delivery settings, authorized campaign controls, inspected inbox
 replies, pipeline updates, follow-up cancellation, and execution event pages.
 It does not expose generic mutation, browser-worker credentials,
 or database access.
+
+## Legitimate research and outreach
+
+Private prospect research and list preparation do not establish permission to
+contact the people in those results. A follower relationship, a public profile,
+an extraction result or an enriched contact route is not recipient consent.
+
+Do not prepare or execute unsolicited bulk spam, repeated unwanted contact,
+harassment, deceptive impersonation or evasion of opt-outs. For outreach, use
+the user's authorized accounts and an audience with consent or an established
+context for the requested contact. If that context is missing, clarify it before
+preparing or starting messaging. Preserve the app's suppression and consent
+checks; email recipients must have explicitly agreed to receive that email.
+
+Use authorized data sources and respect their access rules. Do not bypass
+authentication, privacy controls, provider rate limits or contact restrictions.
+If a request is abusive, stop that messaging workflow and offer relevant private
+research or a consent-based follow-up instead. These boundaries do not impose an
+extraction-volume cap; requested prospecting remains limited by available credits.
 
 The MCP server also offers `connection_status` for local authentication and
 workspace identity. `workspace_open` opens Companies from the sidebar;
