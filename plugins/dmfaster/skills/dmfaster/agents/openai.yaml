@@ -6,9 +6,10 @@ interface:
 dependencies:
   tools:
     - type: "mcp"
-      value: "dmfaster"
+      value: "dmfaster_hosted"
       description: "Official DM Faster Agent 1.0 MCP server"
-      transport: "stdio"
+      transport: "streamable_http"
+      url: "https://app.dmfaster.com/mcp"
 
 policy:
   allow_implicit_invocation: true

@@ -238,6 +238,9 @@ and arbitrary call mutations remain outside this interface.
 
 ## Connect
 
+The shared Codex, Claude and Cursor plugin uses the hosted OAuth endpoint at
+`https://app.dmfaster.com/mcp`, with server name `dmfaster_hosted`. This keeps
+MCP 2025 hosts compatible without changing the modern local npm server.
 For a hosted connection, use the HTTPS server URL shown in DM Faster under
 Settings → AI agents → Connect or manage agents. The hosted server supports
 OAuth sign-in and stateless compatibility with Codex's 2025 protocol. Let the
@@ -252,17 +255,20 @@ fallback below. Do not confuse local package limitations with the hosted endpoin
    directly; use `connection_status` when connection or workspace identity is
    unclear. The MCP server remains discoverable before login and picks up a
    newly approved credential on the next call.
-2. If MCP reports missing or invalid authentication, read
+2. If hosted MCP reports missing or invalid authentication, let the human
+   complete the host's OAuth sign-in. Existing eligible hosted grants are reused;
+   CLI login does not change a hosted grant. For a local stdio connection, read
    [references/authentication.md](references/authentication.md) and use its
    version-pinned CLI login flow. Show the CLI confirmation code, then let the
    human personally compare and approve the focused DM Faster browser page.
-   Never control the approval page or claim approval before the CLI verifies it.
+   Never control the approval page or claim approval before authentication is
+   verified by the corresponding official interface.
 3. If MCP is unavailable, use the version-pinned CLI with `--json` and interpret
    its structured result.
 4. Never ask a human to paste a DM Faster token, browser cookie, session cookie,
    or extension credential into chat, a prompt, or MCP configuration. Use only
-   the CLI's operating-system credential store or an already configured
-   `DMFASTER_TOKEN` developer override.
+   the host's OAuth credential store, the CLI's operating-system credential store,
+   or an already configured `DMFASTER_TOKEN` developer override.
 5. If neither official interface is configured, say setup is incomplete. Never
    search for a source checkout or use browser cookies, generic HTTP, database
    access, or browser-worker tokens as a fallback.

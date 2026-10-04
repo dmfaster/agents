@@ -144,11 +144,11 @@ if (!existsSync(agentPath)) {
     fail("agents/openai.yaml default prompt must explicitly invoke $dmfaster");
   }
   if (
-    !/^dependencies:\s*$[\s\S]*?type:\s*"mcp"$[\s\S]*?value:\s*"dmfaster"$[\s\S]*?transport:\s*"stdio"$/m.test(
+    !/^dependencies:\s*$[\s\S]*?type:\s*"mcp"$[\s\S]*?value:\s*"dmfaster_hosted"$[\s\S]*?transport:\s*"streamable_http"$[\s\S]*?url:\s*"https:\/\/app\.dmfaster\.com\/mcp"$/m.test(
       agentSource,
     )
   ) {
-    fail("agents/openai.yaml must declare the dmfaster stdio MCP dependency");
+    fail("agents/openai.yaml must declare the official hosted HTTPS MCP dependency");
   }
   if (/\bTODO\b|\[TODO/i.test(agentSource)) fail("agents/openai.yaml contains TODO text");
 }
