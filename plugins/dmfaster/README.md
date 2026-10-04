@@ -37,9 +37,14 @@ a legacy MCP downgrade.
 ## Release status
 
 The hosted native Instagram ICP workflow has passed the bounded production canary.
-This public source targets version-pinned 1.11.0 packages; local publication remains
-pending the trusted release workflow. Installed users receive the new tools after
-the package release and plugin update.
+The version-pinned 1.11.0 packages are published through the
+[trusted workflow](https://github.com/dmfaster/agents/actions/runs/37225848421)
+and verified from a fresh registry consumer. Package integrity, signatures,
+source-bound provenance and read-only CLI/MCP briefing checks passed. The Codex
+GitHub plugin has been upgraded to 1.11.0. Refresh the plugin and start a fresh
+host session to load its catalog. Existing credentials without lead permissions
+use the normal human-approved scope upgrade; eligible hosted grants are reused.
+Claude/Cursor host installation and directory acceptance remain unverified.
 
 Do not point users at the private monorepo as a public marketplace. Synchronize
 this plugin directory to the approved public repository after package, privacy,

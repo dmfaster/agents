@@ -1,6 +1,6 @@
-> Hosted Instagram ICP prospecting is verified live. Publication of the 1.11.0
-> local packages is pending the trusted release workflow. Native host rendering
-> and directory review remain separate checks.
+> Hosted Instagram ICP prospecting and all four 1.11.0 npm packages are verified
+> live. The GitHub MCP plugin is available at 1.11.0. Native host rendering and
+> directory review remain separate checks.
 
 # DM Faster for agents
 
@@ -286,3 +286,17 @@ No campaign is activated. Model scores are not a calibrated accuracy guarantee.
 
 The Basic-plan app interface is staged; MCP, SDK, CLI and the shared plugin are
 the first delivery surfaces. See the canonical skill for input examples.
+
+[The trusted package release](https://github.com/dmfaster/agents/actions/runs/37225848421)
+passed on source `0e62bf0a36b78ff28f7b6d22a926cacfc73ce525`. All four
+packages passed a fresh registry install, matching source/registry SHA-512,
+verified registry signatures and SLSA provenance bound to that commit, and a
+clean runtime vulnerability audit. Read-only CLI and MCP workspace briefings
+passed; the installed MCP catalog contains 91 domain tools and five connection
+or presentation tools. The Codex GitHub plugin was upgraded to 1.11.0.
+
+Start a fresh host session after upgrading the plugin so its tool catalog is
+refreshed. Existing local credentials that lack lead permissions require the
+normal human-approved `auth upgrade --access full` flow. The hosted canary used
+its existing eligible grant. Claude/Cursor host installation, native rendering
+and directory acceptance have not been established by these checks.
