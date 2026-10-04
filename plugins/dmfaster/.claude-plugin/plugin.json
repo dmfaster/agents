@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "dmfaster",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Find prospects, research companies, extract Instagram audiences, and run authorized sales workflows with DM Faster.",
   "author": {
     "name": "DM Faster",

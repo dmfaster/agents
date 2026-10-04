@@ -385,6 +385,9 @@ paths:
       description: |
         Returns customer-facing campaign, queue, and browser-worker health. When campaignId
         is omitted, the selected, active, or most recent campaign is used. Read-only.
+        Send x-dmfaster-sending-observation: 1 to include detailed observation clocks.
+        Calls without that header retain the strict published MCP 1.10.0 response shape;
+        summary and assessment still report unavailable or overdue timing.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: ["sending:read"]
       x-dmfaster-approval: none
@@ -392,7 +395,7 @@ paths:
       x-dmfaster-mcp:
         name: sending_inspect
         title: Inspect sending health
-        description: Read browser-worker, queue, and failed-send health for the workspace or one campaign.
+        description: Read campaign sending health with per-channel eligibility deadlines, remaining seconds, pacing anchors, company-order blockers, and browser freshness. These clocks are earliest possible attempts, not promised deliveries. Inspect observation before calling a quiet queue stalled; null deadlines and stale evidence must stay explicit.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -1890,7 +1893,7 @@ paths:
       x-dmfaster-mcp:
         name: companies_search
         title: Search companies
-        description: Search the same company inventory and filters as the live app. Returns full rows, exact total and pagination. Echo querySignature and expectedRevision on subsequent pages.
+        description: Search the same company inventory and filters as the live app. Use projection list for fast prospecting views and company_inspect for full profiles; omit projection for rich rows. Returns an exact total and stable pagination. Echo querySignature and expectedRevision on subsequent pages.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -1989,12 +1992,48 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/agent/tools/companies.knowledge:
+    post:
+      tags: [Agent tools]
+      operationId: companyKnowledge
+      summary: Read saved public company knowledge
+      description: Read standard public website facts for one current published Finnish company. Returns offering-to-buyer relationships, boolean assessments, review flags and original context samples. Unassessed facts remain null. Uses current fresh saved evidence and content-bound shared judgments; never fetches websites, calls Jev or reads another user's queries or runs.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: [audiences:read]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: companies_knowledge
+        title: Read saved public company knowledge
+        description: Read standard public website facts for one current published Finnish company. Returns connected offering-to-buyer relationships and existing boolean assessments. Missing assessments remain null. No website fetch, Jev call or private run access. Quotations are context samples, not selected supporting citations.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        { section: B2B company prospecting, usage: "companies knowledge --input FILE" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CompanyKnowledgeInput" }
+      responses:
+        "200":
+          description: Current saved public knowledge
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CompanyKnowledgeResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
   /api/v1/agent/tools/companies.evidence.start:
     post:
       tags: [Agent tools]
       operationId: companyEvidenceStart
       summary: Start complete website evidence scan
-      description: Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. All fresh retained passages are checked in resumable chunks; keywords only prioritize work. Processing continues in the background. Return every confirmed match through results; unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.
+      description: Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. Choose evaluationMode binary for one compact website packet per company with boolean decisions, probability and explicit review/coverage. Empty retrievalTerms are allowed; keywords only prioritize work. Omission preserves the complete passage verifier. Processing continues in the background. The response already contains a first results page, including validated cached matches when available; inspect and show those rows immediately without repeating the page or waiting for completion. Use results for additional pages or later discoveries. Unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: [audiences:read]
       x-dmfaster-approval: none
@@ -2002,7 +2041,7 @@ paths:
       x-dmfaster-mcp:
         name: companies_evidence_start
         title: Start complete website evidence scan
-        description: Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. All fresh retained passages are checked in resumable chunks; keywords only prioritize work. Processing continues in the background. Return every confirmed match through results; unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.
+        description: Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. Choose evaluationMode binary for one compact website packet per company with boolean decisions, probability and explicit review/coverage. Empty retrievalTerms are allowed; keywords only prioritize work. Omission preserves the complete passage verifier. Processing continues in the background. The response already contains a first results page, including validated cached matches when available; inspect and show those rows immediately without repeating the page or waiting for completion. Use results for additional pages or later discoveries. Unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.
         annotations:
           { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
       x-dmfaster-cli:
@@ -2066,7 +2105,7 @@ paths:
       tags: [Agent tools]
       operationId: companyEvidenceStatus
       summary: Status complete website evidence scan
-      description: Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory and fresh retained passages, not uncrawled websites.
+      description: Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: [audiences:read]
       x-dmfaster-approval: none
@@ -2074,7 +2113,7 @@ paths:
       x-dmfaster-mcp:
         name: companies_evidence_status
         title: Status complete website evidence scan
-        description: Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory and fresh retained passages, not uncrawled websites.
+        description: Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.
         annotations:
           { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
       x-dmfaster-cli:
@@ -2689,6 +2728,90 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/agent/tools/sending.instagram.pacing.inspect:
+    post:
+      tags: [Agent tools]
+      operationId: instagramPacingInspect
+      summary: Inspect workspace Instagram sending pace
+      description: Inspect the user-wide Instagram message gap range and its revision. The range covers every campaign and browser; null uses campaign pacing.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["sending:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: sending_instagram_pacing_inspect
+        title: Inspect workspace Instagram sending pace
+        description: Inspect the user-wide Instagram message gap range and its revision. The range covers every campaign and browser; null uses campaign pacing.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Instagram sending pace
+        usage: sending instagram pacing inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramPacingInspectInput"
+      responses:
+        "200":
+          description: Inspect workspace Instagram sending pace
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramPacingInspectResult"
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/sending.instagram.pacing.update:
+    post:
+      tags: [Agent tools]
+      operationId: instagramPacingUpdate
+      summary: Change workspace Instagram sending pace
+      description: On the owner's explicit instruction, set a user-wide random Instagram message gap range in seconds, or reset it with policy null. Echo the inspected revision and use a stable idempotency key. The change applies at the next scheduler check across all campaigns and browsers; an in-progress attempt finishes and no campaign is started.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes: ["sending:read", "campaigns:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: sending_instagram_pacing_update
+        title: Change workspace Instagram sending pace
+        description: On the owner's explicit instruction, set a user-wide random Instagram message gap range in seconds, or reset it with policy null. Echo the inspected revision and use a stable idempotency key. The change applies at the next scheduler check across all campaigns and browsers; an in-progress attempt finishes and no campaign is started.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Instagram sending pace
+        usage: sending instagram pacing update --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramPacingUpdateInput"
+      responses:
+        "200":
+          description: Change workspace Instagram sending pace
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramPacingUpdateResult"
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
   /api/v1/agent/tools/companies.fit.status:
     post:
       tags:
@@ -3251,6 +3374,219 @@ paths:
           $ref: "#/components/responses/InternalServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/instagram.extract.quote:
+    post:
+      tags:
+        - Agent tools
+      operationId: instagramExtractionQuote
+      summary: Quote an Instagram audience extraction
+      description: Read existing prepaid capacity in the signed-in owner's account wallet.
+        Insufficient capacity hands off to separate account-gated standalone checkout and purchase-scoped API/MCP;
+        standalone payment cannot fund or resume an account request. No provider calls or payment.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: instagram_extract_quote
+        title: Quote an Instagram audience extraction
+        description: Read existing prepaid capacity in the signed-in owner's account wallet.
+          Insufficient capacity hands off to separate account-gated standalone checkout and purchase-scoped API/MCP;
+          standalone payment cannot fund or resume an account request. No provider calls or payment.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Instagram extraction
+        usage: instagram extract quote --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramExtractionQuoteInput"
+      responses:
+        "200":
+          description: Quote an Instagram audience extraction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramExtractionQuoteResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/instagram.extract.start:
+    post:
+      tags:
+        - Agent tools
+      operationId: instagramExtractionStart
+      summary: Start a prepaid Instagram audience extraction
+      description: Queue a durable extraction using the signed-in owner's prepaid account
+        capacity. Guest purchases use their separate purchase-scoped API/MCP and cannot fund
+        this wallet. No subscription or sending access. Requires a stable idempotency key;
+        no automatic payment.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - leads:read
+        - leads:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: instagram_extract_start
+        title: Start a prepaid Instagram audience extraction
+        description: Queue a durable extraction using the signed-in owner's prepaid account
+          capacity. Guest purchases use their separate purchase-scoped API/MCP and cannot fund
+          this wallet. No subscription or sending access. Requires a stable idempotency key;
+          no automatic payment.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Instagram extraction
+        usage: instagram extract start --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramExtractionStartInput"
+      responses:
+        "200":
+          description: Start a prepaid Instagram audience extraction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramExtractionStartResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/instagram.extract.inspect:
+    post:
+      tags:
+        - Agent tools
+      operationId: instagramExtractionInspect
+      summary: Inspect a prepaid Instagram extraction
+      description: Read exact stored progress by durable job ID without advancing the
+        provider or spending capacity. Follow pollAfterMs.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: instagram_extract_inspect
+        title: Inspect a prepaid Instagram extraction
+        description: Read exact stored progress by durable job ID without advancing the
+          provider or spending capacity. Follow pollAfterMs.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Instagram extraction
+        usage: instagram extract inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramExtractionInspectInput"
+      responses:
+        "200":
+          description: Inspect a prepaid Instagram extraction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramExtractionInspectResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/instagram.extract.results:
+    post:
+      tags:
+        - Agent tools
+      operationId: instagramExtractionResults
+      summary: Read saved Instagram extraction profiles
+      description: Read a bounded page of usernames, names and profile URLs after
+        terminal settlement. Follow nextCursor until null; partial results are
+        explicit.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: instagram_extract_results
+        title: Read saved Instagram extraction profiles
+        description: Read a bounded page of usernames, names and profile URLs after
+          terminal settlement. Follow nextCursor until null; partial results are
+          explicit.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Instagram extraction
+        usage: instagram extract results --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramExtractionResultsInput"
+      responses:
+        "200":
+          description: Read saved Instagram extraction profiles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramExtractionResultsResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/leads.status:
     post:
       tags:
@@ -3743,6 +4079,306 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/agent/tools/leads.prospect.quote:
+    post:
+      tags: [Agent tools]
+      operationId: instagramProspectQuote
+      summary: Quote an Instagram ICP list
+      description: Read the exact lead balance and bounded acquisition/enrichment budget. No Hiker or Clef calls, credit reservation or list writes.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+        - campaigns:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: leads_prospect_quote
+        title: Quote an Instagram ICP list
+        description: Read the exact lead balance and bounded acquisition/enrichment budget. No Hiker or Clef calls, credit reservation or list writes.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads prospect quote --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramProspectInput"
+      responses:
+        "200":
+          description: Quote an Instagram ICP list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramProspectQuoteResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.prospect.start:
+    post:
+      tags: [Agent tools]
+      operationId: instagramProspectStart
+      summary: Build an Instagram ICP list
+      description: On an explicit instruction, discover or reuse Instagram sources, run existing credit-bounded extraction and enrichment, qualify observed evidence with Clef, and save private match and optional review lists. Supply atomic criteria and short searchQueries from the user description for better discovery. Same idempotency key resumes the same immutable request. Does not launch campaigns or send messages.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - leads:read
+        - campaigns:read
+        - leads:write
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: leads_prospect_start
+        title: Build an Instagram ICP list
+        description: On an explicit instruction, discover or reuse Instagram sources, run existing credit-bounded extraction and enrichment, qualify observed evidence with Clef, and save private match and optional review lists. Supply atomic criteria and short searchQueries from the user description for better discovery. Same idempotency key resumes the same immutable request. Does not launch campaigns or send messages.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads prospect start --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramProspectStartInput"
+      responses:
+        "200":
+          description: Build an Instagram ICP list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramProspectStartResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.prospect.inspect:
+    post:
+      tags: [Agent tools]
+      operationId: instagramProspectInspect
+      summary: Inspect an Instagram ICP run
+      description: Read exact stored progress, budgets, saved lists and unresolved outcomes. Inspection never advances provider work.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+        - campaigns:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: leads_prospect_inspect
+        title: Inspect an Instagram ICP run
+        description: Read exact stored progress, budgets, saved lists and unresolved outcomes. Inspection never advances provider work.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads prospect inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramProspectRunInput"
+      responses:
+        "200":
+          description: Inspect an Instagram ICP run
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramProspectInspectResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.prospect.results:
+    post:
+      tags: [Agent tools]
+      operationId: instagramProspectResults
+      summary: Read Instagram ICP decisions
+      description: Page observed profiles, decisions, raw probabilities and image manifests. Review and pending profiles are not verified matches. Cursors bind the exact run revision, result version and status filter; restart pagination after a result change.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+        - campaigns:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: leads_prospect_results
+        title: Read Instagram ICP decisions
+        description: Page observed profiles, decisions, raw probabilities and image manifests. Review and pending profiles are not verified matches. Cursors bind the exact run revision, result version and status filter; restart pagination after a result change.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads prospect results --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramProspectResultsInput"
+      responses:
+        "200":
+          description: Read Instagram ICP decisions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramProspectResultsResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.prospect.advance:
+    post:
+      tags: [Agent tools]
+      operationId: instagramProspectAdvance
+      summary: Advance an Instagram ICP run
+      description: Advance one bounded batch using the existing run budgets and current owner grant. Provider reservations prevent duplicate requests after unknown outcomes. Continue inspection/advancement until workComplete; no additional campaign approval is introduced.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - leads:read
+        - campaigns:read
+        - leads:write
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: leads_prospect_advance
+        title: Advance an Instagram ICP run
+        description: Advance one bounded batch using the existing run budgets and current owner grant. Provider reservations prevent duplicate requests after unknown outcomes. Continue inspection/advancement until workComplete; no additional campaign approval is introduced.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads prospect advance --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramProspectRunInput"
+      responses:
+        "200":
+          description: Advance an Instagram ICP run
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramProspectAdvanceResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.prospect.cancel:
+    post:
+      tags: [Agent tools]
+      operationId: instagramProspectCancel
+      summary: Cancel an Instagram ICP run
+      description: Stop future work in this run. In-flight provider or child extraction/enrichment work may complete and settle normally; already saved lists remain private.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - leads:read
+        - campaigns:read
+        - leads:write
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: leads_prospect_cancel
+        title: Cancel an Instagram ICP run
+        description: Stop future work in this run. In-flight provider or child extraction/enrichment work may complete and settle normally; already saved lists remain private.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Social prospecting
+        usage: leads prospect cancel --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramProspectRunInput"
+      responses:
+        "200":
+          description: Cancel an Instagram ICP run
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramProspectCancelResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 components:
   securitySchemes:
     bearerAuth:
@@ -4177,13 +4813,13 @@ components:
             - advertised
             - any_support
         retrievalTerms:
-          description: Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.
+          description: Optional source-language hints for complete scans; use an empty array for binary website judgments without keyword gates. Fast shortlist previews still require retrieval terms.
           type: array
           items:
             type: string
             minLength: 1
             maxLength: 100
-          minItems: 1
+          minItems: 0
           maxItems: 12
         retrievalGroups:
           description: Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion.
@@ -4203,6 +4839,108 @@ components:
         - statement
         - requirement
         - retrievalTerms
+    CompanyKnowledgeInput:
+      type: object
+      additionalProperties: false
+      properties:
+        country: { type: string, enum: [FI] }
+        businessId: { type: string, minLength: 1, maxLength: 192 }
+        maxAgeDays: { type: integer, minimum: 1, maximum: 90 }
+      required: [country, businessId]
+    CompanyKnowledgeCoverage:
+      type: object
+      additionalProperties: false
+      properties:
+        retainedPassages: { type: integer, minimum: 1 }
+        includedPassages: { type: integer, minimum: 1 }
+        complete: { type: boolean }
+      required: [retainedPassages, includedPassages, complete]
+    CompanyKnowledgeAssessment:
+      type: object
+      additionalProperties: false
+      properties:
+        value: { type: boolean }
+        probabilityTrue: { type: number, minimum: 0, maximum: 1 }
+        reviewRequired: { type: boolean }
+        coverage: { $ref: "#/components/schemas/CompanyKnowledgeCoverage" }
+        evaluatedAt: { type: string, format: date-time }
+        evidenceKind: { type: string, const: context_samples }
+        evidence:
+          type: array
+          maxItems: 3
+          items: { $ref: "#/components/schemas/WebsiteEvidenceQuote" }
+      required:
+        [value, probabilityTrue, reviewRequired, coverage, evaluatedAt, evidenceKind, evidence]
+    CompanyKnowledgeFact:
+      type: object
+      additionalProperties: false
+      properties:
+        id: { type: string, minLength: 1, maxLength: 60 }
+        version: { type: integer, const: 1 }
+        question: { type: string, minLength: 1, maxLength: 1000 }
+        trueWhen: { type: string, minLength: 1, maxLength: 2000 }
+        offeringBuyer:
+          oneOf:
+            - type: object
+              additionalProperties: false
+              properties:
+                offering:
+                  {
+                    type: string,
+                    enum:
+                      [saas, software, professional_services, physical_goods, website_development],
+                  }
+                buyerType: { type: string, const: businesses }
+                buyerIndustry:
+                  oneOf:
+                    - { type: string, enum: [construction] }
+                    - { type: "null" }
+              required: [offering, buyerType, buyerIndustry]
+            - type: "null"
+        assessment:
+          oneOf:
+            - { $ref: "#/components/schemas/CompanyKnowledgeAssessment" }
+            - { type: "null" }
+      required: [id, version, question, trueWhen, offeringBuyer, assessment]
+    CompanyKnowledgeData:
+      type: object
+      additionalProperties: false
+      properties:
+        company:
+          type: object
+          additionalProperties: false
+          properties:
+            country: { type: string, enum: [FI] }
+            businessId: { type: string, minLength: 1, maxLength: 192 }
+            name: { type: string }
+            websiteUrl: { type: string }
+          required: [country, businessId, name, websiteUrl]
+        knowledgeRevision: { type: string, minLength: 64, maxLength: 64 }
+        asOf: { type: string, format: date-time }
+        maxAgeDays: { type: integer, minimum: 1, maximum: 90 }
+        sourceStatus: { type: string, enum: [available, missing, stale, requires_complete_scan] }
+        coverage:
+          oneOf:
+            - { $ref: "#/components/schemas/CompanyKnowledgeCoverage" }
+            - { type: "null" }
+        facts:
+          type: array
+          minItems: 7
+          maxItems: 7
+          items: { $ref: "#/components/schemas/CompanyKnowledgeFact" }
+        limitations: { type: array, items: { type: string } }
+      required:
+        [company, knowledgeRevision, asOf, maxAgeDays, sourceStatus, coverage, facts, limitations]
+    CompanyKnowledgeResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.knowledge }
+            data:
+              oneOf:
+                - { $ref: "#/components/schemas/CompanyKnowledgeData" }
+                - { type: "null" }
     CompanyEvidenceStartInput:
       type: object
       additionalProperties: false
@@ -4214,6 +4952,10 @@ components:
           minItems: 1
           maxItems: 4
           items: { $ref: "#/components/schemas/WebsiteEvidenceCriterion" }
+        evaluationMode:
+          type: string
+          enum: [binary, passage]
+          description: Binary evaluates related website sections together in one compact request per company. Passage preserves separate relationship statuses and explicit-denial merging. Omission preserves passage behavior.
         filters: { $ref: "#/components/schemas/CompanySearchFilters" }
         maxAgeDays: { type: integer, minimum: 1, maximum: 90 }
         idempotencyKey: { type: string, minLength: 1, maxLength: 100 }
@@ -4261,6 +5003,7 @@ components:
         scanComplete: { type: boolean }
         country: { type: string, const: FI }
         query: { type: string }
+        evaluationMode: { type: string, enum: [binary, passage] }
         appliedCriteria:
           type: array
           minItems: 1
@@ -4536,6 +5279,23 @@ components:
           type: string
           minLength: 1
           maxLength: 500
+        binary:
+          type: object
+          additionalProperties: false
+          description: Decision on the supplied evidence, not proof of absence. Original quotes are context samples, not selected supporting citations. A review flag blocks automatic matching.
+          properties:
+            value: { type: boolean }
+            probabilityTrue: { type: number, minimum: 0, maximum: 1 }
+            reviewRequired: { type: boolean }
+            coverage:
+              type: object
+              additionalProperties: false
+              properties:
+                retainedPassages: { type: integer, minimum: 1 }
+                includedPassages: { type: integer, minimum: 1 }
+                complete: { type: boolean }
+              required: [retainedPassages, includedPassages, complete]
+          required: [value, probabilityTrue, reviewRequired, coverage]
         evidence:
           type: array
           items:
@@ -4786,6 +5546,7 @@ components:
         - companies.suggest
         - companies.search
         - companies.evidence.search
+        - companies.knowledge
         - companies.evidence.start
         - companies.evidence.advance
         - companies.evidence.status
@@ -4802,6 +5563,8 @@ components:
         - campaign.operation.inspect
         - campaign.delivery.inspect
         - campaign.delivery.update
+        - sending.instagram.pacing.inspect
+        - sending.instagram.pacing.update
         - companies.fit.status
         - companies.fit.cancel
         - companies.fit.runs.list
@@ -4813,6 +5576,10 @@ components:
         - calendar.meeting.book
         - calls.list
         - call.inspect
+        - instagram.extract.quote
+        - instagram.extract.start
+        - instagram.extract.inspect
+        - instagram.extract.results
         - leads.status
         - leads.extract.quote
         - leads.extract.start
@@ -4822,6 +5589,12 @@ components:
         - leads.enrich.preview
         - leads.enrich.start
         - leads.enrich.inspect
+        - leads.prospect.quote
+        - leads.prospect.start
+        - leads.prospect.inspect
+        - leads.prospect.results
+        - leads.prospect.advance
+        - leads.prospect.cancel
 
     AgentToolPolicy:
       type: object
@@ -7277,6 +8050,11 @@ components:
                 queuedJobs: { type: integer, minimum: 0 }
                 runningJobs: { type: integer, minimum: 0 }
             - type: "null"
+        observation:
+          description: Per-channel eligibility clocks and constraints. Deadlines are earliest possible attempts, never promises of provider delivery. Lower bounds may be followed by company work or other unresolved constraints.
+          oneOf:
+            - $ref: "#/components/schemas/CampaignSendingObservation"
+            - type: "null"
         assessment:
           type: object
           additionalProperties: false
@@ -7285,6 +8063,201 @@ components:
             scope: { type: string, enum: [campaign, workspace] }
             reason: { type: string }
             nextAction: { type: string }
+
+    SendingTime:
+      type: [string, "null"]
+      format: date-time
+    SendingJobReference:
+      type: object
+      additionalProperties: false
+      required: [jobId, channel, state, companyName]
+      properties:
+        jobId: { type: string }
+        channel: { type: string }
+        state: { type: string }
+        companyName: { type: string }
+    SendingConstraint:
+      type: object
+      additionalProperties: false
+      required: [code, source, detail, notBefore, blockingJob]
+      properties:
+        startedAt: { $ref: "#/components/schemas/SendingTime" }
+        reason: { type: [string, "null"] }
+        code: { type: string }
+        source: { type: string, enum: [server, browser] }
+        detail: { type: string }
+        notBefore: { $ref: "#/components/schemas/SendingTime" }
+        blockingJob:
+          oneOf:
+            - $ref: "#/components/schemas/SendingJobReference"
+            - type: "null"
+    SendingPacingObservation:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          observedAt,
+          nextEligibleAt,
+          remainingSeconds,
+          remainingMs,
+          reason,
+          policySource,
+          policyRevision,
+          anchor,
+          batchAnchor,
+        ]
+      properties:
+        observedAt: { type: string, format: date-time }
+        nextEligibleAt: { $ref: "#/components/schemas/SendingTime" }
+        remainingSeconds: { type: integer, minimum: 0 }
+        remainingMs: { type: integer, minimum: 0 }
+        reason: { type: string }
+        policySource: { type: string }
+        policyRevision: { type: [string, "null"] }
+        anchor:
+          oneOf:
+            - type: object
+              additionalProperties: false
+              required: [jobId, attemptId, state, finishedAt]
+              properties:
+                jobId: { type: string }
+                attemptId: { type: string }
+                state: { type: string }
+                finishedAt: { $ref: "#/components/schemas/SendingTime" }
+            - type: "null"
+        batchAnchor:
+          oneOf:
+            - type: object
+              additionalProperties: false
+              required: [jobId, finishedAt]
+              properties:
+                jobId: { type: string }
+                finishedAt: { $ref: "#/components/schemas/SendingTime" }
+            - type: "null"
+    SendingActivity:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          workerId,
+          jobId,
+          attemptId,
+          step,
+          phase,
+          kind,
+          timingAvailable,
+          startedAt,
+          deadlineAt,
+          remainingSeconds,
+          watchdogAt,
+          lastProgressAt,
+          observedAt,
+        ]
+      properties:
+        workerId: { type: string }
+        jobId: { type: string }
+        attemptId: { type: string }
+        step: { type: string }
+        phase: { type: string, enum: [active, waiting, overdue, telemetry_unavailable] }
+        kind: { type: string, enum: [work, delay, timeout, watchdog] }
+        timingAvailable: { type: boolean }
+        startedAt: { $ref: "#/components/schemas/SendingTime" }
+        deadlineAt: { $ref: "#/components/schemas/SendingTime" }
+        remainingSeconds: { type: [integer, "null"], minimum: 0 }
+        watchdogAt: { $ref: "#/components/schemas/SendingTime" }
+        lastProgressAt: { $ref: "#/components/schemas/SendingTime" }
+        observedAt: { $ref: "#/components/schemas/SendingTime" }
+    SendingChannelObservation:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          channel,
+          queuedJobs,
+          runningJobs,
+          status,
+          nextEligibleAt,
+          remainingSeconds,
+          deadlineKind,
+          workerId,
+          nextJob,
+          pacing,
+          constraints,
+        ]
+      properties:
+        activities:
+          type: array
+          items: { $ref: "#/components/schemas/SendingActivity" }
+        channel: { type: string }
+        queuedJobs: { type: integer, minimum: 0 }
+        runningJobs: { type: integer, minimum: 0 }
+        status: { type: string, enum: [running, waiting, ready, blocked, unknown, idle] }
+        nextEligibleAt: { $ref: "#/components/schemas/SendingTime" }
+        remainingSeconds: { type: [integer, "null"], minimum: 0 }
+        deadlineKind: { type: string, enum: [eligibility, lower_bound, unknown] }
+        workerId: { type: [string, "null"] }
+        nextJob:
+          oneOf:
+            - $ref: "#/components/schemas/SendingJobReference"
+            - type: "null"
+        pacing:
+          oneOf:
+            - $ref: "#/components/schemas/SendingPacingObservation"
+            - type: "null"
+        constraints:
+          type: array
+          items: { $ref: "#/components/schemas/SendingConstraint" }
+    CampaignSendingObservation:
+      type: object
+      additionalProperties: false
+      required:
+        [observedAt, runId, evidenceComplete, nextEligibleAt, remainingSeconds, channels, browsers]
+      properties:
+        observedAt: { type: string, format: date-time }
+        runId: { type: string }
+        evidenceComplete: { type: boolean }
+        nextEligibleAt: { $ref: "#/components/schemas/SendingTime" }
+        remainingSeconds: { type: [integer, "null"], minimum: 0 }
+        channels:
+          type: array
+          items: { $ref: "#/components/schemas/SendingChannelObservation" }
+        browsers:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              [
+                workerId,
+                online,
+                active,
+                fresh,
+                observedAt,
+                phase,
+                reason,
+                detail,
+                nextWakeAt,
+                lastProgressAt,
+                decisionAt,
+                runId,
+                clockOffsetMs,
+                timingAvailable,
+              ]
+            properties:
+              workerId: { type: string }
+              online: { type: boolean }
+              active: { type: boolean }
+              fresh: { type: boolean }
+              observedAt: { $ref: "#/components/schemas/SendingTime" }
+              phase: { type: string }
+              reason: { type: string }
+              detail: { type: string }
+              nextWakeAt: { $ref: "#/components/schemas/SendingTime" }
+              lastProgressAt: { $ref: "#/components/schemas/SendingTime" }
+              decisionAt: { $ref: "#/components/schemas/SendingTime" }
+              runId: { type: [string, "null"] }
+              clockOffsetMs: { type: [integer, "null"] }
+              timingAvailable: { type: boolean }
 
     AgentLead:
       type: object
@@ -8254,6 +9227,10 @@ components:
       properties:
         filters:
           $ref: "#/components/schemas/CompanySearchFilters"
+        projection:
+          type: string
+          enum: [list, rich]
+          description: List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company.inspect.
         page:
           type: integer
           minimum: 1
@@ -8329,6 +9306,7 @@ components:
           expectedRevision,
         ]
       properties:
+        projection: { type: string, enum: [list, rich] }
         companies:
           {
             type: array,
@@ -8355,7 +9333,7 @@ components:
         dataFreshness: { type: object, additionalProperties: true }
         querySignature: { type: string }
         expectedRevision: { type: string }
-      description: Search the same company inventory and filters as the live app. Returns full rows, exact total and pagination. Echo querySignature and expectedRevision on subsequent pages.
+      description: Search the same company inventory and filters as the live app. Rich rows are the default; projection list returns compact app rows. Both preserve the exact total and pagination identity. Echo querySignature and expectedRevision on subsequent pages.
     CompanySearchResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -8398,11 +9376,35 @@ components:
             businessId: { type: string }
             name: { type: string }
             financials: { type: array, items: { type: object, additionalProperties: true } }
-            decisionMakers: { type: array, items: { type: object, additionalProperties: true } }
+            decisionMakers:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+                required: [name, role, phone, email, linkedinUrl, location]
+                properties:
+                  name: { type: string }
+                  role: { type: string }
+                  phone: { type: string }
+                  email: { type: string }
+                  linkedinUrl: { type: string }
+                  location: { type: string }
+                  socialProfiles:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: false
+                      required: [platform, url]
+                      properties:
+                        platform: { type: string }
+                        url: { type: string, format: uri }
+            companyEmails: { type: array, items: { type: string } }
+            companyPhones: { type: array, items: { type: string } }
+            companyPhone: { type: string }
             technologies: { type: array, items: { type: string } }
             socialProfiles:
               type: array
-              description: Company-owned social account URLs verified from the company's website.
+              description: Supported company-owned business social account URLs.
               items:
                 type: object
                 additionalProperties: false
@@ -9113,6 +10115,91 @@ components:
             data:
               oneOf:
                 - $ref: "#/components/schemas/CampaignDeliveryUpdateOutput"
+                - type: "null"
+    InstagramPacingPolicy:
+      type: object
+      additionalProperties: false
+      required: [gapMinSeconds, gapMaxSeconds]
+      properties:
+        gapMinSeconds: { type: integer, minimum: 12, maximum: 3600 }
+        gapMaxSeconds: { type: integer, minimum: 12, maximum: 3600 }
+      description: Minimum must be less than or equal to maximum; seconds between outgoing Instagram messages.
+    InstagramPacingInspectInput:
+      type: object
+      additionalProperties: false
+      properties: {}
+    InstagramPacingInspectOutput:
+      type: object
+      additionalProperties: false
+      required: [revision, override, source]
+      properties:
+        revision:
+          {
+            type: [string, "null"],
+            pattern: "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-8][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$",
+          }
+        override:
+          oneOf:
+            - $ref: "#/components/schemas/InstagramPacingPolicy"
+            - type: "null"
+        source: { type: string, enum: [user, campaign] }
+    InstagramPacingUpdateInput:
+      type: object
+      additionalProperties: false
+      required: [expectedRevision, idempotencyKey, policy, reason]
+      properties:
+        expectedRevision:
+          {
+            type: [string, "null"],
+            pattern: "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-8][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$",
+          }
+        idempotencyKey:
+          { type: string, minLength: 1, maxLength: 160, pattern: "^[A-Za-z0-9._:-]+$" }
+        reason: { type: string, minLength: 3, maxLength: 500 }
+        policy:
+          oneOf:
+            - $ref: "#/components/schemas/InstagramPacingPolicy"
+            - type: "null"
+    InstagramPacingUpdateOutput:
+      type: object
+      additionalProperties: false
+      required: [revision, policy, previous, effectiveAt, inProgressAttemptChanged, replayed]
+      properties:
+        revision:
+          {
+            type: string,
+            pattern: "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-8][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$",
+          }
+        policy:
+          oneOf:
+            - $ref: "#/components/schemas/InstagramPacingPolicy"
+            - type: "null"
+        previous:
+          oneOf:
+            - $ref: "#/components/schemas/InstagramPacingPolicy"
+            - type: "null"
+        effectiveAt: { type: string, const: next_scheduler_check }
+        inProgressAttemptChanged: { type: boolean, const: false }
+        replayed: { type: boolean }
+    InstagramPacingInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: sending.instagram.pacing.inspect }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/InstagramPacingInspectOutput"
+                - type: "null"
+    InstagramPacingUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: sending.instagram.pacing.update }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/InstagramPacingUpdateOutput"
                 - type: "null"
     CompanyFitDetailedProgress:
       type: object
@@ -10231,6 +11318,285 @@ components:
             - none
         purchaseUrl:
           type: string
+    InstagramExtractionQuoteInput:
+      type: object
+      additionalProperties: false
+      required:
+        - username
+        - type
+        - count
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 31
+          pattern: ^@?[A-Za-z0-9._]{1,30}$
+          x-dmfaster-trim: true
+        type:
+          type: string
+          enum:
+            - followers
+            - following
+            - likers
+            - commenters
+        count:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        currency:
+          type: string
+          enum:
+            - USD
+            - EUR
+        postUrl:
+          type: string
+          minLength: 1
+          maxLength: 300
+          x-dmfaster-trim: true
+    InstagramExtractionStartInput:
+      type: object
+      additionalProperties: false
+      required:
+        - username
+        - type
+        - count
+        - idempotencyKey
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 31
+          pattern: ^@?[A-Za-z0-9._]{1,30}$
+          x-dmfaster-trim: true
+        type:
+          type: string
+          enum:
+            - followers
+            - following
+            - likers
+            - commenters
+        count:
+          type: integer
+          minimum: 1
+          maximum: 2147483647
+        currency:
+          type: string
+          enum:
+            - USD
+            - EUR
+        postUrl:
+          type: string
+          minLength: 1
+          maxLength: 300
+          x-dmfaster-trim: true
+        idempotencyKey:
+          type: string
+          minLength: 1
+          maxLength: 160
+          pattern: ^[A-Za-z0-9._:-]{1,160}$
+          x-dmfaster-trim: true
+    InstagramExtractionInspectInput:
+      type: object
+      additionalProperties: false
+      required:
+        - jobId
+      properties:
+        jobId:
+          $ref: "#/components/schemas/ResourceId"
+    InstagramExtractionResultsInput:
+      type: object
+      additionalProperties: false
+      required:
+        - jobId
+      properties:
+        jobId:
+          $ref: "#/components/schemas/ResourceId"
+        cursor:
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: ^[A-Za-z0-9._]+$
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+    InstagramExtractionQuoteData:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - username
+        - type
+        - requestedCount
+        - coveredCount
+        - purchaseCount
+        - availableProfiles
+        - amountCents
+        - currency
+        - purchaseUrl
+        - checkoutAvailable
+        - message
+      properties:
+        status:
+          type: string
+          enum:
+            - ready
+            - payment_required
+        username:
+          type: string
+        type:
+          type: string
+        requestedCount:
+          type: integer
+          minimum: 0
+        coveredCount:
+          type: integer
+          minimum: 0
+        purchaseCount:
+          type: integer
+          minimum: 0
+        availableProfiles:
+          type: integer
+          minimum: 0
+        amountCents:
+          type: integer
+          minimum: 0
+        currency:
+          type: string
+          enum:
+            - USD
+            - EUR
+        purchaseUrl:
+          type: string
+        checkoutAvailable:
+          type: boolean
+        message:
+          type: string
+    InstagramExtractionData:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - jobId
+        - extractionId
+        - type
+        - identifier
+        - requestedCount
+        - savedCount
+        - availableProfiles
+        - resultsReady
+        - profiles
+        - nextCursor
+        - purchaseUrl
+        - pollAfterMs
+        - message
+      properties:
+        status:
+          type: string
+          enum:
+            - queued
+            - running
+            - completed
+            - partial
+            - failed
+            - payment_required
+        jobId:
+          anyOf:
+            - type: string
+            - type: "null"
+        extractionId:
+          anyOf:
+            - type: string
+            - type: "null"
+        type:
+          type: string
+        identifier:
+          type: string
+        requestedCount:
+          type: integer
+          minimum: 0
+        savedCount:
+          type: integer
+          minimum: 0
+        availableProfiles:
+          type: integer
+          minimum: 0
+        resultsReady:
+          type: boolean
+        profiles:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - username
+              - name
+              - instagramUrl
+            properties:
+              username:
+                type: string
+              name:
+                type: string
+              instagramUrl:
+                type: string
+          maxItems: 100
+        nextCursor:
+          anyOf:
+            - type: string
+            - type: "null"
+        purchaseUrl:
+          type: string
+        pollAfterMs:
+          anyOf:
+            - type: integer
+              minimum: 0
+            - type: "null"
+        message:
+          type: string
+    InstagramExtractionQuoteResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramExtractionQuoteData"
+                - type: "null"
+    InstagramExtractionStartResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramExtractionData"
+                - type: "null"
+    InstagramExtractionInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramExtractionData"
+                - type: "null"
+    InstagramExtractionResultsResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramExtractionData"
+                - type: "null"
     LeadsStatusInput:
       type: object
       additionalProperties: false
@@ -10462,4 +11828,310 @@ components:
             data:
               anyOf:
                 - $ref: "#/components/schemas/LeadProspectingData"
+                - type: "null"
+
+    InstagramProspectCriterion:
+      type: object
+      additionalProperties: false
+      required: [id, statement, basis, role, unknown]
+      properties:
+        id: { type: string, minLength: 1, maxLength: 40, pattern: "^[a-z][a-z0-9_]{0,39}$" }
+        statement: { type: string, minLength: 1, maxLength: 1000 }
+        basis: { type: string, enum: [text, visual] }
+        role: { type: string, enum: [required, preferred] }
+        unknown: { type: string, enum: [review, exclude] }
+        literalRule:
+          oneOf:
+            - type: object
+              additionalProperties: false
+              required: [kind]
+              properties:
+                kind: { type: string, const: follower_count }
+                min: { type: integer, minimum: 0 }
+                max: { type: integer, minimum: 0 }
+            - type: object
+              additionalProperties: false
+              required: [kind, equals]
+              properties:
+                kind: { type: string, enum: [privacy, verification] }
+                equals: { type: boolean }
+    InstagramProspectSource:
+      type: object
+      additionalProperties: false
+      required: [type, identifier]
+      properties:
+        type: { type: string, enum: [followers, following, likers, commenters] }
+        identifier: { type: string, minLength: 1, maxLength: 2048 }
+        count: { type: integer, minimum: 1, maximum: 1000 }
+    InstagramProspectInput:
+      type: object
+      additionalProperties: false
+      required: [query]
+      properties:
+        query: { type: string, minLength: 1, maxLength: 4000 }
+        criteria:
+          type: array
+          minItems: 1
+          maxItems: 12
+          items: { $ref: "#/components/schemas/InstagramProspectCriterion" }
+        threshold: { type: number, minimum: 0.5, maximum: 1 }
+        evidenceThreshold: { type: number, minimum: 0.5, maximum: 1 }
+        sourceListIds:
+          type: array
+          maxItems: 10
+          items: { type: string, minLength: 1, maxLength: 200 }
+        sources:
+          type: array
+          maxItems: 10
+          items: { $ref: "#/components/schemas/InstagramProspectSource" }
+        searchQueries:
+          type: array
+          minItems: 1
+          maxItems: 5
+          items: { type: string, minLength: 1, maxLength: 120 }
+        targetCount: { type: integer, minimum: 1, maximum: 1000 }
+        maxCandidates: { type: integer, minimum: 1, maximum: 1000 }
+        maxCredits: { type: integer, minimum: 1, maximum: 100000 }
+        maxModelCalls: { type: integer, minimum: 1, maximum: 1000 }
+        media: { type: string, enum: [none, avatar, recent_posts] }
+        model: { type: string, enum: [clef, clef-flash] }
+        includeReview: { type: boolean }
+        excludePreviouslyContacted: { type: boolean }
+        name: { type: string, minLength: 1, maxLength: 100 }
+    InstagramProspectStartInput:
+      allOf:
+        - $ref: "#/components/schemas/InstagramProspectInput"
+        - type: object
+          additionalProperties: false
+          required: [idempotencyKey]
+          properties:
+            idempotencyKey: { type: string, minLength: 1, maxLength: 120 }
+    InstagramProspectRunInput:
+      type: object
+      additionalProperties: false
+      required: [runId]
+      properties:
+        runId: { type: string, minLength: 1, maxLength: 100 }
+    InstagramProspectResultsInput:
+      type: object
+      additionalProperties: false
+      required: [runId]
+      properties:
+        runId: { type: string, minLength: 1, maxLength: 100 }
+        status: { type: string, enum: [pending, accept, review, exclude, suppressed] }
+        cursor: { type: string, maxLength: 2000 }
+        limit: { type: integer, minimum: 1, maximum: 100 }
+    InstagramProspectCounts:
+      type: object
+      additionalProperties: false
+      required: [candidates, attempted, pending, accept, review, exclude, suppressed]
+      properties:
+        candidates: { type: integer, minimum: 0 }
+        attempted: { type: integer, minimum: 0 }
+        pending: { type: integer, minimum: 0 }
+        accept: { type: integer, minimum: 0 }
+        review: { type: integer, minimum: 0 }
+        exclude: { type: integer, minimum: 0 }
+        suppressed: { type: integer, minimum: 0 }
+    InstagramProspectItem:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          profileId,
+          username,
+          name,
+          biography,
+          observedAt,
+          status,
+          attempted,
+          reason,
+          decision,
+          evidenceHash,
+          requestHash,
+          imageManifest,
+          mediaSources,
+          cached,
+        ]
+      properties:
+        profileId: { type: string }
+        username: { type: string }
+        name: { type: string }
+        biography: { type: string }
+        observedAt: { type: string }
+        status: { type: string, enum: [pending, accept, review, exclude, suppressed] }
+        attempted: { type: boolean }
+        reason: { type: string }
+        decision:
+          anyOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+        evidenceHash: { type: [string, "null"] }
+        requestHash: { type: [string, "null"] }
+        imageManifest:
+          type: array
+          items: { type: object, additionalProperties: true }
+        mediaSources:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [kind, url, observedAt]
+            properties:
+              kind: { type: string, enum: [avatar, post] }
+              url: { type: string }
+              observedAt: { type: string }
+        cached: { type: boolean }
+    InstagramProspectData:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          runId,
+          phase,
+          query,
+          revision,
+          counts,
+          targetCount,
+          maxCandidates,
+          maxCredits,
+          maxModelCalls,
+          creditBalance,
+          creditSpent,
+          creditState,
+          providerReady,
+          model,
+          media,
+          listId,
+          reviewListId,
+          savedMatches,
+          savedReview,
+          modelCalls,
+          cachedDecisions,
+          inputTokens,
+          usageMissingCalls,
+          providerDurationMs,
+          resultVersion,
+          items,
+          nextCursor,
+          pollAfterMs,
+          errorCode,
+          targetReached,
+          workComplete,
+          warnings,
+        ]
+      properties:
+        runId: { type: [string, "null"] }
+        phase:
+          {
+            type: string,
+            enum:
+              [
+                quoted,
+                queued,
+                discovering,
+                acquiring,
+                enriching,
+                qualifying,
+                saving,
+                completed,
+                blocked,
+                cancelled,
+                failed,
+              ],
+          }
+        query: { type: string }
+        revision: { type: [string, "null"] }
+        counts: { $ref: "#/components/schemas/InstagramProspectCounts" }
+        targetCount: { type: integer, minimum: 1 }
+        maxCandidates: { type: integer, minimum: 1 }
+        maxCredits: { type: integer, minimum: 0 }
+        maxModelCalls: { type: integer, minimum: 1 }
+        creditBalance: { type: [integer, "null"], minimum: 0 }
+        creditSpent: { type: integer, minimum: 0 }
+        creditState: { type: string, enum: [reserved, settled] }
+        providerReady: { type: boolean }
+        model: { type: string, enum: [clef, clef-flash] }
+        media: { type: string, enum: [none, avatar, recent_posts] }
+        listId: { type: [string, "null"] }
+        reviewListId: { type: [string, "null"] }
+        savedMatches: { type: integer, minimum: 0 }
+        savedReview: { type: integer, minimum: 0 }
+        modelCalls: { type: integer, minimum: 0 }
+        cachedDecisions: { type: integer, minimum: 0 }
+        inputTokens: { type: [integer, "null"], minimum: 0 }
+        usageMissingCalls: { type: integer, minimum: 0 }
+        providerDurationMs: { type: number, minimum: 0 }
+        resultVersion: { type: integer, minimum: 0 }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/InstagramProspectItem" }
+        nextCursor: { type: [string, "null"] }
+        pollAfterMs: { type: [integer, "null"], minimum: 0 }
+        errorCode: { type: string }
+        targetReached: { type: boolean }
+        workComplete: { type: boolean }
+        warnings:
+          type: array
+          items: { type: string }
+    InstagramProspectQuoteResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramProspectData"
+                - type: "null"
+    InstagramProspectStartResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramProspectData"
+                - type: "null"
+    InstagramProspectInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramProspectData"
+                - type: "null"
+    InstagramProspectResultsResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramProspectData"
+                - type: "null"
+    InstagramProspectAdvanceResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramProspectData"
+                - type: "null"
+    InstagramProspectCancelResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramProspectData"
                 - type: "null"

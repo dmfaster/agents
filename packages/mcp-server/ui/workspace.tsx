@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import type { AgentToolResult } from "@dmfaster/sdk";
 import { WorkspaceHome, type WorkspaceResult } from "./workspace-home.tsx";
 import { CompaniesWorkspace } from "./companies-workspace.tsx";
+import { CompanyEvidenceWorkspace } from "./company-evidence-workspace.tsx";
+import type { EvidenceResult } from "./company-evidence-data.ts";
 import type { CompanyResult, CompanyFilters } from "./companies-data.ts";
 import type { McpAppBridge } from "./bridge.ts";
 
@@ -13,7 +15,9 @@ export type WorkspacePayload = {
 function sectionFor(payload: WorkspacePayload): "companies" | "campaigns" {
   return (
     payload.section ??
-    (payload.result.tool === "companies.search" || payload.result.tool === "company.inspect"
+    (payload.result.tool === "companies.search" ||
+    payload.result.tool === "company.inspect" ||
+    payload.result.tool === "companies.evidence.results"
       ? "companies"
       : "campaigns")
   );
@@ -31,11 +35,11 @@ export function Workspace({
   const first = sectionFor(initial);
   const [section, setSection] = useState(first);
   const [companies, setCompanies] = useState<{
-    initial?: CompanyResult;
+    initial?: CompanyResult | EvidenceResult;
     filters?: CompanyFilters;
   } | null>(() =>
     first === "companies"
-      ? { initial: initial.result as CompanyResult, filters: initial.filters }
+      ? { initial: initial.result as CompanyResult | EvidenceResult, filters: initial.filters }
       : null,
   );
   const [campaigns, setCampaigns] = useState<WorkspaceResult | null>(() =>
@@ -48,7 +52,10 @@ export function Workspace({
     const next = sectionFor(initial);
     setSection(next);
     if (next === "companies")
-      setCompanies({ initial: initial.result as CompanyResult, filters: initial.filters });
+      setCompanies({
+        initial: initial.result as CompanyResult | EvidenceResult,
+        filters: initial.filters,
+      });
     else setCampaigns(initial.result as WorkspaceResult);
     return () => {
       generation.current += 1;
@@ -98,12 +105,20 @@ export function Workspace({
     <>
       {companies ? (
         <div hidden={section !== "companies"}>
-          <CompaniesWorkspace
-            initial={companies.initial}
-            initialFilters={companies.filters}
-            bridge={bridge}
-            navigation={navigation}
-          />
+          {companies.initial?.tool === "companies.evidence.results" ? (
+            <CompanyEvidenceWorkspace
+              initial={companies.initial as EvidenceResult}
+              bridge={bridge}
+              navigation={navigation}
+            />
+          ) : (
+            <CompaniesWorkspace
+              initial={companies.initial as CompanyResult | undefined}
+              initialFilters={companies.filters}
+              bridge={bridge}
+              navigation={navigation}
+            />
+          )}
         </div>
       ) : null}
       {campaigns ? (

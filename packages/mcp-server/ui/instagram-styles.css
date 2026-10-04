@@ -1,0 +1,227 @@
+:root {
+  color-scheme: light dark;
+  --ig-bg: var(--color-background-primary, light-dark(#fff, #212121));
+  --ig-surface: var(--color-background-secondary, light-dark(#f5f6f4, #2c2c2c));
+  --ig-text: var(--color-text-primary, light-dark(#202820, #eee));
+  --ig-muted: var(--color-text-secondary, light-dark(#5d685d, #b7bdb7));
+  --ig-line: var(--color-border-primary, light-dark(#dfe5df, #484d48));
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  color: var(--ig-text);
+  background: var(--ig-bg);
+  font: 14px/1.55 var(--font-sans-host, system-ui, sans-serif);
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+  border: 1px solid var(--ig-line);
+  background: var(--ig-surface);
+  padding: 7px 11px;
+  border-radius: 7px;
+}
+button:hover:not(:disabled) {
+  filter: brightness(0.94);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+button[aria-pressed="true"] {
+  background: var(--ig-text);
+  color: var(--ig-bg);
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--ig-text);
+  outline-offset: 2px;
+}
+.instagram-app {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.instagram-app h1 {
+  font-size: 27px;
+  line-height: 1.2;
+  margin: 4px 0 12px;
+}
+.instagram-app h2 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.eyebrow {
+  color: var(--ig-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+}
+.instagram-panel {
+  border: 1px solid var(--ig-line);
+  padding: 18px;
+  border-radius: 12px;
+  margin: 18px 0;
+}
+.instagram-panel > label {
+  display: block;
+  margin: 12px 0 5px;
+  font-weight: 600;
+}
+.instagram-panel > select,
+.instagram-panel > textarea {
+  width: 100%;
+  margin-bottom: 12px;
+}
+.instagram-app input:not([type="checkbox"]),
+.instagram-app select,
+.instagram-app textarea {
+  border: 1px solid var(--ig-line);
+  border-radius: 7px;
+  padding: 8px;
+  background: var(--ig-bg);
+}
+.instagram-muted,
+small,
+footer {
+  color: var(--ig-muted);
+}
+small {
+  display: block;
+  font-size: 11px;
+  margin-top: 4px;
+}
+.instagram-filters,
+.instagram-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 12px 0;
+}
+.instagram-table {
+  overflow: auto;
+  margin: 16px 0;
+}
+.instagram-table table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  text-align: left;
+}
+.instagram-table th,
+.instagram-table td {
+  border-bottom: 1px solid var(--ig-line);
+  padding: 12px 8px;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.instagram-table th {
+  font-size: 12px;
+  color: var(--ig-muted);
+}
+.profile-link {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.instagram-error {
+  padding: 12px;
+  border: 1px solid var(--ig-line);
+  background: var(--ig-surface);
+  border-radius: 8px;
+}
+.quote-fields {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+.quote-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+details {
+  margin: 18px 0;
+}
+summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.profile-biography {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+dl {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 6px;
+}
+dd {
+  margin: 0;
+}
+.saved-images {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.saved-images img {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: var(--ig-surface);
+}
+.criterion-result {
+  border-top: 1px solid var(--ig-line);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+.criterion-result p {
+  overflow-wrap: anywhere;
+}
+footer {
+  font-size: 12px;
+  margin: 20px 0;
+}
+li {
+  margin: 10px 0;
+}
+@media (max-width: 650px) {
+  .instagram-app {
+    padding: 14px;
+  }
+  .quote-fields {
+    grid-template-columns: 1fr;
+  }
+  .instagram-panel {
+    padding: 14px;
+  }
+  .instagram-table table {
+    min-width: 540px;
+  }
+  .saved-images img {
+    width: 140px;
+    height: 140px;
+  }
+}

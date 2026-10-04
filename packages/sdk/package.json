@@ -1,6 +1,6 @@
 {
   "name": "@dmfaster/sdk",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Typed client for the DM Faster Agent API.",
   "license": "Apache-2.0",
   "author": "DM Faster",
@@ -18,6 +18,16 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./instagram-prospecting": {
+      "types": "./dist/instagram-prospecting.d.ts",
+      "import": "./dist/instagram-prospecting.js",
+      "default": "./dist/instagram-prospecting.js"
+    },
+    "./instagram-calibration": {
+      "types": "./dist/instagram-calibration.d.ts",
+      "import": "./dist/instagram-calibration.js",
+      "default": "./dist/instagram-calibration.js"
     }
   },
   "files": [

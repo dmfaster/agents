@@ -18,8 +18,10 @@ const packageNames = [
   "@dmfaster/mcp-server",
 ];
 const mcpClientPackage = "@modelcontextprotocol/client@2.0.0";
-const campaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v3.html";
-const previousCampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v2.html";
+const campaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v5.html";
+const previousCampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v4.html";
+const v3CampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v3.html";
+const v2CampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v2.html";
 const legacyCampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v1.html";
 const mcpAppMimeType = "text/html;profile=mcp-app";
 const releaseVersion = JSON.parse(
@@ -72,6 +74,7 @@ const expectedTools = [
   "companies_search",
   "companies_suggest",
   "companies_evidence_search",
+  "companies_knowledge",
   "companies_evidence_start",
   "companies_evidence_advance",
   "companies_evidence_status",
@@ -95,6 +98,10 @@ const expectedTools = [
   "calls_list",
   "call_inspect",
   "leads_status",
+  "instagram_extract_quote",
+  "instagram_extract_start",
+  "instagram_extract_inspect",
+  "instagram_extract_results",
   "leads_extract_quote",
   "leads_extract_start",
   "leads_extract_inspect",
@@ -103,12 +110,21 @@ const expectedTools = [
   "leads_enrich_preview",
   "leads_enrich_start",
   "leads_enrich_inspect",
+  "leads_prospect_quote",
+  "leads_prospect_start",
+  "leads_prospect_inspect",
+  "leads_prospect_results",
+  "leads_prospect_advance",
+  "leads_prospect_cancel",
+
   "companies_list_prepare",
   "companies_list_inspect",
   "companies_list_refine",
   "campaign_operation_inspect",
   "campaign_delivery_inspect",
   "campaign_delivery_update",
+  "sending_instagram_pacing_inspect",
+  "sending_instagram_pacing_update",
   "connection_status",
 ];
 const temporaryRoot = mkdtempSync(path.join(tmpdir(), "dmfaster-agent-packages-"));
@@ -425,11 +441,32 @@ try {
     const companiesTool = listed.tools.find((tool) => tool.name === "companies_workspace");
     assert.equal(companiesTool?._meta?.ui?.resourceUri, campaignWorkspaceUri);
     assert.equal(companiesTool?.annotations?.readOnlyHint, true);
+    assert.equal(
+      listed.tools.find((tool) => tool.name === "companies_evidence_results")?._meta?.[
+        "openai/widgetAccessible"
+      ],
+      true,
+    );
+    for (const name of [
+      "companies_evidence_start",
+      "companies_evidence_advance",
+      "companies_evidence_cancel",
+    ])
+      assert.equal(
+        listed.tools.find((tool) => tool.name === name)?._meta?.["openai/widgetAccessible"],
+        false,
+      );
 
     const listedResources = await client.listResources();
     assert.deepEqual(
       listedResources.resources.map((resource) => resource.uri),
-      [campaignWorkspaceUri, previousCampaignWorkspaceUri, legacyCampaignWorkspaceUri],
+      [
+        campaignWorkspaceUri,
+        previousCampaignWorkspaceUri,
+        v3CampaignWorkspaceUri,
+        v2CampaignWorkspaceUri,
+        legacyCampaignWorkspaceUri,
+      ],
       "the packed MCP server must expose its current workspace and compatibility resources",
     );
     assert.equal(listedResources.resources[0]?.mimeType, mcpAppMimeType);

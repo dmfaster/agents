@@ -6,8 +6,8 @@ stdio MCP 2026-07-28 server definition. It includes the portable Agent Plugins
 Codex, Claude, and Cursor. Hosts that have not
 implemented that revision use the same skill through the version-pinned CLI.
 
-The 1.10.0 source candidate exposes 78 bounded domain tools plus an optional
-portable MCP Apps Companies and campaign workspaces. It covers social prospecting, company research, exact
+The 1.11.0 source candidate exposes 91 bounded domain tools plus an optional
+portable MCP Apps Companies and campaign workspaces. It adds Instagram ICP text-to-list runs and covers social prospecting, company research, exact
 audience and draft preparation, inbox and pipeline work, follow-up control,
 sender readiness and paginated outcomes. Replies require the user's explicit
 instruction for the exact text and report delivery state. Campaign launch and
@@ -30,13 +30,13 @@ resume call; the user only completes the browser-store installation/link and
 any approval explicitly required by the returned connection or action state.
 
 Compliant MCP Apps hosts can render the campaign workspace inline. Modern
-headless hosts use the same complete campaign state and 78 domain tools without
+headless hosts use the same complete campaign state and 91 domain tools without
 losing any server capability or safety guarantee; older clients do not receive
 a legacy MCP downgrade.
 
 ## Release status
 
-This public source targets the version-pinned 1.10.0 candidate packages. Installed
+This public source targets the version-pinned 1.11.0 candidate packages. Installed
 users receive the new tools only after the trusted package release and plugin update.
 
 Do not point users at the private monorepo as a public marketplace. Synchronize
@@ -57,7 +57,7 @@ Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@1.10.0 auth login --json
+npx --yes @dmfaster/cli@1.11.0 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use

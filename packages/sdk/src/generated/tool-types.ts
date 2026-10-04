@@ -43,6 +43,7 @@ export type AgentToolInputMap = {
   "companies.suggest": operations["companySuggestions"]["requestBody"]["content"]["application/json"];
   "companies.search": operations["companySearch"]["requestBody"]["content"]["application/json"];
   "companies.evidence.search": operations["companyEvidenceSearch"]["requestBody"]["content"]["application/json"];
+  "companies.knowledge": operations["companyKnowledge"]["requestBody"]["content"]["application/json"];
   "companies.evidence.start": operations["companyEvidenceStart"]["requestBody"]["content"]["application/json"];
   "companies.evidence.advance": operations["companyEvidenceAdvance"]["requestBody"]["content"]["application/json"];
   "companies.evidence.status": operations["companyEvidenceStatus"]["requestBody"]["content"]["application/json"];
@@ -59,6 +60,8 @@ export type AgentToolInputMap = {
   "campaign.operation.inspect": operations["campaignOperationInspect"]["requestBody"]["content"]["application/json"];
   "campaign.delivery.inspect": operations["campaignDeliveryInspect"]["requestBody"]["content"]["application/json"];
   "campaign.delivery.update": operations["campaignDeliveryUpdate"]["requestBody"]["content"]["application/json"];
+  "sending.instagram.pacing.inspect": operations["instagramPacingInspect"]["requestBody"]["content"]["application/json"];
+  "sending.instagram.pacing.update": operations["instagramPacingUpdate"]["requestBody"]["content"]["application/json"];
   "companies.fit.status": operations["companyFitStatus"]["requestBody"]["content"]["application/json"];
   "companies.fit.cancel": operations["companyFitCancel"]["requestBody"]["content"]["application/json"];
   "companies.fit.runs.list": operations["companyFitRunsList"]["requestBody"]["content"]["application/json"];
@@ -70,6 +73,10 @@ export type AgentToolInputMap = {
   "calendar.meeting.book": operations["calendarMeetingBook"]["requestBody"]["content"]["application/json"];
   "calls.list": operations["callsList"]["requestBody"]["content"]["application/json"];
   "call.inspect": operations["callInspect"]["requestBody"]["content"]["application/json"];
+  "instagram.extract.quote": operations["instagramExtractionQuote"]["requestBody"]["content"]["application/json"];
+  "instagram.extract.start": operations["instagramExtractionStart"]["requestBody"]["content"]["application/json"];
+  "instagram.extract.inspect": operations["instagramExtractionInspect"]["requestBody"]["content"]["application/json"];
+  "instagram.extract.results": operations["instagramExtractionResults"]["requestBody"]["content"]["application/json"];
   "leads.status": operations["leadsStatus"]["requestBody"]["content"]["application/json"];
   "leads.extract.quote": operations["leadExtractionQuote"]["requestBody"]["content"]["application/json"];
   "leads.extract.start": operations["leadExtractionStart"]["requestBody"]["content"]["application/json"];
@@ -79,6 +86,12 @@ export type AgentToolInputMap = {
   "leads.enrich.preview": operations["leadEnrichmentPreview"]["requestBody"]["content"]["application/json"];
   "leads.enrich.start": operations["leadEnrichmentStart"]["requestBody"]["content"]["application/json"];
   "leads.enrich.inspect": operations["leadEnrichmentInspect"]["requestBody"]["content"]["application/json"];
+  "leads.prospect.quote": operations["instagramProspectQuote"]["requestBody"]["content"]["application/json"];
+  "leads.prospect.start": operations["instagramProspectStart"]["requestBody"]["content"]["application/json"];
+  "leads.prospect.inspect": operations["instagramProspectInspect"]["requestBody"]["content"]["application/json"];
+  "leads.prospect.results": operations["instagramProspectResults"]["requestBody"]["content"]["application/json"];
+  "leads.prospect.advance": operations["instagramProspectAdvance"]["requestBody"]["content"]["application/json"];
+  "leads.prospect.cancel": operations["instagramProspectCancel"]["requestBody"]["content"]["application/json"];
 };
 export type AgentToolDataMap = {
   "analytics.summary": NonNullable<
@@ -207,6 +220,9 @@ export type AgentToolDataMap = {
   "companies.evidence.search": NonNullable<
     operations["companyEvidenceSearch"]["responses"][200]["content"]["application/json"]["data"]
   >;
+  "companies.knowledge": NonNullable<
+    operations["companyKnowledge"]["responses"][200]["content"]["application/json"]["data"]
+  >;
   "companies.evidence.start": NonNullable<
     operations["companyEvidenceStart"]["responses"][200]["content"]["application/json"]["data"]
   >;
@@ -255,6 +271,12 @@ export type AgentToolDataMap = {
   "campaign.delivery.update": NonNullable<
     operations["campaignDeliveryUpdate"]["responses"][200]["content"]["application/json"]["data"]
   >;
+  "sending.instagram.pacing.inspect": NonNullable<
+    operations["instagramPacingInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "sending.instagram.pacing.update": NonNullable<
+    operations["instagramPacingUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
   "companies.fit.status": NonNullable<
     operations["companyFitStatus"]["responses"][200]["content"]["application/json"]["data"]
   >;
@@ -288,6 +310,18 @@ export type AgentToolDataMap = {
   "call.inspect": NonNullable<
     operations["callInspect"]["responses"][200]["content"]["application/json"]["data"]
   >;
+  "instagram.extract.quote": NonNullable<
+    operations["instagramExtractionQuote"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "instagram.extract.start": NonNullable<
+    operations["instagramExtractionStart"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "instagram.extract.inspect": NonNullable<
+    operations["instagramExtractionInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "instagram.extract.results": NonNullable<
+    operations["instagramExtractionResults"]["responses"][200]["content"]["application/json"]["data"]
+  >;
   "leads.status": NonNullable<
     operations["leadsStatus"]["responses"][200]["content"]["application/json"]["data"]
   >;
@@ -314,5 +348,23 @@ export type AgentToolDataMap = {
   >;
   "leads.enrich.inspect": NonNullable<
     operations["leadEnrichmentInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "leads.prospect.quote": NonNullable<
+    operations["instagramProspectQuote"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "leads.prospect.start": NonNullable<
+    operations["instagramProspectStart"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "leads.prospect.inspect": NonNullable<
+    operations["instagramProspectInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "leads.prospect.results": NonNullable<
+    operations["instagramProspectResults"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "leads.prospect.advance": NonNullable<
+    operations["instagramProspectAdvance"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "leads.prospect.cancel": NonNullable<
+    operations["instagramProspectCancel"]["responses"][200]["content"]["application/json"]["data"]
   >;
 };

@@ -42,6 +42,7 @@ export const AGENT_TOOL_NAMES = [
   "companies.suggest",
   "companies.search",
   "companies.evidence.search",
+  "companies.knowledge",
   "companies.evidence.start",
   "companies.evidence.advance",
   "companies.evidence.status",
@@ -58,6 +59,8 @@ export const AGENT_TOOL_NAMES = [
   "campaign.operation.inspect",
   "campaign.delivery.inspect",
   "campaign.delivery.update",
+  "sending.instagram.pacing.inspect",
+  "sending.instagram.pacing.update",
   "companies.fit.status",
   "companies.fit.cancel",
   "companies.fit.runs.list",
@@ -69,6 +72,10 @@ export const AGENT_TOOL_NAMES = [
   "calendar.meeting.book",
   "calls.list",
   "call.inspect",
+  "instagram.extract.quote",
+  "instagram.extract.start",
+  "instagram.extract.inspect",
+  "instagram.extract.results",
   "leads.status",
   "leads.extract.quote",
   "leads.extract.start",
@@ -78,6 +85,12 @@ export const AGENT_TOOL_NAMES = [
   "leads.enrich.preview",
   "leads.enrich.start",
   "leads.enrich.inspect",
+  "leads.prospect.quote",
+  "leads.prospect.start",
+  "leads.prospect.inspect",
+  "leads.prospect.results",
+  "leads.prospect.advance",
+  "leads.prospect.cancel",
 ] as const;
 export const AGENT_TOOL_POLICIES = Object.freeze({
   "analytics.summary": {
@@ -290,6 +303,11 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "companies.knowledge": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
   "companies.evidence.start": {
     effect: "read",
     approval: "none",
@@ -370,6 +388,16 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "sending.instagram.pacing.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "sending.instagram.pacing.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
   "companies.fit.status": {
     effect: "read",
     approval: "none",
@@ -425,6 +453,26 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "instagram.extract.quote": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "instagram.extract.start": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "instagram.extract.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "instagram.extract.results": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
   "leads.status": {
     effect: "read",
     approval: "none",
@@ -467,6 +515,36 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
   },
   "leads.enrich.inspect": {
     effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.prospect.quote": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.prospect.start": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.prospect.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.prospect.results": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.prospect.advance": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "leads.prospect.cancel": {
+    effect: "write",
     approval: "none",
     exposure: "public_api",
   },
@@ -514,6 +592,7 @@ export const AGENT_TOOL_SCOPES = {
   "companies.suggest": ["audiences:read"],
   "companies.search": ["audiences:read"],
   "companies.evidence.search": ["audiences:read"],
+  "companies.knowledge": ["audiences:read"],
   "companies.evidence.start": ["audiences:read"],
   "companies.evidence.advance": ["audiences:read"],
   "companies.evidence.status": ["audiences:read"],
@@ -530,6 +609,8 @@ export const AGENT_TOOL_SCOPES = {
   "campaign.operation.inspect": ["campaigns:read"],
   "campaign.delivery.inspect": ["campaigns:read"],
   "campaign.delivery.update": ["campaigns:read", "campaigns:write"],
+  "sending.instagram.pacing.inspect": ["sending:read"],
+  "sending.instagram.pacing.update": ["sending:read", "campaigns:write"],
   "companies.fit.status": ["campaigns:read", "audiences:read"],
   "companies.fit.cancel": ["campaigns:read", "audiences:read", "campaigns:write"],
   "companies.fit.runs.list": ["campaigns:read", "audiences:read"],
@@ -541,6 +622,10 @@ export const AGENT_TOOL_SCOPES = {
   "calendar.meeting.book": ["calendar:write", "calendar:read", "inbox:read", "pipeline:write"],
   "calls.list": ["calls:read"],
   "call.inspect": ["calls:read"],
+  "instagram.extract.quote": ["leads:read"],
+  "instagram.extract.start": ["leads:read", "leads:write"],
+  "instagram.extract.inspect": ["leads:read"],
+  "instagram.extract.results": ["leads:read"],
   "leads.status": ["leads:read"],
   "leads.extract.quote": ["leads:read"],
   "leads.extract.start": ["leads:read", "leads:write"],
@@ -550,6 +635,12 @@ export const AGENT_TOOL_SCOPES = {
   "leads.enrich.preview": ["leads:read"],
   "leads.enrich.start": ["leads:read", "leads:write"],
   "leads.enrich.inspect": ["leads:read"],
+  "leads.prospect.quote": ["leads:read", "campaigns:read"],
+  "leads.prospect.start": ["leads:read", "campaigns:read", "leads:write", "campaigns:write"],
+  "leads.prospect.inspect": ["leads:read", "campaigns:read"],
+  "leads.prospect.results": ["leads:read", "campaigns:read"],
+  "leads.prospect.advance": ["leads:read", "campaigns:read", "leads:write", "campaigns:write"],
+  "leads.prospect.cancel": ["leads:read", "campaigns:read", "leads:write", "campaigns:write"],
 } as const;
 export const AGENT_OWNER_ONLY_TOOLS = [
   "conversation.update",
@@ -573,17 +664,25 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "companies.list.prepare",
   "companies.list.refine",
   "campaign.delivery.update",
+  "sending.instagram.pacing.update",
   "companies.fit.cancel",
   "companies.fit.run",
   "calendar.status",
   "calendar.availability",
   "calendar.meeting.book",
+  "instagram.extract.quote",
+  "instagram.extract.start",
+  "instagram.extract.inspect",
+  "instagram.extract.results",
   "leads.extract.start",
   "leads.extract.refresh",
   "leads.extract.continue",
   "leads.enrich.preview",
   "leads.enrich.start",
   "leads.enrich.inspect",
+  "leads.prospect.start",
+  "leads.prospect.advance",
+  "leads.prospect.cancel",
 ] as const;
 export const AGENT_TOOL_DEFINITIONS = {
   "analytics.summary": {
@@ -688,7 +787,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "sending_inspect",
       title: "Inspect sending health",
       description:
-        "Read browser-worker, queue, and failed-send health for the workspace or one campaign.",
+        "Read campaign sending health with per-channel eligibility deadlines, remaining seconds, pacing anchors, company-order blockers, and browser freshness. These clocks are earliest possible attempts, not promised deliveries. Inspect observation before calling a quiet queue stalled; null deadlines and stale evidence must stay explicit.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -1346,7 +1445,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "companies_search",
       title: "Search companies",
       description:
-        "Search the same company inventory and filters as the live app. Returns full rows, exact total and pagination. Echo querySignature and expectedRevision on subsequent pages.",
+        "Search the same company inventory and filters as the live app. Use projection list for fast prospecting views and company_inspect for full profiles; omit projection for rich rows. Returns an exact total and stable pagination. Echo querySignature and expectedRevision on subsequent pages.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -1379,12 +1478,31 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["companies", "evidence", "search"],
     },
   },
+  "companies.knowledge": {
+    mcp: {
+      name: "companies_knowledge",
+      title: "Read saved public company knowledge",
+      description:
+        "Read standard public website facts for one current published Finnish company. Returns connected offering-to-buyer relationships and existing boolean assessments. Missing assessments remain null. No website fetch, Jev call or private run access. Quotations are context samples, not selected supporting citations.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies knowledge --input FILE",
+      command: ["companies", "knowledge"],
+    },
+  },
   "companies.evidence.start": {
     mcp: {
       name: "companies_evidence_start",
       title: "Start complete website evidence scan",
       description:
-        "Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. All fresh retained passages are checked in resumable chunks; keywords only prioritize work. Processing continues in the background. Return every confirmed match through results; unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.",
+        "Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. Choose evaluationMode binary for one compact website packet per company with boolean decisions, probability and explicit review/coverage. Empty retrievalTerms are allowed; keywords only prioritize work. Omission preserves the complete passage verifier. Processing continues in the background. The response already contains a first results page, including validated cached matches when available; inspect and show those rows immediately without repeating the page or waiting for completion. Use results for additional pages or later discoveries. Unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -1422,7 +1540,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "companies_evidence_status",
       title: "Status complete website evidence scan",
       description:
-        "Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory and fresh retained passages, not uncrawled websites.",
+        "Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -1683,6 +1801,44 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["campaign", "delivery", "update"],
     },
   },
+  "sending.instagram.pacing.inspect": {
+    mcp: {
+      name: "sending_instagram_pacing_inspect",
+      title: "Inspect workspace Instagram sending pace",
+      description:
+        "Inspect the user-wide Instagram message gap range and its revision. The range covers every campaign and browser; null uses campaign pacing.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Instagram sending pace",
+      usage: "sending instagram pacing inspect --input FILE",
+      command: ["sending", "instagram", "pacing", "inspect"],
+    },
+  },
+  "sending.instagram.pacing.update": {
+    mcp: {
+      name: "sending_instagram_pacing_update",
+      title: "Change workspace Instagram sending pace",
+      description:
+        "On the owner's explicit instruction, set a user-wide random Instagram message gap range in seconds, or reset it with policy null. Echo the inspected revision and use a stable idempotency key. The change applies at the next scheduler check across all campaigns and browsers; an in-progress attempt finishes and no campaign is started.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Instagram sending pace",
+      usage: "sending instagram pacing update --input FILE",
+      command: ["sending", "instagram", "pacing", "update"],
+    },
+  },
   "companies.fit.status": {
     mcp: {
       name: "companies_fit_status",
@@ -1892,6 +2048,82 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["call", "inspect"],
     },
   },
+  "instagram.extract.quote": {
+    mcp: {
+      name: "instagram_extract_quote",
+      title: "Quote an Instagram audience extraction",
+      description:
+        "Read existing prepaid capacity in the signed-in owner's account wallet. Insufficient capacity hands off to separate account-gated standalone checkout and purchase-scoped API/MCP; standalone payment cannot fund or resume an account request. No provider calls or payment.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Instagram extraction",
+      usage: "instagram extract quote --input FILE",
+      command: ["instagram", "extract", "quote"],
+    },
+  },
+  "instagram.extract.start": {
+    mcp: {
+      name: "instagram_extract_start",
+      title: "Start a prepaid Instagram audience extraction",
+      description:
+        "Queue a durable extraction using the signed-in owner's prepaid account capacity. Guest purchases use their separate purchase-scoped API/MCP and cannot fund this wallet. No subscription or sending access. Requires a stable idempotency key; no automatic payment.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Instagram extraction",
+      usage: "instagram extract start --input FILE",
+      command: ["instagram", "extract", "start"],
+    },
+  },
+  "instagram.extract.inspect": {
+    mcp: {
+      name: "instagram_extract_inspect",
+      title: "Inspect a prepaid Instagram extraction",
+      description:
+        "Read exact stored progress by durable job ID without advancing the provider or spending capacity. Follow pollAfterMs.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Instagram extraction",
+      usage: "instagram extract inspect --input FILE",
+      command: ["instagram", "extract", "inspect"],
+    },
+  },
+  "instagram.extract.results": {
+    mcp: {
+      name: "instagram_extract_results",
+      title: "Read saved Instagram extraction profiles",
+      description:
+        "Read a bounded page of usernames, names and profile URLs after terminal settlement. Follow nextCursor until null; partial results are explicit.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Instagram extraction",
+      usage: "instagram extract results --input FILE",
+      command: ["instagram", "extract", "results"],
+    },
+  },
   "leads.status": {
     mcp: {
       name: "leads_status",
@@ -2063,6 +2295,120 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["leads", "enrich", "inspect"],
     },
   },
+  "leads.prospect.quote": {
+    mcp: {
+      name: "leads_prospect_quote",
+      title: "Quote an Instagram ICP list",
+      description:
+        "Read the exact lead balance and bounded acquisition/enrichment budget. No Hiker or Clef calls, credit reservation or list writes.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads prospect quote --input FILE",
+      command: ["leads", "prospect", "quote"],
+    },
+  },
+  "leads.prospect.start": {
+    mcp: {
+      name: "leads_prospect_start",
+      title: "Build an Instagram ICP list",
+      description:
+        "On an explicit instruction, discover or reuse Instagram sources, run existing credit-bounded extraction and enrichment, qualify observed evidence with Clef, and save private match and optional review lists. Supply atomic criteria and short searchQueries from the user description for better discovery. Same idempotency key resumes the same immutable request. Does not launch campaigns or send messages.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads prospect start --input FILE",
+      command: ["leads", "prospect", "start"],
+    },
+  },
+  "leads.prospect.inspect": {
+    mcp: {
+      name: "leads_prospect_inspect",
+      title: "Inspect an Instagram ICP run",
+      description:
+        "Read exact stored progress, budgets, saved lists and unresolved outcomes. Inspection never advances provider work.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads prospect inspect --input FILE",
+      command: ["leads", "prospect", "inspect"],
+    },
+  },
+  "leads.prospect.results": {
+    mcp: {
+      name: "leads_prospect_results",
+      title: "Read Instagram ICP decisions",
+      description:
+        "Page observed profiles, decisions, raw probabilities and image manifests. Review and pending profiles are not verified matches. Cursors bind the exact run revision, result version and status filter; restart pagination after a result change.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads prospect results --input FILE",
+      command: ["leads", "prospect", "results"],
+    },
+  },
+  "leads.prospect.advance": {
+    mcp: {
+      name: "leads_prospect_advance",
+      title: "Advance an Instagram ICP run",
+      description:
+        "Advance one bounded batch using the existing run budgets and current owner grant. Provider reservations prevent duplicate requests after unknown outcomes. Continue inspection/advancement until workComplete; no additional campaign approval is introduced.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads prospect advance --input FILE",
+      command: ["leads", "prospect", "advance"],
+    },
+  },
+  "leads.prospect.cancel": {
+    mcp: {
+      name: "leads_prospect_cancel",
+      title: "Cancel an Instagram ICP run",
+      description:
+        "Stop future work in this run. In-flight provider or child extraction/enrichment work may complete and settle normally; already saved lists remain private.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Social prospecting",
+      usage: "leads prospect cancel --input FILE",
+      command: ["leads", "prospect", "cancel"],
+    },
+  },
 } as const;
 export const AGENT_TOOL_INPUT_SCHEMAS = {
   "analytics.summary": {
@@ -2191,6 +2537,9 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   "companies.evidence.search": {
     $ref: "#/components/schemas/CompanyEvidenceSearchInput",
   },
+  "companies.knowledge": {
+    $ref: "#/components/schemas/CompanyKnowledgeInput",
+  },
   "companies.evidence.start": {
     $ref: "#/components/schemas/CompanyEvidenceStartInput",
   },
@@ -2239,6 +2588,12 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   "campaign.delivery.update": {
     $ref: "#/components/schemas/CampaignDeliveryUpdateInput",
   },
+  "sending.instagram.pacing.inspect": {
+    $ref: "#/components/schemas/InstagramPacingInspectInput",
+  },
+  "sending.instagram.pacing.update": {
+    $ref: "#/components/schemas/InstagramPacingUpdateInput",
+  },
   "companies.fit.status": {
     $ref: "#/components/schemas/CompanyFitStatusInput",
   },
@@ -2272,6 +2627,18 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   "call.inspect": {
     $ref: "#/components/schemas/CallInspectInput",
   },
+  "instagram.extract.quote": {
+    $ref: "#/components/schemas/InstagramExtractionQuoteInput",
+  },
+  "instagram.extract.start": {
+    $ref: "#/components/schemas/InstagramExtractionStartInput",
+  },
+  "instagram.extract.inspect": {
+    $ref: "#/components/schemas/InstagramExtractionInspectInput",
+  },
+  "instagram.extract.results": {
+    $ref: "#/components/schemas/InstagramExtractionResultsInput",
+  },
   "leads.status": {
     $ref: "#/components/schemas/LeadsStatusInput",
   },
@@ -2298,6 +2665,24 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "leads.enrich.inspect": {
     $ref: "#/components/schemas/LeadEnrichmentInspectInput",
+  },
+  "leads.prospect.quote": {
+    $ref: "#/components/schemas/InstagramProspectInput",
+  },
+  "leads.prospect.start": {
+    $ref: "#/components/schemas/InstagramProspectStartInput",
+  },
+  "leads.prospect.inspect": {
+    $ref: "#/components/schemas/InstagramProspectRunInput",
+  },
+  "leads.prospect.results": {
+    $ref: "#/components/schemas/InstagramProspectResultsInput",
+  },
+  "leads.prospect.advance": {
+    $ref: "#/components/schemas/InstagramProspectRunInput",
+  },
+  "leads.prospect.cancel": {
+    $ref: "#/components/schemas/InstagramProspectRunInput",
   },
 } as const;
 export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
@@ -3895,6 +4280,12 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       filters: {
         $ref: "#/components/schemas/CompanySearchFilters",
       },
+      projection: {
+        type: "string",
+        enum: ["list", "rich"],
+        description:
+          "List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company.inspect.",
+      },
       page: {
         type: "integer",
         minimum: 1,
@@ -4202,14 +4593,14 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
       retrievalTerms: {
         description:
-          "Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.",
+          "Optional source-language hints for complete scans; use an empty array for binary website judgments without keyword gates. Fast shortlist previews still require retrieval terms.",
         type: "array",
         items: {
           type: "string",
           minLength: 1,
           maxLength: 100,
         },
-        minItems: 1,
+        minItems: 0,
         maxItems: 12,
       },
       retrievalGroups: {
@@ -4232,6 +4623,27 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     },
     required: ["id", "statement", "requirement", "retrievalTerms"],
   },
+  CompanyKnowledgeInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      country: {
+        type: "string",
+        enum: ["FI"],
+      },
+      businessId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 192,
+      },
+      maxAgeDays: {
+        type: "integer",
+        minimum: 1,
+        maximum: 90,
+      },
+    },
+    required: ["country", "businessId"],
+  },
   CompanyEvidenceStartInput: {
     type: "object",
     additionalProperties: false,
@@ -4252,6 +4664,12 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         items: {
           $ref: "#/components/schemas/WebsiteEvidenceCriterion",
         },
+      },
+      evaluationMode: {
+        type: "string",
+        enum: ["binary", "passage"],
+        description:
+          "Binary evaluates related website sections together in one compact request per company. Passage preserves separate relationship statuses and explicit-denial merging. Omission preserves passage behavior.",
       },
       filters: {
         $ref: "#/components/schemas/CompanySearchFilters",
@@ -4805,6 +5223,63 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
   },
+  InstagramPacingInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {},
+  },
+  InstagramPacingUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["expectedRevision", "idempotencyKey", "policy", "reason"],
+    properties: {
+      expectedRevision: {
+        type: ["string", "null"],
+        pattern:
+          "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-8][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$",
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+        pattern: "^[A-Za-z0-9._:-]+$",
+      },
+      reason: {
+        type: "string",
+        minLength: 3,
+        maxLength: 500,
+      },
+      policy: {
+        oneOf: [
+          {
+            $ref: "#/components/schemas/InstagramPacingPolicy",
+          },
+          {
+            type: "null",
+          },
+        ],
+      },
+    },
+  },
+  InstagramPacingPolicy: {
+    type: "object",
+    additionalProperties: false,
+    required: ["gapMinSeconds", "gapMaxSeconds"],
+    properties: {
+      gapMinSeconds: {
+        type: "integer",
+        minimum: 12,
+        maximum: 3600,
+      },
+      gapMaxSeconds: {
+        type: "integer",
+        minimum: 12,
+        maximum: 3600,
+      },
+    },
+    description:
+      "Minimum must be less than or equal to maximum; seconds between outgoing Instagram messages.",
+  },
   CompanyFitStatusInput: {
     type: "object",
     additionalProperties: false,
@@ -5052,6 +5527,110 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
   },
+  InstagramExtractionQuoteInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["username", "type", "count"],
+    properties: {
+      username: {
+        type: "string",
+        minLength: 1,
+        maxLength: 31,
+        pattern: "^@?[A-Za-z0-9._]{1,30}$",
+        "x-dmfaster-trim": true,
+      },
+      type: {
+        type: "string",
+        enum: ["followers", "following", "likers", "commenters"],
+      },
+      count: {
+        type: "integer",
+        minimum: 1,
+        maximum: 2147483647,
+      },
+      currency: {
+        type: "string",
+        enum: ["USD", "EUR"],
+      },
+      postUrl: {
+        type: "string",
+        minLength: 1,
+        maxLength: 300,
+        "x-dmfaster-trim": true,
+      },
+    },
+  },
+  InstagramExtractionStartInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["username", "type", "count", "idempotencyKey"],
+    properties: {
+      username: {
+        type: "string",
+        minLength: 1,
+        maxLength: 31,
+        pattern: "^@?[A-Za-z0-9._]{1,30}$",
+        "x-dmfaster-trim": true,
+      },
+      type: {
+        type: "string",
+        enum: ["followers", "following", "likers", "commenters"],
+      },
+      count: {
+        type: "integer",
+        minimum: 1,
+        maximum: 2147483647,
+      },
+      currency: {
+        type: "string",
+        enum: ["USD", "EUR"],
+      },
+      postUrl: {
+        type: "string",
+        minLength: 1,
+        maxLength: 300,
+        "x-dmfaster-trim": true,
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+        "x-dmfaster-trim": true,
+      },
+    },
+  },
+  InstagramExtractionInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["jobId"],
+    properties: {
+      jobId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
+  },
+  InstagramExtractionResultsInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["jobId"],
+    properties: {
+      jobId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 30,
+        pattern: "^[A-Za-z0-9._]+$",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+  },
   LeadsStatusInput: {
     type: "object",
     additionalProperties: false,
@@ -5238,6 +5817,245 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     properties: {
       jobId: {
         $ref: "#/components/schemas/ResourceId",
+      },
+    },
+  },
+  InstagramProspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["query"],
+    properties: {
+      query: {
+        type: "string",
+        minLength: 1,
+        maxLength: 4000,
+      },
+      criteria: {
+        type: "array",
+        minItems: 1,
+        maxItems: 12,
+        items: {
+          $ref: "#/components/schemas/InstagramProspectCriterion",
+        },
+      },
+      threshold: {
+        type: "number",
+        minimum: 0.5,
+        maximum: 1,
+      },
+      evidenceThreshold: {
+        type: "number",
+        minimum: 0.5,
+        maximum: 1,
+      },
+      sourceListIds: {
+        type: "array",
+        maxItems: 10,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 200,
+        },
+      },
+      sources: {
+        type: "array",
+        maxItems: 10,
+        items: {
+          $ref: "#/components/schemas/InstagramProspectSource",
+        },
+      },
+      searchQueries: {
+        type: "array",
+        minItems: 1,
+        maxItems: 5,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 120,
+        },
+      },
+      targetCount: {
+        type: "integer",
+        minimum: 1,
+        maximum: 1000,
+      },
+      maxCandidates: {
+        type: "integer",
+        minimum: 1,
+        maximum: 1000,
+      },
+      maxCredits: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100000,
+      },
+      maxModelCalls: {
+        type: "integer",
+        minimum: 1,
+        maximum: 1000,
+      },
+      media: {
+        type: "string",
+        enum: ["none", "avatar", "recent_posts"],
+      },
+      model: {
+        type: "string",
+        enum: ["clef", "clef-flash"],
+      },
+      includeReview: {
+        type: "boolean",
+      },
+      excludePreviouslyContacted: {
+        type: "boolean",
+      },
+      name: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+      },
+    },
+  },
+  InstagramProspectCriterion: {
+    type: "object",
+    additionalProperties: false,
+    required: ["id", "statement", "basis", "role", "unknown"],
+    properties: {
+      id: {
+        type: "string",
+        minLength: 1,
+        maxLength: 40,
+        pattern: "^[a-z][a-z0-9_]{0,39}$",
+      },
+      statement: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1000,
+      },
+      basis: {
+        type: "string",
+        enum: ["text", "visual"],
+      },
+      role: {
+        type: "string",
+        enum: ["required", "preferred"],
+      },
+      unknown: {
+        type: "string",
+        enum: ["review", "exclude"],
+      },
+      literalRule: {
+        oneOf: [
+          {
+            type: "object",
+            additionalProperties: false,
+            required: ["kind"],
+            properties: {
+              kind: {
+                type: "string",
+                const: "follower_count",
+              },
+              min: {
+                type: "integer",
+                minimum: 0,
+              },
+              max: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: ["kind", "equals"],
+            properties: {
+              kind: {
+                type: "string",
+                enum: ["privacy", "verification"],
+              },
+              equals: {
+                type: "boolean",
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+  InstagramProspectSource: {
+    type: "object",
+    additionalProperties: false,
+    required: ["type", "identifier"],
+    properties: {
+      type: {
+        type: "string",
+        enum: ["followers", "following", "likers", "commenters"],
+      },
+      identifier: {
+        type: "string",
+        minLength: 1,
+        maxLength: 2048,
+      },
+      count: {
+        type: "integer",
+        minimum: 1,
+        maximum: 1000,
+      },
+    },
+  },
+  InstagramProspectStartInput: {
+    allOf: [
+      {
+        $ref: "#/components/schemas/InstagramProspectInput",
+      },
+      {
+        type: "object",
+        additionalProperties: false,
+        required: ["idempotencyKey"],
+        properties: {
+          idempotencyKey: {
+            type: "string",
+            minLength: 1,
+            maxLength: 120,
+          },
+        },
+      },
+    ],
+  },
+  InstagramProspectRunInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["runId"],
+    properties: {
+      runId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+      },
+    },
+  },
+  InstagramProspectResultsInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["runId"],
+    properties: {
+      runId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+      },
+      status: {
+        type: "string",
+        enum: ["pending", "accept", "review", "exclude", "suppressed"],
+      },
+      cursor: {
+        type: "string",
+        maxLength: 2000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
       },
     },
   },

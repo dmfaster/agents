@@ -8,7 +8,7 @@ Both require an explicitly reviewed version on public `main`.
 1. All four published package versions, all three plugin versions, and every
    pinned command match exactly. `packages/product-ui` remains private.
 2. `npm run check:agents` passes, including strict MCP 2026-07-28 negotiation,
-   all 50 domain tools, connection status, and the portable campaign workspace.
+   all 91 domain tools, connection status, and the portable campaign workspace.
 3. `npm audit --omit=dev` passes.
 4. The production browser-authorization and action-approval backend is healthy.
    The `companies.list.refine`, inbox, pipeline, follow-up, sender and history
@@ -87,3 +87,11 @@ an npm or GitHub URL as though it were a hosted MCP endpoint.
 Never overwrite or routinely unpublish a release. Deprecate an incorrect
 version, fix forward with a new patch version, and repeat the full review and
 release. Never restore a persistent npm write-token fallback.
+
+## 1.11.0 Instagram ICP release
+
+Product migration 0359 and the hosted native prospecting operations must be
+verified before dispatching this version. The six `leads.prospect` operations
+use existing grants and credit services. The approved release canary is bounded
+to 20 model attempts and 40 lead credits. Record deployed source, exact list
+counts, cost and replay results separately from local package checks.

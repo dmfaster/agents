@@ -43,7 +43,23 @@ test("posts the direct tool input with bearer authentication", async () => {
   assert.equal(calls[0]?.url, "https://app.dmfaster.test/api/v1/agent/tools/campaigns.list");
   assert.equal(calls[0]?.init?.method, "POST");
   assert.equal(new Headers(calls[0]?.init?.headers).get("authorization"), "Bearer secret-token");
+  assert.equal(new Headers(calls[0]?.init?.headers).get("x-dmfaster-sending-observation"), null);
   assert.deepEqual(JSON.parse(String(calls[0]?.init?.body)), { status: "Running", limit: 5 });
+});
+
+test("opts sending inspection into detailed timing without changing the tool input", async () => {
+  let sent: RequestInit | undefined;
+  const client = createDmfasterClient({
+    baseUrl: "https://app.dmfaster.test",
+    token: "secret-token",
+    fetch: async (_url, init) => {
+      sent = init;
+      return Response.json(result("sending.inspect"));
+    },
+  });
+  await client.invoke("sending.inspect", { campaignId: "campaign-1" });
+  assert.equal(new Headers(sent?.headers).get("x-dmfaster-sending-observation"), "1");
+  assert.deepEqual(JSON.parse(String(sent?.body)), { campaignId: "campaign-1" });
 });
 
 test("surfaces an API error without leaking the token", async () => {
@@ -53,51 +69,49 @@ test("surfaces an API error without leaking the token", async () => {
     fetch: async () => Response.json({ error: { message: "Token is expired." } }, { status: 401 }),
   });
 
-  await assert.rejects(
-    client.invoke("workspace.briefing", {}),
-    (error: unknown) => {
-      assert.ok(error instanceof DmfasterHttpError);
-      assert.equal(error.status, 401);
-      assert.equal(error.message, "Token is expired.");
-      assert.doesNotMatch(error.message, /do-not-leak/);
-      return true;
-    },
-  );
+  await assert.rejects(client.invoke("workspace.briefing", {}), (error: unknown) => {
+    assert.ok(error instanceof DmfasterHttpError);
+    assert.equal(error.status, 401);
+    assert.equal(error.message, "Token is expired.");
+    assert.doesNotMatch(error.message, /do-not-leak/);
+    return true;
+  });
 });
 
 test("preserves the server retry contract on typed HTTP errors", async () => {
   const client = createDmfasterClient({
     baseUrl: "https://app.dmfaster.test",
     token: "do-not-leak",
-    fetch: async () => Response.json({
-      error: {
-        code: "rate_limited",
-        message: "Too many agent tool requests.",
-        retryable: true,
-        requestId: "req_rate_limit_123",
-        details: { bucket: "workspace" },
-      },
-    }, {
-      status: 429,
-      headers: {
-        "retry-after": "900",
-        "x-request-id": "req_header_fallback",
-      },
-    }),
+    fetch: async () =>
+      Response.json(
+        {
+          error: {
+            code: "rate_limited",
+            message: "Too many agent tool requests.",
+            retryable: true,
+            requestId: "req_rate_limit_123",
+            details: { bucket: "workspace" },
+          },
+        },
+        {
+          status: 429,
+          headers: {
+            "retry-after": "900",
+            "x-request-id": "req_header_fallback",
+          },
+        },
+      ),
   });
 
-  await assert.rejects(
-    client.invoke("workspace.briefing", {}),
-    (error: unknown) => {
-      assert.ok(error instanceof DmfasterHttpError);
-      assert.equal(error.code, "rate_limited");
-      assert.equal(error.retryable, true);
-      assert.equal(error.requestId, "req_rate_limit_123");
-      assert.equal(error.retryAfterSeconds, 900);
-      assert.deepEqual(error.details, { bucket: "workspace" });
-      return true;
-    },
-  );
+  await assert.rejects(client.invoke("workspace.briefing", {}), (error: unknown) => {
+    assert.ok(error instanceof DmfasterHttpError);
+    assert.equal(error.code, "rate_limited");
+    assert.equal(error.retryable, true);
+    assert.equal(error.requestId, "req_rate_limit_123");
+    assert.equal(error.retryAfterSeconds, 900);
+    assert.deepEqual(error.details, { bucket: "workspace" });
+    return true;
+  });
 });
 
 test("rejects a mismatched result envelope", async () => {
@@ -107,20 +121,18 @@ test("rejects a mismatched result envelope", async () => {
     fetch: async () => Response.json(result("sending.inspect")),
   });
 
-  await assert.rejects(
-    client.invoke("campaign.inspect", {}),
-    DmfasterProtocolError,
-  );
+  await assert.rejects(client.invoke("campaign.inspect", {}), DmfasterProtocolError);
 });
 
 test("rejects a server policy that understates an action's effect or approval", async () => {
   const client = createDmfasterClient({
     baseUrl: "https://app.dmfaster.test",
     token: "secret-token",
-    fetch: async () => Response.json({
-      ...result("campaign.launch"),
-      policy: AGENT_TOOL_POLICIES["workspace.briefing"],
-    }),
+    fetch: async () =>
+      Response.json({
+        ...result("campaign.launch"),
+        policy: AGENT_TOOL_POLICIES["workspace.briefing"],
+      }),
   });
 
   await assert.rejects(
@@ -129,8 +141,8 @@ test("rejects a server policy that understates an action's effect or approval", 
       idempotencyKey: "launch-001",
       authorizationId: `agent_action_${"a".repeat(32)}`,
     }),
-    (error: unknown) => error instanceof DmfasterProtocolError
-      && /unsafe result policy/.test(error.message),
+    (error: unknown) =>
+      error instanceof DmfasterProtocolError && /unsafe result policy/.test(error.message),
   );
 });
 
@@ -138,18 +150,16 @@ test("rejects contradictory success and failure envelopes", async () => {
   const client = createDmfasterClient({
     baseUrl: "https://app.dmfaster.test",
     token: "secret-token",
-    fetch: async () => Response.json({
-      ...result("workspace.briefing"),
-      ok: false,
-      data: { leaked: true },
-      error: null,
-    }),
+    fetch: async () =>
+      Response.json({
+        ...result("workspace.briefing"),
+        ok: false,
+        data: { leaked: true },
+        error: null,
+      }),
   });
 
-  await assert.rejects(
-    client.invoke("workspace.briefing", {}),
-    DmfasterProtocolError,
-  );
+  await assert.rejects(client.invoke("workspace.briefing", {}), DmfasterProtocolError);
 });
 
 test("aborts requests at the configured timeout", async () => {
@@ -157,25 +167,28 @@ test("aborts requests at the configured timeout", async () => {
     baseUrl: "https://app.dmfaster.test",
     token: "secret-token",
     timeoutMs: 5,
-    fetch: async (_url, init) => new Promise((_resolve, reject) => {
-      init?.signal?.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")), {
-        once: true,
-      });
-    }),
+    fetch: async (_url, init) =>
+      new Promise((_resolve, reject) => {
+        init?.signal?.addEventListener(
+          "abort",
+          () => reject(new DOMException("Aborted", "AbortError")),
+          {
+            once: true,
+          },
+        );
+      }),
   });
 
-  await assert.rejects(
-    client.invoke("workspace.briefing", {}),
-    DmfasterTimeoutError,
-  );
+  await assert.rejects(client.invoke("workspace.briefing", {}), DmfasterTimeoutError);
 });
 
 test("rejects plaintext non-loopback API endpoints", () => {
   assert.throws(
-    () => createDmfasterClient({
-      baseUrl: "http://api.example.test",
-      token: "secret",
-    }),
+    () =>
+      createDmfasterClient({
+        baseUrl: "http://api.example.test",
+        token: "secret",
+      }),
     (error: unknown) => error instanceof DmfasterSdkError && error.code === "invalid_base_url",
   );
 });
@@ -199,22 +212,25 @@ test("allows loopback HTTP and rejects redirect following", async () => {
     token: "secret",
     fetch: async (_input, init) => {
       redirectMode = String(init?.redirect || "");
-      return new Response(JSON.stringify({
-        version: 1,
-        tool: "workspace.briefing",
-        policy: { effect: "read", approval: "none", exposure: "public_api" },
-        ok: true,
-        generatedAt: new Date().toISOString(),
-        durationMs: 1,
-        evidence: [],
-        consistency: { status: "verified", checks: [] },
-        data: {},
-        artifacts: [],
-        error: null,
-      }), {
-        status: 200,
-        headers: { "content-type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({
+          version: 1,
+          tool: "workspace.briefing",
+          policy: { effect: "read", approval: "none", exposure: "public_api" },
+          ok: true,
+          generatedAt: new Date().toISOString(),
+          durationMs: 1,
+          evidence: [],
+          consistency: { status: "verified", checks: [] },
+          data: {},
+          artifacts: [],
+          error: null,
+        }),
+        {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        },
+      );
     },
   });
 

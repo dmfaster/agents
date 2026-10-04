@@ -2,6 +2,7 @@
 
 import {
   useId,
+  useMemo,
   useState,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
@@ -33,7 +34,9 @@ export type AnalyticsChartSeries = {
 
 function smoothLinePath(values: number[], getY: (value: number) => number) {
   if (!values.length) return "";
-  const getX = (index: number) => CHART_LEFT + (values.length === 1 ? PLOT_WIDTH / 2 : (index / (values.length - 1)) * PLOT_WIDTH);
+  const getX = (index: number) =>
+    CHART_LEFT +
+    (values.length === 1 ? PLOT_WIDTH / 2 : (index / (values.length - 1)) * PLOT_WIDTH);
   let path = `M ${getX(0)} ${getY(values[0] ?? 0)}`;
 
   for (let index = 1; index < values.length; index += 1) {
@@ -93,10 +96,11 @@ export function AnalyticsLineChartCard({
   note,
   ariaLabel,
   formatValue = (value) => new Intl.NumberFormat("en-US").format(value),
-  formatCompactValue = (value) => new Intl.NumberFormat("en-US", {
-    notation: value >= 1_000 ? "compact" : "standard",
-    maximumFractionDigits: value >= 1_000 ? 1 : 0,
-  }).format(value),
+  formatCompactValue = (value) =>
+    new Intl.NumberFormat("en-US", {
+      notation: value >= 1_000 ? "compact" : "standard",
+      maximumFractionDigits: value >= 1_000 ? 1 : 0,
+    }).format(value),
 }: {
   title: string;
   description: string;
@@ -110,30 +114,43 @@ export function AnalyticsLineChartCard({
 }) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const gradientId = useId().replaceAll(":", "");
-  const values = data.flatMap((point) => point.values);
-  const maxValue = Math.max(1, ...values);
-  const chartMax = Math.max(1, Math.ceil(maxValue * 1.12));
-  const getY = (value: number) => CHART_TOP + PLOT_HEIGHT - (value / chartMax) * PLOT_HEIGHT;
   const baselineY = CHART_TOP + PLOT_HEIGHT;
-  const paths = series.map((_entry, seriesIndex) => smoothLinePath(
-    data.map((point) => point.values[seriesIndex] ?? 0),
-    getY,
-  ));
-  const yTicks = Array.from(new Set(
-    Array.from({ length: 5 }, (_, index) => Math.round((chartMax / 4) * index)),
-  ));
-  const xTickIndexes = Array.from(new Set([
-    0,
-    Math.round((data.length - 1) * .25),
-    Math.round((data.length - 1) * .5),
-    Math.round((data.length - 1) * .75),
-    data.length - 1,
-  ])).filter((index) => index >= 0 && index < data.length);
-  const hoveredPoint = hoveredIndex === null ? null : data[hoveredIndex] ?? null;
-  const hoveredX = hoveredIndex === null
-    ? 0
-    : CHART_LEFT + (data.length === 1 ? PLOT_WIDTH / 2 : (hoveredIndex / Math.max(1, data.length - 1)) * PLOT_WIDTH);
-  const isEmpty = values.every((value) => value === 0);
+  const seriesCount = series.length;
+  // Hover changes the overlay, while line paths and axes depend only on data
+  // and series count. Keep labels, colors and tooltips in the current render.
+  const { getY, paths, yTicks, xTickIndexes, isEmpty } = useMemo(() => {
+    const values = data.flatMap((point) => point.values);
+    const maxValue = Math.max(1, ...values);
+    const chartMax = Math.max(1, Math.ceil(maxValue * 1.12));
+    const getY = (value: number) => CHART_TOP + PLOT_HEIGHT - (value / chartMax) * PLOT_HEIGHT;
+    const paths = Array.from({ length: seriesCount }, (_entry, seriesIndex) =>
+      smoothLinePath(
+        data.map((point) => point.values[seriesIndex] ?? 0),
+        getY,
+      ),
+    );
+    const yTicks = Array.from(
+      new Set(Array.from({ length: 5 }, (_, index) => Math.round((chartMax / 4) * index))),
+    );
+    const xTickIndexes = Array.from(
+      new Set([
+        0,
+        Math.round((data.length - 1) * 0.25),
+        Math.round((data.length - 1) * 0.5),
+        Math.round((data.length - 1) * 0.75),
+        data.length - 1,
+      ]),
+    ).filter((index) => index >= 0 && index < data.length);
+    return { getY, paths, yTicks, xTickIndexes, isEmpty: values.every((value) => value === 0) };
+  }, [data, seriesCount]);
+  const hoveredPoint = hoveredIndex === null ? null : (data[hoveredIndex] ?? null);
+  const hoveredX =
+    hoveredIndex === null
+      ? 0
+      : CHART_LEFT +
+        (data.length === 1
+          ? PLOT_WIDTH / 2
+          : (hoveredIndex / Math.max(1, data.length - 1)) * PLOT_WIDTH);
 
   function handleChartPointerMove(event: ReactPointerEvent<SVGSVGElement>) {
     if (!data.length) return;
@@ -151,7 +168,9 @@ export function AnalyticsLineChartCard({
           <p className="mt-1 text-xs text-slate-500">{description}</p>
         </div>
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          {series.map((entry) => <LegendItem key={entry.label} series={entry} />)}
+          {series.map((entry) => (
+            <LegendItem key={entry.label} series={entry} />
+          ))}
         </div>
       </div>
 
@@ -167,20 +186,43 @@ export function AnalyticsLineChartCard({
           >
             <title>{title}</title>
             <defs>
-              {series.map((entry, index) => entry.areaColor ? (
-                <linearGradient key={entry.label} id={`${gradientId}-${index}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={entry.areaColor} stopOpacity="0.28" />
-                  <stop offset="100%" stopColor={entry.areaColor} stopOpacity="0.02" />
-                </linearGradient>
-              ) : null)}
+              {series.map((entry, index) =>
+                entry.areaColor ? (
+                  <linearGradient
+                    key={entry.label}
+                    id={`${gradientId}-${index}`}
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="0%" stopColor={entry.areaColor} stopOpacity="0.28" />
+                    <stop offset="100%" stopColor={entry.areaColor} stopOpacity="0.02" />
+                  </linearGradient>
+                ) : null,
+              )}
             </defs>
 
             {yTicks.map((tick) => {
               const y = getY(tick);
               return (
                 <g key={tick}>
-                  <line x1={CHART_LEFT} y1={y} x2={CHART_LEFT + PLOT_WIDTH} y2={y} stroke="#e2e8f0" strokeWidth="1" />
-                  <text x={CHART_LEFT - 12} y={y + 4} textAnchor="end" fill="#94a3b8" fontSize="11" fontWeight="600">
+                  <line
+                    x1={CHART_LEFT}
+                    y1={y}
+                    x2={CHART_LEFT + PLOT_WIDTH}
+                    y2={y}
+                    stroke="#e2e8f0"
+                    strokeWidth="1"
+                  />
+                  <text
+                    x={CHART_LEFT - 12}
+                    y={y + 4}
+                    textAnchor="end"
+                    fill="#94a3b8"
+                    fontSize="11"
+                    fontWeight="600"
+                  >
                     {formatCompactValue(tick)}
                   </text>
                 </g>
@@ -189,9 +231,21 @@ export function AnalyticsLineChartCard({
 
             {xTickIndexes.map((index) => {
               const point = data[index];
-              const x = CHART_LEFT + (data.length === 1 ? PLOT_WIDTH / 2 : (index / Math.max(1, data.length - 1)) * PLOT_WIDTH);
+              const x =
+                CHART_LEFT +
+                (data.length === 1
+                  ? PLOT_WIDTH / 2
+                  : (index / Math.max(1, data.length - 1)) * PLOT_WIDTH);
               return point ? (
-                <text key={`${point.id}-${index}`} x={x} y={CHART_HEIGHT - 12} textAnchor="middle" fill="#94a3b8" fontSize="11" fontWeight="600">
+                <text
+                  key={`${point.id}-${index}`}
+                  x={x}
+                  y={CHART_HEIGHT - 12}
+                  textAnchor="middle"
+                  fill="#94a3b8"
+                  fontSize="11"
+                  fontWeight="600"
+                >
                   {point.label}
                 </text>
               ) : null;
@@ -199,10 +253,14 @@ export function AnalyticsLineChartCard({
 
             {series.map((entry, index) => {
               const path = paths[index] ?? "";
-              const areaPath = path ? `${path} L ${CHART_LEFT + PLOT_WIDTH} ${baselineY} L ${CHART_LEFT} ${baselineY} Z` : "";
+              const areaPath = path
+                ? `${path} L ${CHART_LEFT + PLOT_WIDTH} ${baselineY} L ${CHART_LEFT} ${baselineY} Z`
+                : "";
               return (
                 <g key={entry.label}>
-                  {entry.areaColor && areaPath ? <path d={areaPath} fill={`url(#${gradientId}-${index})`} /> : null}
+                  {entry.areaColor && areaPath ? (
+                    <path d={areaPath} fill={`url(#${gradientId}-${index})`} />
+                  ) : null}
                   {path ? (
                     <path
                       d={path}
@@ -220,7 +278,15 @@ export function AnalyticsLineChartCard({
 
             {hoveredPoint ? (
               <g>
-                <line x1={hoveredX} y1={CHART_TOP} x2={hoveredX} y2={baselineY} stroke="#94a3b8" strokeDasharray="4 5" strokeWidth="1" />
+                <line
+                  x1={hoveredX}
+                  y1={CHART_TOP}
+                  x2={hoveredX}
+                  y2={baselineY}
+                  stroke="#94a3b8"
+                  strokeDasharray="4 5"
+                  strokeWidth="1"
+                />
                 {series.map((entry, index) => (
                   <circle
                     key={entry.label}
@@ -241,7 +307,7 @@ export function AnalyticsLineChartCard({
               className="pointer-events-none absolute top-2 z-10 min-w-48 rounded-lg border border-slate-200 bg-white px-3 py-3 text-xs shadow-[0_12px_30px_rgba(15,23,42,0.12)]"
               style={{
                 left: `${(hoveredX / CHART_WIDTH) * 100}%`,
-                transform: hoveredX > CHART_WIDTH * .76 ? "translateX(-100%)" : "translateX(12px)",
+                transform: hoveredX > CHART_WIDTH * 0.76 ? "translateX(-100%)" : "translateX(12px)",
               }}
             >
               <p className="font-bold text-slate-950">{hoveredPoint.fullLabel}</p>
@@ -249,7 +315,9 @@ export function AnalyticsLineChartCard({
                 {series.map((entry, index) => (
                   <p key={entry.label} className="flex items-center justify-between gap-5">
                     <span>{entry.label}</span>
-                    <strong className="text-slate-950">{formatValue(hoveredPoint.values[index] ?? 0)}</strong>
+                    <strong className="text-slate-950">
+                      {formatValue(hoveredPoint.values[index] ?? 0)}
+                    </strong>
                   </p>
                 ))}
               </div>
@@ -267,9 +335,19 @@ export function AnalyticsLineChartCard({
 
         {note ? (
           <div className="flex items-start gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-[10px] leading-4 text-slate-500">
-            <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" className="mt-0.5 h-4 w-4 shrink-0 text-slate-400">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 20 20"
+              fill="none"
+              className="mt-0.5 h-4 w-4 shrink-0 text-slate-400"
+            >
               <circle cx="10" cy="10" r="7" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M10 8.5v4M10 6.2h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <path
+                d="M10 8.5v4M10 6.2h.01"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
             </svg>
             <span>{note}</span>
           </div>
