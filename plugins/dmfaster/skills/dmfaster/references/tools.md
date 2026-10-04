@@ -109,6 +109,12 @@ only one input in a command may use `-`.
 | `leads_enrich_preview` | `leads.enrich.preview` | `leads enrich preview --input FILE --json` | `leads:read` | Estimate missing-profile enrichment |
 | `leads_enrich_start` | `leads.enrich.start` | `leads enrich start --input FILE --json` | `leads:read`, `leads:write` | Queue requested enrichment |
 | `leads_enrich_inspect` | `leads.enrich.inspect` | `leads enrich inspect --input FILE --json` | `leads:read` | Read enrichment progress and refunds |
+| `leads_prospect_quote` | `leads.prospect.quote` | `leads prospect quote --input FILE --json` | `leads:read`, `campaigns:read` | Quote a bounded Instagram ICP run without spending |
+| `leads_prospect_start` | `leads.prospect.start` | `leads prospect start --input FILE --json` | `leads:read`, `campaigns:read`, `leads:write`, `campaigns:write` | Queue acquisition, qualification and private list saving |
+| `leads_prospect_inspect` | `leads.prospect.inspect` | `leads prospect inspect --input FILE --json` | `leads:read`, `campaigns:read` | Read exact stored ICP progress and usage |
+| `leads_prospect_results` | `leads.prospect.results` | `leads prospect results --input FILE --json` | `leads:read`, `campaigns:read` | Page private accepted and review results |
+| `leads_prospect_advance` | `leads.prospect.advance` | `leads prospect advance --input FILE --json` | `leads:read`, `campaigns:read`, `leads:write`, `campaigns:write` | Resume the same bounded ICP run |
+| `leads_prospect_cancel` | `leads.prospect.cancel` | `leads prospect cancel --input FILE --json` | `leads:read`, `campaigns:read`, `leads:write`, `campaigns:write` | Cancel a native ICP run |
 | `companies_suggest` | `companies.suggest` | `companies suggest --input FILE --json` | `audiences:read` | Suggest company identities without an audience total |
 | `companies_evidence_search` | `companies.evidence.search` | `companies evidence search --input FILE --json` | `audiences:read` | Search saved company website evidence |
 | `companies_knowledge` | `companies.knowledge` | `companies knowledge --input FILE --json` | `audiences:read` | Read current standard public website facts without a new run or Jev call |
