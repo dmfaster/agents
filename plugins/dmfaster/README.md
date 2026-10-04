@@ -6,7 +6,7 @@ stdio MCP 2026-07-28 server definition. It includes the portable Agent Plugins
 Codex, Claude, and Cursor. Hosts that have not
 implemented that revision use the same skill through the version-pinned CLI.
 
-The 1.11.0 source candidate exposes 91 bounded domain tools plus an optional
+The 1.11.0 source exposes 91 bounded domain tools plus an optional
 portable MCP Apps Companies and campaign workspaces. It adds Instagram ICP text-to-list runs and covers social prospecting, company research, exact
 audience and draft preparation, inbox and pipeline work, follow-up control,
 sender readiness and paginated outcomes. Replies require the user's explicit
@@ -36,8 +36,10 @@ a legacy MCP downgrade.
 
 ## Release status
 
-This public source targets the version-pinned 1.11.0 candidate packages. Installed
-users receive the new tools only after the trusted package release and plugin update.
+The hosted native Instagram ICP workflow has passed the bounded production canary.
+This public source targets version-pinned 1.11.0 packages; local publication remains
+pending the trusted release workflow. Installed users receive the new tools after
+the package release and plugin update.
 
 Do not point users at the private monorepo as a public marketplace. Synchronize
 this plugin directory to the approved public repository after package, privacy,
@@ -48,7 +50,7 @@ hosted MCP endpoint, while Agent 1.0 intentionally runs the version-pinned local
 stdio server.
 
 Repository maintainers must follow the [agent distribution release
-runbook](../../docs/runbooks/agent-distribution-release.md). Package publication
+runbook](../../docs/releasing.md). Package publication
 and plugin publication are separate approved releases.
 
 ## Authentication

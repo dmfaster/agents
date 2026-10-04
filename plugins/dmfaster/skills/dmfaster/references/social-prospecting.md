@@ -5,8 +5,8 @@ In a private development host, six optional research tools may be advertised:
 `instagram_profiles_evaluate`, plus `instagram_workspace`,
 `instagram_profile_inspect` and `instagram_acquisition_quote`.
 Use them only when present. Translate the user's
-Instagram ICP into independently testable criteria without adding Ella-specific
-markets, ages, names or agency exclusions unless that user requests them. Preserve
+Instagram ICP into independently testable criteria without adding unrequested
+markets, ages, names or agency exclusions. Preserve
 required versus preferred criteria and each unknown-evidence policy. Clef returns
 judgments; the assistant supplies the plan. Inspect available named snapshots,
 use explicit `literalRule` filters for observed follower counts, privacy or
@@ -83,7 +83,7 @@ shown the update. Hosts without Events use the same status tools.
 
 Prospecting does not create a campaign or send messages.
 
-## Instagram ICP text to list (candidate)
+## Instagram ICP text to list
 
 For a user-described ICP, compile short `searchQueries` and atomic `criteria`
 from their request, or use supplied source accounts and saved Find Leads list IDs.
@@ -112,6 +112,10 @@ qualification accuracy. List creation never activates a campaign or sends.
 
 These six tools use the existing owner-granted `leads:read`, `leads:write`,
 `campaigns:read` and `campaigns:write` permissions. No extra approval page is
-added to a clearly instructed run. Server deployment, migration 0359, Clef
-configuration and client/plugin release must be verified before calling this
-candidate live.
+added to a clearly instructed run. Server deployment, migration 0359 and production Clef configuration passed a
+bounded live MCP canary: 20 profiles, 20 model attempts and 40 settled lead credits.
+One match and 14 review profiles were saved, with five provider-unavailable cases
+remaining pending. Original-image decisions and exact list counts were verified;
+same-key recovery added no calls or charges. This is execution evidence, not a
+general accuracy claim. Local clients and plugins require the published 1.11.0
+version; follow each run’s actual provider readiness, costs and unresolved counts.

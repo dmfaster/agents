@@ -1,6 +1,12 @@
 # DM Faster MCP server
 
-Private Instagram ICP research is available in this source candidate only when
+Native Instagram ICP text-to-list uses the six `leads_prospect_*` operations,
+existing Hiker extraction/enrichment, Clef text and original-image judgments,
+and private saved match/review lists. These tools are registered without local
+datasets and retain existing lead/campaign grants and explicit spending limits.
+Unknown evidence and provider failures remain marked; no campaign is activated.
+
+Optional offline Instagram ICP research is available only when
 `DMFASTER_INSTAGRAM_EVALUATION_DATASETS` explicitly configures named local
 datasets. `instagram_icp_plan`, `instagram_evaluation_datasets` and
 `instagram_profiles_evaluate` prepare or replay recorded decisions.
@@ -11,7 +17,7 @@ saved text and cached media; image bytes are view-only tool metadata.
 preserving permissions and credit blocks. These tools do not run providers, spend
 credits, save customer lists or send. Offline reads need no cloud credentials;
 the acquisition quote uses the normal account grant. See
-[the evaluation runbook](../../docs/runbooks/instagram-text-to-list.md).
+`src/instagram-evaluation.ts` for the optional evaluation configuration.
 These tools are not registered by hosted MCP or the current published plugin.
 
 Local stdio MCP server for 91 DM Faster Agent 1.0 domain tools, one local
@@ -39,7 +45,7 @@ It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 78 domain tools directly.
+continue to use all 91 domain tools directly.
 
 OpenAI hosts that support composer mentions discover `workspace_mentions` as an
 app-only search tool. It suggests companies across the supported countries and
@@ -116,7 +122,7 @@ npx --yes @dmfaster/mcp-server@1.11.0
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
-smaller ceiling. The MCP server can expose all 78 domain schemas and the
+smaller ceiling. The MCP server can expose all 91 domain schemas and the
 local connection and presentation schemas while the DM Faster API independently rejects
 domain tools outside the stored credential's scopes.
 
@@ -126,7 +132,7 @@ preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world. Domain tools also
 advertise output schemas generated from the public Agent API contract.
 
-The MCP names are the 78 domain tools:
+The MCP names are the 91 domain tools:
 
 - `analytics_summary`
 - `workspace_briefing`
@@ -170,6 +176,7 @@ The MCP names are the 78 domain tools:
 - `companies_suggest`
 - `companies_search`
 - `companies_evidence_search`
+- `companies_knowledge`
 - `companies_evidence_start`
 - `companies_evidence_advance`
 - `companies_evidence_status`
@@ -186,6 +193,8 @@ The MCP names are the 78 domain tools:
 - `campaign_operation_inspect`
 - `campaign_delivery_inspect`
 - `campaign_delivery_update`
+- `sending_instagram_pacing_inspect`
+- `sending_instagram_pacing_update`
 - `companies_fit_status`
 - `companies_fit_cancel`
 - `companies_fit_runs_list`
@@ -197,6 +206,10 @@ The MCP names are the 78 domain tools:
 - `calendar_meeting_book`
 - `calls_list`
 - `call_inspect`
+- `instagram_extract_quote`
+- `instagram_extract_start`
+- `instagram_extract_inspect`
+- `instagram_extract_results`
 - `leads_status`
 - `leads_extract_quote`
 - `leads_extract_start`
@@ -206,6 +219,12 @@ The MCP names are the 78 domain tools:
 - `leads_enrich_preview`
 - `leads_enrich_start`
 - `leads_enrich_inspect`
+- `leads_prospect_quote`
+- `leads_prospect_start`
+- `leads_prospect_inspect`
+- `leads_prospect_results`
+- `leads_prospect_advance`
+- `leads_prospect_cancel`
 
 Additional MCP tools are `connection_status`, `campaign_workspace`,
 `companies_workspace`, `workspace_open`, and the app-only `workspace_mentions`.
