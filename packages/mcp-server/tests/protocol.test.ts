@@ -8,10 +8,13 @@ import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
 
 import { MCP_SERVER_INSTRUCTIONS, serveDmfasterStdio } from "../src/server.ts";
 import { MCP_TOOL_NAMES, type AgentInvoker } from "../src/tools.ts";
+import { evidenceInitial } from "../browser-tests/companies-fixture.mjs";
 import {
   CAMPAIGN_WORKSPACE_RESOURCE_URI,
   LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI,
   PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+  V3_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+  V2_CAMPAIGN_WORKSPACE_RESOURCE_URI,
   MCP_APP_RESOURCE_MIME_TYPE,
 } from "../src/campaign-workspace.ts";
 
@@ -88,6 +91,65 @@ const modernEnvelope = {
   "io.modelcontextprotocol/clientInfo": { name: "dmfaster-test", version: "1.1.0" },
   "io.modelcontextprotocol/clientCapabilities": {},
 };
+
+test("all evidence lifecycle tools keep full structured quotes and send compact text over MCP", async (t) => {
+  const data = evidenceInitial().result.data;
+  const client: AgentInvoker = {
+    async invoke(tool) {
+      return { ...result(tool), data } as AgentToolResult;
+    },
+  };
+  const wire = createWire(client);
+  t.after(() => wire.close());
+  const handles = { runId: data.runId, expectedRevision: data.expectedRevision };
+  const cases = [
+    {
+      name: "companies_evidence_start",
+      tool: "companies.evidence.start",
+      input: {
+        country: "FI",
+        query: "Finnish SaaS companies",
+        evaluationMode: "binary",
+        idempotencyKey: "compact-mcp-lifecycle-test",
+        criteria: [
+          {
+            id: "saas",
+            statement: "Does this company offer its own SaaS product?",
+            requirement: "advertised",
+            retrievalTerms: [],
+          },
+        ],
+      },
+    },
+    {
+      name: "companies_evidence_advance",
+      tool: "companies.evidence.advance",
+      input: { ...handles, batchSize: 1 },
+    },
+    { name: "companies_evidence_status", tool: "companies.evidence.status", input: handles },
+    { name: "companies_evidence_results", tool: "companies.evidence.results", input: handles },
+    { name: "companies_evidence_cancel", tool: "companies.evidence.cancel", input: handles },
+  ] as const;
+  for (const [index, entry] of cases.entries()) {
+    wire.send({
+      jsonrpc: "2.0",
+      id: index + 1,
+      method: "tools/call",
+      params: { name: entry.name, arguments: entry.input, _meta: modernEnvelope },
+    });
+    const response = await wire.receive();
+    assert.equal(response.error, undefined);
+    const received = response.result as JsonObject;
+    assert.deepEqual(received.structuredContent, { ...result(entry.tool), data });
+    const content = received.content as { type: string; text: string }[];
+    assert.equal(content.length, 1);
+    assert.match(content[0]!.text, /accepted matches so far/);
+    assert.match(content[0]!.text, /Market audience total is unavailable/);
+    assert.doesNotMatch(content[0]!.text, /contentHash|websiteUrl|criterionId/);
+    assert(content[0]!.text.length < 800);
+    assert(content[0]!.text.length < JSON.stringify(data).length);
+  }
+});
 
 test("mention resource templates reach the current domain client with decoded identities", async (t) => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
@@ -299,6 +361,8 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
     [
       CAMPAIGN_WORKSPACE_RESOURCE_URI,
       PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+      V3_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+      V2_CAMPAIGN_WORKSPACE_RESOURCE_URI,
       LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI,
     ],
   );
@@ -342,6 +406,20 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
     ((contents[0]?._meta as JsonObject).ui as JsonObject).domain,
     "https://app.dmfaster.com",
   );
+  const csp = ((contents[0]?._meta as JsonObject).ui as JsonObject).csp as JsonObject;
+  assert.deepEqual(csp.connectDomains, []);
+  assert.deepEqual(csp.frameDomains, []);
+  assert.deepEqual(csp.resourceDomains, [
+    "https://www.google.com",
+    "https://t0.gstatic.com",
+    "https://t1.gstatic.com",
+    "https://t2.gstatic.com",
+    "https://t3.gstatic.com",
+  ]);
+  assert.deepEqual((contents[0]?._meta as JsonObject)["openai/widgetCSP"], {
+    connect_domains: [],
+    resource_domains: csp.resourceDomains,
+  });
   wire.send({
     jsonrpc: "2.0",
     id: 51,
@@ -426,7 +504,11 @@ for (const name of ["workspace_open", "companies_workspace", "campaign_workspace
         : [
             {
               tool: "companies.search",
-              input: { filters: { countries: ["FI"], activeOnly: true }, pageSize: 20 },
+              input: {
+                filters: { countries: ["FI"], activeOnly: true },
+                pageSize: 20,
+                projection: "list",
+              },
             },
           ],
     );
@@ -439,13 +521,25 @@ test("company presentation preserves complex filters and domain reads stay headl
   context.after(() => wire.close());
   wire.send({ jsonrpc: "2.0", id: 1, method: "tools/list", params: { _meta: modernEnvelope } });
   const tools = ((await wire.receive()).result as JsonObject).tools as JsonObject[];
-  for (const name of ["companies_filters", "companies_search", "company_inspect"]) {
+  for (const name of [
+    "companies_filters",
+    "companies_search",
+    "company_inspect",
+    "companies_evidence_results",
+  ]) {
     const meta = tools.find((item) => item.name === name)!._meta as JsonObject;
     assert.equal(meta["openai/widgetAccessible"], true);
     assert.equal(meta["openai/outputTemplate"], undefined);
     assert.deepEqual((meta.ui as JsonObject).visibility, ["model", "app"]);
   }
-  for (const name of ["companies_fit_start", "companies_list_prepare", "campaign_launch"]) {
+  for (const name of [
+    "companies_fit_start",
+    "companies_list_prepare",
+    "campaign_launch",
+    "companies_evidence_start",
+    "companies_evidence_advance",
+    "companies_evidence_cancel",
+  ]) {
     assert.equal(
       (tools.find((item) => item.name === name)!._meta as JsonObject)["openai/widgetAccessible"],
       false,
@@ -472,7 +566,9 @@ test("company presentation preserves complex filters and domain reads stay headl
   const response = (await wire.receive()).result as JsonObject;
   assert.equal(response.isError, undefined);
   assert.equal((response.structuredContent as JsonObject).section, "companies");
-  assert.deepEqual(calls, [{ tool: "companies.search", input: { filters, pageSize: 5 } }]);
+  assert.deepEqual(calls, [
+    { tool: "companies.search", input: { filters, pageSize: 5, projection: "list" } },
+  ]);
 });
 
 test("saved campaign entrypoint delegates exact identity and preserves read failures", async (context) => {

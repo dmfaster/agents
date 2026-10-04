@@ -775,6 +775,12 @@ export const CompanySearchFiltersSchema = z
 export const CompanySearchInputSchema = z
   .object({
     filters: CompanySearchFiltersSchema,
+    projection: z
+      .union([z.literal("list"), z.literal("rich")])
+      .describe(
+        "List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company.inspect.",
+      )
+      .optional(),
     page: z.number().int().min(1).max(10000).optional(),
     pageSize: z.number().int().min(1).max(100).optional(),
     cursor: z.string().max(1000).optional(),
@@ -789,10 +795,10 @@ export const WebsiteEvidenceCriterionSchema = z
     requirement: z.union([z.literal("advertised"), z.literal("any_support")]),
     retrievalTerms: z
       .array(z.string().min(1).max(100))
-      .min(1)
+      .min(0)
       .max(12)
       .describe(
-        "Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI.",
+        "Optional source-language hints for complete scans; use an empty array for binary website judgments without keyword gates. Fast shortlist previews still require retrieval terms.",
       ),
     retrievalGroups: z
       .array(z.array(z.string().min(1).max(100)).min(1).max(12))
@@ -826,11 +832,24 @@ export const CompanyEvidenceSearchInputSchema = z
     querySignature: z.string().min(1).max(200).optional(),
   })
   .strict();
+export const CompanyKnowledgeInputSchema = z
+  .object({
+    country: z.union([z.literal("FI")]),
+    businessId: z.string().min(1).max(192),
+    maxAgeDays: z.number().int().min(1).max(90).optional(),
+  })
+  .strict();
 export const CompanyEvidenceStartInputSchema = z
   .object({
     country: z.union([z.literal("FI")]),
     query: z.string().min(1).max(1500),
     criteria: z.array(WebsiteEvidenceCriterionSchema).min(1).max(4),
+    evaluationMode: z
+      .union([z.literal("binary"), z.literal("passage")])
+      .describe(
+        "Binary evaluates related website sections together in one compact request per company. Passage preserves separate relationship statuses and explicit-denial merging. Omission preserves passage behavior.",
+      )
+      .optional(),
     filters: CompanySearchFiltersSchema.optional(),
     maxAgeDays: z.number().int().min(1).max(90).optional(),
     idempotencyKey: z.string().min(1).max(100),
@@ -1031,6 +1050,41 @@ export const CampaignDeliveryUpdateInputSchema = z
       .refine((value) => Object.keys(value).length >= 1, "Provide at least 1 properties"),
   })
   .strict();
+export const InstagramPacingInspectInputSchema = z.object({}).strict();
+export const InstagramPacingPolicySchema = z
+  .object({
+    gapMinSeconds: z.number().int().min(12).max(3600),
+    gapMaxSeconds: z.number().int().min(12).max(3600),
+  })
+  .strict()
+  .describe(
+    "Minimum must be less than or equal to maximum; seconds between outgoing Instagram messages.",
+  );
+export const InstagramPacingUpdateInputSchema = z
+  .object({
+    expectedRevision: z.union([
+      z
+        .string()
+        .regex(
+          new RegExp(
+            "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-8][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$",
+          ),
+        ),
+      z.null(),
+    ]),
+    idempotencyKey: z.string().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]+$")),
+    reason: z.string().min(3).max(500),
+    policy: z
+      .union([InstagramPacingPolicySchema, z.null()])
+      .refine(
+        (value) =>
+          [InstagramPacingPolicySchema, z.null()].filter(
+            (candidate) => candidate.safeParse(value).success,
+          ).length === 1,
+        "Expected exactly one schema match",
+      ),
+  })
+  .strict();
 export const CompanyFitStatusInputSchema = z.object({ runId: ResourceIdSchema }).strict();
 export const CompanyFitCancelInputSchema = z.object({ runId: ResourceIdSchema }).strict();
 export const CompanyFitRunCursorSchema = z
@@ -1109,6 +1163,43 @@ export const CallsListInputSchema = z
   })
   .strict();
 export const CallInspectInputSchema = z.object({ meetingId: ResourceIdSchema }).strict();
+export const InstagramExtractionQuoteInputSchema = z
+  .object({
+    username: z.string().trim().min(1).max(31).regex(new RegExp("^@?[A-Za-z0-9._]{1,30}$")),
+    type: z.union([
+      z.literal("followers"),
+      z.literal("following"),
+      z.literal("likers"),
+      z.literal("commenters"),
+    ]),
+    count: z.number().int().min(1).max(2147483647),
+    currency: z.union([z.literal("USD"), z.literal("EUR")]).optional(),
+    postUrl: z.string().trim().min(1).max(300).optional(),
+  })
+  .strict();
+export const InstagramExtractionStartInputSchema = z
+  .object({
+    username: z.string().trim().min(1).max(31).regex(new RegExp("^@?[A-Za-z0-9._]{1,30}$")),
+    type: z.union([
+      z.literal("followers"),
+      z.literal("following"),
+      z.literal("likers"),
+      z.literal("commenters"),
+    ]),
+    count: z.number().int().min(1).max(2147483647),
+    currency: z.union([z.literal("USD"), z.literal("EUR")]).optional(),
+    postUrl: z.string().trim().min(1).max(300).optional(),
+    idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+  })
+  .strict();
+export const InstagramExtractionInspectInputSchema = z.object({ jobId: ResourceIdSchema }).strict();
+export const InstagramExtractionResultsInputSchema = z
+  .object({
+    jobId: ResourceIdSchema,
+    cursor: z.string().min(1).max(30).regex(new RegExp("^[A-Za-z0-9._]+$")).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
 export const LeadsStatusInputSchema = z
   .object({
     cursor: z.string().trim().min(1).max(1000).optional(),
@@ -1164,6 +1255,106 @@ export const LeadEnrichmentStartInputSchema = z
   })
   .strict();
 export const LeadEnrichmentInspectInputSchema = z.object({ jobId: ResourceIdSchema }).strict();
+export const InstagramProspectCriterionSchema = z
+  .object({
+    id: z.string().min(1).max(40).regex(new RegExp("^[a-z][a-z0-9_]{0,39}$")),
+    statement: z.string().min(1).max(1000),
+    basis: z.union([z.literal("text"), z.literal("visual")]),
+    role: z.union([z.literal("required"), z.literal("preferred")]),
+    unknown: z.union([z.literal("review"), z.literal("exclude")]),
+    literalRule: z
+      .union([
+        z
+          .object({
+            kind: z.literal("follower_count"),
+            min: z.number().int().min(0).optional(),
+            max: z.number().int().min(0).optional(),
+          })
+          .strict(),
+        z
+          .object({
+            kind: z.union([z.literal("privacy"), z.literal("verification")]),
+            equals: z.boolean(),
+          })
+          .strict(),
+      ])
+      .refine(
+        (value) =>
+          [
+            z
+              .object({
+                kind: z.literal("follower_count"),
+                min: z.number().int().min(0).optional(),
+                max: z.number().int().min(0).optional(),
+              })
+              .strict(),
+            z
+              .object({
+                kind: z.union([z.literal("privacy"), z.literal("verification")]),
+                equals: z.boolean(),
+              })
+              .strict(),
+          ].filter((candidate) => candidate.safeParse(value).success).length === 1,
+        "Expected exactly one schema match",
+      )
+      .optional(),
+  })
+  .strict();
+export const InstagramProspectSourceSchema = z
+  .object({
+    type: z.union([
+      z.literal("followers"),
+      z.literal("following"),
+      z.literal("likers"),
+      z.literal("commenters"),
+    ]),
+    identifier: z.string().min(1).max(2048),
+    count: z.number().int().min(1).max(1000).optional(),
+  })
+  .strict();
+export const InstagramProspectInputSchema = z
+  .object({
+    query: z.string().min(1).max(4000),
+    criteria: z.array(InstagramProspectCriterionSchema).min(1).max(12).optional(),
+    threshold: z.number().min(0.5).max(1).optional(),
+    evidenceThreshold: z.number().min(0.5).max(1).optional(),
+    sourceListIds: z.array(z.string().min(1).max(200)).max(10).optional(),
+    sources: z.array(InstagramProspectSourceSchema).max(10).optional(),
+    searchQueries: z.array(z.string().min(1).max(120)).min(1).max(5).optional(),
+    targetCount: z.number().int().min(1).max(1000).optional(),
+    maxCandidates: z.number().int().min(1).max(1000).optional(),
+    maxCredits: z.number().int().min(1).max(100000).optional(),
+    maxModelCalls: z.number().int().min(1).max(1000).optional(),
+    media: z.union([z.literal("none"), z.literal("avatar"), z.literal("recent_posts")]).optional(),
+    model: z.union([z.literal("clef"), z.literal("clef-flash")]).optional(),
+    includeReview: z.boolean().optional(),
+    excludePreviouslyContacted: z.boolean().optional(),
+    name: z.string().min(1).max(100).optional(),
+  })
+  .strict();
+export const InstagramProspectStartInputSchema = z.intersection(
+  InstagramProspectInputSchema,
+  z.object({ idempotencyKey: z.string().min(1).max(120) }).strict(),
+);
+export const InstagramProspectRunInputSchema = z
+  .object({ runId: z.string().min(1).max(100) })
+  .strict();
+export const InstagramProspectResultsInputSchema = z
+  .object({
+    runId: z.string().min(1).max(100),
+    status: z
+      .union([
+        z.literal("pending"),
+        z.literal("accept"),
+        z.literal("review"),
+        z.literal("exclude"),
+        z.literal("suppressed"),
+      ])
+      .optional(),
+    cursor: z.string().max(2000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
 export const AGENT_INPUT_SCHEMAS = {
   "analytics.summary": AnalyticsSummaryInputSchema,
   "workspace.briefing": WorkspaceBriefingInputSchema,
@@ -1207,6 +1398,7 @@ export const AGENT_INPUT_SCHEMAS = {
   "companies.suggest": CompanySuggestionsInputSchema,
   "companies.search": CompanySearchInputSchema,
   "companies.evidence.search": CompanyEvidenceSearchInputSchema,
+  "companies.knowledge": CompanyKnowledgeInputSchema,
   "companies.evidence.start": CompanyEvidenceStartInputSchema,
   "companies.evidence.advance": CompanyEvidenceAdvanceInputSchema,
   "companies.evidence.status": CompanyEvidenceStatusInputSchema,
@@ -1223,6 +1415,8 @@ export const AGENT_INPUT_SCHEMAS = {
   "campaign.operation.inspect": CampaignOperationInspectInputSchema,
   "campaign.delivery.inspect": CampaignDeliveryInspectInputSchema,
   "campaign.delivery.update": CampaignDeliveryUpdateInputSchema,
+  "sending.instagram.pacing.inspect": InstagramPacingInspectInputSchema,
+  "sending.instagram.pacing.update": InstagramPacingUpdateInputSchema,
   "companies.fit.status": CompanyFitStatusInputSchema,
   "companies.fit.cancel": CompanyFitCancelInputSchema,
   "companies.fit.runs.list": CompanyFitRunsListInputSchema,
@@ -1234,6 +1428,10 @@ export const AGENT_INPUT_SCHEMAS = {
   "calendar.meeting.book": CalendarMeetingBookInputSchema,
   "calls.list": CallsListInputSchema,
   "call.inspect": CallInspectInputSchema,
+  "instagram.extract.quote": InstagramExtractionQuoteInputSchema,
+  "instagram.extract.start": InstagramExtractionStartInputSchema,
+  "instagram.extract.inspect": InstagramExtractionInspectInputSchema,
+  "instagram.extract.results": InstagramExtractionResultsInputSchema,
   "leads.status": LeadsStatusInputSchema,
   "leads.extract.quote": LeadExtractionQuoteInputSchema,
   "leads.extract.start": LeadExtractionStartInputSchema,
@@ -1243,4 +1441,10 @@ export const AGENT_INPUT_SCHEMAS = {
   "leads.enrich.preview": LeadEnrichmentPreviewInputSchema,
   "leads.enrich.start": LeadEnrichmentStartInputSchema,
   "leads.enrich.inspect": LeadEnrichmentInspectInputSchema,
+  "leads.prospect.quote": InstagramProspectInputSchema,
+  "leads.prospect.start": InstagramProspectStartInputSchema,
+  "leads.prospect.inspect": InstagramProspectRunInputSchema,
+  "leads.prospect.results": InstagramProspectResultsInputSchema,
+  "leads.prospect.advance": InstagramProspectRunInputSchema,
+  "leads.prospect.cancel": InstagramProspectRunInputSchema,
 } as const;

@@ -3,8 +3,9 @@ import { publicFinnishBusinessId } from "@dmfaster/product-ui";
 import type { AgentToolInputMap } from "@dmfaster/sdk";
 import type { McpAppBridge } from "./bridge.ts";
 import { ConnectionDetails } from "./workspace-details.tsx";
-import { CompanyFilterControls, filterChips } from "./company-filters.tsx";
-import { CompanyProfile } from "./company-profile.tsx";
+import { filterChips } from "./company-filters.tsx";
+import { CompanyLogo } from "./company-logo.tsx";
+import { CompanyProfileDrawer } from "./company-profile-drawer.tsx";
 import { ReadCache } from "./read-cache.ts";
 import {
   DEFAULT_COMPANY_FILTERS,
@@ -22,7 +23,6 @@ import {
   type CompanyPage,
   type CompanyResult,
   type CompanyRow,
-  type FilterMetadata,
 } from "./companies-data.ts";
 
 type SearchInput = AgentToolInputMap["companies.search"];
@@ -73,27 +73,17 @@ export function CompaniesWorkspace({
   const [profileError, setProfileError] = useState("");
   const [notice, setNotice] = useState("");
   const [contextBusy, setContextBusy] = useState(false);
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [metadata, setMetadata] = useState<FilterMetadata | null>(null);
-  const [metadataLoading, setMetadataLoading] = useState(false);
-  const [metadataError, setMetadataError] = useState("");
   const searchGeneration = useRef(0);
   const profileGeneration = useRef(0);
-  const metadataGeneration = useRef(0);
   const contextGeneration = useRef(0);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const heading = useRef<HTMLHeadingElement | null>(null);
   const cacheRef = useRef<ReadCache | null>(null);
   if (!cacheRef.current) cacheRef.current = new ReadCache();
   const cache = cacheRef.current;
   const canCall = bridge.canCallTools();
-  const selectedIdentity = row ? identity(row) : "";
-  useEffect(() => {
-    if (selectedIdentity) heading.current?.focus();
-  }, [selectedIdentity]);
 
   const search = useCallback(
     async (input: SearchInput, fresh = false) => {
+      input = { ...input, projection: "list" };
       const generation = ++searchGeneration.current;
       setSearching(true);
       setSearchError("");
@@ -134,7 +124,6 @@ export function CompaniesWorkspace({
     searchGeneration.current += 1;
     profileGeneration.current += 1;
     contextGeneration.current += 1;
-    if (timer.current) clearTimeout(timer.current);
     const next = initialPage(initial);
     setPage(next);
     setFilters(next?.filters ?? initialFilters ?? DEFAULT_COMPANY_FILTERS);
@@ -145,70 +134,19 @@ export function CompaniesWorkspace({
     setSearchError(initialError(initial));
     setSearching(false);
     if (next && next.page === 1)
-      cache.seed(`search:${stableKey({ filters: next.filters, pageSize: next.pageSize })}`, next);
+      cache.seed(
+        `search:${stableKey({ filters: next.filters, pageSize: next.pageSize, projection: "list" })}`,
+        next,
+      );
     if (!initial && bridge.canCallTools())
       void search({ filters: initialFilters ?? DEFAULT_COMPANY_FILTERS, pageSize: 20 });
     return () => {
       searchGeneration.current += 1;
       profileGeneration.current += 1;
-      metadataGeneration.current += 1;
       contextGeneration.current += 1;
-      if (timer.current) clearTimeout(timer.current);
     };
   }, [initial, initialFilters, bridge, cache, search]);
 
-  const metadataKey = stableKey({ countries: filters.countries, states: filters.states ?? [] });
-  const loadMetadata = useCallback(
-    async (fresh = false) => {
-      const generation = ++metadataGeneration.current;
-      setMetadata(null);
-      setMetadataLoading(true);
-      setMetadataError("");
-      try {
-        const input = JSON.parse(metadataKey) as AgentToolInputMap["companies.filters"];
-        const next = await cache.read(
-          `filters:${metadataKey}`,
-          async () => readData<FilterMetadata>(await bridge.callTool("companies_filters", input)),
-          fresh,
-        );
-        if (generation === metadataGeneration.current) setMetadata(next);
-      } catch (error) {
-        if (generation === metadataGeneration.current)
-          setMetadataError(error instanceof Error ? error.message : String(error));
-      } finally {
-        if (generation === metadataGeneration.current) setMetadataLoading(false);
-      }
-    },
-    [bridge, cache, metadataKey],
-  );
-  useEffect(() => {
-    if (filterOpen && canCall) void loadMetadata();
-    return () => {
-      metadataGeneration.current += 1;
-    };
-  }, [filterOpen, canCall, loadMetadata]);
-
-  function changeFilters(next: CompanyFilters) {
-    searchGeneration.current += 1;
-    profileGeneration.current += 1;
-    contextGeneration.current += 1;
-    setFilters(next);
-    setRow(null);
-    setDetail(null);
-    setSelected(new Map());
-    setNotice("");
-    setSearchError("");
-    if (timer.current) clearTimeout(timer.current);
-    if (!canCall) return;
-    setSearching(true);
-    timer.current = setTimeout(() => {
-      timer.current = null;
-      void search({
-        filters: { ...next, q: next.q?.trim() || "" },
-        pageSize: page?.pageSize ?? 20,
-      });
-    }, 250);
-  }
   const profileKey = (company: CompanyRow) =>
     `profile:${identity(company)}:${page?.expectedRevision ?? ""}`;
   async function inspect(company: CompanyRow, fresh = false) {
@@ -266,10 +204,6 @@ export function CompaniesWorkspace({
     if (row) {
       void inspect(row, true);
       return;
-    }
-    if (timer.current) {
-      clearTimeout(timer.current);
-      timer.current = null;
     }
     setSelected(new Map());
     void search({ filters, pageSize: page?.pageSize ?? 20 }, true);
@@ -337,25 +271,14 @@ export function CompaniesWorkspace({
         {navigation}
         <header className="workspace-header">
           <div>
-            {row ? (
-              <button className="workspace-link workspace-back" onClick={back}>
-                ← Back to companies
-              </button>
-            ) : null}
-            <h1 ref={heading} tabIndex={-1}>
-              {row ? row.name : "Companies"}
-            </h1>
-            {!row ? <p className="workspace-muted">Find your next conversation.</p> : null}
+            <h1>Companies</h1>
+            <p className="workspace-muted">Search in chat. Explore the results here.</p>
           </div>
-          <button
-            className="workspace-link"
-            disabled={!canCall || (row ? profileLoading : searching)}
-            onClick={refresh}
-          >
+          <button className="workspace-link" disabled={!canCall || searching} onClick={refresh}>
             Refresh
           </button>
         </header>
-        {notice ? (
+        {notice && !row ? (
           <p className="workspace-notice" role="status">
             {notice}
           </p>
@@ -363,152 +286,95 @@ export function CompaniesWorkspace({
         {!canCall ? (
           <p className="workspace-muted">Continue this search through your assistant.</p>
         ) : null}
-        {row ? (
-          <>
+        <section aria-label="Companies">
+          <div className="company-filter-chips" aria-label="Search criteria">
+            <span className="company-market">{filters.countries.join(" · ")}</span>
+            {filters.q ? <span className="company-filter-chip">{filters.q}</span> : null}
+            {filterChips(filters).map((chip) => (
+              <span className="company-filter-chip" key={chip.key}>
+                {chip.label}
+              </span>
+            ))}
+          </div>
+          <div className="company-results-bar">
+            <p className="workspace-count" aria-live="polite">
+              {searching
+                ? "Counting matches…"
+                : searchError
+                  ? "Exact count unavailable"
+                  : page
+                    ? `${page.total.toLocaleString("en-US")} ${page.total === 1 ? "company" : "companies"}`
+                    : "Company data unavailable"}
+            </p>
             <button
-              className="workspace-button company-chat-action"
+              className="workspace-link"
               disabled={contextDisabled}
               onClick={() => void useInChat()}
             >
-              Use this company in chat
+              {selected.size ? `Discuss selected (${selected.size})` : "Use this search in chat"}
             </button>
-            <CompanyProfile
-              row={row}
-              detail={detail}
-              loading={profileLoading}
-              error={profileError}
-              onRetry={() => void inspect(row, true)}
-            />
-          </>
-        ) : (
-          <section aria-label="Companies">
-            <form
-              className="workspace-search"
-              onSubmit={(event) => {
-                event.preventDefault();
-                if (canCall) refresh();
-              }}
-            >
-              <input
-                aria-label="Search companies"
-                placeholder="Search companies"
-                maxLength={120}
-                value={filters.q ?? ""}
-                disabled={!canCall}
-                onChange={(event) => changeFilters({ ...filters, q: event.target.value })}
-              />
-              <button
-                type="button"
-                className="workspace-link"
-                aria-expanded={filterOpen}
-                aria-controls="company-filters"
-                onClick={() => setFilterOpen(!filterOpen)}
-              >
-                Filters
-              </button>
-            </form>
-            <div id="company-filters" hidden={!filterOpen}>
-              <CompanyFilterControls
-                filters={filters}
-                metadata={metadata}
-                loading={metadataLoading}
-                error={metadataError}
-                onChange={changeFilters}
-                onRetry={() => void loadMetadata(true)}
-              />
-            </div>
-            <div className="company-filter-chips" aria-label="Active filters">
-              <span className="company-market">{filters.countries.join(" · ")}</span>
-              {filterChips(filters).map((chip) => (
-                <button
-                  key={chip.key}
-                  aria-label={`Remove ${chip.label}`}
-                  disabled={!canCall}
-                  onClick={() => {
-                    const next = { ...filters };
-                    delete next[chip.key];
-                    changeFilters(next);
-                  }}
-                >
-                  {chip.label}
-                  <span aria-hidden="true"> ×</span>
-                </button>
-              ))}
-            </div>
-            <div className="company-results-bar">
-              <p className="workspace-count" aria-live="polite">
-                {searching
-                  ? "Counting matches…"
-                  : searchError
-                    ? "Exact count unavailable"
-                    : page
-                      ? `${page.total.toLocaleString("en-US")} ${page.total === 1 ? "company" : "companies"}`
-                      : "Company data unavailable"}
-              </p>
-              <button
-                className="workspace-link"
-                disabled={contextDisabled}
-                onClick={() => void useInChat()}
-              >
-                {selected.size ? `Discuss selected (${selected.size})` : "Use this search in chat"}
-              </button>
-            </div>
-            {searchError ? (
-              <p role="alert" className="company-error">
-                {searchError}
-              </p>
-            ) : null}
-            {page ? (
-              <>
-                <div className="company-table-wrap" aria-busy={searching}>
-                  <table className="company-table">
-                    <caption className="sr-only">Companies matching the current search</caption>
-                    <thead>
-                      <tr>
-                        <th className="company-select">
-                          <span className="sr-only">Select for discussion</span>
-                        </th>
-                        <th>Company</th>
-                        <th className="company-location">Location</th>
-                        <th className="company-employees">Employees</th>
-                        <th className="company-revenue">Revenue</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {page.companies.map((company) => (
-                        <tr key={identity(company)}>
-                          <td className="company-select">
-                            <input
-                              type="checkbox"
-                              aria-label={`Select ${company.name}`}
-                              checked={selected.has(identity(company))}
-                              disabled={
-                                searching ||
-                                Boolean(searchError) ||
-                                (!selected.has(identity(company)) &&
-                                  selected.size >= MAX_SELECTED_COMPANIES)
-                              }
-                              onChange={(event) => {
-                                const checked = event.target.checked;
-                                setSelected((current) => {
-                                  const next = new Map(current);
-                                  if (checked && next.size < MAX_SELECTED_COMPANIES)
-                                    next.set(identity(company), company);
-                                  else next.delete(identity(company));
-                                  return next;
-                                });
-                              }}
-                            />
-                          </td>
-                          <td>
-                            <button
-                              className="company-row-link"
-                              data-company={identity(company)}
-                              disabled={searching || !canCall || Boolean(searchError)}
-                              onClick={() => void inspect(company)}
-                            >
-                              <strong>{company.name}</strong>
-                              <small>
+          </div>
+          {searchError ? (
+            <p role="alert" className="company-error">
+              {searchError}
+            </p>
+          ) : null}
+          {page ? (
+            <>
+              <div className="company-table-wrap" aria-busy={searching}>
+                <table className="company-table">
+                  <caption className="sr-only">Companies matching the current search</caption>
+                  <thead>
+                    <tr>
+                      <th className="company-select">
+                        <span className="sr-only">Select for discussion</span>
+                      </th>
+                      <th>Company</th>
+                      <th className="company-location">Location</th>
+                      <th className="company-employees">Employees</th>
+                      <th className="company-revenue">Revenue</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {page.companies.map((company) => (
+                      <tr
+                        key={identity(company)}
+                        data-selected={selected.has(identity(company)) || undefined}
+                      >
+                        <td className="company-select">
+                          <input
+                            type="checkbox"
+                            aria-label={`Select ${company.name}`}
+                            checked={selected.has(identity(company))}
+                            disabled={
+                              searching ||
+                              Boolean(searchError) ||
+                              (!selected.has(identity(company)) &&
+                                selected.size >= MAX_SELECTED_COMPANIES)
+                            }
+                            onChange={(event) => {
+                              const checked = event.target.checked;
+                              setSelected((current) => {
+                                const next = new Map(current);
+                                if (checked && next.size < MAX_SELECTED_COMPANIES)
+                                  next.set(identity(company), company);
+                                else next.delete(identity(company));
+                                return next;
+                              });
+                            }}
+                          />
+                        </td>
+                        <td>
+                          <button
+                            className="company-row-link"
+                            data-company={identity(company)}
+                            disabled={searching || !canCall || Boolean(searchError)}
+                            onClick={() => void inspect(company)}
+                          >
+                            <CompanyLogo company={company} />
+                            <span className="company-row-copy">
+                              <strong title={company.name}>{company.name}</strong>
+                              <small title={text(company.industryLabel)}>
                                 {text(company.industryLabel) ||
                                   websiteLabel(company.websiteUrl) ||
                                   publicFinnishBusinessId(company.country, company.businessId)}
@@ -517,74 +383,87 @@ export function CompaniesWorkspace({
                                 {text(company.city) || company.country} · {employees(company)}{" "}
                                 employees · {revenue(company)}
                               </small>
-                            </button>
-                          </td>
-                          <td className="company-location">
-                            {text(company.city) || company.country}
-                          </td>
-                          <td className="company-employees">{employees(company)}</td>
-                          <td className="company-revenue">{revenue(company)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                            </span>
+                          </button>
+                        </td>
+                        <td className="company-location">
+                          {text(company.city) || company.country}
+                        </td>
+                        <td className="company-employees">{employees(company)}</td>
+                        <td className="company-revenue">{revenue(company)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {!page.companies.length && !searching && !searchError ? (
+                <div className="workspace-empty">
+                  <h2>No companies match this search</h2>
+                  <p>Try fewer filters, or explore another market with your assistant.</p>
                 </div>
-                {!page.companies.length && !searching && !searchError ? (
-                  <div className="workspace-empty">
-                    <h2>No companies match this search</h2>
-                    <p>Try fewer filters, or explore another market with your assistant.</p>
-                  </div>
-                ) : null}
-                <div className="company-page-footer">
-                  <p className="workspace-muted">
-                    {page.companies.length
-                      ? `Showing ${(page.page - 1) * page.pageSize + 1}–${(page.page - 1) * page.pageSize + page.companies.length}`
-                      : "No rows"}
-                  </p>
-                  <nav className="workspace-pagination" aria-label="Company pages">
-                    {page.page > 1 ? (
-                      <button
-                        className="workspace-link"
-                        disabled={searching || !canCall || Boolean(searchError)}
-                        onClick={() =>
-                          void search({ filters: page.filters, pageSize: page.pageSize })
-                        }
-                      >
-                        First page
-                      </button>
-                    ) : null}
-                    {page.hasNextPage && page.nextCursor ? (
-                      <button
-                        className="workspace-link"
-                        disabled={searching || !canCall || Boolean(searchError)}
-                        onClick={() =>
-                          void search({
-                            filters: page.filters,
-                            pageSize: page.pageSize,
-                            page: page.page + 1,
-                            cursor: page.nextCursor!,
-                            expectedRevision: page.expectedRevision,
-                            querySignature: page.querySignature,
-                          })
-                        }
-                      >
-                        Next page
-                      </button>
-                    ) : null}
-                  </nav>
-                </div>
-                {selected.size >= MAX_SELECTED_COMPANIES ? (
-                  <p className="workspace-muted">
-                    Up to 50 companies per discussion. Deselect a company to choose another.
-                  </p>
-                ) : null}
-              </>
-            ) : null}
-          </section>
-        )}
+              ) : null}
+              <div className="company-page-footer">
+                <p className="workspace-muted">
+                  {page.companies.length
+                    ? `Showing ${(page.page - 1) * page.pageSize + 1}–${(page.page - 1) * page.pageSize + page.companies.length}`
+                    : "No rows"}
+                </p>
+                <nav className="workspace-pagination" aria-label="Company pages">
+                  {page.page > 1 ? (
+                    <button
+                      className="workspace-link"
+                      disabled={searching || !canCall || Boolean(searchError)}
+                      onClick={() =>
+                        void search({ filters: page.filters, pageSize: page.pageSize })
+                      }
+                    >
+                      First page
+                    </button>
+                  ) : null}
+                  {page.hasNextPage ? (
+                    <button
+                      className="workspace-link"
+                      disabled={searching || !canCall || Boolean(searchError)}
+                      onClick={() =>
+                        void search({
+                          filters: page.filters,
+                          pageSize: page.pageSize,
+                          page: page.page + 1,
+                          ...(page.nextCursor ? { cursor: page.nextCursor } : {}),
+                          expectedRevision: page.expectedRevision,
+                          querySignature: page.querySignature,
+                        })
+                      }
+                    >
+                      Next page
+                    </button>
+                  ) : null}
+                </nav>
+              </div>
+              {selected.size >= MAX_SELECTED_COMPANIES ? (
+                <p className="workspace-muted">
+                  Up to 50 companies per discussion. Deselect a company to choose another.
+                </p>
+              ) : null}
+            </>
+          ) : null}
+        </section>
         <footer>
           <ConnectionDetails bridge={bridge} />
         </footer>
+        {row ? (
+          <CompanyProfileDrawer
+            row={row}
+            detail={detail}
+            loading={profileLoading}
+            error={profileError}
+            notice={notice}
+            contextDisabled={contextDisabled}
+            onClose={back}
+            onRetry={() => void inspect(row, true)}
+            onUseInChat={() => void useInChat()}
+          />
+        ) : null}
       </div>
     </main>
   );

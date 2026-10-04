@@ -19,6 +19,12 @@ import { z } from "zod";
 import type { AgentInvoker } from "./tools.ts";
 import { createDmfasterMcpCore, toolFailure } from "./core.ts";
 import { localConnectionSchema } from "./presentation-schemas.ts";
+import {
+  instagramEvaluationConfigFromEnv,
+  registerInstagramEvaluation,
+  type InstagramEvaluationConfig,
+} from "./instagram-evaluation.ts";
+import { registerInstagramWorkspace } from "./instagram-workspace.ts";
 export { MCP_SERVER_VERSION, MCP_SERVER_INSTRUCTIONS, toolFailure } from "./core.ts";
 export const DEFAULT_MCP_API_URL = DEFAULT_DMFASTER_API_URL;
 
@@ -129,11 +135,18 @@ export function createDmfasterMcpServer(input: {
   client: AgentInvoker;
   env?: NodeJS.ProcessEnv;
   auth?: McpAuthInput;
+  instagramEvaluation?: InstagramEvaluationConfig;
 }) {
   return createDmfasterMcpCore({
     client: input.client,
     registerLocalConnection(server) {
       registerConnectionStatus(server, input.env ?? process.env, input.auth ?? {});
+      const evaluation =
+        input.instagramEvaluation ?? instagramEvaluationConfigFromEnv(input.env ?? process.env);
+      if (evaluation) {
+        const service = registerInstagramEvaluation(server, evaluation);
+        registerInstagramWorkspace(server, service, input.client);
+      }
     },
   });
 }

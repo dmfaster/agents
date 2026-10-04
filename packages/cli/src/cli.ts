@@ -40,7 +40,7 @@ import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "1.10.0";
+export const CLI_VERSION = "1.11.0";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();

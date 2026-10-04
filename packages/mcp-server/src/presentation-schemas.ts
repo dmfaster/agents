@@ -29,6 +29,7 @@ export const workspaceOutputSchema = z
       AGENT_OUTPUT_SCHEMAS["campaigns.list"],
       AGENT_OUTPUT_SCHEMAS["campaign.inspect"],
       AGENT_OUTPUT_SCHEMAS["companies.search"],
+      AGENT_OUTPUT_SCHEMAS["companies.evidence.results"],
       toolFailureSchema.extend({ ok: z.literal(false) }),
     ]),
   })

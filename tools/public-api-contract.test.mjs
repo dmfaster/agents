@@ -56,6 +56,7 @@ const EXPECTED_TOOLS = new Map([
   ["companies.suggest", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.search", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.evidence.search", { effect: "read", scopes: ["audiences:read"] }],
+  ["companies.knowledge", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.evidence.start", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.evidence.advance", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.evidence.status", { effect: "read", scopes: ["audiences:read"] }],
@@ -78,6 +79,11 @@ const EXPECTED_TOOLS = new Map([
   ["campaign.operation.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["campaign.delivery.inspect", { effect: "read", scopes: ["campaigns:read"] }],
   ["campaign.delivery.update", { effect: "write", scopes: ["campaigns:read", "campaigns:write"] }],
+  ["sending.instagram.pacing.inspect", { effect: "read", scopes: ["sending:read"] }],
+  [
+    "sending.instagram.pacing.update",
+    { effect: "write", scopes: ["sending:read", "campaigns:write"] },
+  ],
   ["companies.fit.status", { effect: "read", scopes: ["campaigns:read", "audiences:read"] }],
   [
     "companies.fit.cancel",
@@ -104,6 +110,10 @@ const EXPECTED_TOOLS = new Map([
   ],
   ["calls.list", { effect: "read", scopes: ["calls:read"] }],
   ["call.inspect", { effect: "read", scopes: ["calls:read"] }],
+  ["instagram.extract.quote", { effect: "read", scopes: ["leads:read"] }],
+  ["instagram.extract.start", { effect: "write", scopes: ["leads:read", "leads:write"] }],
+  ["instagram.extract.inspect", { effect: "read", scopes: ["leads:read"] }],
+  ["instagram.extract.results", { effect: "read", scopes: ["leads:read"] }],
   ["leads.status", { effect: "read", scopes: ["leads:read"] }],
   ["leads.extract.quote", { effect: "read", scopes: ["leads:read"] }],
   ["leads.extract.start", { effect: "write", scopes: ["leads:read", "leads:write"] }],
@@ -113,6 +123,21 @@ const EXPECTED_TOOLS = new Map([
   ["leads.enrich.preview", { effect: "read", scopes: ["leads:read"] }],
   ["leads.enrich.start", { effect: "write", scopes: ["leads:read", "leads:write"] }],
   ["leads.enrich.inspect", { effect: "read", scopes: ["leads:read"] }],
+  ["leads.prospect.quote", { effect: "read", scopes: ["leads:read", "campaigns:read"] }],
+  [
+    "leads.prospect.start",
+    { effect: "write", scopes: ["leads:read", "campaigns:read", "leads:write", "campaigns:write"] },
+  ],
+  ["leads.prospect.inspect", { effect: "read", scopes: ["leads:read", "campaigns:read"] }],
+  ["leads.prospect.results", { effect: "read", scopes: ["leads:read", "campaigns:read"] }],
+  [
+    "leads.prospect.advance",
+    { effect: "write", scopes: ["leads:read", "campaigns:read", "leads:write", "campaigns:write"] },
+  ],
+  [
+    "leads.prospect.cancel",
+    { effect: "write", scopes: ["leads:read", "campaigns:read", "leads:write", "campaigns:write"] },
+  ],
 ]);
 
 const EXPECTED_AUTH_METHODS = new Map([

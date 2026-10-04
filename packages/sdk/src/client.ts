@@ -30,7 +30,9 @@ function normalizeBaseUrl(value: string) {
   try {
     url = new URL(value);
   } catch (cause) {
-    throw new DmfasterSdkError("DM Faster base URL must be an absolute URL.", "invalid_base_url", { cause });
+    throw new DmfasterSdkError("DM Faster base URL must be an absolute URL.", "invalid_base_url", {
+      cause,
+    });
   }
   if (url.protocol !== "https:" && url.protocol !== "http:") {
     throw new DmfasterSdkError("DM Faster base URL must use HTTP or HTTPS.", "invalid_base_url");
@@ -75,7 +77,11 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function errorMessageFromBody(body: unknown, status: number) {
   if (isRecord(body)) {
     if (typeof body.message === "string" && body.message.trim()) return body.message;
-    if (isRecord(body.error) && typeof body.error.message === "string" && body.error.message.trim()) {
+    if (
+      isRecord(body.error) &&
+      typeof body.error.message === "string" &&
+      body.error.message.trim()
+    ) {
       return body.error.message;
     }
   }
@@ -103,9 +109,7 @@ function parseRetryAfterSeconds(value: string | null) {
   if (!normalized) return null;
   if (/^\d+$/.test(normalized)) {
     const seconds = Number(normalized);
-    return Number.isSafeInteger(seconds) && seconds >= 0
-      ? Math.min(seconds, 24 * 60 * 60)
-      : null;
+    return Number.isSafeInteger(seconds) && seconds >= 0 ? Math.min(seconds, 24 * 60 * 60) : null;
   }
   const retryAt = Date.parse(normalized);
   return Number.isFinite(retryAt)
@@ -127,43 +131,52 @@ function assertToolResult<Name extends AgentToolName>(
   value: unknown,
   expectedTool: Name,
 ): asserts value is AgentToolResult<AgentToolDataMap[Name]> {
-  if (!isRecord(value) || value.version !== 1 || value.tool !== expectedTool || typeof value.ok !== "boolean") {
+  if (
+    !isRecord(value) ||
+    value.version !== 1 ||
+    value.tool !== expectedTool ||
+    typeof value.ok !== "boolean"
+  ) {
     throw new DmfasterProtocolError(
       `DM Faster API returned an invalid result envelope for ${expectedTool}.`,
     );
   }
-  if (!Array.isArray(value.evidence) || !Array.isArray(value.artifacts) || !isRecord(value.consistency)) {
+  if (
+    !Array.isArray(value.evidence) ||
+    !Array.isArray(value.artifacts) ||
+    !isRecord(value.consistency)
+  ) {
     throw new DmfasterProtocolError(
       `DM Faster API returned an incomplete result envelope for ${expectedTool}.`,
     );
   }
   const expectedPolicy = AGENT_TOOL_POLICIES[expectedTool];
   if (
-    !isRecord(value.policy)
-    || Object.keys(value.policy).length !== 3
-    || value.policy.effect !== expectedPolicy.effect
-    || value.policy.approval !== expectedPolicy.approval
-    || value.policy.exposure !== expectedPolicy.exposure
+    !isRecord(value.policy) ||
+    Object.keys(value.policy).length !== 3 ||
+    value.policy.effect !== expectedPolicy.effect ||
+    value.policy.approval !== expectedPolicy.approval ||
+    value.policy.exposure !== expectedPolicy.exposure
   ) {
     throw new DmfasterProtocolError(
       `DM Faster API returned an unsafe result policy for ${expectedTool}.`,
     );
   }
   if (
-    typeof value.generatedAt !== "string"
-    || !Number.isFinite(Date.parse(value.generatedAt))
-    || typeof value.durationMs !== "number"
-    || !Number.isFinite(value.durationMs)
-    || value.durationMs < 0
-    || value.durationMs > 120_000
+    typeof value.generatedAt !== "string" ||
+    !Number.isFinite(Date.parse(value.generatedAt)) ||
+    typeof value.durationMs !== "number" ||
+    !Number.isFinite(value.durationMs) ||
+    value.durationMs < 0 ||
+    value.durationMs > 120_000
   ) {
     throw new DmfasterProtocolError(
       `DM Faster API returned invalid result metadata for ${expectedTool}.`,
     );
   }
   if (
-    (value.ok && value.error !== null)
-    || (!value.ok && (!isRecord(value.error) || value.data !== null))
+    (value.ok && value.error !== null) ||
+    (!value.ok && (!isRecord(value.error) || value.data !== null))
   ) {
     throw new DmfasterProtocolError(
       `DM Faster API returned an invalid error envelope for ${expectedTool}.`,
@@ -217,6 +230,7 @@ export class DmfasterClient {
             accept: "application/json",
             authorization: `Bearer ${this.#token}`,
             "content-type": "application/json",
+            ...(tool === "sending.inspect" ? { "x-dmfaster-sending-observation": "1" } : {}),
           },
           body: JSON.stringify(input),
           redirect: "error",
@@ -232,8 +246,9 @@ export class DmfasterClient {
           responseBody: body,
           ...(transportError.code ? { code: transportError.code } : {}),
           retryable: transportError.retryable,
-          requestId: transportError.requestId
-            ?? boundedTransportString(response.headers.get("x-request-id"), 128),
+          requestId:
+            transportError.requestId ??
+            boundedTransportString(response.headers.get("x-request-id"), 128),
           retryAfterSeconds: parseRetryAfterSeconds(response.headers.get("retry-after")),
           details: transportError.details,
         });
@@ -246,9 +261,13 @@ export class DmfasterClient {
       if (controller.signal.aborted) {
         throw new DmfasterSdkError("DM Faster request was aborted.", "request_aborted", { cause });
       }
-      throw new DmfasterSdkError("DM Faster request failed before a response was received.", "network_error", {
-        cause,
-      });
+      throw new DmfasterSdkError(
+        "DM Faster request failed before a response was received.",
+        "network_error",
+        {
+          cause,
+        },
+      );
     } finally {
       clearTimeout(timeout);
       options.signal?.removeEventListener("abort", onAbort);

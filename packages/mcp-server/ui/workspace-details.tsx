@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { AgentToolDataMap } from "@dmfaster/sdk";
 import type { McpAppBridge } from "./bridge.ts";
+import { sendingCountdown, providerCountdown } from "./sending-countdown.ts";
 
 // Extra reads happen only when the user opens the corresponding disclosure.
 function ReadSection<T>({
@@ -9,18 +10,22 @@ function ReadSection<T>({
   input,
   bridge,
   children,
+  refreshIntervalMs,
 }: {
   title: string;
   tool: string;
   input: Record<string, unknown>;
   bridge: McpAppBridge;
   children: (data: T) => ReactNode;
+  refreshIntervalMs?: number;
 }) {
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const requested = useRef(false);
   const alive = useRef(true);
+  const [open, setOpen] = useState(false);
+  const inFlight = useRef(false);
   useEffect(() => {
     alive.current = true;
     return () => {
@@ -28,6 +33,8 @@ function ReadSection<T>({
     };
   }, []);
   async function read() {
+    if (inFlight.current) return;
+    inFlight.current = true;
     requested.current = true;
     setBusy(true);
     setError("");
@@ -47,13 +54,22 @@ function ReadSection<T>({
     } catch (failure) {
       if (alive.current) setError(failure instanceof Error ? failure.message : String(failure));
     } finally {
+      inFlight.current = false;
       if (alive.current) setBusy(false);
     }
   }
+  const readRef = useRef(read);
+  readRef.current = read;
+  useEffect(() => {
+    if (!open || !refreshIntervalMs || !bridge.canCallTools()) return;
+    const timer = setInterval(() => void readRef.current(), refreshIntervalMs);
+    return () => clearInterval(timer);
+  }, [open, refreshIntervalMs, bridge]);
   return (
     <details
       className="workspace-disclosure"
       onToggle={(event) => {
+        setOpen(event.currentTarget.open);
         if (event.currentTarget.open && !requested.current && bridge.canCallTools()) void read();
       }}
     >
@@ -76,6 +92,50 @@ function ReadSection<T>({
         )}
       </div>
     </details>
+  );
+}
+
+function SendingTiming({ health }: { health: AgentToolDataMap["sending.inspect"] }) {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+  const observation = health.observation;
+  if (!observation) return <p>Sending timing evidence is unavailable.</p>;
+  return (
+    <ul>
+      {observation.channels
+        .filter((channel) => channel.queuedJobs || channel.runningJobs)
+        .map((channel) => (
+          <li key={channel.channel}>
+            <strong>{channel.channel}</strong>:{" "}
+            {channel.runningJobs
+              ? channel.activities?.length
+                ? channel.activities
+                    .map((activity) =>
+                      providerCountdown({ observedAt: observation.observedAt, activity, now }),
+                    )
+                    .join(" ")
+                : providerCountdown({ observedAt: observation.observedAt, activity: null, now })
+              : sendingCountdown({
+                  observedAt: observation.observedAt,
+                  nextEligibleAt: channel.nextEligibleAt,
+                  deadlineKind: channel.deadlineKind,
+                  now,
+                })}
+            {channel.nextJob?.companyName ? <p>{channel.nextJob.companyName}</p> : null}
+            {channel.constraints.map((constraint, index) => (
+              <p key={`${constraint.code}:${index}`}>
+                {constraint.detail}
+                {constraint.blockingJob?.companyName
+                  ? ` Waiting on ${constraint.blockingJob.companyName} (${constraint.blockingJob.channel}).`
+                  : ""}
+              </p>
+            ))}
+          </li>
+        ))}
+    </ul>
   );
 }
 
@@ -232,10 +292,12 @@ export function CampaignDetails({
         tool="sending_inspect"
         input={input}
         bridge={bridge}
+        refreshIntervalMs={30000}
       >
         {(health) => (
           <>
             <p>{health.summary}</p>
+            <SendingTiming health={health} />
             {health.issues.length ? (
               <ul>
                 {health.issues

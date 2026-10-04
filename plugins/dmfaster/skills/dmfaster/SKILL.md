@@ -5,7 +5,7 @@ description: Inspect and safely operate a user's live DM Faster sales workspace 
 
 # DM Faster
 
-For Instagram follower, following, liker or commenter prospecting and credit costs,
+For Instagram ICP text-to-list runs, follower, following, liker or commenter prospecting and credit costs,
 read [social-prospecting.md](references/social-prospecting.md).
 
 Use DM Faster's public agent interface as the only source for live product data
@@ -14,7 +14,7 @@ implementation, review, tests, migrations, or deployments, follow the
 repository's own development guidance unless the user explicitly asks for live
 workspace evidence.
 
-The suite has 78 narrow domain tools, including company-centric search,
+The suite has 91 narrow domain tools, including company-centric search,
 complete company research, private shortlists, social extraction and enrichment, operational reads, campaign
 planning, live delivery settings, authorized campaign controls, inspected inbox
 replies, pipeline updates, follow-up cancellation, and execution event pages.
@@ -45,7 +45,10 @@ workspace identity. `workspace_open` opens Companies from the sidebar;
 `companies_workspace` opens a prospect search beside chat with the same complete
 filters as `companies_search`. Empty arguments browse active companies in Finland.
 Use current country-specific options from `companies_filters`; never invent taxonomy.
-The view preserves exact counts, filters and selected company evidence for discussion.
+The view visualizes the chat composer's searches with read-only criteria, exact
+counts, compact company rows and profile drawers. Refine searches in conversation
+with the same typed tools; the view preserves full filters and selected company
+evidence for discussion.
 `campaign_workspace` browses campaigns with empty arguments, inspects a saved
 campaign with `campaignId`, or presents a complete supplied `state`. All use
 existing permissions. Sharing a selection is context, never authorization to save
@@ -60,10 +63,45 @@ For website-verifiable ICPs, default to `companies_evidence_start` for ordinary
 requests such as “marketing companies with references, country Finland” or
 “every fitting company.” Preserve the original query and every criterion, with
 deterministic restrictions in `filters`. Supply a stable `idempotencyKey` and
-source-language `retrievalTerms`; terms prioritize processing and never exclude
-companies from the complete inventory. The private scan runs in the background.
+`evaluationMode: binary` for boolean website judgments such as SaaS or B2B, with
+`retrievalTerms: []` when language hints are unnecessary. Read each returned
+`binary.value`, probability, review flag and coverage. A false value means the
+supplied evidence does not establish the fact, not proof of absence. Review flags
+block automatic matches; quotations are original packet context samples, not
+selected supporting citations. Use `evaluationMode: passage` when separate
+portfolio/inference/explicit-denial statuses are needed. Source-language terms
+only prioritize complete-scan processing and never exclude eligible companies. The private scan runs in the background.
 Use `companies_evidence_status` and, when useful, `companies_evidence_advance`
 to continue bounded processing. There is no lifetime company or passage cutoff.
+
+The start response already includes its first company page, including validated
+cached matches when available. Inspect and show those returned rows and evidence
+immediately, even while the scan is initializing or running. Do not read
+`companies_evidence_results` just to repeat that page or wait for the whole scan
+before showing useful matches. Read subsequent pages or later discoveries with
+the returned run identity and cursor, preserving exact progress and provisional
+scan status. For an ordinary website-based search, do not first call
+`companies_search` or `companies_knowledge` merely to establish that scan input;
+use already verified deterministic filters and the standard question below.
+Additional profile or knowledge reads remain useful for an explicitly requested
+company inspection, unresolved source review, or a meaning not established here.
+
+Use `companies_knowledge` with a public company `businessId` to inspect existing
+standard website facts without a website fetch, Jev call or private run. Its
+seven definitions include SaaS, B2B and connected offering-to-buyer relationships.
+An unassessed fact is null. To evaluate one of these exact public questions,
+preserve its returned `question` or `trueWhen` as the criterion `statement` with
+`requirement: advertised` and `evaluationMode: binary` in a complete scan.
+These server-defined public judgments can be reused across users when the
+current fresh saved content and definition match. Arbitrary custom criteria and
+queries remain private. A recrawl with unchanged relevant content can reuse the
+judgment; changed content, definition or model input requires reassessment.
+Do not substitute a standard question if it changes the user's intended meaning.
+For an ordinary SaaS/B2B request with those meanings, the standard statements are
+`Does this company offer its own SaaS product?` and
+`Does this company sell products or services to businesses?`. Keep them separate
+when both are required. Use `Does this company offer its own SaaS product to business customers?`
+when the user specifically requires that connected offering-to-buyer relationship.
 
 Page `companies_evidence_results` with the returned `runId`, `expectedRevision`
 and `nextCursor`. Keep the cursor even after an empty provisional page: later
@@ -80,7 +118,7 @@ Keep seller, service and buyer sector together in one criterion. Set
 `requirement: advertised` for an advertised offering. A delivered client project
 supports `portfolio`, and does not by itself prove an advertised sector offering.
 Use `any_support` only when the user accepts portfolio or inferred support.
-Do not weaken the criterion to obtain more matches. JEV checks all fresh retained
+Do not weaken the criterion to obtain more matches. In passage mode, JEV checks all fresh retained
 passages in bounded chunks; an unrelated or unknown chunk cannot erase explicit
 support, and a later conflicting denial prevents acceptance. Preserve original
 quotations, headings and dates. Missing pages and uncertain model judgments mean
@@ -104,12 +142,20 @@ starts outreach.
 
 ## B2B company prospecting
 
-Start with `companies_filters` for the selected countries. It returns every
+Start with `companies_filters` for the selected countries. Reuse already verified
+country options during the same conversation; fetch again for unknown options
+or changed country scope. It returns every
 Companies app filter field, country-specific options, and restrictions. Use
 `companies_search` with those filters directly; no business profile, campaign,
 outreach copy, or decision-maker choice is required. It searches the app's
 company inventory, including companies without websites unless explicitly
 filtered out. Numeric bounds use decimal strings and dates use YYYY-MM-DD.
+
+For a capable MCP Apps host, call `companies_workspace` directly for the initial
+search and each chat refinement. It searches and renders in one call; do not run
+`companies_search` and then repeat that search merely to open the view. For
+headless browsing, prefer `companies_search` with `projection: list` and a bounded
+page size. Omit projection or use rich when contact arrays are needed.
 
 Read the exact total, full rows, and dataset freshness. Continue pages by
 echoing the returned `querySignature` and `expectedRevision`; restart if the
@@ -234,7 +280,11 @@ Choose the narrowest read workflow that answers the request:
 - Use `campaign_copy_inspect` for exact saved social copy, LinkedIn invitation
   settings and the effective accepted-message sequence.
 - Use `sending_inspect` for queue, extension, browser-worker, or failed-send
-  concerns.
+  concerns. Inspect its `observation.channels` before treating a quiet queue as
+  stalled: report the absolute eligibility deadline, remaining seconds, pacing
+  anchor and any company-order blocker. An eligibility deadline is the earliest
+  possible attempt, not guaranteed delivery. Lower bounds, missing timing and
+  stale browser evidence must stay explicit; do not infer a send from a wake.
 - Use `replies_list` for the older campaign reply-stage summary. It does not
   contain the actual conversation thread.
 - Use `conversations_list` for inbox attention and `conversation_inspect` for
@@ -284,6 +334,18 @@ version. `campaign_followups_cancel` takes queued job IDs, the campaign's
 `updatedAt`, and a stable idempotency key. It stops those prospects' follow-up
 chains, including later queued steps, and refuses running or submitted attempts.
 Inspect the queue again; cancelling cannot recall a previously submitted message.
+
+For a user-wide random Instagram message gap, call
+`sending_instagram_pacing_inspect`, then `sending_instagram_pacing_update` with
+that revision, a new stable idempotency key, the user's reason, and `policy`
+containing `gapMinSeconds` and `gapMaxSeconds` (600 and 900 for 10–15 minutes).
+This setting covers all campaigns and browsers and takes effect at the next
+scheduler check. Use `policy: null` to restore campaign pacing. The workspace
+owner's existing sending read and campaign write grants suffice; no extra
+approval page is required. These tools are added to the hosted server with this
+release; installed 1.10.0 clients retain their published catalog until updated.
+
+When `sending.inspect.observation.channels[].activities` is present, report the active provider step and its `kind`, deadline, and last progress. A `delay` clock is a deliberate pause; a `timeout` or `watchdog` is a recovery boundary, not a promised send time. Treat overdue steps and missing/stale timing as attention states. Never explain them away as pacing or repeat a potentially submitted attempt.
 
 When the user asks to record a meeting or change a lead stage, use
 `pipeline_cards_list` to get the exact card ID, stage key, and stage. Use

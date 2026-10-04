@@ -1,6 +1,6 @@
-> Published runtime: 1.10.0. Hosted API checks, package provenance and a clean
-> registry install are verified. Native ChatGPT composer rendering and Events
-> delivery remain unverified; directory review is a separate publication step.
+> Hosted Instagram ICP prospecting is verified live. Publication of the 1.11.0
+> local packages is pending the trusted release workflow. Native host rendering
+> and directory review remain separate checks.
 
 # DM Faster for agents
 
@@ -19,7 +19,7 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-The 1.10.0 release exposes 78 typed domain tools. It adds Basic-plan Instagram
+The 1.11.0 source exposes 91 typed domain tools. It adds Basic-plan Instagram
 prospecting and separately charged enrichment, quiet Companies views, website
 evidence, bounded company suggestions, and company and saved-list mentions.
 Extraction reports exact saved counts and settled credit costs. A same-key retry
@@ -46,6 +46,24 @@ clients. Existing grants never expand automatically.
 The hosted package is separate from this repository's stdio plugin. It is not
 listed in the universal OpenAI directory yet. Native views, mentions and Events
 need compatible host support and their own verification.
+
+## Instagram ICP prospecting
+
+Describe the profiles you want, for example “independent photographers with
+booking information and portfolio-style photo posts.” The agent supplies atomic
+criteria and short search queries, then uses `leads_prospect_quote`,
+`leads_prospect_start`, `leads_prospect_inspect`, `leads_prospect_results`,
+`leads_prospect_advance` and `leads_prospect_cancel`. Existing Hiker extraction
+and enrichment supply observed evidence; Clef evaluates text and original images.
+The run saves private match and optional review lists within explicit candidate,
+lead-credit and model-attempt limits. Basic app UI changes are deferred.
+
+The production canary processed 20 profiles within 20 Clef attempts and 40 settled
+lead credits. It saved one match and 14 review profiles; five provider-unavailable
+cases remain pending. Original-image decisions and exact list counts were checked,
+and same-key recovery added no calls or charges. This verifies the bounded native
+workflow, not general audience accuracy. Scores remain uncalibrated and the
+requested match count is not guaranteed.
 
 ## Install the plugin
 
@@ -81,7 +99,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.10.0 auth login --json
+npx --yes @dmfaster/cli@1.11.0 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -103,13 +121,13 @@ the owner approves the replacement. Credentials are never upgraded silently.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.10.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.10.0 campaign copy inspect campaign_123 --json
-npx --yes @dmfaster/cli@1.10.0 conversations list --filter unread --limit 25 --json
-npx --yes @dmfaster/mcp-server@1.10.0
+npx --yes @dmfaster/cli@1.11.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.11.0 campaign copy inspect campaign_123 --json
+npx --yes @dmfaster/cli@1.11.0 conversations list --filter unread --limit 25 --json
+npx --yes @dmfaster/mcp-server@1.11.0
 ```
 
-The 78 MCP domain tools cover prospecting, workspace, campaign, sending, reply, inbox,
+The 91 MCP domain tools cover prospecting, workspace, campaign, sending, reply, inbox,
 pipeline, company-history, industry, validation, exact-audience preview,
 private draft, launch, and pause workflows. Compatible MCP Apps hosts can render
 `workspace_open`, `companies_workspace`, and `campaign_workspace`. Selecting a
@@ -160,7 +178,7 @@ private product source or trademarks.
 All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
 
 ```bash
-npx --yes @dmfaster/cli@1.10.0 list import --name "My prospects" --file usernames.csv --json
+npx --yes @dmfaster/cli@1.11.0 list import --name "My prospects" --file usernames.csv --json
 ```
 
 The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
@@ -251,3 +269,20 @@ The `companies.suggest` operation is deployed and verified, as are authenticated
 mention selection and resource reads. An approved Basic-plan canary saved ten
 followers for ten settled credits; a same-key retry created no replacement job
 or extra charge. Native directory review and public npm release are separate steps.
+
+## Agent 1.11.0 release
+
+Describe the Instagram profiles you want in plain text. The agent compiles
+required and preferred criteria, gets a credit quote, starts a bounded run, and
+returns private match and review lists. Hiker supplies discovery and profile
+evidence; Clef scores supported text and original images. Missing evidence stays
+marked for review. Exact metadata filters run in code.
+
+The native operations are `leads.prospect.quote`, `leads.prospect.start`,
+`leads.prospect.inspect`, `leads.prospect.results`, `leads.prospect.advance`, and
+`leads.prospect.cancel`. Credits, candidate count and model attempts have explicit
+budgets. Same-key retries recover the run without starting another paid run.
+No campaign is activated. Model scores are not a calibrated accuracy guarantee.
+
+The Basic-plan app interface is staged; MCP, SDK, CLI and the shared plugin are
+the first delivery surfaces. See the canonical skill for input examples.

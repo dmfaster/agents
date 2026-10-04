@@ -42,6 +42,7 @@ export type BridgeNotification = {
 };
 
 export class McpAppBridge {
+  #appName: string;
   #nextRequestId = 0;
   #pending = new Map<number, PendingRequest>();
   #listeners = new Set<(notification: BridgeNotification) => void>();
@@ -49,7 +50,8 @@ export class McpAppBridge {
   capabilities: HostCapabilities = {};
   context: HostContext = {};
 
-  constructor() {
+  constructor(options: { name?: string } = {}) {
+    this.#appName = options.name ?? "DM Faster campaign workspace";
     window.addEventListener("openai:set_globals", (event) => {
       if (this.standard) return;
       const globals = (event as CustomEvent<{ globals?: OpenAiCompatibility }>).detail?.globals;
@@ -117,7 +119,7 @@ export class McpAppBridge {
       const initialized = (await this.request(
         "ui/initialize",
         {
-          appInfo: { name: "DM Faster campaign workspace", version: "1.10.0" },
+          appInfo: { name: this.#appName, version: "1.10.0" },
           appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] },
           protocolVersion: MCP_APP_PROTOCOL_VERSION,
         },

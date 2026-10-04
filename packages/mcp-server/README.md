@@ -1,6 +1,26 @@
 # DM Faster MCP server
 
-Local stdio MCP server for 78 DM Faster Agent 1.0 domain tools, one local
+Native Instagram ICP text-to-list uses the six `leads_prospect_*` operations,
+existing Hiker extraction/enrichment, Clef text and original-image judgments,
+and private saved match/review lists. These tools are registered without local
+datasets and retain existing lead/campaign grants and explicit spending limits.
+Unknown evidence and provider failures remain marked; no campaign is activated.
+
+Optional offline Instagram ICP research is available only when
+`DMFASTER_INSTAGRAM_EVALUATION_DATASETS` explicitly configures named local
+datasets. `instagram_icp_plan`, `instagram_evaluation_datasets` and
+`instagram_profiles_evaluate` prepare or replay recorded decisions.
+`instagram_workspace` opens a private MCP Apps review view with exact loaded
+counts and provisional CSV export. `instagram_profile_inspect` reads original
+saved text and cached media; image bytes are view-only tool metadata.
+`instagram_acquisition_quote` forwards the existing authenticated extraction quote,
+preserving permissions and credit blocks. These tools do not run providers, spend
+credits, save customer lists or send. Offline reads need no cloud credentials;
+the acquisition quote uses the normal account grant. See
+`src/instagram-evaluation.ts` for the optional evaluation configuration.
+These tools are not registered by hosted MCP or the current published plugin.
+
+Local stdio MCP server for 91 DM Faster Agent 1.0 domain tools, one local
 `connection_status` tool, and portable `companies_workspace`, `campaign_workspace` and `workspace_open` views. It uses the MCP TypeScript SDK
 v2 serving entry in strict modern-only mode. MCP 2026-07-28 clients use the new
 per-request protocol; 2025-era initialization is explicitly rejected. The
@@ -15,13 +35,17 @@ preview, private draft preparation, browser setup, and owner-approved launch.
 
 Hosts implementing the standard MCP Apps extension render
 `campaign_workspace` as an inline campaign editor. The self-contained
-`ui://dmfaster/campaign-workspace/v3.html` resource uses the MCP Apps
-`2026-01-26` bridge and requires no external scripts, styles, frames, cookies,
-or network access. It can validate the current state, preview an exact audience,
+`ui://dmfaster/campaign-workspace/v4.html` resource uses the MCP Apps
+`2026-01-26` bridge and requires no external scripts, styles, frames or cookies.
+Company website icons use trusted public favicon origins, with initials when
+unavailable. The Companies view displays searches initiated by the chat composer;
+criteria are read-only, and new tool results replace the displayed search.
+Users can browse pages, select companies for discussion and open profile drawers.
+It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 78 domain tools directly.
+continue to use all 91 domain tools directly.
 
 OpenAI hosts that support composer mentions discover `workspace_mentions` as an
 app-only search tool. It suggests companies across the supported countries and
@@ -32,6 +56,38 @@ authenticated resource templates, with pagination preserved. A mention is
 context only and never authorizes spending credits, changing lists or sending.
 Native host availability needs a separate host check; protocol metadata alone
 does not establish that the composer will render it.
+
+For local UI review, `npm run dev:agent:workspace` uses disposable fixtures.
+After `npm run build:agents`, an owner-authorized live interface test can use an official MCP
+`companies_search` JSON receipt outside Git:
+
+```bash
+npm run dev:agent:workspace -- --live-results /absolute/path/search-receipt.json
+```
+
+To execute a typed search and publish its receipt immediately, use:
+
+```bash
+npm run dev:agent:search -- --preview http://127.0.0.1:PORT/ --input /absolute/path/company-search-input.json
+```
+
+The input contains the same filters as `companies_search`. The review server
+reuses the official agent client, pushes completed results to the view, and
+atomically saves the receipt. Superseded requests cannot replace a newer result.
+File updates also refresh the view without a reload. The preview uses the existing official CLI credential
+through the shared MCP agent client for company profiles and pagination. It
+binds to loopback, validates typed inputs, rejects foreign origins, and permits
+only `companies.search` and `company.inspect`. It cannot start website research,
+spend research credits, save lists or send. No browser cookie, token handoff,
+database access or production environment file is involved. Selection-to-composer
+integration still requires a native MCP host; this local view tests result updates
+and read interactions separately from hosted availability.
+
+The candidate adds optional `projection: list` for compact rows and a shared,
+revision-bound exact-page cache. The native view uses list rows and fetches full
+profiles on demand; existing headless callers still receive rich rows by default.
+Against an older public server, local review retries only an unsupported optional
+projection field, preserving every criterion and returning rich rows.
 
 Social prospecting uses `leads_status`, quote/start/inspect/refresh/continue tools,
 and separate enrichment preview/start/inspect tools. Exact saved counts and
@@ -60,13 +116,13 @@ tools satisfy the credential's scopes, with missing scopes for the others.
 Workspace role, plan, and action preconditions still apply when a tool runs.
 
 ```bash
-npx --yes @dmfaster/cli@1.10.0 auth login --json
-npx --yes @dmfaster/mcp-server@1.10.0
+npx --yes @dmfaster/cli@1.11.0 auth login --json
+npx --yes @dmfaster/mcp-server@1.11.0
 ```
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
-smaller ceiling. The MCP server can expose all 78 domain schemas and the
+smaller ceiling. The MCP server can expose all 91 domain schemas and the
 local connection and presentation schemas while the DM Faster API independently rejects
 domain tools outside the stored credential's scopes.
 
@@ -76,7 +132,7 @@ preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world. Domain tools also
 advertise output schemas generated from the public Agent API contract.
 
-The MCP names are the 78 domain tools:
+The MCP names are the 91 domain tools:
 
 - `analytics_summary`
 - `workspace_briefing`
@@ -120,6 +176,7 @@ The MCP names are the 78 domain tools:
 - `companies_suggest`
 - `companies_search`
 - `companies_evidence_search`
+- `companies_knowledge`
 - `companies_evidence_start`
 - `companies_evidence_advance`
 - `companies_evidence_status`
@@ -136,6 +193,8 @@ The MCP names are the 78 domain tools:
 - `campaign_operation_inspect`
 - `campaign_delivery_inspect`
 - `campaign_delivery_update`
+- `sending_instagram_pacing_inspect`
+- `sending_instagram_pacing_update`
 - `companies_fit_status`
 - `companies_fit_cancel`
 - `companies_fit_runs_list`
@@ -147,6 +206,10 @@ The MCP names are the 78 domain tools:
 - `calendar_meeting_book`
 - `calls_list`
 - `call_inspect`
+- `instagram_extract_quote`
+- `instagram_extract_start`
+- `instagram_extract_inspect`
+- `instagram_extract_results`
 - `leads_status`
 - `leads_extract_quote`
 - `leads_extract_start`
@@ -156,6 +219,12 @@ The MCP names are the 78 domain tools:
 - `leads_enrich_preview`
 - `leads_enrich_start`
 - `leads_enrich_inspect`
+- `leads_prospect_quote`
+- `leads_prospect_start`
+- `leads_prospect_inspect`
+- `leads_prospect_results`
+- `leads_prospect_advance`
+- `leads_prospect_cancel`
 
 Additional MCP tools are `connection_status`, `campaign_workspace`,
 `companies_workspace`, `workspace_open`, and the app-only `workspace_mentions`.
@@ -182,7 +251,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.10.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.11.0"]
     }
   }
 }

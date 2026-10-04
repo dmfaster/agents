@@ -660,7 +660,7 @@ export interface paths {
         put?: never;
         /**
          * Start complete website evidence scan
-         * @description Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. All fresh retained passages are checked in resumable chunks; keywords only prioritize work. Processing continues in the background. Return every confirmed match through results; unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.
+         * @description Start or resume a private complete website-evidence scan of every eligible published company. Preserve the original criteria and deterministic filters. Choose evaluationMode binary for one compact website packet per company with boolean decisions, probability and explicit review/coverage. Empty retrievalTerms are allowed; keywords only prioritize work. Omission preserves the complete passage verifier. Processing continues in the background. The response already contains a first results page, including validated cached matches when available; inspect and show those rows immediately without repeating the page or waiting for completion. Use results for additional pages or later discoveries. Unknown or missing evidence stays unresolved. No OpenAI API or embeddings required.
          */
         post: operations["companyEvidenceStart"];
         delete?: never;
@@ -680,7 +680,7 @@ export interface paths {
         put?: never;
         /**
          * Status complete website evidence scan
-         * @description Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory and fresh retained passages, not uncrawled websites.
+         * @description Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.
          */
         post: operations["companyEvidenceStatus"];
         delete?: never;
@@ -883,6 +883,26 @@ export interface paths {
          * @description Read exact compact progress, resumable run identity, freshness and polling advice.
          */
         post: operations["companyFitStatus"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.knowledge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read saved public company knowledge
+         * @description Read standard public website facts for one current published Finnish company. Returns offering-to-buyer relationships, boolean assessments, review flags and original context samples. Unassessed facts remain null. Uses current fresh saved evidence and content-bound shared judgments; never fetches websites, calls Jev or reads another user's queries or runs.
+         */
+        post: operations["companyKnowledge"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1189,6 +1209,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/instagram.extract.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect a prepaid Instagram extraction
+         * @description Read exact stored progress by durable job ID without advancing the provider or spending capacity. Follow pollAfterMs.
+         */
+        post: operations["instagramExtractionInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/instagram.extract.quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Quote an Instagram audience extraction
+         * @description Read existing prepaid capacity in the signed-in owner's account wallet. Insufficient capacity hands off to separate account-gated standalone checkout and purchase-scoped API/MCP; standalone payment cannot fund or resume an account request. No provider calls or payment.
+         */
+        post: operations["instagramExtractionQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/instagram.extract.results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read saved Instagram extraction profiles
+         * @description Read a bounded page of usernames, names and profile URLs after terminal settlement. Follow nextCursor until null; partial results are explicit.
+         */
+        post: operations["instagramExtractionResults"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/instagram.extract.start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start a prepaid Instagram audience extraction
+         * @description Queue a durable extraction using the signed-in owner's prepaid account capacity. Guest purchases use their separate purchase-scoped API/MCP and cannot fund this wallet. No subscription or sending access. Requires a stable idempotency key; no automatic payment.
+         */
+        post: operations["instagramExtractionStart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/leads.enrich.inspect": {
         parameters: {
             query?: never;
@@ -1343,6 +1443,126 @@ export interface paths {
          * @description On explicit instructions, queue a credit-bounded Instagram followers, following, likers or commenters job. Return promptly with a durable job ID. Reuse the same idempotency key on retries, inspect actual saved results and settled credits, and subscribe to its completion event when the user requests an update. Does not start a campaign or send messages.
          */
         post: operations["leadExtractionStart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.prospect.advance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Advance an Instagram ICP run
+         * @description Advance one bounded batch using the existing run budgets and current owner grant. Provider reservations prevent duplicate requests after unknown outcomes. Continue inspection/advancement until workComplete; no additional campaign approval is introduced.
+         */
+        post: operations["instagramProspectAdvance"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.prospect.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel an Instagram ICP run
+         * @description Stop future work in this run. In-flight provider or child extraction/enrichment work may complete and settle normally; already saved lists remain private.
+         */
+        post: operations["instagramProspectCancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.prospect.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect an Instagram ICP run
+         * @description Read exact stored progress, budgets, saved lists and unresolved outcomes. Inspection never advances provider work.
+         */
+        post: operations["instagramProspectInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.prospect.quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Quote an Instagram ICP list
+         * @description Read the exact lead balance and bounded acquisition/enrichment budget. No Hiker or Clef calls, credit reservation or list writes.
+         */
+        post: operations["instagramProspectQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.prospect.results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read Instagram ICP decisions
+         * @description Page observed profiles, decisions, raw probabilities and image manifests. Review and pending profiles are not verified matches. Cursors bind the exact run revision, result version and status filter; restart pagination after a result change.
+         */
+        post: operations["instagramProspectResults"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/leads.prospect.start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Build an Instagram ICP list
+         * @description On an explicit instruction, discover or reuse Instagram sources, run existing credit-bounded extraction and enrichment, qualify observed evidence with Clef, and save private match and optional review lists. Supply atomic criteria and short searchQueries from the user description for better discovery. Same idempotency key resumes the same immutable request. Does not launch campaigns or send messages.
+         */
+        post: operations["instagramProspectStart"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1618,8 +1838,51 @@ export interface paths {
          * Inspect sending health
          * @description Returns customer-facing campaign, queue, and browser-worker health. When campaignId
          *     is omitted, the selected, active, or most recent campaign is used. Read-only.
+         *     Send x-dmfaster-sending-observation: 1 to include detailed observation clocks.
+         *     Calls without that header retain the strict published MCP 1.10.0 response shape;
+         *     summary and assessment still report unavailable or overdue timing.
          */
         post: operations["sendingInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/sending.instagram.pacing.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect workspace Instagram sending pace
+         * @description Inspect the user-wide Instagram message gap range and its revision. The range covers every campaign and browser; null uses campaign pacing.
+         */
+        post: operations["instagramPacingInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/sending.instagram.pacing.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Change workspace Instagram sending pace
+         * @description On the owner's explicit instruction, set a user-wide random Instagram message gap range in seconds, or reset it with policy null. Echo the inspected revision and use a stable idempotency key. The change applies at the next scheduler check across all campaigns and browsers; an in-progress attempt finishes and no campaign is started.
+         */
+        post: operations["instagramPacingUpdate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1923,7 +2186,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -2601,6 +2864,31 @@ export interface components {
             /** @constant */
             tool?: "campaign.prepare";
         };
+        CampaignSendingObservation: {
+            browsers: {
+                active: boolean;
+                clockOffsetMs: number | null;
+                decisionAt: components["schemas"]["SendingTime"];
+                detail: string;
+                fresh: boolean;
+                lastProgressAt: components["schemas"]["SendingTime"];
+                nextWakeAt: components["schemas"]["SendingTime"];
+                observedAt: components["schemas"]["SendingTime"];
+                online: boolean;
+                phase: string;
+                reason: string;
+                runId: string | null;
+                timingAvailable: boolean;
+                workerId: string;
+            }[];
+            channels: components["schemas"]["SendingChannelObservation"][];
+            evidenceComplete: boolean;
+            nextEligibleAt: components["schemas"]["SendingTime"];
+            /** Format: date-time */
+            observedAt: string;
+            remainingSeconds: number | null;
+            runId: string;
+        };
         CampaignsListInput: {
             channel?: components["schemas"]["TargetChannel"];
             /** @description Opaque nextCursor returned by the preceding page. */
@@ -2684,6 +2972,8 @@ export interface components {
             companies: components["schemas"]["WebsiteEvidenceCompany"][];
             /** @constant */
             country: "FI";
+            /** @enum {string} */
+            evaluationMode?: "binary" | "passage";
             expectedRevision: string;
             /** Format: date-time */
             expiresAt: string;
@@ -2795,6 +3085,11 @@ export interface components {
             /** @enum {string} */
             country: "FI";
             criteria: components["schemas"]["WebsiteEvidenceCriterion"][];
+            /**
+             * @description Binary evaluates related website sections together in one compact request per company. Passage preserves separate relationship statuses and explicit-denial merging. Omission preserves passage behavior.
+             * @enum {string}
+             */
+            evaluationMode?: "binary" | "passage";
             filters?: components["schemas"]["CompanySearchFilters"];
             idempotencyKey: string;
             maxAgeDays?: number;
@@ -3077,10 +3372,25 @@ export interface components {
                     [key: string]: unknown;
                 };
                 businessId: string;
+                companyEmails?: string[];
+                companyPhone?: string;
+                companyPhones?: string[];
                 country: string;
-                decisionMakers: {
+                decisionMakers: ({
+                    email: string;
+                    linkedinUrl: string;
+                    location: string;
+                    name: string;
+                    phone: string;
+                    role: string;
+                    socialProfiles?: {
+                        platform: string;
+                        /** Format: uri */
+                        url: string;
+                    }[];
+                } & {
                     [key: string]: unknown;
-                }[];
+                })[];
                 exhibitions?: {
                     [key: string]: unknown;
                 }[];
@@ -3097,7 +3407,7 @@ export interface components {
                 publicFunding?: {
                     [key: string]: unknown;
                 } | null;
-                /** @description Company-owned social account URLs verified from the company's website. */
+                /** @description Supported company-owned business social account URLs. */
                 socialProfiles?: {
                     /** @enum {string} */
                     platform: "instagram" | "facebook" | "linkedin" | "youtube" | "tiktok" | "x";
@@ -3128,6 +3438,66 @@ export interface components {
             data?: components["schemas"]["CompanyInspectData"] | null;
             /** @constant */
             tool?: "company.inspect";
+        };
+        CompanyKnowledgeAssessment: {
+            coverage: components["schemas"]["CompanyKnowledgeCoverage"];
+            /** Format: date-time */
+            evaluatedAt: string;
+            evidence: components["schemas"]["WebsiteEvidenceQuote"][];
+            /** @constant */
+            evidenceKind: "context_samples";
+            probabilityTrue: number;
+            reviewRequired: boolean;
+            value: boolean;
+        };
+        CompanyKnowledgeCoverage: {
+            complete: boolean;
+            includedPassages: number;
+            retainedPassages: number;
+        };
+        CompanyKnowledgeData: {
+            /** Format: date-time */
+            asOf: string;
+            company: {
+                businessId: string;
+                /** @enum {string} */
+                country: "FI";
+                name: string;
+                websiteUrl: string;
+            };
+            coverage: components["schemas"]["CompanyKnowledgeCoverage"] | null;
+            facts: components["schemas"]["CompanyKnowledgeFact"][];
+            knowledgeRevision: string;
+            limitations: string[];
+            maxAgeDays: number;
+            /** @enum {string} */
+            sourceStatus: "available" | "missing" | "stale" | "requires_complete_scan";
+        };
+        CompanyKnowledgeFact: {
+            assessment: components["schemas"]["CompanyKnowledgeAssessment"] | null;
+            id: string;
+            offeringBuyer: {
+                buyerIndustry: "construction" | null;
+                /** @constant */
+                buyerType: "businesses";
+                /** @enum {string} */
+                offering: "saas" | "software" | "professional_services" | "physical_goods" | "website_development";
+            } | null;
+            question: string;
+            trueWhen: string;
+            /** @constant */
+            version: 1;
+        };
+        CompanyKnowledgeInput: {
+            businessId: string;
+            /** @enum {string} */
+            country: "FI";
+            maxAgeDays?: number;
+        };
+        CompanyKnowledgeResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompanyKnowledgeData"] | null;
+            /** @constant */
+            tool?: "companies.knowledge";
         };
         /** @description Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile. */
         CompanyListInspectData: {
@@ -3235,7 +3605,7 @@ export interface components {
             /** @constant */
             tool?: "companies.list.refine";
         };
-        /** @description Search the same company inventory and filters as the live app. Returns full rows, exact total and pagination. Echo querySignature and expectedRevision on subsequent pages. */
+        /** @description Search the same company inventory and filters as the live app. Rich rows are the default; projection list returns compact app rows. Both preserve the exact total and pagination identity. Echo querySignature and expectedRevision on subsequent pages. */
         CompanySearchData: {
             companies: ({
                 businessId: string;
@@ -3253,6 +3623,8 @@ export interface components {
             nextCursor?: string;
             page: number;
             pageSize: number;
+            /** @enum {string} */
+            projection?: "list" | "rich";
             querySignature: string;
             total: number;
             /** @constant */
@@ -3313,6 +3685,11 @@ export interface components {
             filters: components["schemas"]["CompanySearchFilters"];
             page?: number;
             pageSize?: number;
+            /**
+             * @description List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company.inspect.
+             * @enum {string}
+             */
+            projection?: "list" | "rich";
             querySignature?: string;
         };
         CompanySearchResult: components["schemas"]["AgentToolResultBase"] & {
@@ -3631,6 +4008,270 @@ export interface components {
             data?: components["schemas"]["IndustryLookupOutput"] | null;
             /** @constant */
             tool?: "industry.lookup";
+        };
+        InstagramExtractionData: {
+            availableProfiles: number;
+            extractionId: string | null;
+            identifier: string;
+            jobId: string | null;
+            message: string;
+            nextCursor: string | null;
+            pollAfterMs: number | null;
+            profiles: {
+                instagramUrl: string;
+                name: string;
+                username: string;
+            }[];
+            purchaseUrl: string;
+            requestedCount: number;
+            resultsReady: boolean;
+            savedCount: number;
+            /** @enum {string} */
+            status: "queued" | "running" | "completed" | "partial" | "failed" | "payment_required";
+            type: string;
+        };
+        InstagramExtractionInspectInput: {
+            jobId: components["schemas"]["ResourceId"];
+        };
+        InstagramExtractionInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramExtractionData"] | null;
+        };
+        InstagramExtractionQuoteData: {
+            amountCents: number;
+            availableProfiles: number;
+            checkoutAvailable: boolean;
+            coveredCount: number;
+            /** @enum {string} */
+            currency: "USD" | "EUR";
+            message: string;
+            purchaseCount: number;
+            purchaseUrl: string;
+            requestedCount: number;
+            /** @enum {string} */
+            status: "ready" | "payment_required";
+            type: string;
+            username: string;
+        };
+        InstagramExtractionQuoteInput: {
+            count: number;
+            /** @enum {string} */
+            currency?: "USD" | "EUR";
+            postUrl?: string;
+            /** @enum {string} */
+            type: "followers" | "following" | "likers" | "commenters";
+            username: string;
+        };
+        InstagramExtractionQuoteResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramExtractionQuoteData"] | null;
+        };
+        InstagramExtractionResultsInput: {
+            cursor?: string;
+            jobId: components["schemas"]["ResourceId"];
+            limit?: number;
+        };
+        InstagramExtractionResultsResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramExtractionData"] | null;
+        };
+        InstagramExtractionStartInput: {
+            count: number;
+            /** @enum {string} */
+            currency?: "USD" | "EUR";
+            idempotencyKey: string;
+            postUrl?: string;
+            /** @enum {string} */
+            type: "followers" | "following" | "likers" | "commenters";
+            username: string;
+        };
+        InstagramExtractionStartResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramExtractionData"] | null;
+        };
+        InstagramPacingInspectInput: Record<string, never>;
+        InstagramPacingInspectOutput: {
+            override: components["schemas"]["InstagramPacingPolicy"] | null;
+            revision: string | null;
+            /** @enum {string} */
+            source: "user" | "campaign";
+        };
+        InstagramPacingInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramPacingInspectOutput"] | null;
+            /** @constant */
+            tool?: "sending.instagram.pacing.inspect";
+        };
+        /** @description Minimum must be less than or equal to maximum; seconds between outgoing Instagram messages. */
+        InstagramPacingPolicy: {
+            gapMaxSeconds: number;
+            gapMinSeconds: number;
+        };
+        InstagramPacingUpdateInput: {
+            expectedRevision: string | null;
+            idempotencyKey: string;
+            policy: components["schemas"]["InstagramPacingPolicy"] | null;
+            reason: string;
+        };
+        InstagramPacingUpdateOutput: {
+            /** @constant */
+            effectiveAt: "next_scheduler_check";
+            /** @constant */
+            inProgressAttemptChanged: false;
+            policy: components["schemas"]["InstagramPacingPolicy"] | null;
+            previous: components["schemas"]["InstagramPacingPolicy"] | null;
+            replayed: boolean;
+            revision: string;
+        };
+        InstagramPacingUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramPacingUpdateOutput"] | null;
+            /** @constant */
+            tool?: "sending.instagram.pacing.update";
+        };
+        InstagramProspectAdvanceResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramProspectData"] | null;
+        };
+        InstagramProspectCancelResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramProspectData"] | null;
+        };
+        InstagramProspectCounts: {
+            accept: number;
+            attempted: number;
+            candidates: number;
+            exclude: number;
+            pending: number;
+            review: number;
+            suppressed: number;
+        };
+        InstagramProspectCriterion: {
+            /** @enum {string} */
+            basis: "text" | "visual";
+            id: string;
+            literalRule?: {
+                /** @constant */
+                kind: "follower_count";
+                max?: number;
+                min?: number;
+            } | {
+                equals: boolean;
+                /** @enum {string} */
+                kind: "privacy" | "verification";
+            };
+            /** @enum {string} */
+            role: "required" | "preferred";
+            statement: string;
+            /** @enum {string} */
+            unknown: "review" | "exclude";
+        };
+        InstagramProspectData: {
+            cachedDecisions: number;
+            counts: components["schemas"]["InstagramProspectCounts"];
+            creditBalance: number | null;
+            creditSpent: number;
+            /** @enum {string} */
+            creditState: "reserved" | "settled";
+            errorCode: string;
+            inputTokens: number | null;
+            items: components["schemas"]["InstagramProspectItem"][];
+            listId: string | null;
+            maxCandidates: number;
+            maxCredits: number;
+            maxModelCalls: number;
+            /** @enum {string} */
+            media: "none" | "avatar" | "recent_posts";
+            /** @enum {string} */
+            model: "clef" | "clef-flash";
+            modelCalls: number;
+            nextCursor: string | null;
+            /** @enum {string} */
+            phase: "quoted" | "queued" | "discovering" | "acquiring" | "enriching" | "qualifying" | "saving" | "completed" | "blocked" | "cancelled" | "failed";
+            pollAfterMs: number | null;
+            providerDurationMs: number;
+            providerReady: boolean;
+            query: string;
+            resultVersion: number;
+            reviewListId: string | null;
+            revision: string | null;
+            runId: string | null;
+            savedMatches: number;
+            savedReview: number;
+            targetCount: number;
+            targetReached: boolean;
+            usageMissingCalls: number;
+            warnings: string[];
+            workComplete: boolean;
+        };
+        InstagramProspectInput: {
+            criteria?: components["schemas"]["InstagramProspectCriterion"][];
+            evidenceThreshold?: number;
+            excludePreviouslyContacted?: boolean;
+            includeReview?: boolean;
+            maxCandidates?: number;
+            maxCredits?: number;
+            maxModelCalls?: number;
+            /** @enum {string} */
+            media?: "none" | "avatar" | "recent_posts";
+            /** @enum {string} */
+            model?: "clef" | "clef-flash";
+            name?: string;
+            query: string;
+            searchQueries?: string[];
+            sourceListIds?: string[];
+            sources?: components["schemas"]["InstagramProspectSource"][];
+            targetCount?: number;
+            threshold?: number;
+        };
+        InstagramProspectInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramProspectData"] | null;
+        };
+        InstagramProspectItem: {
+            attempted: boolean;
+            biography: string;
+            cached: boolean;
+            decision: {
+                [key: string]: unknown;
+            } | null;
+            evidenceHash: string | null;
+            imageManifest: {
+                [key: string]: unknown;
+            }[];
+            mediaSources: {
+                /** @enum {string} */
+                kind: "avatar" | "post";
+                observedAt: string;
+                url: string;
+            }[];
+            name: string;
+            observedAt: string;
+            profileId: string;
+            reason: string;
+            requestHash: string | null;
+            /** @enum {string} */
+            status: "pending" | "accept" | "review" | "exclude" | "suppressed";
+            username: string;
+        };
+        InstagramProspectQuoteResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramProspectData"] | null;
+        };
+        InstagramProspectResultsInput: {
+            cursor?: string;
+            limit?: number;
+            runId: string;
+            /** @enum {string} */
+            status?: "pending" | "accept" | "review" | "exclude" | "suppressed";
+        };
+        InstagramProspectResultsResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramProspectData"] | null;
+        };
+        InstagramProspectRunInput: {
+            runId: string;
+        };
+        InstagramProspectSource: {
+            count?: number;
+            identifier: string;
+            /** @enum {string} */
+            type: "followers" | "following" | "likers" | "commenters";
+        };
+        InstagramProspectStartInput: components["schemas"]["InstagramProspectInput"] & {
+            idempotencyKey: string;
+        };
+        InstagramProspectStartResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramProspectData"] | null;
         };
         LeadCreditBalance: {
             active: boolean;
@@ -4060,6 +4701,49 @@ export interface components {
             /** @constant */
             tool?: "senders.inspect";
         };
+        SendingActivity: {
+            attemptId: string;
+            deadlineAt: components["schemas"]["SendingTime"];
+            jobId: string;
+            /** @enum {string} */
+            kind: "work" | "delay" | "timeout" | "watchdog";
+            lastProgressAt: components["schemas"]["SendingTime"];
+            observedAt: components["schemas"]["SendingTime"];
+            /** @enum {string} */
+            phase: "active" | "waiting" | "overdue" | "telemetry_unavailable";
+            remainingSeconds: number | null;
+            startedAt: components["schemas"]["SendingTime"];
+            step: string;
+            timingAvailable: boolean;
+            watchdogAt: components["schemas"]["SendingTime"];
+            workerId: string;
+        };
+        SendingChannelObservation: {
+            activities?: components["schemas"]["SendingActivity"][];
+            channel: string;
+            constraints: components["schemas"]["SendingConstraint"][];
+            /** @enum {string} */
+            deadlineKind: "eligibility" | "lower_bound" | "unknown";
+            nextEligibleAt: components["schemas"]["SendingTime"];
+            nextJob: components["schemas"]["SendingJobReference"] | null;
+            pacing: components["schemas"]["SendingPacingObservation"] | null;
+            queuedJobs: number;
+            remainingSeconds: number | null;
+            runningJobs: number;
+            /** @enum {string} */
+            status: "running" | "waiting" | "ready" | "blocked" | "unknown" | "idle";
+            workerId: string | null;
+        };
+        SendingConstraint: {
+            blockingJob: components["schemas"]["SendingJobReference"] | null;
+            code: string;
+            detail: string;
+            notBefore: components["schemas"]["SendingTime"];
+            reason?: string | null;
+            /** @enum {string} */
+            source: "server" | "browser";
+            startedAt?: components["schemas"]["SendingTime"];
+        };
         SendingInspectInput: components["schemas"]["OptionalCampaignInput"];
         SendingInspectOutput: {
             assessment?: {
@@ -4079,6 +4763,8 @@ export interface components {
             /** Format: date-time */
             generatedAt: string;
             issues: components["schemas"]["SendingIssue"][];
+            /** @description Per-channel eligibility clocks and constraints. Deadlines are earliest possible attempts, never promises of provider delivery. Lower bounds may be followed by company work or other unresolved constraints. */
+            observation?: components["schemas"]["CampaignSendingObservation"] | null;
             /** @description Workspace-wide counters; do not attribute these to campaignId. */
             sending: components["schemas"]["SendingSummary"];
             /** @enum {string} */
@@ -4096,6 +4782,32 @@ export interface components {
             /** @enum {string} */
             severity: "info" | "warning" | "blocker";
         };
+        SendingJobReference: {
+            channel: string;
+            companyName: string;
+            jobId: string;
+            state: string;
+        };
+        SendingPacingObservation: {
+            anchor: {
+                attemptId: string;
+                finishedAt: components["schemas"]["SendingTime"];
+                jobId: string;
+                state: string;
+            } | null;
+            batchAnchor: {
+                finishedAt: components["schemas"]["SendingTime"];
+                jobId: string;
+            } | null;
+            nextEligibleAt: components["schemas"]["SendingTime"];
+            /** Format: date-time */
+            observedAt: string;
+            policyRevision: string | null;
+            policySource: string;
+            reason: string;
+            remainingMs: number;
+            remainingSeconds: number;
+        };
         SendingSummary: {
             activeWorkers: number;
             completedToday: number;
@@ -4107,6 +4819,8 @@ export interface components {
             queueState: "idle" | "queued" | "running" | "waiting_for_browser";
             runningJobs: number;
         };
+        /** Format: date-time */
+        SendingTime: string | null;
         /** @enum {string} */
         SupportedCountry: "FI" | "NO" | "EE" | "SE" | "DK" | "UK" | "IE" | "AE" | "AT" | "BE" | "CA" | "NL" | "NZ" | "ES" | "FR" | "HK" | "IL" | "LV" | "LT" | "IT" | "CH" | "PT" | "SA" | "SG" | "IS" | "AU" | "DE" | "US" | "ZA";
         /** @enum {string} */
@@ -4114,6 +4828,17 @@ export interface components {
         /** @enum {string} */
         TolVersion: "2008" | "2025";
         WebsiteCriterionJudgment: {
+            /** @description Decision on the supplied evidence, not proof of absence. Original quotes are context samples, not selected supporting citations. A review flag blocks automatic matching. */
+            binary?: {
+                coverage: {
+                    complete: boolean;
+                    includedPassages: number;
+                    retainedPassages: number;
+                };
+                probabilityTrue: number;
+                reviewRequired: boolean;
+                value: boolean;
+            };
             criterionId: string;
             evidence: components["schemas"]["WebsiteEvidenceQuote"][];
             probability: number;
@@ -4142,7 +4867,7 @@ export interface components {
             requirement: "advertised" | "any_support";
             /** @description Optional required concept groups for precise retrieval. Synonyms are ORed within each group; all groups must occur in one original heading/passage context. For relationships split across passages, omit groups and broaden retrievalTerms explicitly. JEV still verifies the complete criterion. */
             retrievalGroups?: string[][];
-            /** @description Source-language keywords and synonyms supplied by the calling assistant; include Finnish terms for FI. */
+            /** @description Optional source-language hints for complete scans; use an empty array for binary website judgments without keyword gates. Fast shortlist previews still require retrieval terms. */
             retrievalTerms: string[];
             statement: string;
         };
@@ -5720,6 +6445,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    companyKnowledge: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompanyKnowledgeInput"];
+            };
+        };
+        responses: {
+            /** @description Current saved public knowledge */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompanyKnowledgeResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     companyListInspect: {
         parameters: {
             query?: never;
@@ -6174,6 +6929,126 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    instagramExtractionInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramExtractionInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect a prepaid Instagram extraction */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramExtractionInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramExtractionQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramExtractionQuoteInput"];
+            };
+        };
+        responses: {
+            /** @description Quote an Instagram audience extraction */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramExtractionQuoteResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramExtractionResults: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramExtractionResultsInput"];
+            };
+        };
+        responses: {
+            /** @description Read saved Instagram extraction profiles */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramExtractionResultsResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramExtractionStart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramExtractionStartInput"];
+            };
+        };
+        responses: {
+            /** @description Start a prepaid Instagram audience extraction */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramExtractionStartResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     leadEnrichmentInspect: {
         parameters: {
             query?: never;
@@ -6404,6 +7279,186 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LeadExtractionStartResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramProspectAdvance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramProspectRunInput"];
+            };
+        };
+        responses: {
+            /** @description Advance an Instagram ICP run */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramProspectAdvanceResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramProspectCancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramProspectRunInput"];
+            };
+        };
+        responses: {
+            /** @description Cancel an Instagram ICP run */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramProspectCancelResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramProspectInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramProspectRunInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect an Instagram ICP run */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramProspectInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramProspectQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramProspectInput"];
+            };
+        };
+        responses: {
+            /** @description Quote an Instagram ICP list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramProspectQuoteResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramProspectResults: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramProspectResultsInput"];
+            };
+        };
+        responses: {
+            /** @description Read Instagram ICP decisions */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramProspectResultsResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramProspectStart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramProspectStartInput"];
+            };
+        };
+        responses: {
+            /** @description Build an Instagram ICP list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramProspectStartResult"];
                 };
             };
             400: components["responses"]["BadRequest"];
@@ -6838,6 +7893,66 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramPacingInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramPacingInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect workspace Instagram sending pace */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramPacingInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramPacingUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramPacingUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Change workspace Instagram sending pace */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramPacingUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];

@@ -7,12 +7,14 @@ import { campaignIdSchema, campaignStateSchema, type AgentInvoker } from "./tool
 
 import { workspaceOutputSchema, campaignWorkspaceOutputSchema } from "./presentation-schemas.ts";
 import { oauthToolMetadata, oauthFailureMetadata, type HostedAuth } from "./hosted-auth.ts";
-import { CompanySearchFiltersSchema } from "./generated/input-schemas.ts";
+import { CompanySearchFiltersSchema, AGENT_INPUT_SCHEMAS } from "./generated/input-schemas.ts";
 import { companyResultSummary } from "./company-result-summary.ts";
 
 export const CAMPAIGN_WORKSPACE_TOOL_NAME = "campaign_workspace";
-export const CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v3.html";
-export const PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v2.html";
+export const CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v5.html";
+export const PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v4.html";
+export const V3_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v3.html";
+export const V2_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v2.html";
 export const LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v1.html";
 export const MCP_APP_RESOURCE_MIME_TYPE = "text/html;profile=mcp-app";
 
@@ -31,14 +33,32 @@ export const companiesWorkspaceInputSchema = z
   .object({
     filters: CompanySearchFiltersSchema.optional(),
     pageSize: z.number().int().min(1).max(100).optional(),
+    evidenceRun: AGENT_INPUT_SCHEMAS["companies.evidence.results"]
+      .omit({ pageSize: true })
+      .optional()
+      .describe(
+        "Read and visualize an existing private website-evidence run. Echo its runId and expectedRevision; no provider work is started.",
+      ),
   })
-  .strict();
+  .strict()
+  .refine((input) => !input.evidenceRun || !input.filters, {
+    message: "An evidence run already owns its filters. Omit inventory filters when opening it.",
+  })
+  .refine((input) => !input.evidenceRun || input.pageSize === undefined || input.pageSize <= 20, {
+    message: "Saved evidence result pages contain at most 20 companies.",
+  });
 
 const resourceUiMetadata = Object.freeze({
   domain: "https://app.dmfaster.com",
   csp: {
     connectDomains: [] as string[],
-    resourceDomains: [] as string[],
+    resourceDomains: [
+      "https://www.google.com",
+      "https://t0.gstatic.com",
+      "https://t1.gstatic.com",
+      "https://t2.gstatic.com",
+      "https://t3.gstatic.com",
+    ],
     frameDomains: [] as string[],
   },
   prefersBorder: true,
@@ -123,10 +143,19 @@ export function registerCampaignWorkspace(
       activeOnly: true,
     }) as AgentToolInputMap["companies.search"]["filters"];
     try {
-      const result = await client.invoke("companies.search", {
-        filters,
-        pageSize: input.pageSize ?? 20,
-      });
+      const result = input.evidenceRun
+        ? await client.invoke("companies.evidence.results", {
+            runId: input.evidenceRun.runId,
+            expectedRevision: input.evidenceRun.expectedRevision,
+            ...(input.evidenceRun.cursor !== undefined ? { cursor: input.evidenceRun.cursor } : {}),
+            ...(input.evidenceRun.view !== undefined ? { view: input.evidenceRun.view } : {}),
+            pageSize: input.pageSize ?? 20,
+          })
+        : await client.invoke("companies.search", {
+            filters,
+            pageSize: input.pageSize ?? 20,
+            projection: "list",
+          });
       return {
         content: [
           { type: "text" as const, text: companyResultSummary(result) ?? JSON.stringify(result) },
@@ -135,7 +164,7 @@ export function registerCampaignWorkspace(
           version: 1,
           view: "dmfaster.workspace",
           section: "companies",
-          filters,
+          ...(input.evidenceRun ? {} : { filters }),
           result,
         },
         ...(result.ok ? {} : { isError: true }),
@@ -160,19 +189,24 @@ export function registerCampaignWorkspace(
     "openai/ui": { availableDisplayModes: ["inline", "fullscreen"] },
     "openai/widgetDescription":
       "Browse companies, share a prospect search with the assistant, or review campaigns. Details load on demand; opening the view does not change data.",
-    "openai/widgetCSP": { connect_domains: [], resource_domains: [] },
+    "openai/widgetCSP": {
+      connect_domains: resourceUiMetadata.csp.connectDomains,
+      resource_domains: resourceUiMetadata.csp.resourceDomains,
+    },
     "openai/widgetPrefersBorder": true,
   };
   // New calls bypass cached HTML; saved conversations retain their resource URI.
   for (const uri of [
     CAMPAIGN_WORKSPACE_RESOURCE_URI,
     PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+    V3_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+    V2_CAMPAIGN_WORKSPACE_RESOURCE_URI,
     LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI,
   ]) {
     server.registerResource(
       uri === CAMPAIGN_WORKSPACE_RESOURCE_URI
         ? "DM Faster workspace"
-        : `DM Faster workspace (${uri.includes("v2") ? "v2" : "v1"} compatibility)`,
+        : `DM Faster workspace (${uri.split("/").at(-1)?.replace(".html", "")} compatibility)`,
       uri,
       {
         title: "DM Faster workspace",
@@ -234,7 +268,7 @@ export function registerCampaignWorkspace(
     {
       title: "Companies",
       description:
-        "Open the native Companies view for prospecting and brainstorming with the assistant. Accepts the same typed filters as companies_search. Empty arguments browse active companies in Finland. Returns exact totals, complete rows and stable pagination. Reads only; selections never authorize research spending, saving or sending.",
+        "Open the Companies view. Use filters for exact inventory search, or evidenceRun to visualize an existing companies_evidence_start run with its original criteria, accepted matches, unresolved evidence and processing progress. Evidence market totals remain unavailable. Empty arguments browse active Finnish companies. Reads only; no classifier work, research spending, saving or sending is started.",
       inputSchema: companiesWorkspaceInputSchema,
       outputSchema: workspaceOutputSchema,
       annotations: {
@@ -259,9 +293,13 @@ export function registerCampaignWorkspace(
       title: "DM Faster",
       description:
         "Open DM Faster to browse companies and brainstorm prospects. Empty arguments open Companies; pass section campaigns to browse campaigns. Reads only; never changes data or spends research credits.",
-      inputSchema: companiesWorkspaceInputSchema.extend({
-        section: z.enum(["companies", "campaigns"]).optional(),
-      }),
+      inputSchema: companiesWorkspaceInputSchema
+        .safeExtend({
+          section: z.enum(["companies", "campaigns"]).optional(),
+        })
+        .refine((input) => input.section !== "campaigns" || !input.evidenceRun, {
+          message: "Open the Companies section for a website evidence run.",
+        }),
       outputSchema: workspaceOutputSchema,
       annotations: {
         readOnlyHint: true,
