@@ -1,10 +1,11 @@
 # DM Faster Agent 1.0 plugin
 
-This plugin bundles the canonical DM Faster skill and a version-pinned local
-stdio MCP 2026-07-28 server definition. It includes the portable Agent Plugins
-1.0 package files at the plugin root, alongside host-specific manifests for
-Codex, Claude, and Cursor. Hosts that have not
-implemented that revision use the same skill through the version-pinned CLI.
+This plugin bundles the canonical DM Faster skill and the hosted OAuth MCP
+endpoint `https://app.dmfaster.com/mcp` under server name `dmfaster_hosted`.
+It includes portable Agent Plugins 1.0 files and Codex, Claude and Cursor
+manifests. The hosted endpoint supports MCP 2025 hosts. The separately published
+version-pinned stdio MCP package requires MCP 2026-07-28; the CLI remains available
+for headless callers.
 
 The 1.11.0 source exposes 91 bounded domain tools plus an optional
 portable MCP Apps Companies and campaign workspaces. It adds Instagram ICP text-to-list runs and covers social prospecting, company research, exact
@@ -45,14 +46,17 @@ GitHub plugin has been upgraded to 1.11.0. Refresh the plugin and start a fresh
 host session to load its catalog. Existing credentials without lead permissions
 use the normal human-approved scope upgrade; eligible hosted grants are reused.
 Claude/Cursor host installation and directory acceptance remain unverified.
+The final Codex check rejected the old stdio transport with protocol error -32022
+(MCP 2025-06-18 requested, 2026-07-28 required). The plugin now selects the existing
+compatible hosted endpoint; its final fresh-host verification is recorded separately.
 
 Do not point users at the private monorepo as a public marketplace. Synchronize
 this plugin directory to the approved public repository after package, privacy,
 and platform review. That repository can act as a Codex/ChatGPT desktop repo
 marketplace and a Claude Code marketplace. It is not a universal
-ChatGPT/Codex Plugins Directory submission: that directory requires a publicly
-hosted MCP endpoint, while Agent 1.0 intentionally runs the version-pinned local
-stdio server.
+ChatGPT/Codex Plugins Directory acceptance: that requires a separate reviewed
+submission and host verification, even though this plugin uses a public HTTPS
+MCP endpoint. The local stdio package alone is not eligible.
 
 Repository maintainers must follow the [agent distribution release
 runbook](../../docs/releasing.md). Package publication

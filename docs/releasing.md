@@ -78,9 +78,10 @@ With explicit approval, submit the public source through
 `https://cursor.com/marketplace/publish`; Cursor reviews the publisher and
 plugin separately. After acceptance, verify `/add-plugin dmfaster` in Cursor.
 
-This local-stdio release is not eligible for the universal ChatGPT/Codex
-Plugins Directory, which requires a publicly hosted MCP endpoint. Do not submit
-an npm or GitHub URL as though it were a hosted MCP endpoint.
+The optional local-stdio package is not eligible by itself for the universal
+ChatGPT/Codex Plugins Directory. The shared plugin uses the existing hosted
+OAuth endpoint, but directory submission and host acceptance remain separate
+reviewed steps. Do not submit an npm or GitHub URL as a hosted MCP endpoint.
 
 ## Recovery
 
@@ -95,3 +96,18 @@ verified before dispatching this version. The six `leads.prospect` operations
 use existing grants and credit services. The approved release canary is bounded
 to 20 model attempts and 40 lead credits. Record deployed source, exact list
 counts, cost and replay results separately from local package checks.
+
+## Hosted plugin compatibility
+
+The shared host manifests and OpenAI skill dependency use
+`https://app.dmfaster.com/mcp` as `dmfaster_hosted`. The final Codex host check
+confirmed that MCP 2025-06-18 cannot handshake with the separately published
+strict MCP 2026-07-28 stdio package. Hosted OAuth supports that host without
+changing local protocol behavior. Existing eligible hosted grants are reused;
+new grants still require the human's host sign-in. CLI login is independent.
+
+This GitHub plugin transport correction does not change the immutable 1.11.0
+npm artifacts and requires no new Product deployment. Validate the exact HTTPS
+manifest and dependency, then verify fresh Codex discovery and read-only
+connection/workspace calls after upgrading. Do not infer Claude/Cursor host
+installation or directory acceptance from matching manifests.

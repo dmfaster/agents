@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "dmfaster": {
-      "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.11.0"]
+    "dmfaster_hosted": {
+      "type": "http",
+      "url": "https://app.dmfaster.com/mcp"
     }
   }
 }

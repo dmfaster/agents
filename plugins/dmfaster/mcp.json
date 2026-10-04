@@ -1,10 +1,9 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {
-    "dmfaster": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.11.0"]
+    "dmfaster_hosted": {
+      "type": "streamable-http",
+      "url": "https://app.dmfaster.com/mcp"
     }
   }
 }

@@ -1,7 +1,13 @@
 # DM Faster authentication
 
-Use this reference only for the official local CLI and MCP distribution. The
-production API origin is `https://app.dmfaster.com`. Node.js 24 is required.
+The shared plugin uses hosted OAuth at `https://app.dmfaster.com/mcp` with
+server name `dmfaster_hosted`. Let the human complete the host's sign-in when
+required; an existing eligible hosted grant is reused. Hosted and local CLI
+credentials are independent. Never copy tokens between them or operate an
+approval page for the human.
+
+The sections below apply to the official local CLI and modern stdio MCP package.
+Their production API origin is `https://app.dmfaster.com`; Node.js 24 is required.
 
 ## Supported credential stores
 
@@ -88,8 +94,9 @@ browser cookie, `dmf_session` cookie, or `wtoken_...` browser-worker credential.
 - `409`: the approved campaign version or operation binding changed. Run the
   exact preflight again; do not bypass the conflict.
 - `429`: respect the retry hint and avoid parallel retries.
-- MCP `connection_status` returns `not_authenticated`: authenticate with the
-  pinned CLI. The running MCP server uses the new credential on its next call.
+- Hosted MCP `connection_status` returns `not_authenticated`: use the host's
+  human-approved OAuth sign-in. Local stdio MCP uses the pinned CLI; its running
+  server resolves the new operating-system credential on the next call.
 - MCP `connection_status` lists tools that satisfy the credential's scopes and
   missing scopes for the rest. Role, plan, and action conditions are still
   checked on each call. `doctor` reports local runtime and credential-store

@@ -43,7 +43,7 @@ and scopes. Hosted connections require no local Node.js installation or copied
 token. They use the same domain controls and account entitlements as the local
 clients. Existing grants never expand automatically.
 
-The hosted package is separate from this repository's stdio plugin. It is not
+The hosted submission ZIP is separate from the public GitHub plugin catalog. It is not
 listed in the universal OpenAI directory yet. Native views, mentions and Events
 need compatible host support and their own verification.
 
@@ -295,8 +295,14 @@ clean runtime vulnerability audit. Read-only CLI and MCP workspace briefings
 passed; the installed MCP catalog contains 91 domain tools and five connection
 or presentation tools. The Codex GitHub plugin was upgraded to 1.11.0.
 
-Start a fresh host session after upgrading the plugin so its tool catalog is
-refreshed. Existing local credentials that lack lead permissions require the
-normal human-approved `auth upgrade --access full` flow. The hosted canary used
-its existing eligible grant. Claude/Cursor host installation, native rendering
-and directory acceptance have not been established by these checks.
+The shared plugin uses hosted OAuth at `https://app.dmfaster.com/mcp` as
+`dmfaster_hosted`. Current Codex requests MCP 2025-06-18 and cannot negotiate
+with the separately published MCP 2026-07-28 stdio package. Selecting the
+compatible hosted endpoint preserves the local server's modern protocol.
+Existing eligible hosted grants are reused; first-time sign-in is human-approved.
+Refresh the plugin and start a fresh host session to load its catalog.
+
+The local CLI and modern stdio package keep their independent credential store;
+older local grants without lead permissions use `auth upgrade --access full`.
+Claude/Cursor host installation, native rendering and directory acceptance
+remain unverified.
