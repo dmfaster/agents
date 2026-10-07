@@ -46,7 +46,7 @@
     "check": "npm run typecheck && npm test && npm run build"
   },
   "devDependencies": {
-    "@types/node": "24.13.3",
+    "@types/node": "26.6.4",
     "typescript": "7.0.2"
   }
 }
