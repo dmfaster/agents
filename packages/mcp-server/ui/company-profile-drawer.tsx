@@ -1,4 +1,7 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { Button } from "@dmfaster/product-ui/components/button";
+import { t } from "./locale.ts";
+import { useEffect, useRef } from "react";
+import { CompanyIcon } from "./company-icon.tsx";
 import { CompanyLogo } from "./company-logo.tsx";
 import { CompanyProfile } from "./company-profile.tsx";
 import { text, type CompanyDetail, type CompanyRow } from "./companies-data.ts";
@@ -13,7 +16,7 @@ export function CompanyProfileDrawer({
   onClose,
   onRetry,
   onUseInChat,
-  evidence,
+  onDraftChat,
 }: {
   row: CompanyRow;
   detail: CompanyDetail | null;
@@ -24,11 +27,13 @@ export function CompanyProfileDrawer({
   onClose: () => void;
   onRetry: () => void;
   onUseInChat: () => void;
-  evidence?: ReactNode;
+  onDraftChat?: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
   const company = detail?.profile ?? row;
+  const person =
+    text(row.decisionMakerPrimaryName) || text(detail?.profile.decisionMakers[0]?.name);
   useEffect(() => {
     const element = dialog.current;
     if (!element) return;
@@ -43,7 +48,7 @@ export function CompanyProfileDrawer({
     <dialog
       ref={dialog}
       className="company-drawer"
-      aria-label="Company details"
+      aria-label={t("Company details")}
       aria-modal="true"
       onKeyDown={(event) => {
         if (event.key !== "Tab") return;
@@ -96,32 +101,21 @@ export function CompanyProfileDrawer({
             <h2 ref={heading} tabIndex={-1}>
               {company.name}
             </h2>
-            <p>{[text(company.city), company.country].filter(Boolean).join(" · ")}</p>
+            {person ? <p>{person}</p> : null}
           </div>
           <button
             type="button"
             className="company-drawer-close"
-            aria-label="Close company details"
+            aria-label={t("Close company details")}
             onClick={onClose}
           >
-            <svg
-              viewBox="0 0 24 24"
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              aria-hidden="true"
-            >
-              <path d="m6 6 12 12M18 6 6 18" />
-            </svg>
+            <CompanyIcon name="close" />
           </button>
         </header>
         <div className="company-drawer-body">
-          {evidence}
           {notice ? (
             <p className="workspace-notice" role="status">
-              {notice}
+              {t(notice)}
             </p>
           ) : null}
           <CompanyProfile
@@ -131,15 +125,27 @@ export function CompanyProfileDrawer({
             error={error}
             onRetry={onRetry}
           />
+          <div className="company-profile-chat-actions">
+            <Button
+              variant="link"
+              size="sm"
+              aria-label={t("Refresh profile")}
+              title={t("Refresh profile")}
+              disabled={loading}
+              onClick={onRetry}
+            >
+              {t("Refresh profile")}
+            </Button>
+            <Button variant="link" size="sm" disabled={contextDisabled} onClick={onUseInChat}>
+              {t("Use this company in chat")}
+            </Button>
+            {onDraftChat ? (
+              <Button variant="link" size="sm" disabled={contextDisabled} onClick={onDraftChat}>
+                {t("Draft chat request")}
+              </Button>
+            ) : null}
+          </div>
         </div>
-        <footer className="company-drawer-actions">
-          <button className="workspace-link" disabled={loading} onClick={onRetry}>
-            Refresh profile
-          </button>
-          <button className="workspace-button" disabled={contextDisabled} onClick={onUseInChat}>
-            Use this company in chat
-          </button>
-        </footer>
       </div>
     </dialog>
   );

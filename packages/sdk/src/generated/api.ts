@@ -296,8 +296,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Prepare a campaign from a saved Instagram list
-         * @description Create an idempotent disabled Instagram campaign draft from a saved list and 1–4 exact message variations. Echo list.inspect updatedAt and exact total as expectedListUpdatedAt and expectedTargetCount. Delivery settings must be supplied. Never launches, schedules activation, or sends messages.
+         * Prepare a campaign from a saved list
+         * @description Create an idempotent disabled campaign from a reviewed saved list. Instagram lists default to Instagram. For company lists supply channel or channels, expectedAudienceCount, and the exact sum of selected channelCounts as expectedTargetCount from companies.list.inspect. Multichannel LinkedIn requires a separate linkedinInviteNote of at most 300 characters. Email uses channel gmail and channelCounts.email; supply gmailSubject, explicitly confirmed gmailRecipientConsentConfirmed and connected mailboxIds from senders.inspect. messageVariants become email body variants. SMS requires workspace setup and a separate smsBody. Echo the list version and supply delivery settings. Never launches or sends messages.
          */
         post: operations["campaignDraftPrepare"];
         delete?: never;
@@ -423,6 +423,86 @@ export interface paths {
          * @description Validates readiness. Returns a resumable browser-setup handoff when browser sending is unavailable; otherwise returns ready for a connection granted campaigns:control, or a short-lived owner approval request for other connections.
          */
         post: operations["campaignLaunchPreflight"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/campaign.messages.draft.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect prepared recipient copy
+         * @description Read saved per-recipient Instagram and Facebook copy for a campaign before or after launch. Returns exact prepared count, campaign and audience versions, stale-audience state and pagination. Use list_inspect for recipients that do not yet have prepared copy. Does not create a queue or send.
+         */
+        post: operations["campaignMessagesDraftList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/campaign.messages.draft.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Prepare unique recipient copy before launch
+         * @description On the owner's instruction, save independently researched Instagram or Facebook first-message copy for an unlaunched disabled draft. Use exact saved-list recipient handles and inspected campaign/audience versions. Each batch contains up to 100 distinct recipients; null removes prepared copy. Returns the new campaign version for the next batch. The normal launch uses this copy and keeps existing suppression and pacing. This does not create a sending queue, launch, or send. A changed audience blocks launch until the prepared copy is reviewed or removed. Null can also remove prepared copy from a stopped, unscheduled campaign after launch.
+         */
+        post: operations["campaignMessagesDraftUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/campaign.messages.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect queued recipient messages
+         * @description Read exact per-recipient text and versions for an existing campaign queue. Pause through the normal campaign controls before lengthy research. No queue is created and no message is sent. Echo expectedRunId on subsequent pages; total is the exact queued count for the selected channels, including blocked jobs. Use companyOutreachId and targetUrl to resolve company/profile research context.
+         */
+        post: operations["campaignMessagesList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/campaign.messages.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Customize queued recipient messages
+         * @description On the owner's instruction, replace each selected recipient message with independently researched copy. Supply inspected campaign/run/job versions and exact target identities. The batch is atomic; active, submitted, unresolved or LinkedIn invitation attempts cannot be edited. Null restores campaign copy. Existing suppression, pacing and launch controls still apply. This never launches or sends. The queue must already exist. Up to 100 edits; use smaller batches for long messages to fit the existing request byte limit.
+         */
+        post: operations["campaignMessagesUpdate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -680,7 +760,7 @@ export interface paths {
         put?: never;
         /**
          * Status complete website evidence scan
-         * @description Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.
+         * @description Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Set includeCompanies false for lightweight polling without fetching rows or quotations; use results to inspect matches. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.
          */
         post: operations["companyEvidenceStatus"];
         delete?: never;
@@ -900,9 +980,29 @@ export interface paths {
         put?: never;
         /**
          * Read saved public company knowledge
-         * @description Read standard public website facts for one current published Finnish company. Returns offering-to-buyer relationships, boolean assessments, review flags and original context samples. Unassessed facts remain null. Uses current fresh saved evidence and content-bound shared judgments; never fetches websites, calls Jev or reads another user's queries or runs.
+         * @description Read standard public website facts and paginated original source passages for one current published Finnish company. Source evidence is available even when assessments are null. Use the returned knowledgeRevision as expectedKnowledgeRevision on subsequent source pages. Returns offering-to-buyer relationships, boolean assessments and review flags. Uses current fresh saved evidence and content-bound shared judgments; never fetches websites, calls Jev or reads another user's queries or runs.
          */
         post: operations["companyKnowledge"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/companies.knowledge.search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Search source-reviewed private company knowledge
+         * @description Search the owner's reviewed Finnish cohort by literal evidence words and supported facets. The exact count is cohort coverage, not a complete market audience. No model calls, crawls or sends.
+         */
+        post: operations["companyKnowledgeSearch"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1240,7 +1340,7 @@ export interface paths {
         put?: never;
         /**
          * Quote an Instagram audience extraction
-         * @description Read existing prepaid capacity in the signed-in owner's account wallet. Insufficient capacity hands off to separate account-gated standalone checkout and purchase-scoped API/MCP; standalone payment cannot fund or resume an account request. No provider calls or payment.
+         * @description Read existing prepaid capacity in the signed-in owner's account wallet. When insufficient, return the full one-time standalone price and human checkout URL. Payment starts a separate purchase job; read it through instagram.purchases.list/inspect/results using the same connection. Standalone payment cannot fund or resume an account request. No provider calls or payment.
          */
         post: operations["instagramExtractionQuote"];
         delete?: never;
@@ -1283,6 +1383,66 @@ export interface paths {
          * @description Queue a durable extraction using the signed-in owner's prepaid account capacity. Guest purchases use their separate purchase-scoped API/MCP and cannot fund this wallet. No subscription or sending access. Requires a stable idempotency key; no automatic payment.
          */
         post: operations["instagramExtractionStart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/instagram.purchases.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect my purchased Instagram extraction
+         * @description Read an owned paid purchase and a bounded page of its saved jobs. Use orderId from instagram.purchases.list; follow nextCursor for more jobs. Does not advance providers or spend profiles.
+         */
+        post: operations["instagramPurchasesInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/instagram.purchases.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * List my paid Instagram extraction purchases
+         * @description List the signed-in buyer's paid standalone extraction purchases. No purchase token, Instagram login, subscription, provider request or payment. Follow nextCursor; the page is not the complete purchase history.
+         */
+        post: operations["instagramPurchasesList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/instagram.purchases.results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read my purchased Instagram profiles
+         * @description Read exact saved profiles from an owned paid purchase and job. Use orderId and jobId from instagram.purchases.list/inspect. Follow nextCursor. Uses the buyer's existing connection without copying a purchase token; never reads another buyer's order.
+         */
+        post: operations["instagramPurchasesResults"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1889,6 +2049,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/sending.test.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect one delivery test
+         * @description Read a prepared delivery test and its durable receipt. Email provider acceptance is not inbox delivery. SMS delivery is confirmed only by a delivered provider callback. Never retries a send.
+         */
+        post: operations["deliveryTestInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/sending.test.prepare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Prepare one delivery test
+         * @description Prepare one disabled email or SMS delivery test to the exact owner-supplied recipient. Returns immutable sender, recipient, subject and body for review. Sends nothing.
+         */
+        post: operations["deliveryTestPrepare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/sending.test.send": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send one delivery test
+         * @description Send exactly the prepared delivery test after the user approves its sender, recipient and copy. Echo its reviewDigest. Requires separate sending:test permission, never campaign launch permission. Atomic claims prevent repeated provider submission. Inspect an uncertain result; never create another test to retry it.
+         */
+        post: operations["deliveryTestSend"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/workspace.briefing": {
         parameters: {
             query?: never;
@@ -1944,7 +2164,7 @@ export interface components {
             targetListId: string;
         };
         /** @enum {string} */
-        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "inbox:write" | "pipeline:write" | "calendar:read" | "calendar:write" | "calls:read" | "leads:read" | "leads:write";
+        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "inbox:write" | "pipeline:write" | "calendar:read" | "calendar:write" | "calls:read" | "leads:read" | "leads:write" | "sending:test";
         AgentAuthenticatedParty: {
             /** Format: email */
             email: string;
@@ -2186,7 +2406,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -2554,30 +2774,64 @@ export interface components {
             audienceCount: number;
             campaignId: string;
             campaignUpdatedAt: string;
-            /** @constant */
-            channel: "instagram";
+            /** @enum {string} */
+            channel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms" | "multichannel";
+            channels: ("instagram" | "facebook" | "linkedin" | "gmail" | "sms")[];
             created: boolean;
             dailyCap: number;
             /** @constant */
             enabled: false;
+            /**
+             * @description Explicit user confirmation of recipient permission, required for email.
+             * @constant
+             */
+            gmailRecipientConsentConfirmed?: true;
+            /** @description Email subject shared by all messageVariants, which become the email body variants. */
+            gmailSubject?: string;
+            linkedinInviteNote: string;
             listId: string;
             listUpdatedAt: string;
+            mailboxIds?: components["schemas"]["ResourceId"][];
+            /** @description Up to 1000 characters per variant, or 1600 for SMS-only drafts. SMS sends the separate smsBody. */
             messageVariants: string[];
             name: string;
             onlyNewChats: boolean;
             pacingSeconds: number;
             replayed: boolean;
             skipPreviouslyMessaged: boolean;
+            /** @description Separate SMS message, required when SMS is selected. */
+            smsBody?: string;
             /** @constant */
             status: "Draft";
             targetCount: number;
         };
         CampaignDraftPrepareInput: {
+            /**
+             * @description Single-channel shorthand. Supply this or channels for company lists; defaults to Instagram for username lists.
+             * @enum {string}
+             */
+            channel?: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
+            /** @description Channels on one campaign. Mutually exclusive with channel. */
+            channels?: ("instagram" | "facebook" | "linkedin" | "gmail" | "sms")[];
             dailyCap: number;
+            /** @description Required exact company count for a company list. */
+            expectedAudienceCount?: number;
             expectedListUpdatedAt: components["schemas"]["ResourceVersion"];
+            /** @description Exact sum of selected channelCounts, not the number of distinct companies. */
             expectedTargetCount: number;
+            /**
+             * @description Explicit user confirmation of recipient permission, required for email.
+             * @constant
+             */
+            gmailRecipientConsentConfirmed?: true;
+            /** @description Email subject shared by all messageVariants, which become the email body variants. */
+            gmailSubject?: string;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Separate LinkedIn invitation note, required when LinkedIn is combined with another channel. */
+            linkedinInviteNote?: string;
             listId: components["schemas"]["ResourceId"];
+            mailboxIds?: components["schemas"]["ResourceId"][];
+            /** @description Up to 1000 characters per variant, or 1600 for SMS-only drafts. SMS sends the separate smsBody. */
             messageVariants: string[];
             name: string;
             /** @constant */
@@ -2585,6 +2839,8 @@ export interface components {
             pacingSeconds: number;
             /** @constant */
             skipPreviouslyMessaged: true;
+            /** @description Separate SMS message, required when SMS is selected. */
+            smsBody?: string;
         };
         CampaignDraftPrepareResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CampaignDraftPrepareData"] | null;
@@ -2799,6 +3055,136 @@ export interface components {
              */
             status: "setup_required";
         };
+        CampaignMessagesDraftListInput: {
+            afterId?: components["schemas"]["ResourceId"];
+            campaignId: components["schemas"]["ResourceId"];
+            limit?: number;
+        };
+        CampaignMessagesDraftListOutput: {
+            campaignId: string;
+            campaignUpdatedAt: string;
+            hasMore: boolean;
+            listId: string;
+            listUpdatedAt: string;
+            messages: {
+                /** @enum {string} */
+                channel: "instagram" | "facebook";
+                companyOutreachId: string;
+                id: string;
+                message: string;
+                targetHandle: string;
+                targetUrl: string;
+                updatedAt: string;
+            }[];
+            nextAfterId: string | null;
+            staleAudience: boolean;
+            total: number;
+        };
+        CampaignMessagesDraftListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignMessagesDraftListOutput"] | null;
+            /** @constant */
+            tool?: "campaign.messages.draft.list";
+        };
+        CampaignMessagesDraftUpdateInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            edits: {
+                /** @enum {string} */
+                channel: "instagram" | "facebook";
+                message: string | null;
+                targetHandle: string;
+            }[];
+            expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
+            expectedListUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+        };
+        CampaignMessagesDraftUpdateOutput: {
+            campaignId: string;
+            campaignUpdatedAt: string;
+            editedCount: number;
+            preparedCount: number;
+            replayed: boolean;
+            /** @constant */
+            sent: false;
+        };
+        CampaignMessagesDraftUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignMessagesDraftUpdateOutput"] | null;
+            /** @constant */
+            tool?: "campaign.messages.draft.update";
+        };
+        CampaignMessagesListInput: {
+            afterJobId?: components["schemas"]["ResourceId"];
+            campaignId: components["schemas"]["ResourceId"];
+            channels?: ("instagram" | "facebook" | "linkedin")[];
+            expectedRunId?: components["schemas"]["ResourceId"];
+            jobIds?: components["schemas"]["ResourceId"][];
+            limit?: number;
+        };
+        CampaignMessagesListOutput: {
+            campaignId: string;
+            /** Format: date-time */
+            campaignUpdatedAt: string;
+            hasMore: boolean;
+            jobs: {
+                blockedReason: string | null;
+                /** @enum {string} */
+                channel: "instagram" | "facebook" | "linkedin";
+                companyOutreachId: string;
+                customized: boolean;
+                editable: boolean;
+                jobId: string;
+                message: string;
+                sequenceStepIndex: number;
+                targetCompanyName: string;
+                targetHandle: string;
+                targetUrl: string;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            nextAfterJobId: string | null;
+            /** Format: date-time */
+            observedAt: string;
+            runId: string;
+            total: number;
+        };
+        CampaignMessagesListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignMessagesListOutput"] | null;
+            /** @constant */
+            tool?: "campaign.messages.list";
+        };
+        CampaignMessagesUpdateInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            edits: {
+                /** @enum {string} */
+                channel: "instagram" | "facebook" | "linkedin";
+                expectedJobUpdatedAt: components["schemas"]["ResourceVersion"];
+                jobId: components["schemas"]["ResourceId"];
+                /** @description Exact recipient copy, preserving whitespace and Unicode. Null removes the override and restores current campaign or sequence copy. */
+                message: string | null;
+                targetHandle: string;
+            }[];
+            expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            runId: components["schemas"]["ResourceId"];
+        };
+        CampaignMessagesUpdateOutput: {
+            campaignId: string;
+            editedCount: number;
+            jobs: {
+                customized: boolean;
+                jobId: string;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            replayed: boolean;
+            runId: string;
+            /** @constant */
+            sent: false;
+        };
+        CampaignMessagesUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignMessagesUpdateOutput"] | null;
+            /** @constant */
+            tool?: "campaign.messages.update";
+        };
         CampaignOperationInspectInput: {
             campaignId: string;
             commandId: string;
@@ -2970,6 +3356,11 @@ export interface components {
             appliedFilters: components["schemas"]["CompanySearchFilters"] | null;
             awaitingMoreResults: boolean;
             companies: components["schemas"]["WebsiteEvidenceCompany"][];
+            /**
+             * @description Present and false only for progress-only status. The empty companies array does not mean there are no matches; nextCursor remains unconsumed.
+             * @constant
+             */
+            companiesIncluded?: false;
             /** @constant */
             country: "FI";
             /** @enum {string} */
@@ -2977,6 +3368,11 @@ export interface components {
             expectedRevision: string;
             /** Format: date-time */
             expiresAt: string;
+            /**
+             * @description Binary question-expansion policy saved with this private run. New binary runs always include it. An older binary run with no field retains its original general expansion policy.
+             * @enum {string}
+             */
+            factExpansion?: "requested_only" | "general";
             hasNextPage: boolean;
             limitations: string[];
             nextCursor: string;
@@ -3090,6 +3486,11 @@ export interface components {
              * @enum {string}
              */
             evaluationMode?: "binary" | "passage";
+            /**
+             * @description Binary mode only. New runs default to requested_only and ask only uncached requested criteria; general explicitly adds reusable standard offering/buyer questions to the same call on complete sources. Existing omitted-policy keys recover their original general run. Cached requested answers never trigger extra inference. Country and other deterministic filters are checked in code.
+             * @enum {string}
+             */
+            factExpansion?: "requested_only" | "general";
             filters?: components["schemas"]["CompanySearchFilters"];
             idempotencyKey: string;
             maxAgeDays?: number;
@@ -3102,6 +3503,8 @@ export interface components {
         };
         CompanyEvidenceStatusInput: {
             expectedRevision: string;
+            /** @description Set false for progress-only polling without fetching company rows or quotations. Omitted or true preserves the first result page. Use companies.evidence.results to inspect matches. */
+            includeCompanies?: boolean;
             runId: string;
         };
         CompanyEvidenceStatusResult: components["schemas"]["AgentToolResultBase"] & {
@@ -3366,6 +3769,13 @@ export interface components {
         };
         /** @description Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown. */
         CompanyInspectData: {
+            /** @description Compare dated financial history with the headline before qualifying employee or revenue bounds. This does not replace published search facts or infer a missing value from another year. */
+            financialReview?: {
+                /** @enum {string} */
+                comparison: "newer_history_available" | "no_newer_history" | "unknown";
+                headlineYear: string | null;
+                latestHistoryYear: string | null;
+            };
             /** @description The complete current Companies drawer profile. Additional properties preserve all app profile sections as they evolve. */
             profile: {
                 advertising: {
@@ -3470,6 +3880,9 @@ export interface components {
             knowledgeRevision: string;
             limitations: string[];
             maxAgeDays: number;
+            ownerVerified?: components["schemas"]["WorkspaceCompanyKnowledgeData"] | null;
+            /** @description Original saved evidence independent of cached model judgments, with exact pagination. Null when no fresh bounded source can be validated. Passages are unassessed and may describe customers, partners or former employers rather than this company's own offering. */
+            sourceEvidence: components["schemas"]["CompanyKnowledgeSources"] | null;
             /** @enum {string} */
             sourceStatus: "available" | "missing" | "stale" | "requires_complete_scan";
         };
@@ -3492,15 +3905,37 @@ export interface components {
             businessId: string;
             /** @enum {string} */
             country: "FI";
+            /** @description Pin subsequent source pages to the knowledgeRevision returned by the first read. */
+            expectedKnowledgeRevision?: string;
             maxAgeDays?: number;
+            /** @description Page of original saved website passages; defaults to 1. */
+            sourcePage?: number;
+            /** @description Original passages per page; defaults to 10. */
+            sourcePageSize?: number;
         };
         CompanyKnowledgeResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyKnowledgeData"] | null;
             /** @constant */
             tool?: "companies.knowledge";
         };
+        CompanyKnowledgeSources: {
+            /** @constant */
+            evidenceKind: "unassessed_source";
+            hasNextPage: boolean;
+            items: components["schemas"]["WebsiteEvidenceQuote"][];
+            page: number;
+            pageSize: number;
+            totalPassages: number;
+        };
         /** @description Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile. */
         CompanyListInspectData: {
+            channelCounts?: {
+                email?: number;
+                facebook: number;
+                instagram: number;
+                linkedin: number;
+                sms?: number;
+            };
             companies: {
                 [key: string]: unknown;
             }[];
@@ -3525,6 +3960,13 @@ export interface components {
         };
         /** @description Save explicitly inspected companies as a private company list. Echo each company.inspect revision. No campaign is created or started. Retry using the same key. */
         CompanyListPrepareData: {
+            channelCounts?: {
+                email?: number;
+                facebook: number;
+                instagram: number;
+                linkedin: number;
+                sms?: number;
+            };
             companies: {
                 [key: string]: unknown;
             }[];
@@ -3611,6 +4053,7 @@ export interface components {
                 businessId: string;
                 country: components["schemas"]["SupportedCountry"];
                 name: string;
+                websiteContacts?: components["schemas"]["CompanyWebsiteContact"][];
             } & {
                 [key: string]: unknown;
             })[];
@@ -3625,6 +4068,16 @@ export interface components {
             pageSize: number;
             /** @enum {string} */
             projection?: "list" | "rich";
+            /** @description Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory. */
+            qualification?: {
+                /** @constant */
+                basis: "published_filters";
+                /** @constant */
+                contactAffiliation: "not_verified";
+                guidance: string;
+                /** @constant */
+                offeringFit: "not_assessed";
+            };
             querySignature: string;
             total: number;
             /** @constant */
@@ -3632,7 +4085,7 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
-        /** @description Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected. */
+        /** @description Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected. */
         CompanySearchFilters: {
             activeOnly?: boolean;
             businessIdRegistrationEnd?: string;
@@ -3678,9 +4131,12 @@ export interface components {
             /** @description Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable. */
             technologies?: string[];
             tolCodes?: string[];
+            /** @description Positive-only saved Finnish website classifications with non-exhaustive coverage. Multiple selected facts must all match. b2c is a provisional consumer-targeting candidate; b2b and saas are independently scored positive candidates. Omission applies no website-fact restriction; absence is not a negative classification. Available only for Finnish audiences. */
+            websiteFacts?: ("b2c" | "b2b" | "saas")[];
         };
         CompanySearchInput: {
             cursor?: string;
+            /** @description Echo the complete opaque revision returned by the first search page, including any website-classification identity. Never truncate it. */
             expectedRevision?: string;
             filters: components["schemas"]["CompanySearchFilters"];
             page?: number;
@@ -3746,6 +4202,14 @@ export interface components {
             /** @constant */
             tool?: "company.timeline";
         };
+        /** @description Retained website-observed contact evidence with unconfirmed ownership. Display only; this does not establish a person association or campaign eligibility. */
+        CompanyWebsiteContact: {
+            /** @enum {string} */
+            channel: "email" | "phone";
+            /** Format: uri */
+            sourceUrl: string;
+            value: string;
+        };
         ConversationInspectInput: {
             conversationId: components["schemas"]["ResourceId"];
             cursor?: string;
@@ -3769,7 +4233,7 @@ export interface components {
             conversationId: string;
             deliveryConfirmed: boolean;
             /** @enum {string} */
-            deliveryRoute: "browser" | "email" | "instagram_api";
+            deliveryRoute: "browser" | "email" | "instagram_api" | "sms";
             requiresExtensionWake: boolean;
             /** @enum {string} */
             state: "queued" | "claimed" | "submitted" | "sent" | "failed" | "cancelled" | "delivery_unknown";
@@ -3878,6 +4342,54 @@ export interface components {
         };
         CopyPerformanceResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CopyPerformanceData"] | null;
+        };
+        DeliveryTestInspectInput: {
+            testId: string;
+        };
+        DeliveryTestInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["DeliveryTestOutput"] | null;
+            /** @constant */
+            tool?: "sending.test.inspect";
+        };
+        DeliveryTestOutput: {
+            body: string;
+            /** @enum {string} */
+            channel: "email" | "sms";
+            deliveryConfirmed: boolean;
+            expiresAt: string;
+            from: string;
+            mailboxId: string;
+            providerAccepted: boolean;
+            replayed: boolean;
+            reviewDigest: string;
+            /** @enum {string} */
+            status: "prepared" | "submitting" | "accepted" | "delivered" | "failed" | "unknown";
+            subject: string;
+            testId: string;
+            to: string;
+        };
+        DeliveryTestPrepareInput: {
+            /** @enum {string} */
+            channel: "email" | "sms";
+            idempotencyKey: string;
+            mailboxId?: components["schemas"]["ResourceId"];
+            /** @constant */
+            recipientConsentConfirmed: true;
+            to: string;
+        };
+        DeliveryTestPrepareResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["DeliveryTestOutput"] | null;
+            /** @constant */
+            tool?: "sending.test.prepare";
+        };
+        DeliveryTestSendInput: {
+            reviewDigest: string;
+            testId: string;
+        };
+        DeliveryTestSendResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["DeliveryTestOutput"] | null;
+            /** @constant */
+            tool?: "sending.test.send";
         };
         Error: {
             /** @enum {string} */
@@ -4272,6 +4784,76 @@ export interface components {
         };
         InstagramProspectStartResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["InstagramProspectData"] | null;
+        };
+        InstagramPurchasedJob: {
+            extractionId?: string;
+            identifier?: string;
+            jobId: string;
+            message?: string;
+            nextCursor?: string | null;
+            profiles?: {
+                instagramUrl: string;
+                name: string;
+                username: string;
+            }[];
+            requestedCount?: number;
+            resultsReady: boolean;
+            savedCount: number;
+            status: string;
+            type?: string;
+        };
+        InstagramPurchasesInspectData: {
+            availableProfiles: number;
+            /** @enum {string} */
+            currency: "USD" | "EUR";
+            jobs: components["schemas"]["InstagramPurchasedJob"][];
+            nextCursor: string | null;
+            orderId: string;
+            paidAt: string;
+            requestedCount: number;
+            type: string;
+            username: string;
+        };
+        InstagramPurchasesInspectInput: {
+            cursor?: components["schemas"]["ResourceId"];
+            limit?: number;
+            orderId: components["schemas"]["ResourceId"];
+        };
+        InstagramPurchasesInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramPurchasesInspectData"] | null;
+        };
+        InstagramPurchasesListData: {
+            nextCursor: string | null;
+            purchases: components["schemas"]["InstagramPurchaseSummary"][];
+        };
+        InstagramPurchasesListInput: {
+            cursor?: components["schemas"]["ResourceId"];
+            limit?: number;
+        };
+        InstagramPurchasesListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramPurchasesListData"] | null;
+        };
+        InstagramPurchasesResultsData: {
+            job: components["schemas"]["InstagramPurchasedJob"];
+            orderId: string;
+        };
+        InstagramPurchasesResultsInput: {
+            cursor?: string;
+            jobId: components["schemas"]["ResourceId"];
+            limit?: number;
+            orderId: components["schemas"]["ResourceId"];
+        };
+        InstagramPurchasesResultsResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["InstagramPurchasesResultsData"] | null;
+        };
+        InstagramPurchaseSummary: {
+            /** @enum {string} */
+            currency: "USD" | "EUR";
+            orderId: string;
+            paidAt: string;
+            requestedCount: number;
+            type: string;
+            username: string;
         };
         LeadCreditBalance: {
             active: boolean;
@@ -4677,6 +5259,7 @@ export interface components {
             }[];
             /** Format: uri */
             browserSetupUrl: string;
+            emailAvailable?: boolean;
             /** Format: date-time */
             generatedAt: string;
             mailboxes: {
@@ -4695,6 +5278,12 @@ export interface components {
                 /** @enum {string} */
                 status: "connected" | "action_required" | "paused" | "disabled";
             }[];
+            sms?: {
+                available: boolean;
+                configured: boolean;
+                enabled: boolean;
+                phoneNumber: string;
+            };
         };
         SendersInspectResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["SendersInspectOutput"] | null;
@@ -4900,6 +5489,57 @@ export interface components {
             data?: components["schemas"]["WorkspaceBriefingOutput"] | null;
             /** @constant */
             tool?: "workspace.briefing";
+        };
+        WorkspaceCompanyKnowledgeData: {
+            companies: {
+                businessId: string;
+                /** @constant */
+                country: "FI";
+                evidence: {
+                    contentHash: string;
+                    observedAt: string;
+                    requestHash: string;
+                    review: string;
+                    reviewedAt: string;
+                    text: string;
+                    url: string;
+                }[];
+                facets: {
+                    definition: string;
+                    id: string;
+                }[];
+                name: string;
+                websiteUrl: string;
+            }[];
+            currentlyEligibleCompanies: number;
+            facets: string[];
+            hasNextPage: boolean;
+            limitations: string[];
+            page: number;
+            pageSize: number;
+            publicationRevision: string;
+            query: string;
+            reviewedCompanies: number;
+            revision: string;
+            /** @constant */
+            scope: "owner_workspace";
+            /** @constant */
+            source: "reviewed_saved_websites";
+            total: number;
+            /** @constant */
+            totalExact: true;
+        };
+        WorkspaceCompanyKnowledgeInput: {
+            expectedRevision?: string;
+            facets?: ("offers_software" | "offers_saas_b2b" | "offers_it_services" | "offers_marketing" | "offers_consulting" | "offers_accounting" | "offers_legal" | "offers_recruitment" | "offers_training" | "offers_engineering" | "offers_industrial_services" | "offers_construction" | "offers_property_services" | "offers_logistics" | "offers_manufactured_goods" | "offers_wholesale" | "offers_machinery" | "offers_food" | "offers_healthcare" | "offers_finance" | "offers_energy" | "offers_hospitality" | "role_manufacturer" | "role_reseller" | "role_service_provider" | "buyer_business" | "buyer_consumer" | "buyer_public_sector" | "buyer_manufacturing" | "buyer_construction" | "buyer_property" | "buyer_retail" | "buyer_healthcare" | "buyer_hospitality" | "buyer_logistics" | "buyer_technology" | "buyer_finance" | "buyer_energy" | "buyer_education" | "buyer_agriculture")[];
+            page?: number;
+            pageSize?: number;
+            query?: string;
+        };
+        WorkspaceCompanyKnowledgeResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkspaceCompanyKnowledgeData"] | null;
+            /** @constant */
+            tool?: "companies.knowledge.search";
         };
     };
     responses: {
@@ -5548,7 +6188,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Prepare a campaign from a saved Instagram list */
+            /** @description Prepare a campaign from a saved list */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -5745,6 +6385,126 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    campaignMessagesDraftList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignMessagesDraftListInput"];
+            };
+        };
+        responses: {
+            /** @description Prepared recipient copy page; no messages sent. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignMessagesDraftListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    campaignMessagesDraftUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignMessagesDraftUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Prepared recipient copy receipt; no messages sent. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignMessagesDraftUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    campaignMessagesList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignMessagesListInput"];
+            };
+        };
+        responses: {
+            /** @description Exact queued message page. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignMessagesListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    campaignMessagesUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignMessagesUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Exact queued message edit receipt; no messages sent. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignMessagesUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];
@@ -6475,6 +7235,34 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    companyKnowledgeSearch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceCompanyKnowledgeInput"];
+            };
+        };
+        responses: {
+            /** @description Reviewed private knowledge matches */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceCompanyKnowledgeResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            500: components["responses"]["InternalServerError"];
+        };
+    };
     companyListInspect: {
         parameters: {
             query?: never;
@@ -7039,6 +7827,96 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["InstagramExtractionStartResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramPurchasesInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramPurchasesInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect my purchased Instagram extraction */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramPurchasesInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramPurchasesList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramPurchasesListInput"];
+            };
+        };
+        responses: {
+            /** @description List my paid Instagram extraction purchases */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramPurchasesListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    instagramPurchasesResults: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InstagramPurchasesResultsInput"];
+            };
+        };
+        responses: {
+            /** @description Read my purchased Instagram profiles */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InstagramPurchasesResultsResult"];
                 };
             };
             400: components["responses"]["BadRequest"];
@@ -7948,6 +8826,96 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["InstagramPacingUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    deliveryTestInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeliveryTestInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Exact delivery test and receipt. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeliveryTestInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    deliveryTestPrepare: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeliveryTestPrepareInput"];
+            };
+        };
+        responses: {
+            /** @description Exact delivery test and receipt. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeliveryTestPrepareResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    deliveryTestSend: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeliveryTestSendInput"];
+            };
+        };
+        responses: {
+            /** @description Exact delivery test and receipt. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeliveryTestSendResult"];
                 };
             };
             400: components["responses"]["BadRequest"];

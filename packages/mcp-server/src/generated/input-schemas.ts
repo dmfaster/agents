@@ -177,6 +177,97 @@ export const ConversationReplyInputSchema = z
 export const ConversationReplyInspectInputSchema = z
   .object({ idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9_-]+$")) })
   .strict();
+export const CampaignMessagesDraftListInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    afterId: ResourceIdSchema.optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+export const IdempotencyKeySchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(160)
+  .regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$"));
+export const CampaignMessagesDraftUpdateInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    expectedCampaignUpdatedAt: ResourceVersionSchema,
+    expectedListUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    edits: z
+      .array(
+        z
+          .object({
+            targetHandle: z.string().min(1).max(180),
+            channel: z.union([z.literal("instagram"), z.literal("facebook")]),
+            message: z.union([z.string().min(1).max(1000).regex(new RegExp("\\S")), z.null()]),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(100),
+  })
+  .strict();
+export const CampaignMessagesListInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    expectedRunId: ResourceIdSchema.optional(),
+    channels: z
+      .array(z.union([z.literal("instagram"), z.literal("facebook"), z.literal("linkedin")]))
+      .min(1)
+      .max(3)
+      .optional(),
+    jobIds: z.array(ResourceIdSchema).min(1).max(100).optional(),
+    afterJobId: ResourceIdSchema.optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+export const CampaignMessagesUpdateInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    runId: ResourceIdSchema,
+    expectedCampaignUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    edits: z
+      .array(
+        z
+          .object({
+            jobId: ResourceIdSchema,
+            targetHandle: z.string().min(1).max(180),
+            channel: z.union([
+              z.literal("instagram"),
+              z.literal("facebook"),
+              z.literal("linkedin"),
+            ]),
+            expectedJobUpdatedAt: ResourceVersionSchema,
+            message: z
+              .union([
+                z
+                  .string()
+                  .min(1)
+                  .max(2000)
+                  .regex(new RegExp("\\S"))
+                  .describe(
+                    "Exact recipient copy, preserving whitespace and Unicode. Null removes the override and restores current campaign or sequence copy.",
+                  ),
+                z
+                  .null()
+                  .describe(
+                    "Exact recipient copy, preserving whitespace and Unicode. Null removes the override and restores current campaign or sequence copy.",
+                  ),
+              ])
+              .describe(
+                "Exact recipient copy, preserving whitespace and Unicode. Null removes the override and restores current campaign or sequence copy.",
+              ),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(100),
+  })
+  .strict();
 export const CampaignFollowupsListInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
@@ -198,6 +289,24 @@ export const CampaignOutcomesListInputSchema = z
     cursor: z.string().min(1).max(512).optional(),
     limit: z.number().int().min(1).max(100).optional(),
   })
+  .strict();
+export const DeliveryTestPrepareInputSchema = z
+  .object({
+    channel: z.union([z.literal("email"), z.literal("sms")]),
+    to: z.string().trim().min(3).max(254),
+    mailboxId: ResourceIdSchema.optional(),
+    recipientConsentConfirmed: z.literal(true),
+    idempotencyKey: z.string().max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+  })
+  .strict();
+export const DeliveryTestSendInputSchema = z
+  .object({
+    testId: z.string().regex(new RegExp("^delivery_test_[a-f0-9]{64}$")),
+    reviewDigest: z.string().regex(new RegExp("^[a-f0-9]{64}$")),
+  })
+  .strict();
+export const DeliveryTestInspectInputSchema = z
+  .object({ testId: z.string().regex(new RegExp("^delivery_test_[a-f0-9]{64}$")) })
   .strict();
 export const HistoryListInputSchema = z
   .object({
@@ -561,19 +670,81 @@ export const ListTargetRemoveInputSchema = z
     expectedListUpdatedAt: ResourceVersionSchema,
   })
   .strict();
-export const IdempotencyKeySchema = z
-  .string()
-  .trim()
-  .min(1)
-  .max(160)
-  .regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$"));
 export const CampaignDraftPrepareInputSchema = z
   .object({
+    channel: z
+      .union([
+        z.literal("instagram"),
+        z.literal("facebook"),
+        z.literal("linkedin"),
+        z.literal("gmail"),
+        z.literal("sms"),
+      ])
+      .describe(
+        "Single-channel shorthand. Supply this or channels for company lists; defaults to Instagram for username lists.",
+      )
+      .optional(),
+    channels: z
+      .array(
+        z.union([
+          z.literal("instagram"),
+          z.literal("facebook"),
+          z.literal("linkedin"),
+          z.literal("gmail"),
+          z.literal("sms"),
+        ]),
+      )
+      .min(1)
+      .max(5)
+      .describe("Channels on one campaign. Mutually exclusive with channel.")
+      .optional(),
+    gmailSubject: z
+      .string()
+      .min(1)
+      .max(500)
+      .describe(
+        "Email subject shared by all messageVariants, which become the email body variants.",
+      )
+      .optional(),
+    gmailRecipientConsentConfirmed: z
+      .literal(true)
+      .describe("Explicit user confirmation of recipient permission, required for email.")
+      .optional(),
+    mailboxIds: z.array(ResourceIdSchema).min(1).max(8).optional(),
+    smsBody: z
+      .string()
+      .min(1)
+      .max(1600)
+      .describe("Separate SMS message, required when SMS is selected.")
+      .optional(),
+    linkedinInviteNote: z
+      .string()
+      .max(300)
+      .describe(
+        "Separate LinkedIn invitation note, required when LinkedIn is combined with another channel.",
+      )
+      .optional(),
+    expectedAudienceCount: z
+      .number()
+      .int()
+      .min(1)
+      .describe("Required exact company count for a company list.")
+      .optional(),
     listId: ResourceIdSchema,
     expectedListUpdatedAt: ResourceVersionSchema,
-    expectedTargetCount: z.number().int().min(1),
+    expectedTargetCount: z
+      .number()
+      .int()
+      .min(1)
+      .describe("Exact sum of selected channelCounts, not the number of distinct companies."),
     name: z.string().min(1).max(120),
-    messageVariants: z.array(z.string().min(1).max(1000)).min(1).max(4),
+    messageVariants: z
+      .array(z.string().min(1).max(1600))
+      .min(1)
+      .max(4)
+      .describe(
+        "Up to 1000 characters per variant, or 1600 for SMS-only drafts. SMS sends the separate smsBody.",
+      ),
     dailyCap: z.number().int().min(1).max(60),
     pacingSeconds: z.number().int().min(12).max(3600),
     onlyNewChats: z.literal(true),
@@ -743,6 +914,13 @@ export const CompanySearchFiltersSchema = z
         "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
       )
       .optional(),
+    websiteFacts: z
+      .array(z.union([z.literal("b2c"), z.literal("b2b"), z.literal("saas")]))
+      .max(3)
+      .describe(
+        "Positive-only saved Finnish website classifications with non-exhaustive coverage. Multiple selected facts must all match. b2c is a provisional consumer-targeting candidate; b2b and saas are independently scored positive candidates. Omission applies no website-fact restriction; absence is not a negative classification. Available only for Finnish audiences.",
+      )
+      .optional(),
     hasExhibitionParticipation: z.boolean().optional(),
     exhibitionEventKeys: z.array(z.string().max(160)).max(32).optional(),
     exhibitionMinEditions: z.string().max(8).optional(),
@@ -770,7 +948,7 @@ export const CompanySearchFiltersSchema = z
   })
   .strict()
   .describe(
-    "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+    "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
   );
 export const CompanySearchInputSchema = z
   .object({
@@ -784,7 +962,13 @@ export const CompanySearchInputSchema = z
     page: z.number().int().min(1).max(10000).optional(),
     pageSize: z.number().int().min(1).max(100).optional(),
     cursor: z.string().max(1000).optional(),
-    expectedRevision: z.string().max(200).optional(),
+    expectedRevision: z
+      .string()
+      .max(1024)
+      .describe(
+        "Echo the complete opaque revision returned by the first search page, including any website-classification identity. Never truncate it.",
+      )
+      .optional(),
     querySignature: z.string().max(200).optional(),
   })
   .strict();
@@ -832,11 +1016,85 @@ export const CompanyEvidenceSearchInputSchema = z
     querySignature: z.string().min(1).max(200).optional(),
   })
   .strict();
+export const WorkspaceCompanyKnowledgeInputSchema = z
+  .object({
+    query: z.string().max(200).optional(),
+    facets: z
+      .array(
+        z.union([
+          z.literal("offers_software"),
+          z.literal("offers_saas_b2b"),
+          z.literal("offers_it_services"),
+          z.literal("offers_marketing"),
+          z.literal("offers_consulting"),
+          z.literal("offers_accounting"),
+          z.literal("offers_legal"),
+          z.literal("offers_recruitment"),
+          z.literal("offers_training"),
+          z.literal("offers_engineering"),
+          z.literal("offers_industrial_services"),
+          z.literal("offers_construction"),
+          z.literal("offers_property_services"),
+          z.literal("offers_logistics"),
+          z.literal("offers_manufactured_goods"),
+          z.literal("offers_wholesale"),
+          z.literal("offers_machinery"),
+          z.literal("offers_food"),
+          z.literal("offers_healthcare"),
+          z.literal("offers_finance"),
+          z.literal("offers_energy"),
+          z.literal("offers_hospitality"),
+          z.literal("role_manufacturer"),
+          z.literal("role_reseller"),
+          z.literal("role_service_provider"),
+          z.literal("buyer_business"),
+          z.literal("buyer_consumer"),
+          z.literal("buyer_public_sector"),
+          z.literal("buyer_manufacturing"),
+          z.literal("buyer_construction"),
+          z.literal("buyer_property"),
+          z.literal("buyer_retail"),
+          z.literal("buyer_healthcare"),
+          z.literal("buyer_hospitality"),
+          z.literal("buyer_logistics"),
+          z.literal("buyer_technology"),
+          z.literal("buyer_finance"),
+          z.literal("buyer_energy"),
+          z.literal("buyer_education"),
+          z.literal("buyer_agriculture"),
+        ]),
+      )
+      .max(40)
+      .optional(),
+    page: z.number().int().min(1).max(10000).optional(),
+    pageSize: z.number().int().min(1).max(100).optional(),
+    expectedRevision: z.string().min(64).max(64).optional(),
+  })
+  .strict();
 export const CompanyKnowledgeInputSchema = z
   .object({
     country: z.union([z.literal("FI")]),
     businessId: z.string().min(1).max(192),
     maxAgeDays: z.number().int().min(1).max(90).optional(),
+    sourcePage: z
+      .number()
+      .int()
+      .min(1)
+      .max(500)
+      .describe("Page of original saved website passages; defaults to 1.")
+      .optional(),
+    sourcePageSize: z
+      .number()
+      .int()
+      .min(1)
+      .max(20)
+      .describe("Original passages per page; defaults to 10.")
+      .optional(),
+    expectedKnowledgeRevision: z
+      .string()
+      .regex(new RegExp("^[a-f0-9]{64}$"))
+      .describe("Pin subsequent source pages to the knowledgeRevision returned by the first read.")
+      .optional(),
   })
   .strict();
 export const CompanyEvidenceStartInputSchema = z
@@ -848,6 +1106,12 @@ export const CompanyEvidenceStartInputSchema = z
       .union([z.literal("binary"), z.literal("passage")])
       .describe(
         "Binary evaluates related website sections together in one compact request per company. Passage preserves separate relationship statuses and explicit-denial merging. Omission preserves passage behavior.",
+      )
+      .optional(),
+    factExpansion: z
+      .union([z.literal("requested_only"), z.literal("general")])
+      .describe(
+        "Binary mode only. New runs default to requested_only and ask only uncached requested criteria; general explicitly adds reusable standard offering/buyer questions to the same call on complete sources. Existing omitted-policy keys recover their original general run. Cached requested answers never trigger extra inference. Country and other deterministic filters are checked in code.",
       )
       .optional(),
     filters: CompanySearchFiltersSchema.optional(),
@@ -863,7 +1127,16 @@ export const CompanyEvidenceAdvanceInputSchema = z
   })
   .strict();
 export const CompanyEvidenceStatusInputSchema = z
-  .object({ runId: z.string().min(36).max(36), expectedRevision: z.string().min(64).max(64) })
+  .object({
+    runId: z.string().min(36).max(36),
+    expectedRevision: z.string().min(64).max(64),
+    includeCompanies: z
+      .boolean()
+      .describe(
+        "Set false for progress-only polling without fetching company rows or quotations. Omitted or true preserves the first result page. Use companies.evidence.results to inspect matches.",
+      )
+      .optional(),
+  })
   .strict();
 export const CompanyEvidenceResultsInputSchema = z
   .object({
@@ -1200,6 +1473,27 @@ export const InstagramExtractionResultsInputSchema = z
     limit: z.number().int().min(1).max(100).optional(),
   })
   .strict();
+export const InstagramPurchasesListInputSchema = z
+  .object({
+    cursor: ResourceIdSchema.optional(),
+    limit: z.number().int().min(1).max(20).optional(),
+  })
+  .strict();
+export const InstagramPurchasesInspectInputSchema = z
+  .object({
+    orderId: ResourceIdSchema,
+    cursor: ResourceIdSchema.optional(),
+    limit: z.number().int().min(1).max(20).optional(),
+  })
+  .strict();
+export const InstagramPurchasesResultsInputSchema = z
+  .object({
+    orderId: ResourceIdSchema,
+    jobId: ResourceIdSchema,
+    cursor: z.string().min(1).max(30).regex(new RegExp("^[A-Za-z0-9._]+$")).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
 export const LeadsStatusInputSchema = z
   .object({
     cursor: z.string().trim().min(1).max(1000).optional(),
@@ -1368,9 +1662,16 @@ export const AGENT_INPUT_SCHEMAS = {
   "conversation.update": ConversationUpdateInputSchema,
   "conversation.reply": ConversationReplyInputSchema,
   "conversation.reply.inspect": ConversationReplyInspectInputSchema,
+  "campaign.messages.draft.list": CampaignMessagesDraftListInputSchema,
+  "campaign.messages.draft.update": CampaignMessagesDraftUpdateInputSchema,
+  "campaign.messages.list": CampaignMessagesListInputSchema,
+  "campaign.messages.update": CampaignMessagesUpdateInputSchema,
   "campaign.followups.list": CampaignFollowupsListInputSchema,
   "campaign.followups.cancel": CampaignFollowupsCancelInputSchema,
   "campaign.outcomes.list": CampaignOutcomesListInputSchema,
+  "sending.test.prepare": DeliveryTestPrepareInputSchema,
+  "sending.test.send": DeliveryTestSendInputSchema,
+  "sending.test.inspect": DeliveryTestInspectInputSchema,
   "senders.inspect": WorkspaceBriefingInputSchema,
   "history.list": HistoryListInputSchema,
   "pipeline.inspect": PipelineInspectInputSchema,
@@ -1398,6 +1699,7 @@ export const AGENT_INPUT_SCHEMAS = {
   "companies.suggest": CompanySuggestionsInputSchema,
   "companies.search": CompanySearchInputSchema,
   "companies.evidence.search": CompanyEvidenceSearchInputSchema,
+  "companies.knowledge.search": WorkspaceCompanyKnowledgeInputSchema,
   "companies.knowledge": CompanyKnowledgeInputSchema,
   "companies.evidence.start": CompanyEvidenceStartInputSchema,
   "companies.evidence.advance": CompanyEvidenceAdvanceInputSchema,
@@ -1432,6 +1734,9 @@ export const AGENT_INPUT_SCHEMAS = {
   "instagram.extract.start": InstagramExtractionStartInputSchema,
   "instagram.extract.inspect": InstagramExtractionInspectInputSchema,
   "instagram.extract.results": InstagramExtractionResultsInputSchema,
+  "instagram.purchases.list": InstagramPurchasesListInputSchema,
+  "instagram.purchases.inspect": InstagramPurchasesInspectInputSchema,
+  "instagram.purchases.results": InstagramPurchasesResultsInputSchema,
   "leads.status": LeadsStatusInputSchema,
   "leads.extract.quote": LeadExtractionQuoteInputSchema,
   "leads.extract.start": LeadExtractionStartInputSchema,

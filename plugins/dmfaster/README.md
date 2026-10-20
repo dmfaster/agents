@@ -7,7 +7,7 @@ manifests. The hosted endpoint supports MCP 2025 hosts. The separately published
 version-pinned stdio MCP package requires MCP 2026-07-28; the CLI remains available
 for headless callers.
 
-The 1.11.0 source exposes 91 bounded domain tools plus an optional
+The 1.12.0 source exposes 102 bounded domain tools plus an optional
 portable MCP Apps Companies and campaign workspaces. It adds Instagram ICP text-to-list runs and covers social prospecting, company research, exact
 audience and draft preparation, inbox and pipeline work, follow-up control,
 sender readiness and paginated outcomes. Replies require the user's explicit
@@ -31,24 +31,20 @@ resume call; the user only completes the browser-store installation/link and
 any approval explicitly required by the returned connection or action state.
 
 Compliant MCP Apps hosts can render the campaign workspace inline. Modern
-headless hosts use the same complete campaign state and 91 domain tools without
+headless hosts use the same complete campaign state and 102 domain tools without
 losing any server capability or safety guarantee; older clients do not receive
 a legacy MCP downgrade.
 
 ## Release status
 
-The hosted native Instagram ICP workflow has passed the bounded production canary.
-The version-pinned 1.11.0 packages are published through the
-[trusted workflow](https://github.com/dmfaster/agents/actions/runs/37225848421)
-and verified from a fresh registry consumer. Package integrity, signatures,
-source-bound provenance and read-only CLI/MCP briefing checks passed. The Codex
-GitHub plugin has been upgraded to 1.11.0. Refresh the plugin and start a fresh
-host session to load its catalog. Existing credentials without lead permissions
-use the normal human-approved scope upgrade; eligible hosted grants are reused.
-Claude/Cursor host installation and directory acceptance remain unverified.
-The final Codex check rejected the old stdio transport with protocol error -32022
-(MCP 2025-06-18 requested, 2026-07-28 required). The plugin now selects the existing
-compatible hosted endpoint; its final fresh-host verification is recorded separately.
+Version 1.12.0 adds recipient-specific message preparation for unlaunched drafts
+and edits to eligible queued messages. Users can have their own agent research
+websites and supply the exact text for each recipient. Preparing copy does not
+launch a campaign. The version-pinned packages use the
+[trusted publishing workflow](https://github.com/dmfaster/agents/actions/workflows/agent-packages-release.yml).
+Publication, registry verification and host checks are recorded separately for
+each release. Refresh the plugin and start a fresh host session after upgrading.
+Existing connections retain their granted permissions.
 
 Do not point users at the private monorepo as a public marketplace. Synchronize
 this plugin directory to the approved public repository after package, privacy,
@@ -68,7 +64,7 @@ Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@1.11.0 auth login --json
+npx --yes @dmfaster/cli@1.12.0 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use

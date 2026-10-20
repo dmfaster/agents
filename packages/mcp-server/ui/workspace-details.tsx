@@ -1,3 +1,4 @@
+import { t } from "./locale.ts";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { AgentToolDataMap } from "@dmfaster/sdk";
 import type { McpAppBridge } from "./bridge.ts";
@@ -75,11 +76,11 @@ function ReadSection<T>({
     >
       <summary>{title}</summary>
       <div className="workspace-disclosure-body">
-        {busy ? <p role="status">Loading…</p> : null}
+        {busy ? <p role="status">{t("Loading…")}</p> : null}
         {error ? <p role="alert">{error}</p> : null}
         {data ? children(data) : null}
         {!bridge.canCallTools() ? (
-          <p>Ask your assistant to load this information.</p>
+          <p>{t("Ask your assistant to load this information.")}</p>
         ) : (
           <button
             type="button"
@@ -87,7 +88,7 @@ function ReadSection<T>({
             disabled={busy}
             onClick={() => void read()}
           >
-            {error ? "Retry" : "Refresh"}
+            {error ? t("Retry") : t("Refresh")}
           </button>
         )}
       </div>
@@ -326,47 +327,52 @@ type Connection = {
 };
 export function ConnectionDetails({ bridge }: { bridge: McpAppBridge }) {
   return (
-    <ReadSection<Connection> title="Connection" tool="connection_status" input={{}} bridge={bridge}>
+    <ReadSection<Connection>
+      title={t("Connection")}
+      tool="connection_status"
+      input={{}}
+      bridge={bridge}
+    >
       {(connection) => (
         <>
           <dl className="workspace-facts">
             <div>
-              <dt>Status</dt>
-              <dd>{connection.status === "authenticated" ? "Connected" : "Not connected"}</dd>
+              <dt>{t("Status")}</dt>
+              <dd>{connection.status === "authenticated" ? t("Connected") : t("Not connected")}</dd>
             </div>
             {connection.user ? (
               <div>
-                <dt>Account</dt>
-                <dd>{connection.user.email || connection.user.name || "Unavailable"}</dd>
+                <dt>{t("Account")}</dt>
+                <dd>{connection.user.email || connection.user.name || t("Unavailable")}</dd>
               </div>
             ) : null}
             {connection.workspace ? (
               <div>
-                <dt>Workspace</dt>
-                <dd>{connection.workspace.name || "Unavailable"}</dd>
+                <dt>{t("Workspace")}</dt>
+                <dd>{connection.workspace.name || t("Unavailable")}</dd>
               </div>
             ) : null}
           </dl>
           {connection.credential?.scopes ? (
             <dl className="workspace-facts">
               {[
-                ["Campaigns", "campaigns:read"],
-                ["Replies", "inbox:read"],
-                ["Sending health", "sending:read"],
+                [t("Campaigns"), "campaigns:read"],
+                [t("Replies"), "inbox:read"],
+                [t("Sending health"), "sending:read"],
               ].map(([label, scope]) => (
                 <div key={scope}>
-                  <dt>{label}</dt>
+                  <dt>{t(label)}</dt>
                   <dd>
                     {connection.credential!.scopes!.includes(scope!)
-                      ? "Read enabled"
-                      : "Permission needed"}
+                      ? t("Read enabled")
+                      : t("Permission needed")}
                   </dd>
                 </div>
               ))}
             </dl>
           ) : null}
           {connection.status !== "authenticated" ? (
-            <p>{connection.actionRequired || "Reconnect DM Faster in your host."}</p>
+            <p>{connection.actionRequired || t("Reconnect DM Faster in your host.")}</p>
           ) : null}
         </>
       )}

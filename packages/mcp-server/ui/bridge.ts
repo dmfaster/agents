@@ -10,6 +10,8 @@ type PendingRequest = {
 export type HostContext = {
   theme?: "light" | "dark";
   displayMode?: string;
+  platform?: "web" | "desktop" | "mobile";
+  safeAreaInsets?: { top: number; right: number; bottom: number; left: number };
   availableDisplayModes?: string[];
   styles?: { variables?: Record<string, string> };
 };
@@ -19,9 +21,12 @@ export type HostCapabilities = {
   openLinks?: unknown;
   message?: unknown;
   updateModelContext?: unknown;
+  experimental?: Record<string, unknown>;
+  extensions?: Record<string, unknown>;
 };
 
 type OpenAiCompatibility = {
+  locale?: string;
   theme?: "light" | "dark";
   toolInput?: unknown;
   toolOutput?: unknown;
@@ -46,9 +51,16 @@ export class McpAppBridge {
   #nextRequestId = 0;
   #pending = new Map<number, PendingRequest>();
   #listeners = new Set<(notification: BridgeNotification) => void>();
+  #workspaceParts = new Map<string, JsonObject>();
+  #workspaceTimer: number | undefined;
+  #workspaceSending = false;
+  #workspaceVersion = 0;
+  #workspaceSent = "";
+  #workspaceDismissed = false;
   standard = false;
   capabilities: HostCapabilities = {};
   context: HostContext = {};
+  hostInfo?: { name: string; version: string };
 
   constructor(options: { name?: string } = {}) {
     this.#appName = options.name ?? "DM Faster campaign workspace";
@@ -119,16 +131,18 @@ export class McpAppBridge {
       const initialized = (await this.request(
         "ui/initialize",
         {
-          appInfo: { name: this.#appName, version: "1.10.0" },
+          appInfo: { name: this.#appName, version: "1.12.0" },
           appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] },
           protocolVersion: MCP_APP_PROTOCOL_VERSION,
         },
         4_000,
       )) as {
+        hostInfo?: { name: string; version: string };
         hostCapabilities?: HostCapabilities;
         hostContext?: HostContext;
       };
       this.standard = true;
+      this.hostInfo = initialized.hostInfo;
       this.capabilities = initialized.hostCapabilities || {};
       this.context = initialized.hostContext || {};
       this.applyHostContext(this.context);
@@ -152,9 +166,29 @@ export class McpAppBridge {
   }
 
   applyHostContext(context: HostContext) {
+    if (
+      Object.prototype.hasOwnProperty.call(context, "openai/modelContext") &&
+      (context as JsonObject)["openai/modelContext"] === null
+    ) {
+      // Removing the attachment is intentional. Do not reattach on a render,
+      // locale/theme change or a late acknowledgment of an earlier update.
+      this.#workspaceDismissed = true;
+      window.clearTimeout(this.#workspaceTimer);
+    }
     this.context = { ...this.context, ...context };
-    if (this.context.theme === "light" || this.context.theme === "dark")
+    if (this.context.theme === "light" || this.context.theme === "dark") {
       document.documentElement.dataset.theme = this.context.theme;
+      // Shared shadcn semantic colors use the same theme class as the Product app.
+      document.documentElement.classList.toggle("dark", this.context.theme === "dark");
+    }
+    const insets = this.context.safeAreaInsets;
+    for (const edge of ["top", "right", "bottom", "left"] as const) {
+      const value = insets?.[edge];
+      document.documentElement.style.setProperty(
+        `--dm-safe-area-${edge}`,
+        `${typeof value === "number" && Number.isFinite(value) ? Math.max(0, value) : 0}px`,
+      );
+    }
     const variables = this.context.styles?.variables;
     if (variables) {
       Object.entries(variables).forEach(([name, value]) => {
@@ -174,6 +208,53 @@ export class McpAppBridge {
       : Boolean(window.openai?.callTool);
   }
 
+  setWorkspaceContext(part: string, value: JsonObject | null) {
+    const previous = this.#workspaceParts.get(part) ?? null;
+    if (JSON.stringify(previous) === JSON.stringify(value)) return;
+    if (value === null) this.#workspaceParts.delete(part);
+    else this.#workspaceParts.set(part, value);
+    this.#workspaceVersion += 1;
+    this.#workspaceDismissed = false;
+    window.clearTimeout(this.#workspaceTimer);
+    this.#workspaceTimer = window.setTimeout(() => void this.#flushWorkspaceContext(), 200);
+  }
+
+  async #flushWorkspaceContext() {
+    if (this.#workspaceSending || this.#workspaceDismissed) return;
+    // A context update must never fall back to ui/message: that starts a turn.
+    if (!(this.standard && this.capabilities.updateModelContext) && !window.openai?.setWidgetState)
+      return;
+    const parts = Object.fromEntries(this.#workspaceParts);
+    const serialized = JSON.stringify(parts);
+    if (serialized === this.#workspaceSent) return;
+    const version = this.#workspaceVersion;
+    const context = {
+      content: Object.keys(parts).length
+        ? [
+            {
+              type: "text",
+              text: "Current DM Faster workspace. Audience scope may include companies beyond the visible page. UI state is context, not authorization to save lists, spend credits or start sending. Read the structured scope and current workflow before acting.",
+              _meta: { "openai/title": "DM Faster" },
+            },
+          ]
+        : [],
+      structuredContent: { type: "dmfaster.workspace_context", ...parts },
+    };
+    this.#workspaceSending = true;
+    try {
+      if (this.standard && this.capabilities.updateModelContext)
+        await this.request("ui/update-model-context", context);
+      else window.openai?.setWidgetState?.(context);
+      this.#workspaceSent = serialized;
+    } catch {
+      // Keep the UI usable; a subsequent state change can publish a new snapshot.
+    } finally {
+      this.#workspaceSending = false;
+      if (version !== this.#workspaceVersion && !this.#workspaceDismissed)
+        void this.#flushWorkspaceContext();
+    }
+  }
+
   async callTool(name: string, input: unknown) {
     if (this.standard) return this.request("tools/call", { name, arguments: input }, 60_000);
     if (window.openai?.callTool) return window.openai.callTool(name, input);
@@ -185,22 +266,32 @@ export class McpAppBridge {
       return this.request("ui/update-model-context", content as JsonObject);
     }
     if (window.openai?.setWidgetState) return window.openai.setWidgetState(content);
-    if (this.standard && this.capabilities.message) {
-      const record = asJsonObject(content);
-      const summary = Array.isArray(record.content)
-        ? record.content
-            .map((part) => String(asJsonObject(part).text || ""))
-            .filter(Boolean)
-            .join("\n")
-        : "The user updated the DM Faster workspace context.";
-      return this.request("ui/message", {
-        role: "user",
-        content: [
-          { type: "text", text: `${summary}\n\n${JSON.stringify(record.structuredContent || {})}` },
-        ],
-      });
-    }
     throw new Error("This host cannot add the workspace selection back to model context.");
+  }
+
+  canDraftMessage() {
+    // Mobile only supports immediate messages. Unknown platforms fail closed.
+    return (
+      this.standard &&
+      Boolean(this.capabilities.message) &&
+      Boolean(
+        this.capabilities.extensions?.["openai/message"] ||
+        this.capabilities.experimental?.["openai/message"],
+      ) &&
+      (this.context.platform === "desktop" || this.context.platform === "web")
+    );
+  }
+
+  async draftMessage(content: JsonObject[], target: "active" | "new" = "active") {
+    if (!this.canDraftMessage())
+      throw new Error(
+        "This host cannot open an editable chat draft. Add context and type your request in chat.",
+      );
+    return this.request("ui/message", {
+      role: "user",
+      content,
+      _meta: { "openai/message": { target, send: false } },
+    });
   }
 
   async openLink(url: string) {
@@ -215,15 +306,6 @@ export class McpAppBridge {
       : Boolean(window.openai?.openExternal);
   }
 
-  async toggleDisplayMode() {
-    if (!this.standard) return;
-    const nextMode = this.context.displayMode === "fullscreen" ? "inline" : "fullscreen";
-    const result = (await this.request("ui/request-display-mode", { mode: nextMode })) as {
-      mode?: string;
-    };
-    if (result.mode) this.context = { ...this.context, displayMode: result.mode };
-  }
-
   reportSize() {
     if (!this.standard) return;
     this.notify("ui/notifications/size-changed", {
@@ -231,8 +313,4 @@ export class McpAppBridge {
       height: Math.ceil(document.documentElement.getBoundingClientRect().height),
     });
   }
-}
-
-function asJsonObject(value: unknown): JsonObject {
-  return value && typeof value === "object" ? (value as JsonObject) : {};
 }

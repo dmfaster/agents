@@ -8,7 +8,7 @@ Both require an explicitly reviewed version on public `main`.
 1. All four published package versions, all three plugin versions, and every
    pinned command match exactly. `packages/product-ui` remains private.
 2. `npm run check:agents` passes, including strict MCP 2026-07-28 negotiation,
-   all 91 domain tools, connection status, and the portable campaign workspace.
+   all 102 domain tools, connection status, and the portable campaign workspace.
 3. `npm audit --omit=dev` passes.
 4. The production browser-authorization and action-approval backend is healthy.
    The `companies.list.refine`, inbox, pipeline, follow-up, sender and history
@@ -111,3 +111,10 @@ npm artifacts and requires no new Product deployment. Validate the exact HTTPS
 manifest and dependency, then verify fresh Codex discovery and read-only
 connection/workspace calls after upgrading. Do not infer Claude/Cursor host
 installation or directory acceptance from matching manifests.
+
+## 1.12.0 recipient messages
+
+Verify Product migration 0385 and the four `campaign.messages` tools before
+dispatching the 1.12.0 trusted package workflow. Release the GitHub plugin catalog
+after all four exact npm versions are publicly installable. Record live tool
+discovery, clean installs, signatures, provenance, and read-only host results.

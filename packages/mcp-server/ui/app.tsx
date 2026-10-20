@@ -1,4 +1,21 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  cloneElement,
+  isValidElement,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import {
+  Field as SharedField,
+  FieldDescription,
+  FieldLabel,
+} from "@dmfaster/product-ui/components/field";
+import { Input } from "@dmfaster/product-ui/components/input";
+import { Textarea } from "@dmfaster/product-ui/components/textarea";
 import { createRoot } from "react-dom/client";
 import type { AgentCampaignState, AgentToolInputMap } from "@dmfaster/sdk";
 import {
@@ -6,11 +23,8 @@ import {
   PageIntro,
   Panel,
   TonePill,
-  inputClass,
-  numberInputClass,
   primaryButtonClass,
   subtleButtonClass,
-  textareaClass,
 } from "@dmfaster/product-ui";
 import {
   AnalyticsLineChartCard,
@@ -231,14 +245,25 @@ function Field({
   hint?: string;
   className?: string;
 }) {
+  const generatedId = useId();
+  const control = isValidElement<{ id?: string; "aria-describedby"?: string }>(children)
+    ? children
+    : null;
+  const id = control?.props.id || generatedId;
+  const descriptionId = hint ? `${id}-description` : undefined;
   return (
-    <label className={`block min-w-0 text-sm font-semibold text-slate-800 ${className}`}>
-      <span>{label}</span>
-      <span className="mt-1.5 block">{children}</span>
-      {hint ? (
-        <span className="mt-1.5 block text-xs font-normal leading-5 text-slate-500">{hint}</span>
-      ) : null}
-    </label>
+    <SharedField className={className}>
+      <FieldLabel htmlFor={id}>{label}</FieldLabel>
+      {control
+        ? cloneElement(control, {
+            id,
+            "aria-describedby":
+              [control.props["aria-describedby"], descriptionId].filter(Boolean).join(" ") ||
+              undefined,
+          })
+        : children}
+      {hint ? <FieldDescription id={descriptionId}>{hint}</FieldDescription> : null}
+    </SharedField>
   );
 }
 
@@ -330,8 +355,7 @@ function AudienceEditor({
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <Field label="Campaign objective" className="sm:col-span-2">
-        <input
-          className={inputClass}
+        <Input
           value={state.brief.objective}
           onChange={(event) =>
             update((next) => {
@@ -345,8 +369,8 @@ function AudienceEditor({
         className="sm:col-span-2"
         hint="Describe the audience naturally; the resolved filters below remain authoritative."
       >
-        <textarea
-          className={`${textareaClass} min-h-28`}
+        <Textarea
+          className="min-h-28"
           value={state.brief.targetDescription}
           onChange={(event) =>
             update((next) => {
@@ -356,8 +380,7 @@ function AudienceEditor({
         />
       </Field>
       <Field label="Countries">
-        <input
-          className={inputClass}
+        <Input
           value={state.brief.countries.join(", ")}
           onChange={(event) =>
             update((next) => {
@@ -369,8 +392,7 @@ function AudienceEditor({
         />
       </Field>
       <Field label="Cities">
-        <input
-          className={inputClass}
+        <Input
           value={(state.brief.cities || []).join(", ")}
           onChange={(event) =>
             update((next) => {
@@ -380,8 +402,7 @@ function AudienceEditor({
         />
       </Field>
       <Field label="Decision-maker roles" className="sm:col-span-2">
-        <input
-          className={inputClass}
+        <Input
           value={state.brief.decisionMakerRoles.join(", ")}
           onChange={(event) =>
             update((next) => {
@@ -391,8 +412,7 @@ function AudienceEditor({
         />
       </Field>
       <Field label="Employees minimum">
-        <input
-          className={numberInputClass}
+        <Input
           type="number"
           min="0"
           value={state.brief.companySize.employeeMin ?? ""}
@@ -406,8 +426,7 @@ function AudienceEditor({
         />
       </Field>
       <Field label="Employees maximum">
-        <input
-          className={numberInputClass}
+        <Input
           type="number"
           min="0"
           value={state.brief.companySize.employeeMax ?? ""}
@@ -421,8 +440,7 @@ function AudienceEditor({
         />
       </Field>
       <Field label="Revenue minimum, EUR">
-        <input
-          className={numberInputClass}
+        <Input
           type="number"
           min="0"
           value={state.brief.companySize.revenueMinEur ?? ""}
@@ -436,8 +454,7 @@ function AudienceEditor({
         />
       </Field>
       <Field label="Revenue maximum, EUR">
-        <input
-          className={numberInputClass}
+        <Input
           type="number"
           min="0"
           value={state.brief.companySize.revenueMaxEur ?? ""}
@@ -455,8 +472,7 @@ function AudienceEditor({
         <Tags values={industryTags} empty="No industry has been resolved yet" />
       </div>
       <Field label="Company exclusions" className="sm:col-span-2">
-        <input
-          className={inputClass}
+        <Input
           value={state.brief.exclusions.join(", ")}
           onChange={(event) =>
             update((next) => {
@@ -490,8 +506,7 @@ function AudienceEditor({
         <Tags values={signalTags} empty="No signal filter requested" />
       </div>
       <Field label="Call to action" className="sm:col-span-2">
-        <input
-          className={inputClass}
+        <Input
           value={state.brief.callToAction}
           onChange={(event) =>
             update((next) => {
@@ -515,8 +530,7 @@ function MessageEditor({
     <div className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Message language">
-          <input
-            className={inputClass}
+          <Input
             value={state.brief.messageLanguage}
             onChange={(event) =>
               update((next) => {
@@ -526,8 +540,7 @@ function MessageEditor({
           />
         </Field>
         <Field label="Tone">
-          <input
-            className={inputClass}
+          <Input
             value={state.brief.tone}
             onChange={(event) =>
               update((next) => {
@@ -595,8 +608,7 @@ function MessageEditor({
               })}
             </div>
             <Field label="Subject (email only)">
-              <input
-                className={inputClass}
+              <Input
                 value={message.subject || ""}
                 onChange={(event) =>
                   update((next) => {
@@ -610,8 +622,8 @@ function MessageEditor({
               />
             </Field>
             <Field label="Message body">
-              <textarea
-                className={`${textareaClass} min-h-32`}
+              <Textarea
+                className="min-h-32"
                 value={message.body}
                 onChange={(event) =>
                   update((next) => {
@@ -692,8 +704,7 @@ function DeliveryEditor({
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Daily company limit">
-          <input
-            className={numberInputClass}
+          <Input
             type="number"
             min="1"
             value={state.brief.deliverySettings.dailyCap ?? ""}
@@ -707,8 +718,7 @@ function DeliveryEditor({
           />
         </Field>
         <Field label="Timezone">
-          <input
-            className={inputClass}
+          <Input
             value={state.brief.deliverySettings.timezone}
             onChange={(event) =>
               update((next) => {
@@ -718,8 +728,7 @@ function DeliveryEditor({
           />
         </Field>
         <Field label="Window starts">
-          <input
-            className={inputClass}
+          <Input
             type="time"
             value={state.brief.deliverySettings.windowStart}
             onChange={(event) =>
@@ -730,8 +739,7 @@ function DeliveryEditor({
           />
         </Field>
         <Field label="Window ends">
-          <input
-            className={inputClass}
+          <Input
             type="time"
             value={state.brief.deliverySettings.windowEnd}
             onChange={(event) =>
@@ -798,8 +806,7 @@ function BusinessEditor({
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <Field label="Business name">
-        <input
-          className={inputClass}
+        <Input
           value={state.profile.businessName}
           onChange={(event) =>
             update((next) => {
@@ -809,8 +816,7 @@ function BusinessEditor({
         />
       </Field>
       <Field label="Website">
-        <input
-          className={inputClass}
+        <Input
           inputMode="url"
           value={state.profile.websiteUrl}
           onChange={(event) =>
@@ -821,8 +827,8 @@ function BusinessEditor({
         />
       </Field>
       <Field label="Offer" className="sm:col-span-2">
-        <textarea
-          className={`${textareaClass} min-h-28`}
+        <Textarea
+          className="min-h-28"
           value={state.brief.offer}
           onChange={(event) =>
             update((next) => {
@@ -833,8 +839,8 @@ function BusinessEditor({
         />
       </Field>
       <Field label="Customer outcome" className="sm:col-span-2">
-        <textarea
-          className={`${textareaClass} min-h-28`}
+        <Textarea
+          className="min-h-28"
           value={state.profile.customerOutcome}
           onChange={(event) =>
             update((next) => {
@@ -844,8 +850,8 @@ function BusinessEditor({
         />
       </Field>
       <Field label="Business context" className="sm:col-span-2">
-        <textarea
-          className={`${textareaClass} min-h-32`}
+        <Textarea
+          className="min-h-32"
           value={state.profile.businessDescription}
           onChange={(event) =>
             update((next) => {
@@ -855,8 +861,7 @@ function BusinessEditor({
         />
       </Field>
       <Field label="Differentiators" className="sm:col-span-2">
-        <input
-          className={inputClass}
+        <Input
           value={state.profile.differentiators.join(", ")}
           onChange={(event) =>
             update((next) => {
@@ -866,8 +871,7 @@ function BusinessEditor({
         />
       </Field>
       <Field label="Proof points" className="sm:col-span-2">
-        <input
-          className={inputClass}
+        <Input
           value={state.profile.proofPoints.join(", ")}
           onChange={(event) =>
             update((next) => {
@@ -877,8 +881,7 @@ function BusinessEditor({
         />
       </Field>
       <Field label="Preferred languages">
-        <input
-          className={inputClass}
+        <Input
           value={state.profile.preferredLanguages.join(", ")}
           onChange={(event) =>
             update((next) => {
@@ -888,8 +891,7 @@ function BusinessEditor({
         />
       </Field>
       <Field label="Default excluded traits">
-        <input
-          className={inputClass}
+        <Input
           value={state.profile.excludedCompanyTraits.join(", ")}
           onChange={(event) =>
             update((next) => {
@@ -1279,18 +1281,7 @@ function App() {
             "Review the complete campaign plan, preview the exact audience, and prepare a private draft."
           }
           actions={
-            <>
-              {dirty ? <span className="text-xs text-slate-500">Unsynced edits</span> : null}
-              {bridge.context.availableDisplayModes?.includes("fullscreen") ? (
-                <button
-                  type="button"
-                  className={subtleButtonClass}
-                  onClick={() => void bridge.toggleDisplayMode()}
-                >
-                  Expand
-                </button>
-              ) : null}
-            </>
+            <>{dirty ? <span className="text-xs text-slate-500">Unsynced edits</span> : null}</>
           }
         />
 
@@ -1306,7 +1297,6 @@ function App() {
               detail={
                 exactAudience === null ? "Exact count required" : "Authoritative company total"
               }
-              accent="bg-highlight"
             />
             <AnalyticsMetricCard
               label="Estimated duration"
@@ -1316,13 +1306,11 @@ function App() {
                   ? "Preview the audience to calculate"
                   : "At the confirmed schedule"
               }
-              accent="bg-slate-950"
             />
             <AnalyticsMetricCard
               label="Daily company limit"
               value={formatNumber(state.brief.deliverySettings.dailyCap)}
               detail={`${state.brief.deliverySettings.windowStart}–${state.brief.deliverySettings.windowEnd} · ${state.brief.deliverySettings.timezone}`}
-              accent="bg-amber-400"
             />
             <AnalyticsMetricCard
               label="Channels"
@@ -1332,7 +1320,6 @@ function App() {
                   ? state.brief.requestedChannels.join(", ")
                   : "No channel selected"
               }
-              accent="bg-emerald-500"
             />
           </section>
 

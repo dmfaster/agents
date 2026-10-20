@@ -1,5 +1,5 @@
 import { ResourceTemplate, type McpServer } from "@modelcontextprotocol/server";
-import { DmfasterHttpError, type AgentToolDataMap } from "@dmfaster/sdk";
+import { DmfasterHttpError, type AgentToolDataMap, type AgentToolCallOptions } from "@dmfaster/sdk";
 import { z } from "zod";
 import {
   CompanyInspectInputSchema,
@@ -54,6 +54,7 @@ export async function searchWorkspaceMentions(
   client: AgentInvoker,
   query: string,
   auth?: HostedAuth,
+  options?: AgentToolCallOptions,
 ) {
   const normalized = query.trim();
   const sources: Array<{ source: string; load: () => Promise<Mention[]> }> = [];
@@ -61,10 +62,14 @@ export async function searchWorkspaceMentions(
     sources.push({
       source: "lists",
       load: async () => {
-        const result = await client.invoke("lists.list", {
-          ...(normalized ? { query: normalized } : {}),
-          limit: 10,
-        });
+        const result = await client.invoke(
+          "lists.list",
+          {
+            ...(normalized ? { query: normalized } : {}),
+            limit: 10,
+          },
+          options,
+        );
         if (!result.ok || !result.data) throw new Error("Saved list suggestions are unavailable.");
         return (result.data as AgentToolDataMap["lists.list"]).lists.map(listMention);
       },
@@ -75,11 +80,15 @@ export async function searchWorkspaceMentions(
     sources.push({
       source: "companies",
       load: async () => {
-        const result = await client.invoke("companies.suggest", {
-          countries: SupportedCountrySchema.options.map((country) => country.value),
-          query: normalized,
-          limit: 10,
-        });
+        const result = await client.invoke(
+          "companies.suggest",
+          {
+            countries: SupportedCountrySchema.options.map((country) => country.value),
+            query: normalized,
+            limit: 10,
+          },
+          options,
+        );
         if (!result.ok || !result.data) throw new Error("Company suggestions are unavailable.");
         return (result.data as AgentToolDataMap["companies.suggest"]).suggestions.map(
           companyMention,
@@ -106,7 +115,11 @@ export async function searchWorkspaceMentions(
   };
 }
 
-export async function readWorkspaceMention(client: AgentInvoker, uri: URL) {
+export async function readWorkspaceMention(
+  client: AgentInvoker,
+  uri: URL,
+  options?: AgentToolCallOptions,
+) {
   const kind = uri.hostname;
   const ids = uri.pathname.slice(1).split("/").map(decodeURIComponent);
   if (
@@ -122,13 +135,13 @@ export async function readWorkspaceMention(client: AgentInvoker, uri: URL) {
   if (kind === "companies" && ids.length === 2) {
     const country = SupportedCountrySchema.parse(ids[0]);
     const businessId = CompanyInspectInputSchema.shape.businessId.parse(ids[1]);
-    result = await client.invoke("company.inspect", { country, businessId });
+    result = await client.invoke("company.inspect", { country, businessId }, options);
   } else if ((kind === "lists" || kind === "company-lists") && ids.length === 1) {
     const listId = ResourceIdSchema.parse(ids[0]);
     result =
       kind === "lists"
-        ? await client.invoke("list.inspect", { listId, limit: 25 })
-        : await client.invoke("companies.list.inspect", { listId, limit: 25 });
+        ? await client.invoke("list.inspect", { listId, limit: 25 }, options)
+        : await client.invoke("companies.list.inspect", { listId, limit: 25 }, options);
   } else throw new Error("Invalid DM Faster resource.");
   // Every read uses the current authenticated domain service: resource URIs are
   // identities, never cached permission grants or authority to mutate anything.
@@ -159,6 +172,9 @@ export function registerWorkspaceMentions(
   },
   auth?: HostedAuth,
 ) {
+  server.server.registerCapabilities({
+    extensions: { "openai/mentions": { searchTool: WORKSPACE_MENTIONS_TOOL_NAME } },
+  });
   server.registerTool(
     WORKSPACE_MENTIONS_TOOL_NAME,
     {
@@ -175,13 +191,12 @@ export function registerWorkspaceMentions(
       },
       _meta: {
         ...oauthToolMetadata(auth, []),
-        "openai/extensions": { "mentions/search": {} },
         ui: { visibility: ["app"] },
       },
     },
-    async ({ query }) => {
+    async ({ query }, ctx) => {
       try {
-        return await searchWorkspaceMentions(client, query, auth);
+        return await searchWorkspaceMentions(client, query, auth, { signal: ctx.mcpReq.signal });
       } catch (error) {
         return { ...onFailure(error), ...oauthFailureMetadata(error, auth, []) };
       }
@@ -201,6 +216,7 @@ export function registerWorkspaceMentions(
         description:
           "Current authenticated workspace context. Reading grants no action permission.",
       },
-      async (uri) => readWorkspaceMention(client, uri),
+      async (uri, _variables, ctx) =>
+        readWorkspaceMention(client, uri, { signal: ctx.mcpReq.signal }),
     );
 }

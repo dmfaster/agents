@@ -18,8 +18,10 @@ const packageNames = [
   "@dmfaster/mcp-server",
 ];
 const mcpClientPackage = "@modelcontextprotocol/client@2.0.0";
-const campaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v5.html";
-const previousCampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v4.html";
+const campaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v7.html";
+const previousCampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v6.html";
+const v5CampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v5.html";
+const v4CampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v4.html";
 const v3CampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v3.html";
 const v2CampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v2.html";
 const legacyCampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v1.html";
@@ -42,16 +44,24 @@ const expectedTools = [
   "companies_workspace",
   "workspace_open",
   "workspace_mentions",
+  "outreach_details",
   "campaigns_list",
   "conversations_list",
   "conversation_inspect",
   "conversation_update",
   "conversation_reply",
   "conversation_reply_inspect",
+  "campaign_messages_draft_list",
+  "campaign_messages_draft_update",
+  "campaign_messages_list",
+  "campaign_messages_update",
   "campaign_followups_list",
   "campaign_followups_cancel",
   "campaign_outcomes_list",
   "senders_inspect",
+  "sending_test_prepare",
+  "sending_test_send",
+  "sending_test_inspect",
   "history_list",
   "company_timeline",
   "industry_lookup",
@@ -75,6 +85,7 @@ const expectedTools = [
   "companies_suggest",
   "companies_evidence_search",
   "companies_knowledge",
+  "companies_knowledge_search",
   "companies_evidence_start",
   "companies_evidence_advance",
   "companies_evidence_status",
@@ -102,6 +113,9 @@ const expectedTools = [
   "instagram_extract_start",
   "instagram_extract_inspect",
   "instagram_extract_results",
+  "instagram_purchases_list",
+  "instagram_purchases_inspect",
+  "instagram_purchases_results",
   "leads_extract_quote",
   "leads_extract_start",
   "leads_extract_inspect",
@@ -463,6 +477,8 @@ try {
       [
         campaignWorkspaceUri,
         previousCampaignWorkspaceUri,
+        v5CampaignWorkspaceUri,
+        v4CampaignWorkspaceUri,
         v3CampaignWorkspaceUri,
         v2CampaignWorkspaceUri,
         legacyCampaignWorkspaceUri,

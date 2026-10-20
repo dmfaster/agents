@@ -20,19 +20,20 @@ test("live preview delegates typed company reads and blocks writes, research spe
     pageSize: 20,
   });
   await read("company_inspect", { country: "FI", businessId: "1234567-8" });
+  await read("campaigns_list", { limit: 20 });
   assert.deepEqual(
     calls.map((call) => call.tool),
-    ["companies.search", "company.inspect"],
+    ["companies.search", "company.inspect", "campaigns.list"],
   );
   for (const name of ["campaign_launch", "companies_list_prepare", "companies_evidence_start"])
     await assert.rejects(
       read(name, {}),
-      /only company search, profile and saved evidence result reads/,
+      /only company search, profile, saved evidence and campaign summary reads/,
     );
   await assert.rejects(
     read("companies_search", { filters: { countries: ["FI"], invented: true } }),
   );
-  assert.equal(calls.length, 2);
+  assert.equal(calls.length, 3);
 });
 
 test("composer result receipts preserve original identities and reject nonexact or unrelated data", () => {

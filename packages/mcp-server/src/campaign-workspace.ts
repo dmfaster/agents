@@ -1,5 +1,5 @@
 import { type McpServer } from "@modelcontextprotocol/server";
-import type { AgentToolInputMap } from "@dmfaster/sdk";
+import type { AgentToolInputMap, AgentToolCallOptions } from "@dmfaster/sdk";
 import { z } from "zod";
 
 import { CAMPAIGN_WORKSPACE_HTML } from "./campaign-workspace-html.ts";
@@ -9,10 +9,13 @@ import { workspaceOutputSchema, campaignWorkspaceOutputSchema } from "./presenta
 import { oauthToolMetadata, oauthFailureMetadata, type HostedAuth } from "./hosted-auth.ts";
 import { CompanySearchFiltersSchema, AGENT_INPUT_SCHEMAS } from "./generated/input-schemas.ts";
 import { companyResultSummary } from "./company-result-summary.ts";
+import { mcpToolDescription } from "./tool-guidance.ts";
 
 export const CAMPAIGN_WORKSPACE_TOOL_NAME = "campaign_workspace";
-export const CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v5.html";
-export const PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v4.html";
+export const CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v7.html";
+export const PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v6.html";
+export const V5_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v5.html";
+export const V4_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v4.html";
 export const V3_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v3.html";
 export const V2_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v2.html";
 export const LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI = "ui://dmfaster/campaign-workspace/v1.html";
@@ -33,6 +36,12 @@ export const companiesWorkspaceInputSchema = z
   .object({
     filters: CompanySearchFiltersSchema.optional(),
     pageSize: z.number().int().min(1).max(100).optional(),
+    savedList: AGENT_INPUT_SCHEMAS["companies.list.inspect"]
+      .omit({ offset: true, limit: true })
+      .optional()
+      .describe(
+        "Open a saved company shortlist by its returned listId. Reads only; requires campaigns:read and audiences:read.",
+      ),
     evidenceRun: AGENT_INPUT_SCHEMAS["companies.evidence.results"]
       .omit({ pageSize: true })
       .optional()
@@ -41,6 +50,9 @@ export const companiesWorkspaceInputSchema = z
       ),
   })
   .strict()
+  .refine((input) => !input.savedList || (!input.filters && !input.evidenceRun), {
+    message: "A saved list owns its audience. Omit inventory filters and evidenceRun.",
+  })
   .refine((input) => !input.evidenceRun || !input.filters, {
     message: "An evidence run already owns its filters. Omit inventory filters when opening it.",
   })
@@ -53,6 +65,7 @@ const resourceUiMetadata = Object.freeze({
   csp: {
     connectDomains: [] as string[],
     resourceDomains: [
+      "https://app.dmfaster.com",
       "https://www.google.com",
       "https://t0.gstatic.com",
       "https://t1.gstatic.com",
@@ -112,12 +125,12 @@ export function registerCampaignWorkspace(
   },
   auth?: HostedAuth,
 ) {
-  const openWorkspace = async (campaignId?: string) => {
+  const openWorkspace = async (campaignId?: string, options?: AgentToolCallOptions) => {
     try {
       // The same authenticated domain adapter enforces scopes and workspace ownership.
       const result = campaignId
-        ? await client.invoke("campaign.inspect", { campaignId })
-        : await client.invoke("campaigns.list", { limit: 20 });
+        ? await client.invoke("campaign.inspect", { campaignId }, options)
+        : await client.invoke("campaigns.list", { limit: 20 }, options);
       return {
         content: [{ type: "text" as const, text: JSON.stringify(result) }],
         structuredContent: { version: 1, view: "dmfaster.workspace", section: "campaigns", result },
@@ -137,25 +150,50 @@ export function registerCampaignWorkspace(
       };
     }
   };
-  const openCompanies = async (input: z.infer<typeof companiesWorkspaceInputSchema>) => {
+  const openCompanies = async (
+    input: z.infer<typeof companiesWorkspaceInputSchema>,
+    options?: AgentToolCallOptions,
+  ) => {
     const filters = (input.filters ?? {
       countries: ["FI"],
       activeOnly: true,
     }) as AgentToolInputMap["companies.search"]["filters"];
     try {
-      const result = input.evidenceRun
-        ? await client.invoke("companies.evidence.results", {
-            runId: input.evidenceRun.runId,
-            expectedRevision: input.evidenceRun.expectedRevision,
-            ...(input.evidenceRun.cursor !== undefined ? { cursor: input.evidenceRun.cursor } : {}),
-            ...(input.evidenceRun.view !== undefined ? { view: input.evidenceRun.view } : {}),
-            pageSize: input.pageSize ?? 20,
-          })
-        : await client.invoke("companies.search", {
-            filters,
-            pageSize: input.pageSize ?? 20,
-            projection: "list",
-          });
+      const result = input.savedList
+        ? await client.invoke(
+            "companies.list.inspect",
+            {
+              listId: input.savedList.listId,
+              limit: input.pageSize ?? 20,
+              ...(input.savedList.expectedUpdatedAt
+                ? { expectedUpdatedAt: input.savedList.expectedUpdatedAt }
+                : {}),
+            },
+            options,
+          )
+        : input.evidenceRun
+          ? await client.invoke(
+              "companies.evidence.results",
+              {
+                runId: input.evidenceRun.runId,
+                expectedRevision: input.evidenceRun.expectedRevision,
+                ...(input.evidenceRun.cursor !== undefined
+                  ? { cursor: input.evidenceRun.cursor }
+                  : {}),
+                ...(input.evidenceRun.view !== undefined ? { view: input.evidenceRun.view } : {}),
+                pageSize: input.pageSize ?? 20,
+              },
+              options,
+            )
+          : await client.invoke(
+              "companies.search",
+              {
+                filters,
+                pageSize: input.pageSize ?? 20,
+                projection: "list",
+              },
+              options,
+            );
       return {
         content: [
           { type: "text" as const, text: companyResultSummary(result) ?? JSON.stringify(result) },
@@ -164,7 +202,11 @@ export function registerCampaignWorkspace(
           version: 1,
           view: "dmfaster.workspace",
           section: "companies",
-          ...(input.evidenceRun ? {} : { filters }),
+          ...(input.savedList
+            ? { savedListId: input.savedList.listId, savedListPageSize: input.pageSize ?? 20 }
+            : input.evidenceRun
+              ? {}
+              : { filters }),
           result,
         },
         ...(result.ok ? {} : { isError: true }),
@@ -173,12 +215,18 @@ export function registerCampaignWorkspace(
       const failure = onFailure(error);
       return {
         ...failure,
-        ...oauthFailureMetadata(error, auth, ["audiences:read"]),
+        ...oauthFailureMetadata(
+          error,
+          auth,
+          input.savedList ? ["audiences:read", "campaigns:read"] : ["audiences:read"],
+        ),
         structuredContent: {
           version: 1,
           view: "dmfaster.workspace",
           section: "companies",
-          filters,
+          ...(input.savedList
+            ? { savedListId: input.savedList.listId, savedListPageSize: input.pageSize ?? 20 }
+            : { filters }),
           result: { ok: false, ...failure.structuredContent },
         },
       };
@@ -186,7 +234,10 @@ export function registerCampaignWorkspace(
   };
   const metadata = {
     ui: resourceUiMetadata,
-    "openai/ui": { availableDisplayModes: ["inline", "fullscreen"] },
+    "openai/ui": {
+      availableDisplayModes: ["inline", "fullscreen"],
+      preferredDisplayMode: "fullscreen",
+    },
     "openai/widgetDescription":
       "Browse companies, share a prospect search with the assistant, or review campaigns. Details load on demand; opening the view does not change data.",
     "openai/widgetCSP": {
@@ -199,6 +250,8 @@ export function registerCampaignWorkspace(
   for (const uri of [
     CAMPAIGN_WORKSPACE_RESOURCE_URI,
     PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+    V5_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+    V4_CAMPAIGN_WORKSPACE_RESOURCE_URI,
     V3_CAMPAIGN_WORKSPACE_RESOURCE_URI,
     V2_CAMPAIGN_WORKSPACE_RESOURCE_URI,
     LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI,
@@ -258,17 +311,20 @@ export function registerCampaignWorkspace(
         "openai/toolInvocation/invoked": "Campaign workspace ready",
       },
     },
-    async (input) =>
+    async (input, ctx) =>
       input.state
         ? presentationResult({ state: input.state, campaignId: input.campaignId })
-        : openWorkspace(input.campaignId),
+        : openWorkspace(input.campaignId, { signal: ctx.mcpReq.signal }),
   );
   server.registerTool(
     "companies_workspace",
     {
       title: "Companies",
-      description:
-        "Open the Companies view. Use filters for exact inventory search, or evidenceRun to visualize an existing companies_evidence_start run with its original criteria, accepted matches, unresolved evidence and processing progress. Evidence market totals remain unavailable. Empty arguments browse active Finnish companies. Reads only; no classifier work, research spending, saving or sending is started.",
+      description: mcpToolDescription(
+        "companies_workspace",
+        "Open the Companies view. Use filters for exact inventory search, savedList for an existing company shortlist, or evidenceRun for saved website evidence. Saved lists require campaigns:read and audiences:read. Evidence market totals remain unavailable. Empty arguments browse active Finnish companies. The user can inspect companies and explicitly save up to 50 as a private shortlist. Opening reads only; no research spending, saving or sending is started.",
+        auth,
+      ),
       inputSchema: companiesWorkspaceInputSchema,
       outputSchema: workspaceOutputSchema,
       annotations: {
@@ -285,7 +341,7 @@ export function registerCampaignWorkspace(
         "openai/widgetAccessible": true,
       },
     },
-    openCompanies,
+    (input, ctx) => openCompanies(input, { signal: ctx.mcpReq.signal }),
   );
   server.registerTool(
     "workspace_open",
@@ -297,9 +353,15 @@ export function registerCampaignWorkspace(
         .safeExtend({
           section: z.enum(["companies", "campaigns"]).optional(),
         })
-        .refine((input) => input.section !== "campaigns" || !input.evidenceRun, {
-          message: "Open the Companies section for a website evidence run.",
-        }),
+        .refine(
+          (input) =>
+            input.section !== "campaigns" ||
+            (!input.evidenceRun && !input.savedList && !input.filters),
+          {
+            message:
+              "Open the Companies section for company filters, a saved list or website evidence.",
+          },
+        ),
       outputSchema: workspaceOutputSchema,
       annotations: {
         readOnlyHint: true,
@@ -326,6 +388,9 @@ export function registerCampaignWorkspace(
         "openai/widgetAccessible": true,
       },
     },
-    async (input) => (input.section === "campaigns" ? openWorkspace() : openCompanies(input)),
+    async (input, ctx) =>
+      input.section === "campaigns"
+        ? openWorkspace(undefined, { signal: ctx.mcpReq.signal })
+        : openCompanies(input, { signal: ctx.mcpReq.signal }),
   );
 }

@@ -120,17 +120,43 @@ const server = createServer(async (request, response) => {
     }
     return;
   }
-  if (request.method !== "GET" || url.pathname !== "/") {
+  if (request.method !== "GET" || !["/", "/demo"].includes(url.pathname)) {
     response.writeHead(404).end();
     return;
   }
   const theme = url.searchParams.get("theme") === "dark" ? "dark" : "light";
-  const options = { hostContext: { theme } };
+  const demo = url.pathname === "/demo";
+  const options = {
+    hostContext: { theme },
+    ...(demo
+      ? {
+          draftMessages: true,
+          hostContext: { theme, platform: "desktop" },
+          outreach: true,
+          demoCampaigns: true,
+          bulkSelection: true,
+          emailSetup: true,
+          smsSetup: true,
+        }
+      : {}),
+  };
   const fixture = JSON.stringify({ payload: initial(), rows, options }).replaceAll("<", "\\u003c");
-  const script = resultsPath
-    ? `(${installLivePreviewHost.toString()})(${JSON.stringify({ theme })});`
-    : `(${installCompanyHost.toString()})(${fixture});`;
-  const html = CAMPAIGN_WORKSPACE_HTML.replace("</head>", `<script>${script}</script></head>`);
+  const script =
+    resultsPath && !demo
+      ? `(${installLivePreviewHost.toString()})(${JSON.stringify({ theme })});`
+      : `(${installCompanyHost.toString()})(${fixture});`;
+  const locale = url.searchParams.get("locale");
+  const localizedHtml = ["fi", "fi-FI", "en", "en-US"].includes(locale)
+    ? CAMPAIGN_WORKSPACE_HTML.replace("<html>", `<html lang="${locale}">`)
+    : CAMPAIGN_WORKSPACE_HTML;
+  const html = localizedHtml
+    .replace("</head>", `<script>${script}</script></head>`)
+    .replace(
+      "<body>",
+      demo
+        ? '<body><p style="padding:8px;text-align:center;font:12px system-ui;background:#fff7ed;color:#7c2d12">Demo data · No real messages or account changes</p>'
+        : "<body>",
+    );
   response
     .writeHead(200, {
       "content-type": "text/html; charset=utf-8",

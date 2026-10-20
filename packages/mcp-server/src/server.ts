@@ -18,6 +18,7 @@ import { serveStdio, type ServeStdioOptions } from "@modelcontextprotocol/server
 import { z } from "zod";
 import type { AgentInvoker } from "./tools.ts";
 import { createDmfasterMcpCore, toolFailure } from "./core.ts";
+import { mcpToolDescription } from "./tool-guidance.ts";
 import { localConnectionSchema } from "./presentation-schemas.ts";
 import {
   instagramEvaluationConfigFromEnv,
@@ -97,8 +98,10 @@ function registerConnectionStatus(server: McpServer, env: NodeJS.ProcessEnv, inp
     "connection_status",
     {
       title: "Check DM Faster connection",
-      description:
+      description: mcpToolDescription(
+        "connection_status",
         "Check local authentication and the selected workspace without exposing the credential. Use when setup or permissions are unclear.",
+      ),
       inputSchema: z.object({}).strict(),
       outputSchema: localConnectionSchema,
       _meta: { "openai/widgetAccessible": true },

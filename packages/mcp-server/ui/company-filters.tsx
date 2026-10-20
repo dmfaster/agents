@@ -1,3 +1,4 @@
+import { t } from "./locale.ts";
 import type { CompanyFilters, FilterMetadata } from "./companies-data.ts";
 import { record, text } from "./companies-data.ts";
 
@@ -79,13 +80,23 @@ export function filterChips(filters: CompanyFilters) {
         (!Array.isArray(value) || value.length > 0),
     )
     .map(([key, value]) => {
+      if (key === "websiteFacts" && Array.isArray(value)) {
+        const labels: Record<string, string> = { b2c: "B2C", b2b: "B2B", saas: "SaaS" };
+        return {
+          key: key as keyof CompanyFilters,
+          label: value.map((fact) => labels[String(fact)] || String(fact)).join(" · "),
+        };
+      }
       const label = names[key as keyof CompanyFilters] || key.replace(/([a-z])([A-Z])/g, "$1 $2");
       const detail = Array.isArray(value)
-        ? `${value.length} selected`
+        ? t("{count} selected", { count: value.length })
         : typeof value === "boolean"
           ? ""
           : String(value).replaceAll("_", " ");
-      return { key: key as keyof CompanyFilters, label: `${label}${detail ? ` · ${detail}` : ""}` };
+      return {
+        key: key as keyof CompanyFilters,
+        label: `${t(label)}${detail ? ` · ${detail}` : ""}`,
+      };
     });
 }
 

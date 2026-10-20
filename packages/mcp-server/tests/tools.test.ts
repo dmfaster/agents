@@ -173,6 +173,29 @@ test("registers the complete Agent 1.0 surface with honest MCP safety hints", ()
   );
 });
 
+test("company pagination forwards composite website-fact revisions unchanged", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const tool = createAgentToolDefinitions(fakeClient(calls)).find(
+    (definition) => definition.name === "companies_search",
+  )!;
+  const revision = `dataset_${"a".repeat(32)}|website-classification:${"b".repeat(64)}:fi-crawler-20260923:7:${"c".repeat(64)}`;
+  const input = {
+    filters: { countries: ["FI"], websiteFacts: ["b2b"] },
+    projection: "list",
+    page: 2,
+    pageSize: 10,
+    cursor: "company-search-next-page",
+    querySignature: "d".repeat(64),
+    expectedRevision: revision,
+  };
+  await tool.call(input);
+  assert.deepEqual(calls, [{ tool: "companies.search", input }]);
+  assert.equal(
+    tool.inputSchema.safeParse({ ...input, expectedRevision: "x".repeat(1025) }).success,
+    false,
+  );
+});
+
 test("maps MCP tool names and validated inputs onto SDK calls", async () => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   const definitions: AgentToolDefinition[] = [];
@@ -418,4 +441,88 @@ test("draft update MCP requires a version and bounded nonempty patch, never acti
     tool.inputSchema.safeParse({ ...input, expectedCampaignUpdatedAt: undefined }).success,
     false,
   );
+});
+
+test("recipient message tools preserve exact per-recipient copy and validate bounded updates", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const definitions = createAgentToolDefinitions(fakeClient(calls));
+  const list = definitions.find((tool) => tool.name === "campaign_messages_list")!;
+  const update = definitions.find((tool) => tool.name === "campaign_messages_update")!;
+  assert.ok(list);
+  assert.ok(update);
+  assert.equal(list.annotations.readOnlyHint, true);
+  assert.equal(update.annotations.idempotentHint, true);
+  const version = "2026-10-20T10:00:00.000Z";
+  const input = {
+    campaignId: "campaign",
+    runId: "run",
+    expectedCampaignUpdatedAt: version,
+    idempotencyKey: "copy-1",
+    edits: [
+      {
+        jobId: "a",
+        targetHandle: "alice",
+        channel: "instagram",
+        expectedJobUpdatedAt: version,
+        message: " Hi Alice 👋\nI saw your new service. ",
+      },
+      {
+        jobId: "b",
+        targetHandle: "bob",
+        channel: "facebook",
+        expectedJobUpdatedAt: version,
+        message: "Your website mentions a new location, Bob.",
+      },
+    ],
+  };
+  await list.call({
+    campaignId: "campaign",
+    expectedRunId: "run",
+    afterJobId: "previous",
+    limit: 100,
+  });
+  await update.call(input);
+  assert.deepEqual(calls[1], { tool: "campaign.messages.update", input });
+  await update.call({ ...input, edits: [{ ...input.edits[0], message: null }] });
+  for (const patch of [
+    { userId: "foreign" },
+    { edits: [] },
+    { edits: Array(101).fill(input.edits[0]) },
+    { edits: [{ ...input.edits[0], message: " " }] },
+    { edits: [{ ...input.edits[0], channel: "gmail" }] },
+  ])
+    assert.equal(update.inputSchema.safeParse({ ...input, ...patch }).success, false);
+});
+
+test("draft personalization exposes exact audience versions and unique copy before launch", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const definitions = createAgentToolDefinitions(fakeClient(calls));
+  const list = definitions.find((tool) => tool.name === "campaign_messages_draft_list")!;
+  const update = definitions.find((tool) => tool.name === "campaign_messages_draft_update")!;
+  const input = {
+    campaignId: "draft",
+    expectedCampaignUpdatedAt: "2026-10-20T10:00:00.000Z",
+    expectedListUpdatedAt: "2026-10-20T09:00:00.000Z",
+    idempotencyKey: "draft-copy",
+    edits: [
+      {
+        channel: "instagram",
+        targetHandle: "alice",
+        message: " Alice 👋\nYour new service looks interesting. ",
+      },
+      { channel: "facebook", targetHandle: "bob", message: "Bob, I saw your second location." },
+    ],
+  };
+  await list.call({ campaignId: "draft", limit: 100 });
+  await update.call(input);
+  assert.deepEqual(calls[1], { tool: "campaign.messages.draft.update", input });
+  await update.call({ ...input, edits: [{ ...input.edits[0], message: null }] });
+  for (const patch of [
+    { userId: "foreign" },
+    { edits: [] },
+    { edits: Array(101).fill(input.edits[0]) },
+    { edits: [{ ...input.edits[0], message: "x".repeat(1001) }] },
+    { edits: [{ ...input.edits[0], channel: "linkedin" }] },
+  ])
+    assert.equal(update.inputSchema.safeParse({ ...input, ...patch }).success, false);
 });

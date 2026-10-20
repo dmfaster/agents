@@ -1,4 +1,9 @@
-import type { AgentToolInputMap, AgentToolName, AgentToolResult } from "@dmfaster/sdk";
+import type {
+  AgentToolInputMap,
+  AgentToolName,
+  AgentToolResult,
+  AgentToolCallOptions,
+} from "@dmfaster/sdk";
 import { z } from "zod";
 
 import { AGENT_TOOL_NAMES, AGENT_TOOL_DEFINITIONS } from "@dmfaster/sdk";
@@ -18,6 +23,7 @@ export const MCP_PRESENTATION_TOOL_NAMES = [
   "companies_workspace",
   "workspace_open",
   "workspace_mentions",
+  "outreach_details",
 ] as const;
 export const MCP_LOCAL_TOOL_NAMES = ["connection_status"] as const;
 
@@ -41,6 +47,7 @@ export type AgentInvoker = {
   invoke<Name extends AgentToolName>(
     tool: Name,
     input: AgentToolInputMap[Name],
+    options?: AgentToolCallOptions,
   ): Promise<AgentToolResult>;
 };
 
@@ -51,7 +58,7 @@ export type AgentToolDefinition = {
   inputSchema: z.ZodType;
   outputSchema: z.ZodType;
   annotations: AgentToolAnnotations;
-  call(input: unknown): Promise<AgentToolResult>;
+  call(input: unknown, options?: AgentToolCallOptions): Promise<AgentToolResult>;
 };
 
 export type AgentToolRegistrar = {
@@ -68,10 +75,16 @@ export function createAgentToolDefinitions(client: AgentInvoker): AgentToolDefin
     const outputSchema = AGENT_OUTPUT_SCHEMAS[tool];
     return {
       ...metadata,
+      ...(tool === "instagram.extract.quote"
+        ? {
+            description:
+              "Check whether the signed-in owner’s existing prepaid capacity covers an Instagram audience extraction. If not, explain that the current entitlement is insufficient. Does not offer prices, checkout, payment or collection.",
+          }
+        : {}),
       inputSchema,
       outputSchema,
-      call: async (value: unknown) =>
-        client.invoke(tool, inputSchema.parse(value) as AgentToolInputMap[typeof tool]),
+      call: async (value: unknown, options?: AgentToolCallOptions) =>
+        client.invoke(tool, inputSchema.parse(value) as AgentToolInputMap[typeof tool], options),
     };
   });
 }

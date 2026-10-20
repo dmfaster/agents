@@ -106,21 +106,25 @@ test("opening an evidence workspace reads its pinned private run and preserves t
   const payload = evidenceInitial();
   const tools = new Map<
     string,
-    { options: Record<string, unknown>; call: (input: unknown) => Promise<unknown> }
+    {
+      options: Record<string, unknown>;
+      call: (input: unknown, ctx: { mcpReq: { signal: AbortSignal } }) => Promise<unknown>;
+    }
   >();
   const server = {
     registerResource() {},
     registerTool(
       name: string,
       options: Record<string, unknown>,
-      call: (input: unknown) => Promise<unknown>,
+      call: (input: unknown, ctx: { mcpReq: { signal: AbortSignal } }) => Promise<unknown>,
     ) {
       tools.set(name, { options, call });
     },
   };
   const calls: unknown[] = [];
   const client = {
-    invoke: async (tool: unknown, input: unknown) => {
+    invoke: async (tool: unknown, input: unknown, options: { signal: AbortSignal }) => {
+      assert.ok(options.signal instanceof AbortSignal);
       calls.push({ tool, input });
       return payload.result as AgentToolResult;
     },
@@ -139,7 +143,8 @@ test("opening an evidence workspace reads its pinned private run and preserves t
   };
   const args = companiesWorkspaceInputSchema.parse({ evidenceRun, pageSize: 20 });
   const tool = tools.get("companies_workspace")!;
-  const result = (await tool.call(args)) as {
+  const signal = new AbortController().signal;
+  const result = (await tool.call(args, { mcpReq: { signal } })) as {
     structuredContent: { result: AgentToolResult };
     content: { text: string }[];
   };
