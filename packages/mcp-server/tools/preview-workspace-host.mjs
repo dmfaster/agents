@@ -1,5 +1,10 @@
 import { completeEvidencePage } from "../ui/company-evidence-data.ts";
-const companyReads = new Set(["companies_search", "company_inspect", "companies_evidence_results"]);
+const previewReads = new Set([
+  "companies_search",
+  "company_inspect",
+  "companies_evidence_results",
+  "campaigns_list",
+]);
 
 function unsupportedProjection(error) {
   return (
@@ -14,7 +19,7 @@ export async function createPreviewReader(client) {
   const { createAgentToolDefinitions } = await import("../src/tools.ts");
   const reads = new Map(
     createAgentToolDefinitions(client)
-      .filter((definition) => companyReads.has(definition.name))
+      .filter((definition) => previewReads.has(definition.name))
       .map((definition) => [definition.name, definition]),
   );
   let legacyProjection = false;
@@ -22,7 +27,7 @@ export async function createPreviewReader(client) {
     const definition = reads.get(name);
     if (!definition)
       throw new Error(
-        "This preview allows only company search, profile and saved evidence result reads.",
+        "This preview allows only company search, profile, saved evidence and campaign summary reads.",
       );
     const parsed = definition.inputSchema.parse(input);
     const isList = name === "companies_search" && parsed.projection === "list";

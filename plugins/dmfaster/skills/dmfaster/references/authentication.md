@@ -25,14 +25,14 @@ repository, or MCP configuration.
 Check the current credential without a global install:
 
 ```bash
-npx --yes @dmfaster/cli@1.11.0 auth status --json
-npx --yes @dmfaster/cli@1.11.0 doctor --json
+npx --yes @dmfaster/cli@1.12.0 auth status --json
+npx --yes @dmfaster/cli@1.12.0 doctor --json
 ```
 
 When authentication is required:
 
 ```bash
-npx --yes @dmfaster/cli@1.11.0 auth login --json
+npx --yes @dmfaster/cli@1.12.0 auth login --json
 ```
 
 The CLI prints an `authorization_required` JSON event and a human-readable
@@ -101,3 +101,8 @@ browser cookie, `dmf_session` cookie, or `wtoken_...` browser-worker credential.
   missing scopes for the rest. Role, plan, and action conditions are still
   checked on each call. `doctor` reports local runtime and credential-store
   recovery steps without printing the credential.
+
+The optional owner-only `sending:test` grant allows approved individual email/SMS
+delivery tests without `campaigns:launch` or `campaigns:control`. Existing grants
+stay unchanged. Request it only when the owner asks to send a delivery test and
+let the human approve the host's OAuth permission upgrade.

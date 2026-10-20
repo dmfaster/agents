@@ -42,6 +42,7 @@ x-dmfaster-scopes:
   leads:read: Read social prospecting jobs, profile enrichment and exact lead credit balance.
   leads:write: Spend lead credits on explicitly instructed social extraction and profile enrichment
     jobs. Requires the workspace owner.
+  "sending:test": Send individual, explicitly approved email or SMS delivery tests. No campaign launch permission.
 paths:
   /api/v1/agent/auth/device:
     post:
@@ -681,6 +682,172 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
         "503": { $ref: "#/components/responses/ServiceUnavailable" }
 
+  /api/v1/agent/tools/campaign.messages.draft.list:
+    post:
+      tags: [Agent tools]
+      operationId: campaignMessagesDraftList
+      summary: Inspect prepared recipient copy
+      description: >-
+        Read saved per-recipient Instagram and Facebook copy for a campaign before or after launch. Returns exact prepared count, campaign and audience versions, stale-audience state and pagination. Use list_inspect for recipients that do not yet have prepared copy. Does not create a queue or send.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["campaigns:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: campaign_messages_draft_list
+        title: Inspect prepared recipient copy
+        description: >-
+          Read saved per-recipient Instagram and Facebook copy for a campaign before or after launch. Returns exact prepared count, campaign and audience versions, stale-audience state and pagination. Use list_inspect for recipients that do not yet have prepared copy. Does not create a queue or send.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: campaign messages draft list --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignMessagesDraftListInput" }
+      responses:
+        "200":
+          description: Prepared recipient copy page; no messages sent.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignMessagesDraftListResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/campaign.messages.draft.update:
+    post:
+      tags: [Agent tools]
+      operationId: campaignMessagesDraftUpdate
+      summary: Prepare unique recipient copy before launch
+      description: >-
+        On the owner's instruction, save independently researched Instagram or Facebook first-message copy for an unlaunched disabled draft. Use exact saved-list recipient handles and inspected campaign/audience versions. Each batch contains up to 100 distinct recipients; null removes prepared copy. Returns the new campaign version for the next batch. The normal launch uses this copy and keeps existing suppression and pacing. This does not create a sending queue, launch, or send. A changed audience blocks launch until the prepared copy is reviewed or removed. Null can also remove prepared copy from a stopped, unscheduled campaign after launch.
+      x-dmfaster-effect: draft
+      x-dmfaster-required-scopes: ["campaigns:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_messages_draft_update
+        title: Prepare unique recipient copy before launch
+        description: >-
+          On the owner's instruction, save independently researched Instagram or Facebook first-message copy for an unlaunched disabled draft. Use exact saved-list recipient handles and inspected campaign/audience versions. Each batch contains up to 100 distinct recipients; null removes prepared copy. Returns the new campaign version for the next batch. The normal launch uses this copy and keeps existing suppression and pacing. This does not create a sending queue, launch, or send. A changed audience blocks launch until the prepared copy is reviewed or removed. Null can also remove prepared copy from a stopped, unscheduled campaign after launch.
+        annotations:
+          {
+            readOnlyHint: false,
+            destructiveHint: false,
+            idempotentHint: true,
+            openWorldHint: false,
+          }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: campaign messages draft update --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignMessagesDraftUpdateInput" }
+      responses:
+        "200":
+          description: Prepared recipient copy receipt; no messages sent.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignMessagesDraftUpdateResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/campaign.messages.list:
+    post:
+      tags: [Agent tools]
+      operationId: campaignMessagesList
+      summary: Inspect queued recipient messages
+      description: >-
+        Read exact per-recipient text and versions for an existing campaign queue. Pause through the normal campaign controls before lengthy research. No queue is created and no message is sent. Echo expectedRunId on subsequent pages; total is the exact queued count for the selected channels, including blocked jobs. Use companyOutreachId and targetUrl to resolve company/profile research context.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["sending:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: campaign_messages_list
+        title: Inspect queued recipient messages
+        description: >-
+          Read exact per-recipient text and versions for an existing campaign queue. Pause through the normal campaign controls before lengthy research. No queue is created and no message is sent. Echo expectedRunId on subsequent pages; total is the exact queued count for the selected channels, including blocked jobs. Use companyOutreachId and targetUrl to resolve company/profile research context.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: campaign messages list --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignMessagesListInput" }
+      responses:
+        "200":
+          description: Exact queued message page.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignMessagesListResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/campaign.messages.update:
+    post:
+      tags: [Agent tools]
+      operationId: campaignMessagesUpdate
+      summary: Customize queued recipient messages
+      description: >-
+        On the owner's instruction, replace each selected recipient message with independently researched copy. Supply inspected campaign/run/job versions and exact target identities. The batch is atomic; active, submitted, unresolved or LinkedIn invitation attempts cannot be edited. Null restores campaign copy. Existing suppression, pacing and launch controls still apply. This never launches or sends. The queue must already exist. Up to 100 edits; use smaller batches for long messages to fit the existing request byte limit.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes: ["campaigns:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_messages_update
+        title: Customize queued recipient messages
+        description: >-
+          On the owner's instruction, replace each selected recipient message with independently researched copy. Supply inspected campaign/run/job versions and exact target identities. The batch is atomic; active, submitted, unresolved or LinkedIn invitation attempts cannot be edited. Null restores campaign copy. Existing suppression, pacing and launch controls still apply. This never launches or sends. The queue must already exist. Up to 100 edits; use smaller batches for long messages to fit the existing request byte limit.
+        annotations:
+          {
+            readOnlyHint: false,
+            destructiveHint: false,
+            idempotentHint: true,
+            openWorldHint: false,
+          }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: campaign messages update --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignMessagesUpdateInput" }
+      responses:
+        "200":
+          description: Exact queued message edit receipt; no messages sent.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CampaignMessagesUpdateResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
   /api/v1/agent/tools/campaign.followups.list:
     post:
       tags: [Agent tools]
@@ -792,6 +959,122 @@ paths:
         "500": { $ref: "#/components/responses/InternalServerError" }
         "503": { $ref: "#/components/responses/ServiceUnavailable" }
 
+  /api/v1/agent/tools/sending.test.prepare:
+    post:
+      tags: [Agent tools]
+      operationId: deliveryTestPrepare
+      summary: Prepare one delivery test
+      description: Prepare one disabled email or SMS delivery test to the exact owner-supplied recipient. Returns immutable sender, recipient, subject and body for review. Sends nothing.
+      x-dmfaster-effect: draft
+      x-dmfaster-required-scopes: ["sending:read", "campaigns:write"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: sending_test_prepare
+        title: Prepare delivery test
+        description: Prepare one disabled email or SMS delivery test to the exact owner-supplied recipient. Returns immutable sender, recipient, subject and body for review. Sends nothing.
+        annotations:
+          {
+            readOnlyHint: false,
+            destructiveHint: false,
+            idempotentHint: true,
+            openWorldHint: false,
+          }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: sending test prepare --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/DeliveryTestPrepareInput" }
+      responses:
+        "200":
+          description: Exact delivery test and receipt.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DeliveryTestPrepareResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/sending.test.send:
+    post:
+      tags: [Agent tools]
+      operationId: deliveryTestSend
+      summary: Send one delivery test
+      description: Send exactly the prepared delivery test after the user approves its sender, recipient and copy. Echo its reviewDigest. Requires separate sending:test permission, never campaign launch permission. Atomic claims prevent repeated provider submission. Inspect an uncertain result; never create another test to retry it.
+      x-dmfaster-effect: external
+      x-dmfaster-required-scopes: ["sending:read", "sending:test"]
+      x-dmfaster-approval: human_confirmation
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: sending_test_send
+        title: Send delivery test
+        description: Send exactly the prepared delivery test after the user approves its sender, recipient and copy. Echo its reviewDigest. Requires separate sending:test permission, never campaign launch permission. Atomic claims prevent repeated provider submission. Inspect an uncertain result; never create another test to retry it.
+        annotations:
+          { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: sending test send --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/DeliveryTestSendInput" }
+      responses:
+        "200":
+          description: Exact delivery test and receipt.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DeliveryTestSendResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
+  /api/v1/agent/tools/sending.test.inspect:
+    post:
+      tags: [Agent tools]
+      operationId: deliveryTestInspect
+      summary: Inspect one delivery test
+      description: Read a prepared delivery test and its durable receipt. Email provider acceptance is not inbox delivery. SMS delivery is confirmed only by a delivered provider callback. Never retries a send.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: ["sending:read"]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: sending_test_inspect
+        title: Inspect delivery test
+        description: Read a prepared delivery test and its durable receipt. Email provider acceptance is not inbox delivery. SMS delivery is confirmed only by a delivered provider callback. Never retries a send.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: sending test inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/DeliveryTestInspectInput" }
+      responses:
+        "200":
+          description: Exact delivery test and receipt.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DeliveryTestInspectResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/TooManyRequests" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
+        "503": { $ref: "#/components/responses/ServiceUnavailable" }
+
   /api/v1/agent/tools/senders.inspect:
     post:
       tags: [Agent tools]
@@ -805,7 +1088,7 @@ paths:
       x-dmfaster-mcp:
         name: senders_inspect
         title: Inspect senders
-        description: Read browser and email sender status, health, and the setup URL for manual reconnection.
+        description: Read browser and email sender status, email access, safe SMS setup, and the browser setup URL. SMS availability retains workspace access restrictions.
         annotations:
           { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
       x-dmfaster-cli:
@@ -1395,8 +1678,8 @@ paths:
       tags:
         - Agent tools
       operationId: campaignDraftPrepare
-      summary: Prepare a campaign from a saved Instagram list
-      description: Create an idempotent disabled Instagram campaign draft from a saved list and 1–4 exact message variations. Echo list.inspect updatedAt and exact total as expectedListUpdatedAt and expectedTargetCount. Delivery settings must be supplied. Never launches, schedules activation, or sends messages.
+      summary: Prepare a campaign from a saved list
+      description: Create an idempotent disabled campaign from a reviewed saved list. Instagram lists default to Instagram. For company lists supply channel or channels, expectedAudienceCount, and the exact sum of selected channelCounts as expectedTargetCount from companies.list.inspect. Multichannel LinkedIn requires a separate linkedinInviteNote of at most 300 characters. Email uses channel gmail and channelCounts.email; supply gmailSubject, explicitly confirmed gmailRecipientConsentConfirmed and connected mailboxIds from senders.inspect. messageVariants become email body variants. SMS requires workspace setup and a separate smsBody. Echo the list version and supply delivery settings. Never launches or sends messages.
       x-dmfaster-effect: draft
       x-dmfaster-required-scopes:
         - campaigns:read
@@ -1405,8 +1688,8 @@ paths:
       x-dmfaster-owner-only: true
       x-dmfaster-mcp:
         name: campaign_draft_prepare
-        title: Prepare a campaign from a saved Instagram list
-        description: Create an idempotent disabled Instagram campaign draft from a saved list and 1–4 exact message variations. Echo list.inspect updatedAt and exact total as expectedListUpdatedAt and expectedTargetCount. Delivery settings must be supplied. Never launches, schedules activation, or sends messages.
+        title: Prepare a campaign from a saved list
+        description: Create an idempotent disabled campaign from a reviewed saved list. Instagram lists default to Instagram. For company lists supply channel or channels, expectedAudienceCount, and the exact sum of selected channelCounts as expectedTargetCount from companies.list.inspect. Multichannel LinkedIn requires a separate linkedinInviteNote of at most 300 characters. Email uses channel gmail and channelCounts.email; supply gmailSubject, explicitly confirmed gmailRecipientConsentConfirmed and connected mailboxIds from senders.inspect. messageVariants become email body variants. SMS requires workspace setup and a separate smsBody. Echo the list version and supply delivery settings. Never launches or sends messages.
         annotations:
           readOnlyHint: false
           destructiveHint: false
@@ -1423,7 +1706,7 @@ paths:
               $ref: "#/components/schemas/CampaignDraftPrepareInput"
       responses:
         "200":
-          description: Prepare a campaign from a saved Instagram list
+          description: Prepare a campaign from a saved list
           content:
             application/json:
               schema:
@@ -1893,7 +2176,7 @@ paths:
       x-dmfaster-mcp:
         name: companies_search
         title: Search companies
-        description: Search the same company inventory and filters as the live app. Use projection list for fast prospecting views and company_inspect for full profiles; omit projection for rich rows. Returns an exact total and stable pagination. Echo querySignature and expectedRevision on subsequent pages.
+        description: Search indexed saved company data without website model calls. Results are candidates matching saved filters; industry membership does not establish the actual offering, buyer type or current contact employment. Qualify shortlisted companies with company_inspect and website evidence. Combine country, industry, employee/revenue bounds, technologies, Google Ads activity windows and Meta Ads filters in one request. Use this for structured ICPs before website evidence research; only unsupported website predicates need inference. Discover options with companies_filters. Ads reflect dated observations, not guaranteed live activity. Use projection list for fast prospecting views and company_inspect for full profiles; omit projection for rich rows. Returns an exact total and stable pagination. Echo querySignature and expectedRevision on subsequent pages.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -1992,12 +2275,45 @@ paths:
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
 
+  /api/v1/agent/tools/companies.knowledge.search:
+    post:
+      tags: [Agent tools]
+      operationId: companyKnowledgeSearch
+      summary: Search source-reviewed private company knowledge
+      description: Search the owner's reviewed Finnish cohort by literal evidence words and supported facets. The exact count is cohort coverage, not a complete market audience. No model calls, crawls or sends.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes: [audiences:read]
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: companies_knowledge_search
+        title: Search reviewed Finnish company knowledge
+        description: Search the owner-only source-reviewed Finnish cohort without Jev calls. Query words must all occur literally in the company name or reviewed source text; use Finnish source words when appropriate. Facets are ANDed. Read returned evidence before qualifying a complete offering-to-buyer brief; separate facets do not prove the same offering relationship. Counts describe this reviewed cohort, not Finland market coverage. Absent companies are unknown. Echo revision as expectedRevision on later pages. Inspect company_inspect for existing contact details; this data does not verify contacts.
+        annotations:
+          { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+      x-dmfaster-cli:
+        { section: B2B company prospecting, usage: "companies knowledge search --input FILE" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/WorkspaceCompanyKnowledgeInput" }
+      responses:
+        "200":
+          description: Reviewed private knowledge matches
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WorkspaceCompanyKnowledgeResult" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "500": { $ref: "#/components/responses/InternalServerError" }
   /api/v1/agent/tools/companies.knowledge:
     post:
       tags: [Agent tools]
       operationId: companyKnowledge
       summary: Read saved public company knowledge
-      description: Read standard public website facts for one current published Finnish company. Returns offering-to-buyer relationships, boolean assessments, review flags and original context samples. Unassessed facts remain null. Uses current fresh saved evidence and content-bound shared judgments; never fetches websites, calls Jev or reads another user's queries or runs.
+      description: Read standard public website facts and paginated original source passages for one current published Finnish company. Source evidence is available even when assessments are null. Use the returned knowledgeRevision as expectedKnowledgeRevision on subsequent source pages. Returns offering-to-buyer relationships, boolean assessments and review flags. Uses current fresh saved evidence and content-bound shared judgments; never fetches websites, calls Jev or reads another user's queries or runs.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: [audiences:read]
       x-dmfaster-approval: none
@@ -2005,7 +2321,7 @@ paths:
       x-dmfaster-mcp:
         name: companies_knowledge
         title: Read saved public company knowledge
-        description: Read standard public website facts for one current published Finnish company. Returns connected offering-to-buyer relationships and existing boolean assessments. Missing assessments remain null. No website fetch, Jev call or private run access. Quotations are context samples, not selected supporting citations.
+        description: Inspect one Finnish company's offering and buyers using saved website facts and paginated original sourceEvidence, including when assessments are null. Read related sections together and preserve seller, customer and partner attribution. For further sourcePage values pass the first response's knowledgeRevision as expectedKnowledgeRevision with unchanged sourcePageSize. No website fetch, Jev call or private run access. Source passages are unassessed; fact quotations are context samples, not selected supporting citations.
         annotations:
           { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
       x-dmfaster-cli:
@@ -2105,7 +2421,7 @@ paths:
       tags: [Agent tools]
       operationId: companyEvidenceStatus
       summary: Status complete website evidence scan
-      description: Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.
+      description: Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Set includeCompanies false for lightweight polling without fetching rows or quotations; use results to inspect matches. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes: [audiences:read]
       x-dmfaster-approval: none
@@ -2113,7 +2429,7 @@ paths:
       x-dmfaster-mcp:
         name: companies_evidence_status
         title: Status complete website evidence scan
-        description: Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.
+        description: Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Set includeCompanies false for lightweight polling without fetching rows or quotations; use results to inspect matches. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.
         annotations:
           { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
       x-dmfaster-cli:
@@ -3381,8 +3697,10 @@ paths:
       operationId: instagramExtractionQuote
       summary: Quote an Instagram audience extraction
       description: Read existing prepaid capacity in the signed-in owner's account wallet.
-        Insufficient capacity hands off to separate account-gated standalone checkout and purchase-scoped API/MCP;
-        standalone payment cannot fund or resume an account request. No provider calls or payment.
+        When insufficient, return the full one-time standalone price and human checkout URL.
+        Payment starts a separate purchase job; read it through instagram.purchases.list/inspect/results
+        using the same connection. Standalone payment cannot fund or resume an account request.
+        No provider calls or payment.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
         - leads:read
@@ -3392,8 +3710,10 @@ paths:
         name: instagram_extract_quote
         title: Quote an Instagram audience extraction
         description: Read existing prepaid capacity in the signed-in owner's account wallet.
-          Insufficient capacity hands off to separate account-gated standalone checkout and purchase-scoped API/MCP;
-          standalone payment cannot fund or resume an account request. No provider calls or payment.
+          When insufficient, return the full one-time standalone price and human checkout URL.
+          Payment starts a separate purchase job; read it through instagram.purchases.list/inspect/results
+          using the same connection. Standalone payment cannot fund or resume an account request.
+          No provider calls or payment.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -3575,6 +3895,153 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InstagramExtractionResultsResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/instagram.purchases.list:
+    post:
+      tags:
+        - Agent tools
+      operationId: instagramPurchasesList
+      summary: List my paid Instagram extraction purchases
+      description: List the signed-in buyer's paid standalone extraction purchases. No purchase token, Instagram login, subscription, provider request or payment. Follow nextCursor; the page is not the complete purchase history.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: instagram_purchases_list
+        title: List my paid Instagram extraction purchases
+        description: List the signed-in buyer's paid standalone extraction purchases. No purchase token, Instagram login, subscription, provider request or payment. Follow nextCursor; the page is not the complete purchase history.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Instagram extraction purchases
+        usage: instagram purchases list --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramPurchasesListInput"
+      responses:
+        "200":
+          description: List my paid Instagram extraction purchases
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramPurchasesListResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/instagram.purchases.inspect:
+    post:
+      tags:
+        - Agent tools
+      operationId: instagramPurchasesInspect
+      summary: Inspect my purchased Instagram extraction
+      description: Read an owned paid purchase and a bounded page of its saved jobs. Use orderId from instagram.purchases.list; follow nextCursor for more jobs. Does not advance providers or spend profiles.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: instagram_purchases_inspect
+        title: Inspect my purchased Instagram extraction
+        description: Read an owned paid purchase and a bounded page of its saved jobs. Use orderId from instagram.purchases.list; follow nextCursor for more jobs. Does not advance providers or spend profiles.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Instagram extraction purchases
+        usage: instagram purchases inspect --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramPurchasesInspectInput"
+      responses:
+        "200":
+          description: Inspect my purchased Instagram extraction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramPurchasesInspectResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/instagram.purchases.results:
+    post:
+      tags:
+        - Agent tools
+      operationId: instagramPurchasesResults
+      summary: Read my purchased Instagram profiles
+      description: Read exact saved profiles from an owned paid purchase and job. Use orderId and jobId from instagram.purchases.list/inspect. Follow nextCursor. Uses the buyer's existing connection without copying a purchase token; never reads another buyer's order.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - leads:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: instagram_purchases_results
+        title: Read my purchased Instagram profiles
+        description: Read exact saved profiles from an owned paid purchase and job. Use orderId and jobId from instagram.purchases.list/inspect. Follow nextCursor. Uses the buyer's existing connection without copying a purchase token; never reads another buyer's order.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Instagram extraction purchases
+        usage: instagram purchases results --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InstagramPurchasesResultsInput"
+      responses:
+        "200":
+          description: Read my purchased Instagram profiles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstagramPurchasesResultsResult"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -4577,6 +5044,7 @@ components:
         - calls:read
         - leads:read
         - leads:write
+        - sending:test
 
     AgentDeviceAuthorizationInput:
       type: object
@@ -4609,7 +5077,7 @@ components:
         scopes:
           type: array
           minItems: 1
-          maxItems: 14
+          maxItems: 17
           uniqueItems: true
           items:
             $ref: "#/components/schemas/AgentApiScope"
@@ -4684,7 +5152,7 @@ components:
         scopes:
           type: array
           minItems: 1
-          maxItems: 14
+          maxItems: 17
           uniqueItems: true
           items:
             $ref: "#/components/schemas/AgentApiScope"
@@ -4839,6 +5307,142 @@ components:
         - statement
         - requirement
         - retrievalTerms
+    WorkspaceCompanyKnowledgeInput:
+      type: object
+      additionalProperties: false
+      properties:
+        query: { type: string, maxLength: 200 }
+        facets:
+          type: array
+          maxItems: 40
+          items:
+            type: string
+            enum:
+              [
+                offers_software,
+                offers_saas_b2b,
+                offers_it_services,
+                offers_marketing,
+                offers_consulting,
+                offers_accounting,
+                offers_legal,
+                offers_recruitment,
+                offers_training,
+                offers_engineering,
+                offers_industrial_services,
+                offers_construction,
+                offers_property_services,
+                offers_logistics,
+                offers_manufactured_goods,
+                offers_wholesale,
+                offers_machinery,
+                offers_food,
+                offers_healthcare,
+                offers_finance,
+                offers_energy,
+                offers_hospitality,
+                role_manufacturer,
+                role_reseller,
+                role_service_provider,
+                buyer_business,
+                buyer_consumer,
+                buyer_public_sector,
+                buyer_manufacturing,
+                buyer_construction,
+                buyer_property,
+                buyer_retail,
+                buyer_healthcare,
+                buyer_hospitality,
+                buyer_logistics,
+                buyer_technology,
+                buyer_finance,
+                buyer_energy,
+                buyer_education,
+                buyer_agriculture,
+              ]
+        page: { type: integer, minimum: 1, maximum: 10000 }
+        pageSize: { type: integer, minimum: 1, maximum: 100 }
+        expectedRevision: { type: string, minLength: 64, maxLength: 64 }
+    WorkspaceCompanyKnowledgeData:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          scope,
+          source,
+          revision,
+          publicationRevision,
+          query,
+          facets,
+          total,
+          totalExact,
+          page,
+          pageSize,
+          hasNextPage,
+          reviewedCompanies,
+          currentlyEligibleCompanies,
+          companies,
+          limitations,
+        ]
+      properties:
+        scope: { type: string, const: owner_workspace }
+        source: { type: string, const: reviewed_saved_websites }
+        revision: { type: string }
+        publicationRevision: { type: string }
+        query: { type: string }
+        facets: { type: array, items: { type: string } }
+        total: { type: integer, minimum: 0 }
+        totalExact: { type: boolean, const: true }
+        page: { type: integer }
+        pageSize: { type: integer }
+        hasNextPage: { type: boolean }
+        reviewedCompanies: { type: integer }
+        currentlyEligibleCompanies: { type: integer }
+        companies:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [country, businessId, name, websiteUrl, facets, evidence]
+            properties:
+              country: { type: string, const: FI }
+              businessId: { type: string }
+              name: { type: string }
+              websiteUrl: { type: string }
+              facets:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: false
+                  required: [id, definition]
+                  properties:
+                    id: { type: string }
+                    definition: { type: string }
+              evidence:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: false
+                  required: [url, text, observedAt, contentHash, reviewedAt, review, requestHash]
+                  properties:
+                    url: { type: string }
+                    text: { type: string }
+                    observedAt: { type: string }
+                    contentHash: { type: string }
+                    reviewedAt: { type: string }
+                    review: { type: string }
+                    requestHash: { type: string }
+        limitations: { type: array, items: { type: string } }
+    WorkspaceCompanyKnowledgeResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: companies.knowledge.search }
+            data:
+              oneOf:
+                - { $ref: "#/components/schemas/WorkspaceCompanyKnowledgeData" }
+                - { type: "null" }
     CompanyKnowledgeInput:
       type: object
       additionalProperties: false
@@ -4846,7 +5450,42 @@ components:
         country: { type: string, enum: [FI] }
         businessId: { type: string, minLength: 1, maxLength: 192 }
         maxAgeDays: { type: integer, minimum: 1, maximum: 90 }
+        sourcePage:
+          {
+            type: integer,
+            minimum: 1,
+            maximum: 500,
+            description: Page of original saved website passages; defaults to 1.,
+          }
+        sourcePageSize:
+          {
+            type: integer,
+            minimum: 1,
+            maximum: 20,
+            description: Original passages per page; defaults to 10.,
+          }
+        expectedKnowledgeRevision:
+          {
+            type: string,
+            pattern: "^[a-f0-9]{64}$",
+            description: Pin subsequent source pages to the knowledgeRevision returned by the first read.,
+          }
       required: [country, businessId]
+    CompanyKnowledgeSources:
+      type: object
+      additionalProperties: false
+      properties:
+        evidenceKind: { type: string, const: unassessed_source }
+        page: { type: integer, minimum: 1, maximum: 500 }
+        pageSize: { type: integer, minimum: 1, maximum: 20 }
+        totalPassages: { type: integer, minimum: 1, maximum: 500 }
+        hasNextPage: { type: boolean }
+        items:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items: { $ref: "#/components/schemas/WebsiteEvidenceQuote" }
+      required: [evidenceKind, page, pageSize, totalPassages, hasNextPage, items]
     CompanyKnowledgeCoverage:
       type: object
       additionalProperties: false
@@ -4906,6 +5545,10 @@ components:
       type: object
       additionalProperties: false
       properties:
+        ownerVerified:
+          oneOf:
+            - { $ref: "#/components/schemas/WorkspaceCompanyKnowledgeData" }
+            - { type: "null" }
         company:
           type: object
           additionalProperties: false
@@ -4919,6 +5562,11 @@ components:
         asOf: { type: string, format: date-time }
         maxAgeDays: { type: integer, minimum: 1, maximum: 90 }
         sourceStatus: { type: string, enum: [available, missing, stale, requires_complete_scan] }
+        sourceEvidence:
+          description: Original saved evidence independent of cached model judgments, with exact pagination. Null when no fresh bounded source can be validated. Passages are unassessed and may describe customers, partners or former employers rather than this company's own offering.
+          oneOf:
+            - { $ref: "#/components/schemas/CompanyKnowledgeSources" }
+            - { type: "null" }
         coverage:
           oneOf:
             - { $ref: "#/components/schemas/CompanyKnowledgeCoverage" }
@@ -4926,11 +5574,21 @@ components:
         facts:
           type: array
           minItems: 7
-          maxItems: 7
+          maxItems: 8
           items: { $ref: "#/components/schemas/CompanyKnowledgeFact" }
         limitations: { type: array, items: { type: string } }
       required:
-        [company, knowledgeRevision, asOf, maxAgeDays, sourceStatus, coverage, facts, limitations]
+        [
+          company,
+          knowledgeRevision,
+          asOf,
+          maxAgeDays,
+          sourceStatus,
+          sourceEvidence,
+          coverage,
+          facts,
+          limitations,
+        ]
     CompanyKnowledgeResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -4956,6 +5614,10 @@ components:
           type: string
           enum: [binary, passage]
           description: Binary evaluates related website sections together in one compact request per company. Passage preserves separate relationship statuses and explicit-denial merging. Omission preserves passage behavior.
+        factExpansion:
+          type: string
+          enum: [requested_only, general]
+          description: Binary mode only. New runs default to requested_only and ask only uncached requested criteria; general explicitly adds reusable standard offering/buyer questions to the same call on complete sources. Existing omitted-policy keys recover their original general run. Cached requested answers never trigger extra inference. Country and other deterministic filters are checked in code.
         filters: { $ref: "#/components/schemas/CompanySearchFilters" }
         maxAgeDays: { type: integer, minimum: 1, maximum: 90 }
         idempotencyKey: { type: string, minLength: 1, maxLength: 100 }
@@ -4974,6 +5636,9 @@ components:
       properties:
         runId: { type: string, minLength: 36, maxLength: 36 }
         expectedRevision: { type: string, minLength: 64, maxLength: 64 }
+        includeCompanies:
+          type: boolean
+          description: Set false for progress-only polling without fetching company rows or quotations. Omitted or true preserves the first result page. Use companies.evidence.results to inspect matches.
       required: [runId, expectedRevision]
     CompanyEvidenceResultsInput:
       type: object
@@ -5004,6 +5669,10 @@ components:
         country: { type: string, const: FI }
         query: { type: string }
         evaluationMode: { type: string, enum: [binary, passage] }
+        factExpansion:
+          type: string
+          enum: [requested_only, general]
+          description: Binary question-expansion policy saved with this private run. New binary runs always include it. An older binary run with no field retains its original general expansion policy.
         appliedCriteria:
           type: array
           minItems: 1
@@ -5019,6 +5688,10 @@ components:
           minItems: 0
           maxItems: 20
           items: { $ref: "#/components/schemas/WebsiteEvidenceCompany" }
+        companiesIncluded:
+          type: boolean
+          const: false
+          description: Present and false only for progress-only status. The empty companies array does not mean there are no matches; nextCursor remains unconsumed.
         view: { type: string, enum: [matches, unresolved, all] }
         nextCursor: { type: string }
         hasNextPage: { type: boolean }
@@ -5516,9 +6189,16 @@ components:
         - conversation.update
         - conversation.reply
         - conversation.reply.inspect
+        - campaign.messages.draft.list
+        - campaign.messages.draft.update
+        - campaign.messages.list
+        - campaign.messages.update
         - campaign.followups.list
         - campaign.followups.cancel
         - campaign.outcomes.list
+        - sending.test.prepare
+        - sending.test.send
+        - sending.test.inspect
         - senders.inspect
         - history.list
         - pipeline.inspect
@@ -5546,6 +6226,7 @@ components:
         - companies.suggest
         - companies.search
         - companies.evidence.search
+        - companies.knowledge.search
         - companies.knowledge
         - companies.evidence.start
         - companies.evidence.advance
@@ -5580,6 +6261,9 @@ components:
         - instagram.extract.start
         - instagram.extract.inspect
         - instagram.extract.results
+        - instagram.purchases.list
+        - instagram.purchases.inspect
+        - instagram.purchases.results
         - leads.status
         - leads.extract.quote
         - leads.extract.start
@@ -6720,6 +7404,45 @@ components:
         - skipPreviouslyMessaged
         - idempotencyKey
       properties:
+        channel:
+          type: string
+          enum: [instagram, facebook, linkedin, gmail, sms]
+          description: Single-channel shorthand. Supply this or channels for company lists; defaults to Instagram for username lists.
+        channels:
+          type: array
+          minItems: 1
+          maxItems: 5
+          items:
+            type: string
+            enum: [instagram, facebook, linkedin, gmail, sms]
+          description: Channels on one campaign. Mutually exclusive with channel.
+        gmailSubject:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: Email subject shared by all messageVariants, which become the email body variants.
+        gmailRecipientConsentConfirmed:
+          const: true
+          description: Explicit user confirmation of recipient permission, required for email.
+        mailboxIds:
+          type: array
+          minItems: 1
+          maxItems: 8
+          items:
+            $ref: "#/components/schemas/ResourceId"
+        smsBody:
+          type: string
+          minLength: 1
+          maxLength: 1600
+          description: Separate SMS message, required when SMS is selected.
+        linkedinInviteNote:
+          type: string
+          maxLength: 300
+          description: Separate LinkedIn invitation note, required when LinkedIn is combined with another channel.
+        expectedAudienceCount:
+          type: integer
+          minimum: 1
+          description: Required exact company count for a company list.
         listId:
           $ref: "#/components/schemas/ResourceId"
         expectedListUpdatedAt:
@@ -6727,18 +7450,20 @@ components:
         expectedTargetCount:
           type: integer
           minimum: 1
+          description: Exact sum of selected channelCounts, not the number of distinct companies.
         name:
           type: string
           minLength: 1
           maxLength: 120
         messageVariants:
+          description: Up to 1000 characters per variant, or 1600 for SMS-only drafts. SMS sends the separate smsBody.
           type: array
           minItems: 1
           maxItems: 4
           items:
             type: string
             minLength: 1
-            maxLength: 1000
+            maxLength: 1600
         dailyCap:
           type: integer
           minimum: 1
@@ -6765,6 +7490,8 @@ components:
         - status
         - enabled
         - channel
+        - channels
+        - linkedinInviteNote
         - targetCount
         - audienceCount
         - messageVariants
@@ -6798,7 +7525,38 @@ components:
         enabled:
           const: false
         channel:
-          const: instagram
+          type: string
+          enum: [instagram, facebook, linkedin, gmail, sms, multichannel]
+        channels:
+          type: array
+          minItems: 1
+          maxItems: 5
+          uniqueItems: true
+          items:
+            type: string
+            enum: [instagram, facebook, linkedin, gmail, sms]
+        gmailSubject:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: Email subject shared by all messageVariants, which become the email body variants.
+        gmailRecipientConsentConfirmed:
+          const: true
+          description: Explicit user confirmation of recipient permission, required for email.
+        mailboxIds:
+          type: array
+          minItems: 1
+          maxItems: 8
+          items:
+            $ref: "#/components/schemas/ResourceId"
+        smsBody:
+          type: string
+          minLength: 1
+          maxLength: 1600
+          description: Separate SMS message, required when SMS is selected.
+        linkedinInviteNote:
+          type: string
+          maxLength: 300
         targetCount:
           type: integer
           minimum: 0
@@ -6806,13 +7564,14 @@ components:
           type: integer
           minimum: 1
         messageVariants:
+          description: Up to 1000 characters per variant, or 1600 for SMS-only drafts. SMS sends the separate smsBody.
           type: array
           minItems: 1
           maxItems: 4
           items:
             type: string
             minLength: 1
-            maxLength: 1000
+            maxLength: 1600
         dailyCap:
           type: integer
           minimum: 1
@@ -8537,7 +9296,7 @@ components:
             type: string,
             enum: [queued, claimed, submitted, sent, failed, cancelled, delivery_unknown],
           }
-        deliveryRoute: { type: string, enum: [browser, email, instagram_api] }
+        deliveryRoute: { type: string, enum: [browser, email, instagram_api, sms] }
         deliveryConfirmed: { type: boolean }
         requiresExtensionWake: { type: boolean }
     ConversationReplyResult:
@@ -8568,6 +9327,248 @@ components:
           properties:
             lastErrorCode: { type: string }
             lastErrorDetail: { type: string }
+
+    CampaignMessagesDraftListInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        afterId: { $ref: "#/components/schemas/ResourceId" }
+        limit: { type: integer, minimum: 1, maximum: 100 }
+    CampaignMessagesDraftUpdateInput:
+      type: object
+      additionalProperties: false
+      required:
+        [campaignId, expectedCampaignUpdatedAt, expectedListUpdatedAt, edits, idempotencyKey]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        expectedCampaignUpdatedAt: { $ref: "#/components/schemas/ResourceVersion" }
+        expectedListUpdatedAt: { $ref: "#/components/schemas/ResourceVersion" }
+        idempotencyKey: { $ref: "#/components/schemas/IdempotencyKey" }
+        edits:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            required: [targetHandle, channel, message]
+            properties:
+              targetHandle: { type: string, minLength: 1, maxLength: 180 }
+              channel: { type: string, enum: [instagram, facebook] }
+              message:
+                type: [string, "null"]
+                minLength: 1
+                maxLength: 1000
+                pattern: "\\S"
+    CampaignMessagesDraftListOutput:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          campaignId,
+          campaignUpdatedAt,
+          listId,
+          listUpdatedAt,
+          total,
+          staleAudience,
+          messages,
+          hasMore,
+          nextAfterId,
+        ]
+      properties:
+        campaignId: { type: string }
+        campaignUpdatedAt: { type: string }
+        listId: { type: string }
+        listUpdatedAt: { type: string }
+        total: { type: integer, minimum: 0 }
+        staleAudience: { type: boolean }
+        messages:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            required: [id, channel, targetHandle, targetUrl, companyOutreachId, message, updatedAt]
+            properties:
+              id: { type: string }
+              channel: { type: string, enum: [instagram, facebook] }
+              targetHandle: { type: string }
+              targetUrl: { type: string }
+              companyOutreachId: { type: string }
+              message: { type: string }
+              updatedAt: { type: string }
+        hasMore: { type: boolean }
+        nextAfterId: { type: [string, "null"] }
+    CampaignMessagesDraftUpdateOutput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, campaignUpdatedAt, editedCount, preparedCount, sent, replayed]
+      properties:
+        campaignId: { type: string }
+        campaignUpdatedAt: { type: string }
+        editedCount: { type: integer, minimum: 1, maximum: 100 }
+        preparedCount: { type: integer, minimum: 0 }
+        sent: { type: boolean, const: false }
+        replayed: { type: boolean }
+    CampaignMessagesDraftListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: campaign.messages.draft.list }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignMessagesDraftListOutput"
+                - type: "null"
+    CampaignMessagesDraftUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: campaign.messages.draft.update }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignMessagesDraftUpdateOutput"
+                - type: "null"
+
+    CampaignMessagesListInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        expectedRunId: { $ref: "#/components/schemas/ResourceId" }
+        channels:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items: { type: string, enum: [instagram, facebook, linkedin] }
+        jobIds:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items: { $ref: "#/components/schemas/ResourceId" }
+        afterJobId: { $ref: "#/components/schemas/ResourceId" }
+        limit: { type: integer, minimum: 1, maximum: 100 }
+    CampaignMessagesUpdateInput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, runId, expectedCampaignUpdatedAt, edits, idempotencyKey]
+      properties:
+        campaignId: { $ref: "#/components/schemas/ResourceId" }
+        runId: { $ref: "#/components/schemas/ResourceId" }
+        expectedCampaignUpdatedAt: { $ref: "#/components/schemas/ResourceVersion" }
+        idempotencyKey: { $ref: "#/components/schemas/IdempotencyKey" }
+        edits:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            required: [jobId, targetHandle, channel, expectedJobUpdatedAt, message]
+            properties:
+              jobId: { $ref: "#/components/schemas/ResourceId" }
+              targetHandle: { type: string, minLength: 1, maxLength: 180 }
+              channel: { type: string, enum: [instagram, facebook, linkedin] }
+              expectedJobUpdatedAt: { $ref: "#/components/schemas/ResourceVersion" }
+              message:
+                type: [string, "null"]
+                minLength: 1
+                maxLength: 2000
+                pattern: "\\S"
+                description: Exact recipient copy, preserving whitespace and Unicode. Null removes the override and restores current campaign or sequence copy.
+    CampaignMessagesListOutput:
+      type: object
+      additionalProperties: false
+      required:
+        [campaignId, runId, campaignUpdatedAt, total, jobs, hasMore, nextAfterJobId, observedAt]
+      properties:
+        campaignId: { type: string }
+        runId: { type: string }
+        campaignUpdatedAt: { type: string, format: date-time }
+        total: { type: integer, minimum: 0 }
+        jobs:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              [
+                jobId,
+                targetHandle,
+                targetCompanyName,
+                targetUrl,
+                companyOutreachId,
+                channel,
+                sequenceStepIndex,
+                updatedAt,
+                message,
+                customized,
+                editable,
+                blockedReason,
+              ]
+            properties:
+              jobId: { type: string }
+              targetHandle: { type: string }
+              targetCompanyName: { type: string }
+              targetUrl: { type: string }
+              companyOutreachId: { type: string }
+              channel: { type: string, enum: [instagram, facebook, linkedin] }
+              sequenceStepIndex: { type: integer, minimum: 0 }
+              updatedAt: { type: string, format: date-time }
+              message: { type: string }
+              customized: { type: boolean }
+              editable: { type: boolean }
+              blockedReason: { type: [string, "null"] }
+        hasMore: { type: boolean }
+        nextAfterJobId: { type: [string, "null"] }
+        observedAt: { type: string, format: date-time }
+    CampaignMessagesUpdateOutput:
+      type: object
+      additionalProperties: false
+      required: [campaignId, runId, editedCount, jobs, sent, replayed]
+      properties:
+        campaignId: { type: string }
+        runId: { type: string }
+        editedCount: { type: integer, minimum: 1, maximum: 100 }
+        jobs:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            required: [jobId, updatedAt, customized]
+            properties:
+              jobId: { type: string }
+              updatedAt: { type: string, format: date-time }
+              customized: { type: boolean }
+        sent: { type: boolean, const: false }
+        replayed: { type: boolean }
+    CampaignMessagesListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: campaign.messages.list }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignMessagesListOutput"
+                - type: "null"
+    CampaignMessagesUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: campaign.messages.update }
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/CampaignMessagesUpdateOutput"
+                - type: "null"
 
     CampaignFollowupsListResult:
       allOf:
@@ -8687,6 +9688,84 @@ components:
         hasMore: { type: boolean }
         nextCursor: { oneOf: [{ type: string }, { type: "null" }] }
 
+    DeliveryTestPrepareInput:
+      type: object
+      additionalProperties: false
+      required: [channel, to, recipientConsentConfirmed, idempotencyKey]
+      properties:
+        channel: { type: string, enum: [email, sms] }
+        to: { type: string, minLength: 3, maxLength: 254, x-dmfaster-trim: true }
+        mailboxId: { $ref: "#/components/schemas/ResourceId" }
+        recipientConsentConfirmed: { type: boolean, const: true }
+        idempotencyKey: { type: string, pattern: "^[A-Za-z0-9._:-]{1,160}$", maxLength: 160 }
+    DeliveryTestInspectInput:
+      type: object
+      additionalProperties: false
+      required: [testId]
+      properties:
+        testId: { type: string, pattern: "^delivery_test_[a-f0-9]{64}$" }
+    DeliveryTestSendInput:
+      type: object
+      additionalProperties: false
+      required: [testId, reviewDigest]
+      properties:
+        testId: { type: string, pattern: "^delivery_test_[a-f0-9]{64}$" }
+        reviewDigest: { type: string, pattern: "^[a-f0-9]{64}$" }
+    DeliveryTestOutput:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          testId,
+          channel,
+          to,
+          from,
+          mailboxId,
+          subject,
+          body,
+          reviewDigest,
+          status,
+          expiresAt,
+          replayed,
+          providerAccepted,
+          deliveryConfirmed,
+        ]
+      properties:
+        testId: { type: string }
+        channel: { type: string, enum: [email, sms] }
+        to: { type: string }
+        from: { type: string }
+        mailboxId: { type: string }
+        subject: { type: string }
+        body: { type: string }
+        reviewDigest: { type: string }
+        status: { type: string, enum: [prepared, submitting, accepted, delivered, failed, unknown] }
+        expiresAt: { type: string }
+        replayed: { type: boolean }
+        providerAccepted: { type: boolean }
+        deliveryConfirmed: { type: boolean }
+    DeliveryTestPrepareResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: sending.test.prepare }
+            data: { oneOf: [{ $ref: "#/components/schemas/DeliveryTestOutput" }, { type: "null" }] }
+    DeliveryTestSendResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: sending.test.send }
+            data: { oneOf: [{ $ref: "#/components/schemas/DeliveryTestOutput" }, { type: "null" }] }
+    DeliveryTestInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool: { type: string, const: sending.test.inspect }
+            data: { oneOf: [{ $ref: "#/components/schemas/DeliveryTestOutput" }, { type: "null" }] }
+
     SendersInspectResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -8702,6 +9781,16 @@ components:
       properties:
         generatedAt: { type: string, format: date-time }
         browserSetupUrl: { type: string, format: uri }
+        emailAvailable: { type: boolean }
+        sms:
+          type: object
+          additionalProperties: false
+          required: [available, configured, enabled, phoneNumber]
+          properties:
+            available: { type: boolean }
+            configured: { type: boolean }
+            enabled: { type: boolean }
+            phoneNumber: { type: string }
         browserProfiles:
           type: array
           maxItems: 20
@@ -9070,6 +10159,13 @@ components:
             type: string
             maxLength: 80
           maxItems: 40
+        websiteFacts:
+          type: array
+          description: Positive-only saved Finnish website classifications with non-exhaustive coverage. Multiple selected facts must all match. b2c is a provisional consumer-targeting candidate; b2b and saas are independently scored positive candidates. Omission applies no website-fact restriction; absence is not a negative classification. Available only for Finnish audiences.
+          items:
+            type: string
+            enum: [b2c, b2b, saas]
+          maxItems: 3
         hasExhibitionParticipation:
           type: boolean
         exhibitionEventKeys:
@@ -9123,7 +10219,7 @@ components:
           type: boolean
       required:
         - countries
-      description: Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.
+      description: Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.
     CompanyFiltersInput:
       type: object
       additionalProperties: false
@@ -9244,7 +10340,8 @@ components:
           maxLength: 1000
         expectedRevision:
           type: string
-          maxLength: 200
+          maxLength: 1024
+          description: Echo the complete opaque revision returned by the first search page, including any website-classification identity. Never truncate it.
         querySignature:
           type: string
           maxLength: 200
@@ -9290,6 +10387,15 @@ components:
               oneOf:
                 - $ref: "#/components/schemas/CompanySuggestionsData"
                 - type: "null"
+    CompanyWebsiteContact:
+      type: object
+      additionalProperties: false
+      required: [channel, value, sourceUrl]
+      description: Retained website-observed contact evidence with unconfirmed ownership. Display only; this does not establish a person association or campaign eligibility.
+      properties:
+        channel: { type: string, enum: [email, phone] }
+        value: { type: string, maxLength: 254 }
+        sourceUrl: { type: string, format: uri }
     CompanySearchData:
       type: object
       additionalProperties: true
@@ -9306,6 +10412,16 @@ components:
           expectedRevision,
         ]
       properties:
+        qualification:
+          type: object
+          additionalProperties: false
+          required: [basis, offeringFit, contactAffiliation, guidance]
+          properties:
+            basis: { type: string, const: published_filters }
+            offeringFit: { type: string, const: not_assessed }
+            contactAffiliation: { type: string, const: not_verified }
+            guidance: { type: string }
+          description: Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.
         projection: { type: string, enum: [list, rich] }
         companies:
           {
@@ -9320,6 +10436,12 @@ components:
                     country: { $ref: "#/components/schemas/SupportedCountry" },
                     businessId: { type: string },
                     name: { type: string },
+                    websiteContacts:
+                      {
+                        type: array,
+                        maxItems: 80,
+                        items: { $ref: "#/components/schemas/CompanyWebsiteContact" },
+                      },
                   },
               },
           }
@@ -9364,6 +10486,15 @@ components:
       additionalProperties: true
       required: [profile, revision]
       properties:
+        financialReview:
+          type: object
+          additionalProperties: false
+          required: [headlineYear, latestHistoryYear, comparison]
+          properties:
+            headlineYear: { type: [string, "null"] }
+            latestHistoryYear: { type: [string, "null"] }
+            comparison: { type: string, enum: [newer_history_available, no_newer_history, unknown] }
+          description: Compare dated financial history with the headline before qualifying employee or revenue bounds. This does not replace published search facts or infer a missing value from another year.
         revision: { type: string }
         profile:
           type: object
@@ -9741,6 +10872,16 @@ components:
       additionalProperties: true
       required: [listId, name, total, created, replayed, companies]
       properties:
+        channelCounts:
+          type: object
+          additionalProperties: false
+          required: [instagram, facebook, linkedin]
+          properties:
+            instagram: { type: integer, minimum: 0 }
+            facebook: { type: integer, minimum: 0 }
+            linkedin: { type: integer, minimum: 0 }
+            email: { type: integer, minimum: 0 }
+            sms: { type: integer, minimum: 0 }
         listId: { type: string }
         name: { type: string }
         total: { type: integer, minimum: 0 }
@@ -9785,6 +10926,16 @@ components:
       additionalProperties: true
       required: [listId, name, total, companies, nextOffset]
       properties:
+        channelCounts:
+          type: object
+          additionalProperties: false
+          required: [instagram, facebook, linkedin]
+          properties:
+            instagram: { type: integer, minimum: 0 }
+            facebook: { type: integer, minimum: 0 }
+            linkedin: { type: integer, minimum: 0 }
+            email: { type: integer, minimum: 0 }
+            sms: { type: integer, minimum: 0 }
         listId: { type: string }
         name: { type: string }
         total: { type: integer, minimum: 0 }
@@ -11318,6 +12469,207 @@ components:
             - none
         purchaseUrl:
           type: string
+    InstagramPurchasesListInput:
+      type: object
+      additionalProperties: false
+      properties:
+        cursor:
+          $ref: "#/components/schemas/ResourceId"
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 20
+    InstagramPurchasesInspectInput:
+      type: object
+      additionalProperties: false
+      required: [orderId]
+      properties:
+        orderId:
+          $ref: "#/components/schemas/ResourceId"
+        cursor:
+          $ref: "#/components/schemas/ResourceId"
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 20
+    InstagramPurchasesResultsInput:
+      type: object
+      additionalProperties: false
+      required: [orderId, jobId]
+      properties:
+        orderId:
+          $ref: "#/components/schemas/ResourceId"
+        jobId:
+          $ref: "#/components/schemas/ResourceId"
+        cursor:
+          type: string
+          minLength: 1
+          maxLength: 30
+          pattern: ^[A-Za-z0-9._]+$
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+    InstagramPurchaseSummary:
+      type: object
+      additionalProperties: false
+      required: [orderId, username, type, requestedCount, currency, paidAt]
+      properties:
+        orderId:
+          type: string
+        username:
+          type: string
+        type:
+          type: string
+        requestedCount:
+          type: integer
+          minimum: 1
+        currency:
+          type: string
+          enum: [USD, EUR]
+        paidAt:
+          type: string
+    InstagramPurchasedJob:
+      type: object
+      additionalProperties: false
+      required: [jobId, status, savedCount, resultsReady]
+      properties:
+        jobId:
+          type: string
+        extractionId:
+          type: string
+        type:
+          type: string
+        identifier:
+          type: string
+        requestedCount:
+          type: integer
+          minimum: 0
+        savedCount:
+          type: integer
+          minimum: 0
+        status:
+          type: string
+        resultsReady:
+          type: boolean
+        message:
+          type: string
+        profiles:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            required: [username, name, instagramUrl]
+            properties:
+              username:
+                type: string
+              name:
+                type: string
+              instagramUrl:
+                type: string
+        nextCursor:
+          anyOf:
+            - type: string
+            - type: "null"
+    InstagramPurchasesListData:
+      type: object
+      additionalProperties: false
+      required: [purchases, nextCursor]
+      properties:
+        purchases:
+          type: array
+          maxItems: 20
+          items:
+            $ref: "#/components/schemas/InstagramPurchaseSummary"
+        nextCursor:
+          anyOf:
+            - type: string
+            - type: "null"
+    InstagramPurchasesInspectData:
+      type: object
+      additionalProperties: false
+      required:
+        [
+          orderId,
+          username,
+          type,
+          requestedCount,
+          currency,
+          paidAt,
+          availableProfiles,
+          jobs,
+          nextCursor,
+        ]
+      properties:
+        orderId:
+          type: string
+        username:
+          type: string
+        type:
+          type: string
+        requestedCount:
+          type: integer
+          minimum: 1
+        currency:
+          type: string
+          enum: [USD, EUR]
+        paidAt:
+          type: string
+        availableProfiles:
+          type: integer
+          minimum: 0
+        jobs:
+          type: array
+          maxItems: 20
+          items:
+            $ref: "#/components/schemas/InstagramPurchasedJob"
+        nextCursor:
+          anyOf:
+            - type: string
+            - type: "null"
+    InstagramPurchasesResultsData:
+      type: object
+      additionalProperties: false
+      required: [orderId, job]
+      properties:
+        orderId:
+          type: string
+        job:
+          $ref: "#/components/schemas/InstagramPurchasedJob"
+    InstagramPurchasesListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramPurchasesListData"
+                - type: "null"
+    InstagramPurchasesInspectResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramPurchasesInspectData"
+                - type: "null"
+    InstagramPurchasesResultsResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          required: []
+          properties:
+            data:
+              anyOf:
+                - $ref: "#/components/schemas/InstagramPurchasesResultsData"
+                - type: "null"
     InstagramExtractionQuoteInput:
       type: object
       additionalProperties: false

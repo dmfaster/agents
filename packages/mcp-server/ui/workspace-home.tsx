@@ -1,6 +1,9 @@
+import { ChevronRight } from "lucide-react";
+import { InstagramIcon, FacebookIcon, LinkedInIcon } from "@dmfaster/product-ui/company-brands";
+import { t } from "./locale.ts";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { AgentToolDataMap, AgentToolResult } from "@dmfaster/sdk";
-import { CampaignDetails, ConnectionDetails } from "./workspace-details.tsx";
+import { CampaignOverview } from "./campaign-overview.tsx";
 import type { McpAppBridge } from "./bridge.ts";
 
 type CampaignPage = AgentToolDataMap["campaigns.list"];
@@ -33,8 +36,6 @@ export function WorkspaceHome({
   navigation?: ReactNode;
 }) {
   const [result, setResult] = useState(initial);
-  const [query, setQuery] = useState("");
-  const [appliedQuery, setAppliedQuery] = useState("");
   const [cursor, setCursor] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
@@ -43,8 +44,6 @@ export function WorkspaceHome({
     generation.current += 1;
     setResult(initial);
     setCursor(null);
-    setQuery("");
-    setAppliedQuery("");
     setNotice("");
     setBusy(false);
     return () => {
@@ -56,7 +55,7 @@ export function WorkspaceHome({
   const detail = data && "campaign" in data ? data : null;
   const canCall = bridge.canCallTools();
 
-  async function call(name: string, input: Record<string, unknown>, search = appliedQuery) {
+  async function call(name: string, input: Record<string, unknown>) {
     const request = ++generation.current;
     setBusy(true);
     setNotice("");
@@ -64,7 +63,6 @@ export function WorkspaceHome({
       const next = unpack(await bridge.callTool(name, input));
       if (request !== generation.current) return;
       setResult(next);
-      setAppliedQuery(search);
       if (name === "campaigns_list")
         setCursor(typeof input.cursor === "string" ? input.cursor : null);
     } catch (error) {
@@ -74,75 +72,30 @@ export function WorkspaceHome({
       if (request === generation.current) setBusy(false);
     }
   }
-  async function useInChat() {
-    const request = ++generation.current;
-    setBusy(true);
-    setNotice("");
-    try {
-      await bridge.updateModelContext({
-        content: [
-          {
-            type: "text",
-            text: detail
-              ? `The user selected campaign ${detail.campaign.name} (${detail.campaign.id}). This is context only, not an instruction to change or send anything.`
-              : "The user is browsing their DM Faster campaigns. They have not requested any campaign mutation.",
-          },
-        ],
-        structuredContent: {
-          type: "dmfaster.campaign_selection",
-          campaignId: detail?.campaign.id ?? null,
-          result,
-        },
-      });
-      if (request === generation.current) setNotice("Added to chat context.");
-    } catch (error) {
-      if (request === generation.current)
-        setNotice(error instanceof Error ? error.message : String(error));
-    } finally {
-      if (request === generation.current) setBusy(false);
-    }
-  }
-  const list = (search: string, cursor?: string) =>
-    call(
-      "campaigns_list",
-      { limit: 20, ...(search ? { query: search } : {}), ...(cursor ? { cursor } : {}) },
-      search,
-    );
+  const list = (cursor?: string) =>
+    call("campaigns_list", { limit: 20, ...(cursor ? { cursor } : {}) });
 
   return (
     <main className="native-workspace">
       <div className="workspace-shell">
         {navigation}
-        <header className="workspace-header">
-          <div>
-            {detail ? (
+        {detail ? (
+          <header className="workspace-header">
+            <div>
               <button
                 className="workspace-link workspace-back"
                 disabled={busy || !canCall}
-                onClick={() => void list(appliedQuery)}
+                onClick={() => void list()}
               >
-                ← Back to campaigns
+                {t("Back to campaigns")}
               </button>
-            ) : null}
-            <h1>{detail ? detail.campaign.name : "Campaigns"}</h1>
-            {detail ? (
+              <h1>{detail.campaign.name}</h1>
               <p className="workspace-muted">
-                {detail.campaign.status} · {detail.campaign.channels.join(" · ")}
+                {t(detail.campaign.status)} · {detail.campaign.channels.join(" · ")}
               </p>
-            ) : null}
-          </div>
-          <button
-            className="workspace-link"
-            disabled={busy || !canCall}
-            onClick={() =>
-              detail
-                ? void call("campaign_inspect", { campaignId: detail.campaign.id })
-                : void list(appliedQuery, cursor ?? undefined)
-            }
-          >
-            Refresh
-          </button>
-        </header>
+            </div>
+          </header>
+        ) : null}
         {notice ? (
           <p role="status" className="workspace-notice">
             {notice}
@@ -160,103 +113,90 @@ export function WorkspaceHome({
           </p>
         ) : null}
         {detail ? (
-          <section aria-label="Campaign overview">
-            <dl className="workspace-metrics">
-              {[
-                ["Sent", detail.campaign.sentCount],
-                ["Targets", detail.campaign.targetCount],
-                ["Queued", detail.execution.queued],
-              ].map(([label, count]) => (
-                <div key={label}>
-                  <dt>{label}</dt>
-                  <dd>{Number(count).toLocaleString()}</dd>
-                </div>
-              ))}
-            </dl>
-            <button className="workspace-button" disabled={busy} onClick={() => void useInChat()}>
-              Use this campaign in chat
-            </button>
-            <CampaignDetails
-              key={`${detail.campaign.id}:${detail.generatedAt}`}
-              detail={detail}
-              bridge={bridge}
-            />
-          </section>
+          <CampaignOverview
+            key={`${detail.campaign.id}:${detail.generatedAt}`}
+            detail={detail}
+            bridge={bridge}
+          />
         ) : page ? (
-          <section aria-label="Campaigns">
-            <form
-              className="workspace-search"
-              onSubmit={(event) => {
-                event.preventDefault();
-                if (!busy && canCall) void list(query.trim());
-              }}
-            >
-              <input
-                aria-label="Search campaigns"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search campaigns"
-              />
-              <button className="workspace-link" disabled={busy || !canCall}>
-                Search
-              </button>
-            </form>
-            <p className="workspace-count">
-              {page.totalCount.toLocaleString()} campaigns
-              {appliedQuery ? ` matching “${appliedQuery}”` : ""}
-            </p>
+          <section aria-label={t("Campaigns")}>
             {page.campaigns.length ? (
-              <ul className="workspace-campaigns">
-                {page.campaigns.map((campaign) => (
-                  <li key={campaign.id}>
-                    <button
-                      disabled={busy || !canCall}
-                      onClick={() => void call("campaign_inspect", { campaignId: campaign.id })}
-                    >
-                      <span>
-                        <strong>{campaign.name}</strong>
-                        <small>
-                          {campaign.sentCount.toLocaleString()} sent ·{" "}
-                          {campaign.targetCount.toLocaleString()} targets
-                        </small>
-                      </span>
-                      <span className="workspace-muted">{campaign.status}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="workspace-empty">
-                <h2>
-                  {appliedQuery
-                    ? "No campaigns match this search"
-                    : "Your first campaign starts with a conversation"}
-                </h2>
-                <p>
-                  {appliedQuery
-                    ? "Try another name."
-                    : "Tell your assistant who you want to reach."}
-                </p>
+              <div className="campaign-panel">
+                <div className="campaign-grid campaign-grid-heading" aria-hidden="true">
+                  <span>{t("Campaign")}</span>
+                  <span>{t("Targets")}</span>
+                  <span>{t("Sent")}</span>
+                  <span>{t("Status")}</span>
+                  <span />
+                </div>
+                <ul className="campaign-rows">
+                  {page.campaigns.map((campaign) => (
+                    <li key={campaign.id}>
+                      <button
+                        className="campaign-grid campaign-row"
+                        aria-label={campaign.name}
+                        disabled={busy || !canCall}
+                        onClick={() => void call("campaign_inspect", { campaignId: campaign.id })}
+                      >
+                        <span className="campaign-identity">
+                          <strong>{campaign.name}</strong>
+                          <span className="campaign-channels">
+                            {campaign.channels.map((channel) => {
+                              const Icon = {
+                                instagram: InstagramIcon,
+                                facebook: FacebookIcon,
+                                linkedin: LinkedInIcon,
+                              }[channel as "instagram" | "facebook" | "linkedin"];
+                              return (
+                                <span key={channel} title={channel} aria-label={channel}>
+                                  {Icon ? (
+                                    <Icon
+                                      className={`outreach-channel-icon outreach-icon-${channel}`}
+                                    />
+                                  ) : (
+                                    channel
+                                  )}
+                                </span>
+                              );
+                            })}
+                          </span>
+                        </span>
+                        <span className="campaign-stat">
+                          <small>{t("Targets")}</small>
+                          {campaign.targetCount.toLocaleString()}
+                        </span>
+                        <span className="campaign-stat">
+                          <small>{t("Sent")}</small>
+                          {campaign.sentCount.toLocaleString()}
+                        </span>
+                        <span className="campaign-status" data-status={campaign.status}>
+                          {t(campaign.status)}
+                        </span>
+                        <ChevronRight className="campaign-open" size={16} aria-hidden="true" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            )}
+            ) : null}
             {cursor || page.hasMore ? (
-              <nav className="workspace-pagination" aria-label="Campaign pages">
+              <nav className="workspace-pagination" aria-label={t("Campaign pages")}>
                 {cursor ? (
                   <button
                     className="workspace-link"
                     disabled={busy || !canCall}
-                    onClick={() => void list(appliedQuery)}
+                    onClick={() => void list()}
                   >
-                    First page
+                    {t("First page")}
                   </button>
                 ) : null}
                 {page.hasMore && page.nextCursor ? (
                   <button
                     className="workspace-link"
                     disabled={busy || !canCall}
-                    onClick={() => void list(appliedQuery, page.nextCursor!)}
+                    onClick={() => void list(page.nextCursor!)}
                   >
-                    Next page
+                    {t("Next page")}
                   </button>
                 ) : null}
               </nav>
@@ -270,9 +210,6 @@ export function WorkspaceHome({
             Loading…
           </p>
         ) : null}
-        <footer>
-          <ConnectionDetails bridge={bridge} />
-        </footer>
       </div>
     </main>
   );

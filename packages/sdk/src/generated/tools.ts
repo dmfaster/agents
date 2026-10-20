@@ -12,9 +12,16 @@ export const AGENT_TOOL_NAMES = [
   "conversation.update",
   "conversation.reply",
   "conversation.reply.inspect",
+  "campaign.messages.draft.list",
+  "campaign.messages.draft.update",
+  "campaign.messages.list",
+  "campaign.messages.update",
   "campaign.followups.list",
   "campaign.followups.cancel",
   "campaign.outcomes.list",
+  "sending.test.prepare",
+  "sending.test.send",
+  "sending.test.inspect",
   "senders.inspect",
   "history.list",
   "pipeline.inspect",
@@ -42,6 +49,7 @@ export const AGENT_TOOL_NAMES = [
   "companies.suggest",
   "companies.search",
   "companies.evidence.search",
+  "companies.knowledge.search",
   "companies.knowledge",
   "companies.evidence.start",
   "companies.evidence.advance",
@@ -76,6 +84,9 @@ export const AGENT_TOOL_NAMES = [
   "instagram.extract.start",
   "instagram.extract.inspect",
   "instagram.extract.results",
+  "instagram.purchases.list",
+  "instagram.purchases.inspect",
+  "instagram.purchases.results",
   "leads.status",
   "leads.extract.quote",
   "leads.extract.start",
@@ -153,6 +164,26 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "campaign.messages.draft.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.messages.draft.update": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.messages.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.messages.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
   "campaign.followups.list": {
     effect: "read",
     approval: "none",
@@ -164,6 +195,21 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     exposure: "public_api",
   },
   "campaign.outcomes.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "sending.test.prepare": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "sending.test.send": {
+    effect: "external",
+    approval: "human_confirmation",
+    exposure: "public_api",
+  },
+  "sending.test.inspect": {
     effect: "read",
     approval: "none",
     exposure: "public_api",
@@ -299,6 +345,11 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     exposure: "public_api",
   },
   "companies.evidence.search": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.knowledge.search": {
     effect: "read",
     approval: "none",
     exposure: "public_api",
@@ -473,6 +524,21 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "instagram.purchases.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "instagram.purchases.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "instagram.purchases.results": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
   "leads.status": {
     effect: "read",
     approval: "none",
@@ -562,9 +628,16 @@ export const AGENT_TOOL_SCOPES = {
   "conversation.update": ["inbox:read", "inbox:write"],
   "conversation.reply": ["inbox:read", "inbox:write"],
   "conversation.reply.inspect": ["inbox:read"],
+  "campaign.messages.draft.list": ["campaigns:read"],
+  "campaign.messages.draft.update": ["campaigns:write"],
+  "campaign.messages.list": ["sending:read"],
+  "campaign.messages.update": ["campaigns:write"],
   "campaign.followups.list": ["sending:read"],
   "campaign.followups.cancel": ["campaigns:write"],
   "campaign.outcomes.list": ["sending:read"],
+  "sending.test.prepare": ["sending:read", "campaigns:write"],
+  "sending.test.send": ["sending:read", "sending:test"],
+  "sending.test.inspect": ["sending:read"],
   "senders.inspect": ["sending:read"],
   "history.list": ["campaigns:read", "sending:read"],
   "pipeline.inspect": ["pipeline:read"],
@@ -592,6 +665,7 @@ export const AGENT_TOOL_SCOPES = {
   "companies.suggest": ["audiences:read"],
   "companies.search": ["audiences:read"],
   "companies.evidence.search": ["audiences:read"],
+  "companies.knowledge.search": ["audiences:read"],
   "companies.knowledge": ["audiences:read"],
   "companies.evidence.start": ["audiences:read"],
   "companies.evidence.advance": ["audiences:read"],
@@ -626,6 +700,9 @@ export const AGENT_TOOL_SCOPES = {
   "instagram.extract.start": ["leads:read", "leads:write"],
   "instagram.extract.inspect": ["leads:read"],
   "instagram.extract.results": ["leads:read"],
+  "instagram.purchases.list": ["leads:read"],
+  "instagram.purchases.inspect": ["leads:read"],
+  "instagram.purchases.results": ["leads:read"],
   "leads.status": ["leads:read"],
   "leads.extract.quote": ["leads:read"],
   "leads.extract.start": ["leads:read", "leads:write"],
@@ -645,7 +722,12 @@ export const AGENT_TOOL_SCOPES = {
 export const AGENT_OWNER_ONLY_TOOLS = [
   "conversation.update",
   "conversation.reply",
+  "campaign.messages.draft.update",
+  "campaign.messages.update",
   "campaign.followups.cancel",
+  "sending.test.prepare",
+  "sending.test.send",
+  "sending.test.inspect",
   "senders.inspect",
   "pipeline.stage.update",
   "pipeline.note.add",
@@ -659,6 +741,7 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "campaign.launch",
   "campaign.pause.preflight",
   "campaign.pause",
+  "companies.knowledge.search",
   "companies.fit.start",
   "companies.fit.advance",
   "companies.list.prepare",
@@ -674,6 +757,9 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "instagram.extract.start",
   "instagram.extract.inspect",
   "instagram.extract.results",
+  "instagram.purchases.list",
+  "instagram.purchases.inspect",
+  "instagram.purchases.results",
   "leads.extract.start",
   "leads.extract.refresh",
   "leads.extract.continue",
@@ -915,6 +1001,82 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["conversation", "reply", "inspect"],
     },
   },
+  "campaign.messages.draft.list": {
+    mcp: {
+      name: "campaign_messages_draft_list",
+      title: "Inspect prepared recipient copy",
+      description:
+        "Read saved per-recipient Instagram and Facebook copy for a campaign before or after launch. Returns exact prepared count, campaign and audience versions, stale-audience state and pagination. Use list_inspect for recipients that do not yet have prepared copy. Does not create a queue or send.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "campaign messages draft list --input FILE",
+      command: ["campaign", "messages", "draft", "list"],
+    },
+  },
+  "campaign.messages.draft.update": {
+    mcp: {
+      name: "campaign_messages_draft_update",
+      title: "Prepare unique recipient copy before launch",
+      description:
+        "On the owner's instruction, save independently researched Instagram or Facebook first-message copy for an unlaunched disabled draft. Use exact saved-list recipient handles and inspected campaign/audience versions. Each batch contains up to 100 distinct recipients; null removes prepared copy. Returns the new campaign version for the next batch. The normal launch uses this copy and keeps existing suppression and pacing. This does not create a sending queue, launch, or send. A changed audience blocks launch until the prepared copy is reviewed or removed. Null can also remove prepared copy from a stopped, unscheduled campaign after launch.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "campaign messages draft update --input FILE",
+      command: ["campaign", "messages", "draft", "update"],
+    },
+  },
+  "campaign.messages.list": {
+    mcp: {
+      name: "campaign_messages_list",
+      title: "Inspect queued recipient messages",
+      description:
+        "Read exact per-recipient text and versions for an existing campaign queue. Pause through the normal campaign controls before lengthy research. No queue is created and no message is sent. Echo expectedRunId on subsequent pages; total is the exact queued count for the selected channels, including blocked jobs. Use companyOutreachId and targetUrl to resolve company/profile research context.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "campaign messages list --input FILE",
+      command: ["campaign", "messages", "list"],
+    },
+  },
+  "campaign.messages.update": {
+    mcp: {
+      name: "campaign_messages_update",
+      title: "Customize queued recipient messages",
+      description:
+        "On the owner's instruction, replace each selected recipient message with independently researched copy. Supply inspected campaign/run/job versions and exact target identities. The batch is atomic; active, submitted, unresolved or LinkedIn invitation attempts cannot be edited. Null restores campaign copy. Existing suppression, pacing and launch controls still apply. This never launches or sends. The queue must already exist. Up to 100 edits; use smaller batches for long messages to fit the existing request byte limit.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "campaign messages update --input FILE",
+      command: ["campaign", "messages", "update"],
+    },
+  },
   "campaign.followups.list": {
     mcp: {
       name: "campaign_followups_list",
@@ -970,12 +1132,69 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["campaign", "outcomes", "list"],
     },
   },
+  "sending.test.prepare": {
+    mcp: {
+      name: "sending_test_prepare",
+      title: "Prepare delivery test",
+      description:
+        "Prepare one disabled email or SMS delivery test to the exact owner-supplied recipient. Returns immutable sender, recipient, subject and body for review. Sends nothing.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "sending test prepare --input FILE",
+      command: ["sending", "test", "prepare"],
+    },
+  },
+  "sending.test.send": {
+    mcp: {
+      name: "sending_test_send",
+      title: "Send delivery test",
+      description:
+        "Send exactly the prepared delivery test after the user approves its sender, recipient and copy. Echo its reviewDigest. Requires separate sending:test permission, never campaign launch permission. Atomic claims prevent repeated provider submission. Inspect an uncertain result; never create another test to retry it.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "sending test send --input FILE",
+      command: ["sending", "test", "send"],
+    },
+  },
+  "sending.test.inspect": {
+    mcp: {
+      name: "sending_test_inspect",
+      title: "Inspect delivery test",
+      description:
+        "Read a prepared delivery test and its durable receipt. Email provider acceptance is not inbox delivery. SMS delivery is confirmed only by a delivered provider callback. Never retries a send.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "sending test inspect --input FILE",
+      command: ["sending", "test", "inspect"],
+    },
+  },
   "senders.inspect": {
     mcp: {
       name: "senders_inspect",
       title: "Inspect senders",
       description:
-        "Read browser and email sender status, health, and the setup URL for manual reconnection.",
+        "Read browser and email sender status, email access, safe SMS setup, and the browser setup URL. SMS availability retains workspace access restrictions.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -1233,9 +1452,9 @@ export const AGENT_TOOL_DEFINITIONS = {
   "campaign.draft.prepare": {
     mcp: {
       name: "campaign_draft_prepare",
-      title: "Prepare a campaign from a saved Instagram list",
+      title: "Prepare a campaign from a saved list",
       description:
-        "Create an idempotent disabled Instagram campaign draft from a saved list and 1–4 exact message variations. Echo list.inspect updatedAt and exact total as expectedListUpdatedAt and expectedTargetCount. Delivery settings must be supplied. Never launches, schedules activation, or sends messages.",
+        "Create an idempotent disabled campaign from a reviewed saved list. Instagram lists default to Instagram. For company lists supply channel or channels, expectedAudienceCount, and the exact sum of selected channelCounts as expectedTargetCount from companies.list.inspect. Multichannel LinkedIn requires a separate linkedinInviteNote of at most 300 characters. Email uses channel gmail and channelCounts.email; supply gmailSubject, explicitly confirmed gmailRecipientConsentConfirmed and connected mailboxIds from senders.inspect. messageVariants become email body variants. SMS requires workspace setup and a separate smsBody. Echo the list version and supply delivery settings. Never launches or sends messages.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -1445,7 +1664,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "companies_search",
       title: "Search companies",
       description:
-        "Search the same company inventory and filters as the live app. Use projection list for fast prospecting views and company_inspect for full profiles; omit projection for rich rows. Returns an exact total and stable pagination. Echo querySignature and expectedRevision on subsequent pages.",
+        "Search indexed saved company data without website model calls. Results are candidates matching saved filters; industry membership does not establish the actual offering, buyer type or current contact employment. Qualify shortlisted companies with company_inspect and website evidence. Combine country, industry, employee/revenue bounds, technologies, Google Ads activity windows and Meta Ads filters in one request. Use this for structured ICPs before website evidence research; only unsupported website predicates need inference. Discover options with companies_filters. Ads reflect dated observations, not guaranteed live activity. Use projection list for fast prospecting views and company_inspect for full profiles; omit projection for rich rows. Returns an exact total and stable pagination. Echo querySignature and expectedRevision on subsequent pages.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -1478,12 +1697,31 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["companies", "evidence", "search"],
     },
   },
+  "companies.knowledge.search": {
+    mcp: {
+      name: "companies_knowledge_search",
+      title: "Search reviewed Finnish company knowledge",
+      description:
+        "Search the owner-only source-reviewed Finnish cohort without Jev calls. Query words must all occur literally in the company name or reviewed source text; use Finnish source words when appropriate. Facets are ANDed. Read returned evidence before qualifying a complete offering-to-buyer brief; separate facets do not prove the same offering relationship. Counts describe this reviewed cohort, not Finland market coverage. Absent companies are unknown. Echo revision as expectedRevision on later pages. Inspect company_inspect for existing contact details; this data does not verify contacts.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "companies knowledge search --input FILE",
+      command: ["companies", "knowledge", "search"],
+    },
+  },
   "companies.knowledge": {
     mcp: {
       name: "companies_knowledge",
       title: "Read saved public company knowledge",
       description:
-        "Read standard public website facts for one current published Finnish company. Returns connected offering-to-buyer relationships and existing boolean assessments. Missing assessments remain null. No website fetch, Jev call or private run access. Quotations are context samples, not selected supporting citations.",
+        "Inspect one Finnish company's offering and buyers using saved website facts and paginated original sourceEvidence, including when assessments are null. Read related sections together and preserve seller, customer and partner attribution. For further sourcePage values pass the first response's knowledgeRevision as expectedKnowledgeRevision with unchanged sourcePageSize. No website fetch, Jev call or private run access. Source passages are unassessed; fact quotations are context samples, not selected supporting citations.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -1540,7 +1778,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "companies_evidence_status",
       title: "Status complete website evidence scan",
       description:
-        "Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.",
+        "Read exact progress, observed confirmed-match counts and unresolved coverage for a private complete scan. Set includeCompanies false for lightweight polling without fetching rows or quotations; use results to inspect matches. Completion covers the pinned published inventory. Binary packets report any omitted retained passages and require review; uncrawled websites remain unresolved.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -2053,7 +2291,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "instagram_extract_quote",
       title: "Quote an Instagram audience extraction",
       description:
-        "Read existing prepaid capacity in the signed-in owner's account wallet. Insufficient capacity hands off to separate account-gated standalone checkout and purchase-scoped API/MCP; standalone payment cannot fund or resume an account request. No provider calls or payment.",
+        "Read existing prepaid capacity in the signed-in owner's account wallet. When insufficient, return the full one-time standalone price and human checkout URL. Payment starts a separate purchase job; read it through instagram.purchases.list/inspect/results using the same connection. Standalone payment cannot fund or resume an account request. No provider calls or payment.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -2122,6 +2360,63 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "Instagram extraction",
       usage: "instagram extract results --input FILE",
       command: ["instagram", "extract", "results"],
+    },
+  },
+  "instagram.purchases.list": {
+    mcp: {
+      name: "instagram_purchases_list",
+      title: "List my paid Instagram extraction purchases",
+      description:
+        "List the signed-in buyer's paid standalone extraction purchases. No purchase token, Instagram login, subscription, provider request or payment. Follow nextCursor; the page is not the complete purchase history.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Instagram extraction purchases",
+      usage: "instagram purchases list --input FILE",
+      command: ["instagram", "purchases", "list"],
+    },
+  },
+  "instagram.purchases.inspect": {
+    mcp: {
+      name: "instagram_purchases_inspect",
+      title: "Inspect my purchased Instagram extraction",
+      description:
+        "Read an owned paid purchase and a bounded page of its saved jobs. Use orderId from instagram.purchases.list; follow nextCursor for more jobs. Does not advance providers or spend profiles.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Instagram extraction purchases",
+      usage: "instagram purchases inspect --input FILE",
+      command: ["instagram", "purchases", "inspect"],
+    },
+  },
+  "instagram.purchases.results": {
+    mcp: {
+      name: "instagram_purchases_results",
+      title: "Read my purchased Instagram profiles",
+      description:
+        "Read exact saved profiles from an owned paid purchase and job. Use orderId and jobId from instagram.purchases.list/inspect. Follow nextCursor. Uses the buyer's existing connection without copying a purchase token; never reads another buyer's order.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Instagram extraction purchases",
+      usage: "instagram purchases results --input FILE",
+      command: ["instagram", "purchases", "results"],
     },
   },
   "leads.status": {
@@ -2447,6 +2742,18 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   "conversation.reply.inspect": {
     $ref: "#/components/schemas/ConversationReplyInspectInput",
   },
+  "campaign.messages.draft.list": {
+    $ref: "#/components/schemas/CampaignMessagesDraftListInput",
+  },
+  "campaign.messages.draft.update": {
+    $ref: "#/components/schemas/CampaignMessagesDraftUpdateInput",
+  },
+  "campaign.messages.list": {
+    $ref: "#/components/schemas/CampaignMessagesListInput",
+  },
+  "campaign.messages.update": {
+    $ref: "#/components/schemas/CampaignMessagesUpdateInput",
+  },
   "campaign.followups.list": {
     $ref: "#/components/schemas/CampaignFollowupsListInput",
   },
@@ -2455,6 +2762,15 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "campaign.outcomes.list": {
     $ref: "#/components/schemas/CampaignOutcomesListInput",
+  },
+  "sending.test.prepare": {
+    $ref: "#/components/schemas/DeliveryTestPrepareInput",
+  },
+  "sending.test.send": {
+    $ref: "#/components/schemas/DeliveryTestSendInput",
+  },
+  "sending.test.inspect": {
+    $ref: "#/components/schemas/DeliveryTestInspectInput",
   },
   "senders.inspect": {
     $ref: "#/components/schemas/WorkspaceBriefingInput",
@@ -2536,6 +2852,9 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "companies.evidence.search": {
     $ref: "#/components/schemas/CompanyEvidenceSearchInput",
+  },
+  "companies.knowledge.search": {
+    $ref: "#/components/schemas/WorkspaceCompanyKnowledgeInput",
   },
   "companies.knowledge": {
     $ref: "#/components/schemas/CompanyKnowledgeInput",
@@ -2638,6 +2957,15 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "instagram.extract.results": {
     $ref: "#/components/schemas/InstagramExtractionResultsInput",
+  },
+  "instagram.purchases.list": {
+    $ref: "#/components/schemas/InstagramPurchasesListInput",
+  },
+  "instagram.purchases.inspect": {
+    $ref: "#/components/schemas/InstagramPurchasesInspectInput",
+  },
+  "instagram.purchases.results": {
+    $ref: "#/components/schemas/InstagramPurchasesResultsInput",
   },
   "leads.status": {
     $ref: "#/components/schemas/LeadsStatusInput",
@@ -2985,6 +3313,175 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
   },
+  CampaignMessagesDraftListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      afterId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+  },
+  CampaignMessagesDraftUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [
+      "campaignId",
+      "expectedCampaignUpdatedAt",
+      "expectedListUpdatedAt",
+      "edits",
+      "idempotencyKey",
+    ],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedCampaignUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      expectedListUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      edits: {
+        type: "array",
+        minItems: 1,
+        maxItems: 100,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: ["targetHandle", "channel", "message"],
+          properties: {
+            targetHandle: {
+              type: "string",
+              minLength: 1,
+              maxLength: 180,
+            },
+            channel: {
+              type: "string",
+              enum: ["instagram", "facebook"],
+            },
+            message: {
+              type: ["string", "null"],
+              minLength: 1,
+              maxLength: 1000,
+              pattern: "\\S",
+            },
+          },
+        },
+      },
+    },
+  },
+  IdempotencyKey: {
+    "x-dmfaster-trim": true,
+    type: "string",
+    minLength: 1,
+    maxLength: 160,
+    pattern: "^[A-Za-z0-9._:-]{1,160}$",
+  },
+  CampaignMessagesListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedRunId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      channels: {
+        type: "array",
+        minItems: 1,
+        maxItems: 3,
+        items: {
+          type: "string",
+          enum: ["instagram", "facebook", "linkedin"],
+        },
+      },
+      jobIds: {
+        type: "array",
+        minItems: 1,
+        maxItems: 100,
+        items: {
+          $ref: "#/components/schemas/ResourceId",
+        },
+      },
+      afterJobId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+  },
+  CampaignMessagesUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId", "runId", "expectedCampaignUpdatedAt", "edits", "idempotencyKey"],
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      runId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedCampaignUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      edits: {
+        type: "array",
+        minItems: 1,
+        maxItems: 100,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: ["jobId", "targetHandle", "channel", "expectedJobUpdatedAt", "message"],
+          properties: {
+            jobId: {
+              $ref: "#/components/schemas/ResourceId",
+            },
+            targetHandle: {
+              type: "string",
+              minLength: 1,
+              maxLength: 180,
+            },
+            channel: {
+              type: "string",
+              enum: ["instagram", "facebook", "linkedin"],
+            },
+            expectedJobUpdatedAt: {
+              $ref: "#/components/schemas/ResourceVersion",
+            },
+            message: {
+              type: ["string", "null"],
+              minLength: 1,
+              maxLength: 2000,
+              pattern: "\\S",
+              description:
+                "Exact recipient copy, preserving whitespace and Unicode. Null removes the override and restores current campaign or sequence copy.",
+            },
+          },
+        },
+      },
+    },
+  },
   CampaignFollowupsListInput: {
     type: "object",
     additionalProperties: false,
@@ -3048,6 +3545,61 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "integer",
         minimum: 1,
         maximum: 100,
+      },
+    },
+  },
+  DeliveryTestPrepareInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["channel", "to", "recipientConsentConfirmed", "idempotencyKey"],
+    properties: {
+      channel: {
+        type: "string",
+        enum: ["email", "sms"],
+      },
+      to: {
+        type: "string",
+        minLength: 3,
+        maxLength: 254,
+        "x-dmfaster-trim": true,
+      },
+      mailboxId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      recipientConsentConfirmed: {
+        type: "boolean",
+        const: true,
+      },
+      idempotencyKey: {
+        type: "string",
+        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+        maxLength: 160,
+      },
+    },
+  },
+  DeliveryTestSendInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["testId", "reviewDigest"],
+    properties: {
+      testId: {
+        type: "string",
+        pattern: "^delivery_test_[a-f0-9]{64}$",
+      },
+      reviewDigest: {
+        type: "string",
+        pattern: "^[a-f0-9]{64}$",
+      },
+    },
+  },
+  DeliveryTestInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["testId"],
+    properties: {
+      testId: {
+        type: "string",
+        pattern: "^delivery_test_[a-f0-9]{64}$",
       },
     },
   },
@@ -3890,6 +4442,58 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       "idempotencyKey",
     ],
     properties: {
+      channel: {
+        type: "string",
+        enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+        description:
+          "Single-channel shorthand. Supply this or channels for company lists; defaults to Instagram for username lists.",
+      },
+      channels: {
+        type: "array",
+        minItems: 1,
+        maxItems: 5,
+        items: {
+          type: "string",
+          enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+        },
+        description: "Channels on one campaign. Mutually exclusive with channel.",
+      },
+      gmailSubject: {
+        type: "string",
+        minLength: 1,
+        maxLength: 500,
+        description:
+          "Email subject shared by all messageVariants, which become the email body variants.",
+      },
+      gmailRecipientConsentConfirmed: {
+        const: true,
+        description: "Explicit user confirmation of recipient permission, required for email.",
+      },
+      mailboxIds: {
+        type: "array",
+        minItems: 1,
+        maxItems: 8,
+        items: {
+          $ref: "#/components/schemas/ResourceId",
+        },
+      },
+      smsBody: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1600,
+        description: "Separate SMS message, required when SMS is selected.",
+      },
+      linkedinInviteNote: {
+        type: "string",
+        maxLength: 300,
+        description:
+          "Separate LinkedIn invitation note, required when LinkedIn is combined with another channel.",
+      },
+      expectedAudienceCount: {
+        type: "integer",
+        minimum: 1,
+        description: "Required exact company count for a company list.",
+      },
       listId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -3899,6 +4503,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       expectedTargetCount: {
         type: "integer",
         minimum: 1,
+        description: "Exact sum of selected channelCounts, not the number of distinct companies.",
       },
       name: {
         type: "string",
@@ -3906,13 +4511,15 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxLength: 120,
       },
       messageVariants: {
+        description:
+          "Up to 1000 characters per variant, or 1600 for SMS-only drafts. SMS sends the separate smsBody.",
         type: "array",
         minItems: 1,
         maxItems: 4,
         items: {
           type: "string",
           minLength: 1,
-          maxLength: 1000,
+          maxLength: 1600,
         },
       },
       dailyCap: {
@@ -3935,13 +4542,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         $ref: "#/components/schemas/IdempotencyKey",
       },
     },
-  },
-  IdempotencyKey: {
-    "x-dmfaster-trim": true,
-    type: "string",
-    minLength: 1,
-    maxLength: 160,
-    pattern: "^[A-Za-z0-9._:-]{1,160}$",
   },
   CampaignDraftUpdateInput: {
     type: "object",
@@ -4302,7 +4902,9 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
       expectedRevision: {
         type: "string",
-        maxLength: 200,
+        maxLength: 1024,
+        description:
+          "Echo the complete opaque revision returned by the first search page, including any website-classification identity. Never truncate it.",
       },
       querySignature: {
         type: "string",
@@ -4444,6 +5046,16 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         },
         maxItems: 40,
       },
+      websiteFacts: {
+        type: "array",
+        description:
+          "Positive-only saved Finnish website classifications with non-exhaustive coverage. Multiple selected facts must all match. b2c is a provisional consumer-targeting candidate; b2b and saas are independently scored positive candidates. Omission applies no website-fact restriction; absence is not a negative classification. Available only for Finnish audiences.",
+        items: {
+          type: "string",
+          enum: ["b2c", "b2b", "saas"],
+        },
+        maxItems: 3,
+      },
       hasExhibitionParticipation: {
         type: "boolean",
       },
@@ -4507,7 +5119,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     },
     required: ["countries"],
     description:
-      "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Unsupported or discarded criteria are rejected.",
+      "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
   },
   CompanyEvidenceSearchInput: {
     type: "object",
@@ -4623,6 +5235,80 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     },
     required: ["id", "statement", "requirement", "retrievalTerms"],
   },
+  WorkspaceCompanyKnowledgeInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      query: {
+        type: "string",
+        maxLength: 200,
+      },
+      facets: {
+        type: "array",
+        maxItems: 40,
+        items: {
+          type: "string",
+          enum: [
+            "offers_software",
+            "offers_saas_b2b",
+            "offers_it_services",
+            "offers_marketing",
+            "offers_consulting",
+            "offers_accounting",
+            "offers_legal",
+            "offers_recruitment",
+            "offers_training",
+            "offers_engineering",
+            "offers_industrial_services",
+            "offers_construction",
+            "offers_property_services",
+            "offers_logistics",
+            "offers_manufactured_goods",
+            "offers_wholesale",
+            "offers_machinery",
+            "offers_food",
+            "offers_healthcare",
+            "offers_finance",
+            "offers_energy",
+            "offers_hospitality",
+            "role_manufacturer",
+            "role_reseller",
+            "role_service_provider",
+            "buyer_business",
+            "buyer_consumer",
+            "buyer_public_sector",
+            "buyer_manufacturing",
+            "buyer_construction",
+            "buyer_property",
+            "buyer_retail",
+            "buyer_healthcare",
+            "buyer_hospitality",
+            "buyer_logistics",
+            "buyer_technology",
+            "buyer_finance",
+            "buyer_energy",
+            "buyer_education",
+            "buyer_agriculture",
+          ],
+        },
+      },
+      page: {
+        type: "integer",
+        minimum: 1,
+        maximum: 10000,
+      },
+      pageSize: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+      expectedRevision: {
+        type: "string",
+        minLength: 64,
+        maxLength: 64,
+      },
+    },
+  },
   CompanyKnowledgeInput: {
     type: "object",
     additionalProperties: false,
@@ -4640,6 +5326,24 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "integer",
         minimum: 1,
         maximum: 90,
+      },
+      sourcePage: {
+        type: "integer",
+        minimum: 1,
+        maximum: 500,
+        description: "Page of original saved website passages; defaults to 1.",
+      },
+      sourcePageSize: {
+        type: "integer",
+        minimum: 1,
+        maximum: 20,
+        description: "Original passages per page; defaults to 10.",
+      },
+      expectedKnowledgeRevision: {
+        type: "string",
+        pattern: "^[a-f0-9]{64}$",
+        description:
+          "Pin subsequent source pages to the knowledgeRevision returned by the first read.",
       },
     },
     required: ["country", "businessId"],
@@ -4670,6 +5374,12 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         enum: ["binary", "passage"],
         description:
           "Binary evaluates related website sections together in one compact request per company. Passage preserves separate relationship statuses and explicit-denial merging. Omission preserves passage behavior.",
+      },
+      factExpansion: {
+        type: "string",
+        enum: ["requested_only", "general"],
+        description:
+          "Binary mode only. New runs default to requested_only and ask only uncached requested criteria; general explicitly adds reusable standard offering/buyer questions to the same call on complete sources. Existing omitted-policy keys recover their original general run. Cached requested answers never trigger extra inference. Country and other deterministic filters are checked in code.",
       },
       filters: {
         $ref: "#/components/schemas/CompanySearchFilters",
@@ -4722,6 +5432,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "string",
         minLength: 64,
         maxLength: 64,
+      },
+      includeCompanies: {
+        type: "boolean",
+        description:
+          "Set false for progress-only polling without fetching company rows or quotations. Omitted or true preserves the first result page. Use companies.evidence.results to inspect matches.",
       },
     },
     required: ["runId", "expectedRevision"],
@@ -5615,6 +6330,62 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["jobId"],
     properties: {
+      jobId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 30,
+        pattern: "^[A-Za-z0-9._]+$",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+  },
+  InstagramPurchasesListInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      cursor: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 20,
+      },
+    },
+  },
+  InstagramPurchasesInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["orderId"],
+    properties: {
+      orderId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      cursor: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 20,
+      },
+    },
+  },
+  InstagramPurchasesResultsInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["orderId", "jobId"],
+    properties: {
+      orderId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
       jobId: {
         $ref: "#/components/schemas/ResourceId",
       },

@@ -28,27 +28,28 @@ server is deliberately stateless; the caller sends the complete latest campaign
 state on each planning call, while durable product state, permissions,
 idempotency, and approvals remain on DM Faster's server.
 
-The server advertises host-neutral operating instructions through MCP discovery,
-so an agent without a DM Faster-specific prompt can inspect its connection,
-choose the right read tool, and carry a plain-language campaign goal through validation, exact
-preview, private draft preparation, browser setup, and owner-approved launch.
+Discovery carries a self-contained instruction summary of at most 512 characters.
+Detailed sequences and recovery rules live on their entry tool descriptions, including
+validation, exact preview, private drafts and owner-authorized launch. Hosted connection
+guidance uses host reconnect; local connections use the CLI scope-upgrade flow.
 
 Hosts implementing the standard MCP Apps extension render
 `campaign_workspace` as an inline campaign editor. The self-contained
-`ui://dmfaster/campaign-workspace/v4.html` resource uses the MCP Apps
+`ui://dmfaster/campaign-workspace/v7.html` resource uses the MCP Apps
 `2026-01-26` bridge and requires no external scripts, styles, frames or cookies.
 Company website icons use trusted public favicon origins, with initials when
 unavailable. The Companies view displays searches initiated by the chat composer;
 criteria are read-only, and new tool results replace the displayed search.
-Users can browse pages, select companies for discussion and open profile drawers.
+Users can browse pages, select a campaign audience and open profile drawers.
 It can validate the current state, preview an exact audience,
 prepare a private disabled draft, request launch approval, and sync edits back
 into model context. It cannot execute launch or pause. Codex and other headless
 hosts receive the same state and safety description as structured content and
-continue to use all 91 domain tools directly.
+continue to use the typed domain tools directly.
 
 OpenAI hosts that support composer mentions discover `workspace_mentions` as an
-app-only search tool. It suggests companies across the supported countries and
+app-only search tool through `capabilities.extensions["openai/mentions"]`,
+with `searchTool: "workspace_mentions"`. It suggests companies across the supported countries and
 saved prospect or company lists. Company suggestions use `companies_suggest`,
 a bounded compact read with no audience total; `companies_search` still returns
 an exact total. Opening a mention reads the current profile or list through
@@ -116,8 +117,8 @@ tools satisfy the credential's scopes, with missing scopes for the others.
 Workspace role, plan, and action preconditions still apply when a tool runs.
 
 ```bash
-npx --yes @dmfaster/cli@1.11.0 auth login --json
-npx --yes @dmfaster/mcp-server@1.11.0
+npx --yes @dmfaster/cli@1.12.0 auth login --json
+npx --yes @dmfaster/mcp-server@1.12.0
 ```
 
 Login defaults to the complete Agent 1.0 capability set. Use `auth login
@@ -227,7 +228,8 @@ The MCP names are the 91 domain tools:
 - `leads_prospect_cancel`
 
 Additional MCP tools are `connection_status`, `campaign_workspace`,
-`companies_workspace`, `workspace_open`, and the app-only `workspace_mentions`.
+`companies_workspace`, `workspace_open`, the app-only `workspace_mentions`,
+and read-only `outreach_details` for native forms.
 
 Planning and preview tools do not mutate the workspace. Preparation creates
 private drafts with a stable idempotency key. Launch and pause use a two-step
@@ -251,7 +253,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.11.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@1.12.0"]
     }
   }
 }
@@ -366,6 +368,28 @@ See the shared plugin review and booking reference for full workflow limits.
 
 ## Native workspace entrypoints
 
+The company outreach composer supports one to four message variations for Instagram
+and Facebook through the existing `messageVariants` contract. Review displays every
+variation and verifies the exact ordered array returned by draft preparation. Editing,
+adding or removing a variation invalidates review; uncertain requests retain their
+original configuration and idempotency key. LinkedIn invitations keep a separate note.
+
+The workspace resource requests `preferredDisplayMode: "fullscreen"` while
+retaining inline support. This is a host-controlled preference, not a guarantee
+that a model invocation opens a side panel. Thread entrypoints open a content
+tab; the global entrypoint opens the standalone workspace.
+
+Company selection, focused company identity, workflow step, and edited outreach
+copy publish a debounced `dmfaster.workspace_context` snapshot through
+`ui/update-model-context`. Query-wide selection carries the frozen query/revision
+and exclusions instead of fetching all matches. Saved-evidence context preserves
+unknown market totals and exact processing progress. Passive updates never fall
+back to `ui/message`, never create lists/campaigns, and never authorize sending.
+If the host clears its attached model context, unchanged renders and theme
+updates do not reattach it; a subsequent workspace state change publishes again.
+Legacy `setWidgetState` is supported when available. Hosts with neither context
+capability retain the normal UI and tool workflow without passive synchronization.
+
 `workspace_open({})` advertises a global sidebar entry and returns the first exact
 Companies page. `companies_workspace({ filters, pageSize })` opens a prospect
 search beside chat using every typed Companies filter. Empty arguments browse
@@ -383,8 +407,7 @@ to `campaign_workspace` preserves the existing plan editor. Supplying only
 `campaignId` inspects that saved campaign. Selection is context, never authorization
 to mutate or send. Domain tools retain their scope, ownership, plan and audit checks.
 
-Company selection is discussion context, never authorization to save, spend
-research credits or execute outreach. Full typed company data stays in
+Company selection alone never saves a list, spends research credits or starts outreach. Full typed company data stays in
 `structuredContent`; brief text summaries avoid duplicating it in the response.
 These extensions require a supporting host. Metadata and local tests are not proof
 of public directory listing, production deployment, or native host availability.
@@ -397,12 +420,25 @@ filter preservation and narrow-layout overflow. It stays outside `test:tooling` 
 checks never launch a browser. `npm run dev:agent:workspace` opens a loopback-only
 review preview with disposable Companies fixture data. Add `?theme=dark` for dark mode.
 
-The native view keeps messages, delivery, replies/pipeline, sending health, and
-connection details in collapsed disclosures. Extra reads run only when opened;
-permission failures stay local to the section. Reply contacts are a labelled
-bounded sample, not inbox message text. Sending health uses the server's assessment
-and does not present workspace-wide counters as campaign totals. The plan editor
-keeps its audience and forecast summary collapsed until requested.
+The compact campaign detail shows basic campaign facts and a cumulative activity
+chart from at most 100 recorded sends. It reads `history.list` only on opening a
+campaign, validates campaign identity, labels truncated history as the latest
+sends, and keeps denied or empty activity separate from zero. Detailed copy,
+delivery, replies and sending-health tools remain available through the assistant.
+The plan editor keeps its audience and forecast summary collapsed until requested.
+
+Company selection opens from the result count, with no visible header row or select-all checkbox: a custom quantity, this page, all exact
+results, or clear selection. The campaign editor currently supports 50 companies.
+Query results start selected across all pages without eager reads. Exclusions
+stay selected-out while paging. Continuing to Message resolves the bounded
+selection against the pinned source identity. Larger exact queries remain entirely
+selected, but the editor requires a custom audience of at most 50 before continuing;
+it never silently truncates to the first page. Unknown evidence market totals do
+not become an all-results count: only the run's confirmed matches start selected,
+and unresolved companies require an explicit choice.
+Cross-page selection pins the query and revision and applies atomically; incomplete
+or changed results leave the previous selection intact. The Message navigation
+step replaces redundant discussion and compose buttons.
 
 The view follows host theme and font tokens, with light/dark fallbacks. The original
 `v1.html` and `v2.html` resources remain readable for existing conversations. All presentation
@@ -410,3 +446,118 @@ and connection tools declare output schemas. Hosted tool descriptors declare OAu
 scopes and return renewal challenges for expired or insufficient grants; ownership
 and role denials do not trigger an unhelpful reconnect. Local stdio authentication
 keeps its existing flow. Only tools used by the view permit iframe invocation.
+
+## Company research shortlists
+
+The native Companies view can save 1–50 selected companies as a named private
+research list without preparing a campaign. It resolves the exact selection,
+inspects current company revisions, and retains one immutable save request across
+uncertain responses. A changed selection before saving cancels preparation; a
+retry after an uncertain save reuses the original identities, revisions, name,
+and idempotency key. Saving requires the existing owner and audience/list scopes.
+
+Open a saved company list with `companies_workspace` (or `workspace_open`):
+
+```json
+{ "savedList": { "listId": "<returned-list-id>" }, "pageSize": 20 }
+```
+
+The view reads `companies.list.inspect`, preserves its exact saved total and
+`expectedUpdatedAt` across pages, and opens current profiles on demand. Saved
+list counts are not market counts. Saved contact routes retain their snapshot
+meaning; opening a profile does not verify deliverability. Preparing new outreach
+from a selection reinspects its companies through the existing draft workflow.
+Filters, savedList and evidenceRun are mutually exclusive sources. Errors and
+missing exact counts block selection-dependent actions. Hosted and local MCP
+share the same presentation and domain authorization.
+
+This implementation is locally verified separately from production promotion,
+public package publication and native-host installation. See the company
+prospecting readiness record for the current candidate's evidence.
+
+The native company outreach composer also offers **Email** and **SMS** when the
+workspace has usable setup. Email requires a connected sender, subject and the
+app's existing recipient permission confirmation; SMS uses the workspace's
+assigned sender and separate message. Discovery uses `senders_inspect`, including
+its `emailAvailable` and safe `sms` fields, and requires `sending:read`.
+
+For headless company drafts, `campaign_draft_prepare` supports `gmail` and `sms`
+in `channel` or `channels`. Sum `channelCounts.email` for `gmail` and
+`channelCounts.sms` for SMS in `expectedTargetCount`. Supply `gmailSubject`,
+`gmailRecipientConsentConfirmed: true` only after explicit user confirmation,
+and connected `mailboxIds` for email; `messageVariants` are the email body
+variants. Supply separate `smsBody` for SMS. Recipient counts, list version,
+workspace access and sender readiness are validated before the disabled draft
+is saved. Only a separate authorized launch can start it.
+
+## October 14 MCP guidance upgrades (source candidate)
+
+The company profile's **Draft chat request** action creates an editable prompt with
+`_meta["openai/message"]: { target: "active", send: false }`. It includes a company
+resource reference. It appears only when the host advertises the extension and identifies
+itself as desktop or web. Mobile and unknown hosts keep context sharing. Context updates
+never fall back to immediate `ui/message` submission. Opening a chat draft does not create
+an outreach draft or send messages.
+
+`outreach_details` reads the current owner sender setup through `senders.inspect`
+(`sending:read`) and collects channel, name, body, daily cap and optional eligible email
+mailbox/subject. MCP 2.0 hosts with form elicitation receive `input_required`; OpenAI extended
+forms additionally require the extension capability and carry their schema in
+`_meta["openai/elicitation"].requestedSchema`. A fresh request resumes with `inputResponses`.
+Each round checks sender eligibility again, validates the answer and handles cancellation.
+No authorization state is round-tripped, saved or trusted. Unsupported hosts receive the
+same collection instructions for chat. Results are typed review context; normal audience,
+plan, recipient-permission, draft, revision, idempotency and launch checks still apply.
+
+Hosted servers additionally advertise campaign-filtered `reply.received`, `campaign.blocked`
+and `campaign.completed`. Reply events need `campaigns:read` and `inbox:read`; blocked events
+need `campaigns:read` and `sending:read`; completion needs `campaigns:read`. Replies carry IDs,
+not bodies, and include only confirmed human inbound records saved after monitoring starts.
+They exclude automatic and uncertain responses. A durable outbox drains batches without a
+moving timestamp cursor, preserving equal-time and late-committing records within the monitored
+interval. Blocked alerts use existing sending health and remain quiet during normal pacing,
+caps and closed windows. Completion is checked against authoritative remaining jobs and reports
+sent/skipped/failed outcomes separately. Subscriptions, callback verification, expiry, revocation,
+signatures and retry protections are shared with prospecting Events.
+
+MCP Events in ChatGPT require Cloud Work chats; local chats use status tools. Actual ChatGPT
+subscription/delivery verification remains a release canary, not a claim from these local tests.
+Migration `0376_mcp_sales_events` expands the event-name check and adds bounded reply/outbox
+lookup indexes. Production migration/deployment and package or marketplace publication have
+not been performed by this source change.
+
+The panel follows host safe-area updates and relies on host display-mode controls. HTML v7
+keeps older resource URIs readable for saved conversations.
+
+References: [OpenAI extensions v0.2](https://github.com/openai/mcp-extensions/blob/main/CHANGELOG.md),
+[UI patterns](https://github.com/openai/mcp-extensions/blob/main/docs/patterns.md),
+[MCP Events](https://developers.openai.com/plugins/build/mcp-events).
+
+### Per-recipient campaign messages
+
+Agents can research recipients with their own authorized web tools and save unique
+Instagram/Facebook first messages **before the first launch**. Prepare a disabled
+campaign, inspect its saved list, then use `campaign_messages_draft_list` and
+`campaign_messages_draft_update`. Draft updates accept up to 100 exact
+channel/handle identities per batch with inspected campaign/list versions and a
+stable key. Messages preserve exact text; null removes prepared copy. Use the
+returned campaign version for subsequent batches, then read the saved copy back.
+Preparation creates no queue and sends nothing. Normal authorized launch uses
+that copy with existing suppression, pacing and provider checks. An audience
+change blocks launch until the prepared copy is reviewed or removed.
+
+For an existing queue, `campaign_messages_list` returns exact counts, research
+identities, pagination, editability and versions. `campaign_messages_update`
+atomically edits up to 100 distinct unsent recipients. It refuses active or
+unresolved send attempts, never starts or sends, and returns a durable retry
+receipt. Queued overrides belong to the inspected run; a new run clears them.
+Prepared draft copy remains the campaign's recipient-specific base across runs.
+
+Draft reads use `campaigns:read`, queue reads use `sending:read`, and owner writes
+use `campaigns:write` without an extra approval screen. Draft messages support
+Instagram/Facebook; queued edits also support LinkedIn accepted/follow-up messages.
+Gmail, SMS and LinkedIn invitations are excluded. Use batches below 64,000 UTF-8
+bytes for CLI/HTTP compatibility.
+
+Prepared copy may also be removed (with null) while a used campaign is stopped,
+so a changed audience can return to the campaign template before a new launch.

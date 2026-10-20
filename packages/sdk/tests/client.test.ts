@@ -8,7 +8,77 @@ import {
   DmfasterProtocolError,
   DmfasterSdkError,
   DmfasterTimeoutError,
+  DmfasterAdapterError,
 } from "../src/index.ts";
+
+test("internal adapter failures retain a safe reference and their private cause", async () => {
+  const failure = new DmfasterAdapterError("req_adapter_123", {
+    cause: new TypeError("secret-token"),
+  });
+  const client = createDmfasterClient({
+    baseUrl: "https://example.test",
+    token: "synthetic",
+    fetch: async () => {
+      throw failure;
+    },
+  });
+  await assert.rejects(client.invoke("workspace.briefing", {}), (error) => {
+    assert.equal(error, failure);
+    assert.equal(failure.code, "request_adapter_error");
+    assert.equal(failure.retryable, false);
+    assert.doesNotMatch(failure.message, /secret-token|network/);
+    return true;
+  });
+});
+
+for (const parent of [true, false])
+  test(`SDK cancellation interrupts an injected adapter (${parent ? "request" : "call"})`, async () => {
+    const controller = new AbortController();
+    let entered!: () => void;
+    const started = new Promise<void>((resolve) => {
+      entered = resolve;
+    });
+    const client = createDmfasterClient({
+      baseUrl: "https://example.test",
+      token: "synthetic",
+      ...(parent ? { signal: controller.signal } : {}),
+      fetch: async () => {
+        entered();
+        return new Promise<Response>(() => {});
+      },
+    });
+    const result = client.invoke(
+      "workspace.briefing",
+      {},
+      parent ? {} : { signal: controller.signal },
+    );
+    await started;
+    controller.abort("private reason");
+    await assert.rejects(
+      result,
+      (error) =>
+        error instanceof DmfasterSdkError &&
+        error.code === "request_aborted" &&
+        !error.message.includes("private reason"),
+    );
+  });
+
+test("an already cancelled SDK call cannot enter the adapter", async () => {
+  const controller = new AbortController();
+  controller.abort();
+  const client = createDmfasterClient({
+    baseUrl: "https://example.test",
+    token: "synthetic",
+    signal: controller.signal,
+    fetch: async () => {
+      assert.fail("called after abort");
+    },
+  });
+  await assert.rejects(
+    client.invoke("workspace.briefing", {}),
+    (error) => error instanceof DmfasterSdkError && error.code === "request_aborted",
+  );
+});
 
 function result(tool: keyof typeof AGENT_TOOL_POLICIES) {
   return {
@@ -236,4 +306,88 @@ test("allows loopback HTTP and rejects redirect following", async () => {
 
   await client.invoke("workspace.briefing", {});
   assert.equal(redirectMode, "error");
+});
+
+test("cancelling a response read closes the injected adapter's body", async () => {
+  const controller = new AbortController();
+  let started!: () => void;
+  const reading = new Promise<void>((resolve) => {
+    started = resolve;
+  });
+  let cancelled = false;
+  const client = createDmfasterClient({
+    baseUrl: "https://app.dmfaster.test",
+    token: "fixture",
+    fetch: async () =>
+      new Response(
+        new ReadableStream(
+          {
+            pull() {
+              started();
+            },
+            cancel() {
+              cancelled = true;
+            },
+          },
+          { highWaterMark: 0 },
+        ),
+      ),
+  });
+  const work = client.invoke("workspace.briefing", {}, { signal: controller.signal });
+  await reading;
+  controller.abort();
+  await assert.rejects(
+    work,
+    (error) => error instanceof DmfasterSdkError && error.code === "request_aborted",
+  );
+  assert.equal(cancelled, true);
+});
+
+test("per-call cancellation leaves another concurrent SDK call running", async () => {
+  const signals: AbortSignal[] = [];
+  let entered!: () => void, release!: () => void;
+  const both = new Promise<void>((resolve) => {
+    entered = resolve;
+  });
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const client = createDmfasterClient({
+    baseUrl: "https://app.dmfaster.test",
+    token: "fixture",
+    fetch: async (_url, init) => {
+      signals.push(init!.signal!);
+      if (signals.length === 2) entered();
+      await gate;
+      return Response.json({
+        version: 1,
+        tool: "workspace.briefing",
+        policy: { effect: "read", approval: "none", exposure: "public_api" },
+        ok: true,
+        generatedAt: new Date().toISOString(),
+        durationMs: 1,
+        evidence: [],
+        consistency: { status: "verified", checks: [] },
+        data: {},
+        artifacts: [],
+        error: null,
+      });
+    },
+  });
+  const controller = new AbortController();
+  const first = client.invoke("workspace.briefing", {}, { signal: controller.signal });
+  const second = client.invoke("workspace.briefing", {});
+  await both;
+  controller.abort();
+  try {
+    await assert.rejects(
+      first,
+      (error) => error instanceof DmfasterSdkError && error.code === "request_aborted",
+    );
+    assert.equal(signals[0]!.aborted, true);
+    assert.equal(signals[1]!.aborted, false);
+  } finally {
+    release();
+  }
+  assert.equal((await second).ok, true);
 });

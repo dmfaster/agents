@@ -951,3 +951,77 @@ test("interrupting the review coordinator returns an explicit resumable receipt"
   assert.equal(JSON.parse(stdout.read()).runId, "fit_interrupt");
   assert.equal(JSON.parse(stdout.read()).stopReason, "interrupted");
 });
+
+test("recipient-copy CLI commands forward per-recipient messages and inspected versions", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const version = "2026-10-20T10:00:00.000Z";
+  const edit = {
+    campaignId: "campaign",
+    runId: "run",
+    expectedCampaignUpdatedAt: version,
+    idempotencyKey: "copy-1",
+    edits: [
+      {
+        jobId: "job",
+        targetHandle: "alice",
+        channel: "instagram",
+        expectedJobUpdatedAt: version,
+        message: " Exact website research 👋\nAlice ",
+      },
+    ],
+  };
+  for (const [action, input] of [
+    ["list", { campaignId: "campaign", expectedRunId: "run", limit: 25 }],
+    ["update", edit],
+  ] as const) {
+    assert.equal(
+      await runCli(["campaign", "messages", action, "--input", "copy.json"], {
+        ...configuredContext(calls),
+        stdout: output().stream,
+        readTextFile: async () => JSON.stringify(input),
+      }),
+      0,
+    );
+  }
+  assert.deepEqual(calls, [
+    {
+      tool: "campaign.messages.list",
+      input: { campaignId: "campaign", expectedRunId: "run", limit: 25 },
+    },
+    { tool: "campaign.messages.update", input: edit },
+  ]);
+});
+
+test("draft recipient-copy CLI commands preserve audience versions and exact text", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const version = "2026-10-20T10:00:00.000Z";
+  const copy = {
+    campaignId: "draft",
+    expectedCampaignUpdatedAt: version,
+    expectedListUpdatedAt: version,
+    idempotencyKey: "draft-copy",
+    edits: [
+      {
+        targetHandle: "alice",
+        channel: "instagram",
+        message: " Exact website research 👋\nAlice ",
+      },
+    ],
+  };
+  for (const [action, input] of [
+    ["list", { campaignId: "draft", limit: 100 }],
+    ["update", copy],
+  ] as const)
+    assert.equal(
+      await runCli(["campaign", "messages", "draft", action, "--input", "copy.json"], {
+        ...configuredContext(calls),
+        stdout: output().stream,
+        readTextFile: async () => JSON.stringify(input),
+      }),
+      0,
+    );
+  assert.deepEqual(calls, [
+    { tool: "campaign.messages.draft.list", input: { campaignId: "draft", limit: 100 } },
+    { tool: "campaign.messages.draft.update", input: copy },
+  ]);
+});

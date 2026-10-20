@@ -19,6 +19,7 @@ export type DmfasterClientOptions = {
   token: string;
   timeoutMs?: number;
   fetch?: typeof globalThis.fetch;
+  signal?: AbortSignal;
 };
 
 export type AgentToolCallOptions = {
@@ -117,14 +118,61 @@ function parseRetryAfterSeconds(value: string | null) {
     : null;
 }
 
-async function readJson(response: Response) {
-  const text = await response.text();
+async function readJson(response: Response, signal: AbortSignal) {
+  const reader = response.body?.getReader();
+  if (!reader) return null;
+  const decoder = new TextDecoder();
+  let text = "";
+  const abort = () => {
+    void reader.cancel(signal.reason).catch(() => {});
+  };
+  signal.addEventListener("abort", abort, { once: true });
+  try {
+    signal.throwIfAborted();
+    while (true) {
+      const { done, value } = await reader.read();
+      signal.throwIfAborted();
+      if (done) break;
+      text += decoder.decode(value, { stream: true });
+    }
+    text += decoder.decode();
+  } finally {
+    signal.removeEventListener("abort", abort);
+    reader.releaseLock();
+  }
   if (!text) return null;
   try {
     return JSON.parse(text) as unknown;
   } catch (cause) {
     throw new DmfasterProtocolError("DM Faster API returned invalid JSON.", { cause });
   }
+}
+
+/** Injected in-process adapters must honor cancellation even without native fetch. */
+function abortable<T>(run: () => Promise<T>, signal: AbortSignal): Promise<T> {
+  signal.throwIfAborted();
+  return new Promise((resolve, reject) => {
+    const abort = () => {
+      signal.removeEventListener("abort", abort);
+      reject(signal.reason);
+    };
+    signal.addEventListener("abort", abort, { once: true });
+    Promise.resolve()
+      .then(() => {
+        signal.throwIfAborted();
+        return run();
+      })
+      .then(
+        (value) => {
+          signal.removeEventListener("abort", abort);
+          resolve(value);
+        },
+        (error) => {
+          signal.removeEventListener("abort", abort);
+          reject(error);
+        },
+      );
+  });
 }
 
 function assertToolResult<Name extends AgentToolName>(
@@ -190,6 +238,7 @@ export class DmfasterClient {
 
   readonly #token: string;
   readonly #fetch: typeof globalThis.fetch;
+  readonly #signal: AbortSignal | undefined;
 
   constructor(options: DmfasterClientOptions) {
     const token = options.token.trim();
@@ -200,6 +249,7 @@ export class DmfasterClient {
     this.timeoutMs = normalizeTimeout(options.timeoutMs);
     this.#token = token;
     this.#fetch = options.fetch ?? globalThis.fetch;
+    this.#signal = options.signal;
     if (typeof this.#fetch !== "function") {
       throw new DmfasterSdkError("No Fetch API implementation is available.", "missing_fetch");
     }
@@ -212,32 +262,42 @@ export class DmfasterClient {
   ): Promise<AgentToolResult<AgentToolDataMap[Name]>> {
     const controller = new AbortController();
     let timedOut = false;
-    const onAbort = () => controller.abort(options.signal?.reason);
-    if (options.signal?.aborted) onAbort();
-    else options.signal?.addEventListener("abort", onAbort, { once: true });
+    const signals = [
+      ...new Set([this.#signal, options.signal].filter((s): s is AbortSignal => Boolean(s))),
+    ];
+    const listeners = signals.map((signal) => {
+      const abort = () => controller.abort(signal.reason);
+      if (signal.aborted) abort();
+      else signal.addEventListener("abort", abort, { once: true });
+      return () => signal.removeEventListener("abort", abort);
+    });
 
     const timeout = setTimeout(() => {
       timedOut = true;
       controller.abort();
     }, this.timeoutMs);
 
+    let response: Response | undefined;
     try {
-      const response = await this.#fetch(
-        `${this.baseUrl}/api/v1/agent/tools/${encodeURIComponent(tool)}`,
-        {
-          method: "POST",
-          headers: {
-            accept: "application/json",
-            authorization: `Bearer ${this.#token}`,
-            "content-type": "application/json",
-            ...(tool === "sending.inspect" ? { "x-dmfaster-sending-observation": "1" } : {}),
-          },
-          body: JSON.stringify(input),
-          redirect: "error",
-          signal: controller.signal,
-        },
+      controller.signal.throwIfAborted();
+      response = await abortable(
+        () =>
+          this.#fetch(`${this.baseUrl}/api/v1/agent/tools/${encodeURIComponent(tool)}`, {
+            method: "POST",
+            headers: {
+              accept: "application/json",
+              authorization: `Bearer ${this.#token}`,
+              "content-type": "application/json",
+              ...(tool === "sending.inspect" ? { "x-dmfaster-sending-observation": "1" } : {}),
+            },
+            body: JSON.stringify(input),
+            redirect: "error",
+            signal: controller.signal,
+          }),
+        controller.signal,
       );
-      const body = await readJson(response);
+      const received = response;
+      const body = await abortable(() => readJson(received, controller.signal), controller.signal);
       if (!response.ok) {
         const transportError = transportErrorFromBody(body);
         throw new DmfasterHttpError({
@@ -270,7 +330,9 @@ export class DmfasterClient {
       );
     } finally {
       clearTimeout(timeout);
-      options.signal?.removeEventListener("abort", onAbort);
+      for (const remove of listeners) remove();
+      if (controller.signal.aborted && response?.body && !response.body.locked)
+        void response.body.cancel(controller.signal.reason).catch(() => {});
     }
   }
 }

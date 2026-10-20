@@ -12,7 +12,7 @@ test("profile summaries keep the opaque lookup key only in structured data", () 
   } as unknown as AgentToolResult;
   assert.equal(
     companyResultSummary(result),
-    "Profile for Sample Company (US). Full evidence and revision are in structuredContent.",
+    "Profile for Sample Company (US). Review dated financial history alongside headline figures and verify current contact roles before selection. Website contacts have source URLs but unassigned person ownership. Full evidence and revision are in structuredContent.",
   );
   assert.equal(
     (result.data as { profile: { businessId: string } }).profile.businessId,
@@ -27,12 +27,36 @@ test("company text summaries carry exact counts without duplicating the complete
     data: { total: 649, totalExact: true, page: 1, companies: [{ name: "Full company evidence" }] },
   } as unknown as AgentToolResult;
   assert.match(companyResultSummary(result)!, /649 companies match/);
+  assert.match(companyResultSummary(result)!, /saved filters/);
+  assert.match(
+    companyResultSummary(result)!,
+    /Offering fit and current contact roles still need qualification/,
+  );
   assert.doesNotMatch(companyResultSummary(result)!, /Full company evidence/);
   assert.match(
     companyResultSummary({ ...result, data: { ...(result.data as object), totalExact: false } })!,
     /exact company count is unavailable/,
   );
   assert.equal(companyResultSummary({ ...result, tool: "campaign.prepare" }), null);
+});
+
+test("shortlist summaries separate saved counts from market coverage and do not repeat contact data", () => {
+  const result = {
+    tool: "companies.list.inspect",
+    ok: true,
+    data: {
+      name: "Selected partners",
+      total: 21,
+      companies: [{ emailAddress: "private@example.test" }],
+    },
+  } as unknown as AgentToolResult;
+  assert.match(companyResultSummary(result)!, /contains 21 companies; this page includes 1/);
+  assert.match(companyResultSummary(result)!, /snapshots, not verified deliverability/);
+  assert.doesNotMatch(companyResultSummary(result)!, /private@example/);
+  assert.match(
+    companyResultSummary({ ...result, data: { ...(result.data as object), total: -1 } })!,
+    /unavailable/,
+  );
 });
 
 test("view-local reads deduplicate pending work, honor fresh reads, and retry failed calls", async () => {

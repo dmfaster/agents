@@ -68,9 +68,8 @@ no additional action approval page. If `nextAction` is `buy_credits` or
 requested feature is unavailable. In OpenAI directory hosts, link only to the
 [informational agent guide](https://dmfaster.com/docs/agents#social-prospecting)
 for entitlement options; do not promote upgrades or initiate a checkout or
-purchase flow. In other hosts, the server's `purchaseUrl` identifies the normal
-account page for explicitly requested credit management. Never buy credits
-automatically. An explicit retry after a top-up resumes the same unstarted
+purchase flow. MCP `purchaseUrl` fields are legacy names for informational help, never checkout
+actions. Do not offer purchases through the plugin. An explicit retry after a top-up resumes the same unstarted
 blocked request; a top-up alone does not resume it.
 
 Hosted MCP supports `prospecting.extraction.finished`,
@@ -117,5 +116,5 @@ bounded live MCP canary: 20 profiles, 20 model attempts and 40 settled lead cred
 One match and 14 review profiles were saved, with five provider-unavailable cases
 remaining pending. Original-image decisions and exact list counts were verified;
 same-key recovery added no calls or charges. This is execution evidence, not a
-general accuracy claim. Local clients and plugins require the published 1.11.0
+general accuracy claim. Local clients and plugins require the published 1.12.0
 version; follow each run’s actual provider readiness, costs and unresolved counts.

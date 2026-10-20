@@ -1,8 +1,15 @@
+import { useWorkspaceContext } from "./use-workspace-context.ts";
+import {
+  CompanySelection,
+  collectSelection,
+  type CompanySelectionScope,
+} from "./company-selection.tsx";
+import { t, numberLocale } from "./locale.ts";
+import { expandCompanyDetails } from "./company-display-mode.ts";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { McpAppBridge } from "./bridge.ts";
 import { CompanyLogo } from "./company-logo.tsx";
 import { CompanyProfileDrawer } from "./company-profile-drawer.tsx";
-import { ConnectionDetails } from "./workspace-details.tsx";
 import { ReadCache } from "./read-cache.ts";
 import {
   externalUrl,
@@ -10,13 +17,12 @@ import {
   readData,
   websiteLabel,
   type CompanyDetail,
+  type CompanyRow,
 } from "./companies-data.ts";
 import {
   completeEvidencePage,
   evidenceAssessment,
   evidenceCompanyRow,
-  evidenceNotes,
-  evidenceQuotes,
   type EvidenceCompany,
   type EvidencePage,
   type EvidenceResult,
@@ -33,60 +39,51 @@ function initialState(initial: EvidenceResult) {
   }
 }
 
-function Sources({ company }: { company: EvidenceCompany }) {
-  const quotes = evidenceQuotes(company);
-  return (
-    <section className="company-evidence-sources" aria-label="Saved website evidence">
-      <h3>Saved website evidence</h3>
-      <p className="workspace-muted">
-        {evidenceAssessment(company)}.{" "}
-        {company.criteria.some((c) => c.binary)
-          ? "These original quotes are context samples from the assessment."
-          : "Original source passages from this evidence run."}
-      </p>
-      {evidenceNotes(company).map((note) => (
-        <p key={note} className="workspace-muted">
-          {note}
-        </p>
-      ))}
-      {quotes.length ? (
-        quotes.slice(0, 6).map((quote, index) => (
-          <details key={index} open={index === 0}>
-            <summary>{quote.heading || websiteLabel(quote.url) || "Original passage"}</summary>
-            <blockquote>{quote.text}</blockquote>
-            <p className="workspace-muted">
-              Saved {new Date(quote.observedAt).toLocaleDateString("en-GB")}
-              {externalUrl(quote.url) ? (
-                <>
-                  {" "}
-                  ·{" "}
-                  <a href={externalUrl(quote.url)} target="_blank" rel="noreferrer">
-                    Source page
-                  </a>
-                </>
-              ) : null}
-            </p>
-          </details>
-        ))
-      ) : (
-        <p className="workspace-muted">No usable saved passage is available for this company.</p>
-      )}
-    </section>
-  );
-}
-
 export function CompanyEvidenceWorkspace({
   initial,
   bridge,
   navigation,
+  onSelectionChange,
 }: {
   initial: EvidenceResult;
   bridge: McpAppBridge;
   navigation: ReactNode;
+  onSelectionChange(companies: CompanyRow[], scope?: CompanySelectionScope): void;
 }) {
+  const [selected, setSelected] = useState<Map<string, CompanyRow>>(() => new Map());
+  const [allSelected, setAllSelected] = useState(true);
+  const [excluded, setExcluded] = useState<Set<string>>(() => new Set());
   const [page, setPage] = useState<EvidencePage | null>(() => initialState(initial).page);
   const [error, setError] = useState(() => initialState(initial).error);
   const [busy, setBusy] = useState(false);
+  const visibleSelected =
+    allSelected && page
+      ? new Map(
+          page.companies
+            .filter((company) => company.matches && !excluded.has(identity(company)))
+            .map((company) => [identity(company), evidenceCompanyRow(company)]),
+        )
+      : selected;
+  useEffect(() => {
+    if (busy || error || !page) {
+      onSelectionChange([]);
+      return;
+    }
+    onSelectionChange(
+      [...visibleSelected.values()],
+      allSelected && page
+        ? {
+            count: page.progress.confirmedMatches - excluded.size,
+            key: `${page.runId}:${page.expectedRevision}:${page.progress.confirmedMatches}:${[...excluded].sort().join("|")}`,
+            blocked: page.progress.confirmedMatches - excluded.size > 50,
+            resolve: async () =>
+              (await loadSelection(page.progress.confirmedMatches, true)).filter(
+                (company) => !excluded.has(identity(company)),
+              ),
+          }
+        : undefined,
+    );
+  }, [selected, allSelected, excluded, page, busy, error, onSelectionChange]);
   const [company, setCompany] = useState<EvidenceCompany | null>(null);
   const [detail, setDetail] = useState<CompanyDetail | null>(null);
   const [profileBusy, setProfileBusy] = useState(false);
@@ -98,12 +95,61 @@ export function CompanyEvidenceWorkspace({
     contextGeneration = useRef(0);
   const profiles = useRef(new ReadCache());
   const canCall = bridge.canCallTools();
+  useWorkspaceContext(
+    bridge,
+    "audience",
+    page && !busy && !error
+      ? {
+          source: "saved_website_evidence",
+          runId: page.runId,
+          querySignature: page.querySignature,
+          expectedRevision: page.expectedRevision,
+          query: page.query,
+          filters: page.appliedFilters,
+          total: null,
+          totalExact: false,
+          scanComplete: page.scanComplete,
+          progress: page.progress,
+          mode: allSelected ? "confirmed_matches_except_exclusions" : "explicit",
+          selectedCount: allSelected
+            ? page.progress.confirmedMatches - excluded.size
+            : selected.size,
+          excludedCompanyKeys: allSelected ? [...excluded].sort() : [],
+          selectedCompanies: allSelected
+            ? undefined
+            : [...selected.values()].map(({ country, businessId, name }) => ({
+                country,
+                businessId,
+                name,
+              })),
+          visiblePageIsFullAudience: false,
+          campaignHandoffLimit: 50,
+        }
+      : { status: busy ? "loading" : "unavailable", selectedCount: null },
+  );
+  useWorkspaceContext(
+    bridge,
+    "focusedCompany",
+    company
+      ? {
+          country: company.country,
+          businessId: company.businessId,
+          name: company.name,
+          matches: company.matches,
+          profileStatus: detail ? "loaded" : profileBusy ? "loading" : "unavailable",
+          profileRevision: detail?.revision ?? null,
+        }
+      : null,
+  );
 
   useEffect(() => {
     generation.current++;
     profileGeneration.current++;
     contextGeneration.current++;
     const next = initialState(initial);
+    setSelected(new Map());
+    setAllSelected(true);
+    setExcluded(new Set());
     setPage(next.page);
     setError(next.error);
     setBusy(false);
@@ -160,7 +206,40 @@ export function CompanyEvidenceWorkspace({
       if (request === generation.current) setBusy(false);
     }
   }
+  async function loadSelection(count: number, matchesOnly = false) {
+    if (!page) throw new Error(t("Company data unavailable"));
+    const current = page;
+    const request = generation.current;
+    const view = matchesOnly ? "matches" : current.view;
+    return collectSelection(count, async (cursor) => {
+      const next = completeEvidencePage(
+        readData<EvidencePage>(
+          await bridge.callTool("companies_evidence_results", {
+            runId: current.runId,
+            expectedRevision: current.expectedRevision,
+            view,
+            pageSize: 20,
+            ...(cursor ? { cursor } : {}),
+          }),
+        ),
+      );
+      if (
+        request !== generation.current ||
+        next.runId !== current.runId ||
+        next.expectedRevision !== current.expectedRevision ||
+        next.querySignature !== current.querySignature ||
+        next.view !== view ||
+        (matchesOnly &&
+          (next.progress.confirmedMatches !== current.progress.confirmedMatches ||
+            next.companies.some((company) => !company.matches)))
+      )
+        throw new Error(t("The results changed. Reopen selection and try again."));
+      return { ...next, companies: next.companies.map(evidenceCompanyRow) };
+    });
+  }
+
   async function inspect(nextCompany: EvidenceCompany, fresh = false) {
+    void expandCompanyDetails(bridge);
     const request = ++profileGeneration.current;
     contextGeneration.current++;
     setContextBusy(false);
@@ -223,7 +302,7 @@ export function CompanyEvidenceWorkspace({
           {
             type: "text",
             text: company
-              ? `Discuss ${company.name} using its saved website evidence and current profile. Assessment: ${evidenceAssessment(company)}.`
+              ? `Discuss ${company.name} using its saved website evidence and current profile. Assessment: ${t(evidenceAssessment(company))}.`
               : `Discuss this website-evidence run: ${page.query}. The exact market audience total is unavailable. ${page.progress.confirmedMatches} matches have been accepted so far; ${page.progress.processedCompanies} of ${page.progress.eligibleCompanies} eligible companies have been processed. Selection supplies discussion context only.`,
           },
         ],
@@ -268,68 +347,126 @@ export function CompanyEvidenceWorkspace({
     >
       <div className="workspace-shell companies-shell">
         {navigation}
-        <header className="workspace-header">
-          <div>
-            <h1>Companies</h1>
-            <p className="workspace-muted">Search in chat. Explore saved website evidence here.</p>
-          </div>
-          <button
-            className="workspace-link"
-            disabled={!canCall || busy || !page}
-            onClick={() => void readPage()}
-          >
-            Refresh results
-          </button>
-        </header>
+
         {page ? (
           <>
-            <div className="company-filter-chips" aria-label="Search criteria">
+            <div className="company-filter-chips" aria-label={t("Search criteria")}>
               <span className="company-market">{page.country}</span>
               <span className="company-filter-chip">{page.query}</span>
             </div>
-            <div className="company-results-bar">
+            <div className="company-results-bar company-results-selection">
               <div aria-live="polite">
-                <p className="workspace-count">
-                  {page.progress.confirmedMatches.toLocaleString("en-US")} accepted{" "}
-                  {page.progress.confirmedMatches === 1 ? "match" : "matches"} so far
-                </p>
+                <CompanySelection
+                  label={
+                    page.progress.confirmedMatches === 1
+                      ? t("1 accepted match so far")
+                      : t("{count} accepted matches so far", {
+                          count: page.progress.confirmedMatches.toLocaleString(numberLocale()),
+                        })
+                  }
+                  key={`${page.runId}:${page.expectedRevision}:${page.nextCursor}`}
+                  selected={visibleSelected}
+                  selectedCount={
+                    allSelected ? page.progress.confirmedMatches - excluded.size : selected.size
+                  }
+                  pageRows={page.companies.map(evidenceCompanyRow)}
+                  total={null}
+                  disabled={busy || Boolean(error) || !canCall}
+                  load={loadSelection}
+                  onChange={(rows) => {
+                    setAllSelected(false);
+                    setSelected(rows);
+                  }}
+                />
                 <p className="workspace-muted">
-                  Market total unavailable ·{" "}
+                  {t("Market total unavailable")} ·{" "}
                   {page.status === "complete"
-                    ? "Processing complete"
+                    ? t("Processing complete")
                     : page.status === "running" || page.status === "initializing"
-                      ? "Processing saved evidence"
-                      : `Run ${page.status}`}
+                      ? t("Processing saved evidence")
+                      : t("Run {status}", { status: t(page.status) })}
                 </p>
               </div>
-              <button
-                className="workspace-link"
-                disabled={busy || Boolean(error) || contextBusy}
-                onClick={() => void useInChat()}
-              >
-                Use this search in chat
-              </button>
             </div>
             <p className="workspace-muted" role="status">
               {busy
-                ? "Loading saved results…"
-                : `${page.progress.processedCompanies.toLocaleString("en-US")} of ${page.progress.eligibleCompanies.toLocaleString("en-US")} eligible companies checked · ${page.progress.unresolvedCompanies.toLocaleString("en-US")} unresolved`}
+                ? t("Loading saved results…")
+                : t(
+                    "{processed} of {eligible} eligible companies checked · {unresolved} unresolved",
+                    {
+                      processed: page.progress.processedCompanies.toLocaleString(numberLocale()),
+                      eligible: page.progress.eligibleCompanies.toLocaleString(numberLocale()),
+                      unresolved: page.progress.unresolvedCompanies.toLocaleString(numberLocale()),
+                    },
+                  )}
             </p>
+
+            {allSelected && page.progress.confirmedMatches - excluded.size > 50 ? (
+              <p className="workspace-muted">
+                {t("All {count} accepted matches selected. Choose up to 50 to continue.", {
+                  count: page.progress.confirmedMatches - excluded.size,
+                })}
+              </p>
+            ) : null}
             <div className="company-table-wrap" aria-busy={busy}>
-              <table className="company-table">
-                <caption className="sr-only">Saved website evidence results</caption>
-                <thead>
+              <table className="company-table company-evidence-table">
+                <caption className="sr-only">{t("Saved website evidence results")}</caption>
+                <thead className="company-table-labels">
                   <tr>
-                    <th>Company</th>
-                    <th>Assessment</th>
-                    <th>Saved evidence</th>
+                    <th>
+                      <span className="sr-only">{t("Select companies")}</span>
+                    </th>
+                    <th>
+                      <span className="sr-only">{t("Company")}</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {page.companies.map((c) => {
-                    const quote = evidenceQuotes(c)[0];
                     return (
                       <tr key={identity(c)}>
+                        <td className="company-select">
+                          <input
+                            type="checkbox"
+                            aria-label={t("Select {name}", { name: c.name })}
+                            checked={visibleSelected.has(identity(c))}
+                            disabled={
+                              busy ||
+                              Boolean(error) ||
+                              (!allSelected &&
+                                !visibleSelected.has(identity(c)) &&
+                                selected.size >= 50)
+                            }
+                            onChange={(e) => {
+                              const checked = e.target.checked;
+                              if (allSelected && c.matches) {
+                                setExcluded((current) => {
+                                  const next = new Set(current);
+                                  if (checked) next.delete(identity(c));
+                                  else next.add(identity(c));
+                                  return next;
+                                });
+                                return;
+                              }
+                              if (allSelected) {
+                                setAllSelected(false);
+                                setSelected(
+                                  new Map([
+                                    ...visibleSelected,
+                                    [identity(c), evidenceCompanyRow(c)],
+                                  ]),
+                                );
+                                return;
+                              }
+                              setSelected((current) => {
+                                const next = new Map(current);
+                                if (checked) next.set(identity(c), evidenceCompanyRow(c));
+                                else next.delete(identity(c));
+                                return next;
+                              });
+                            }}
+                          />
+                        </td>
                         <td>
                           <button
                             className="company-row-link"
@@ -339,28 +476,16 @@ export function CompanyEvidenceWorkspace({
                           >
                             <CompanyLogo company={evidenceCompanyRow(c)} />
                             <span className="company-row-copy">
-                              <strong>{c.name}</strong>
+                              <strong title={c.name}>{c.name}</strong>
                               <small>{websiteLabel(c.websiteUrl)}</small>
                             </span>
+                            <span
+                              className="company-evidence-status"
+                              data-accepted={c.matches || undefined}
+                            >
+                              {t(evidenceAssessment(c))}
+                            </span>
                           </button>
-                        </td>
-                        <td>
-                          <span
-                            className="company-evidence-status"
-                            data-accepted={c.matches || undefined}
-                          >
-                            {evidenceAssessment(c)}
-                          </span>
-                        </td>
-                        <td className="company-evidence-excerpt">
-                          {quote ? (
-                            <>
-                              <span title={quote.text}>{quote.text}</span>
-                              <small>{quote.heading || websiteLabel(quote.url)}</small>
-                            </>
-                          ) : (
-                            "Saved evidence unavailable"
-                          )}
                         </td>
                       </tr>
                     );
@@ -372,27 +497,34 @@ export function CompanyEvidenceWorkspace({
               <div className="workspace-empty">
                 <h2>
                   {page.awaitingMoreResults
-                    ? "Waiting for matching evidence"
-                    : "No companies on this result page"}
+                    ? t("Waiting for matching evidence")
+                    : t("No companies on this result page")}
                 </h2>
                 <p>
                   {page.awaitingMoreResults
-                    ? "The scan is still running. Refresh results or continue through chat."
-                    : "Missing or uncertain evidence does not establish that a company fails the criteria."}
+                    ? t(
+                        "The scan is still running. Check for more results or continue through chat.",
+                      )
+                    : t(
+                        "Missing or uncertain evidence does not establish that a company fails the criteria.",
+                      )}
                 </p>
               </div>
             ) : null}
             <div className="company-page-footer">
               <p className="workspace-muted">
-                {page.companies.length} companies on this page · {page.view} view
+                {t("{count} companies on this page · {view} view", {
+                  count: page.companies.length,
+                  view: t(page.view),
+                })}
               </p>
-              <nav className="workspace-pagination" aria-label="Evidence pages">
+              <nav className="workspace-pagination" aria-label={t("Evidence pages")}>
                 <button
                   className="workspace-link"
                   disabled={!canCall || busy || Boolean(error)}
                   onClick={() => void readPage()}
                 >
-                  First page
+                  {t("First page")}
                 </button>
                 {page.hasNextPage || page.awaitingMoreResults ? (
                   <button
@@ -400,7 +532,7 @@ export function CompanyEvidenceWorkspace({
                     disabled={!canCall || busy || Boolean(error)}
                     onClick={() => void readPage(page.nextCursor)}
                   >
-                    {page.hasNextPage ? "Next page" : "Check for more results"}
+                    {page.hasNextPage ? t("Next page") : t("Check for more results")}
                   </button>
                 ) : null}
               </nav>
@@ -410,28 +542,31 @@ export function CompanyEvidenceWorkspace({
         {error ? (
           <p role="alert" className="company-error">
             {error}
+            <button
+              className="workspace-link"
+              disabled={!canCall || busy}
+              onClick={() => void readPage()}
+            >
+              {t("Retry")}
+            </button>
           </p>
         ) : null}
         {notice && !company ? (
           <p className="workspace-notice" role="status">
-            {notice}
+            {t(notice)}
           </p>
         ) : null}
-        <footer>
-          <ConnectionDetails bridge={bridge} />
-        </footer>
         {company ? (
           <CompanyProfileDrawer
             row={evidenceCompanyRow(company)}
             detail={detail}
             loading={profileBusy}
             error={profileError}
-            notice={notice}
+            notice={t(notice)}
             contextDisabled={!page || busy || Boolean(error) || contextBusy}
             onClose={close}
             onRetry={() => void inspect(company, true)}
             onUseInChat={() => void useInChat()}
-            evidence={<Sources company={company} />}
           />
         ) : null}
       </div>

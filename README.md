@@ -1,6 +1,5 @@
-> Hosted Instagram ICP prospecting and all four 1.11.0 npm packages are verified
-> live. The GitHub MCP plugin is available at 1.11.0. Native host rendering and
-> directory review remain separate checks.
+> Agent 1.12.0 adds recipient-specific draft and queued campaign messages.
+> Native host rendering and directory review remain separate checks.
 
 # DM Faster for agents
 
@@ -19,7 +18,7 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-The 1.11.0 source exposes 91 typed domain tools. It adds Basic-plan Instagram
+The 1.12.0 source exposes 102 typed domain tools. It adds Basic-plan Instagram
 prospecting and separately charged enrichment, quiet Companies views, website
 evidence, bounded company suggestions, and company and saved-list mentions.
 Extraction reports exact saved counts and settled credit costs. A same-key retry
@@ -99,7 +98,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.11.0 auth login --json
+npx --yes @dmfaster/cli@1.12.0 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -121,13 +120,13 @@ the owner approves the replacement. Credentials are never upgraded silently.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.11.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.11.0 campaign copy inspect campaign_123 --json
-npx --yes @dmfaster/cli@1.11.0 conversations list --filter unread --limit 25 --json
-npx --yes @dmfaster/mcp-server@1.11.0
+npx --yes @dmfaster/cli@1.12.0 workspace briefing --json
+npx --yes @dmfaster/cli@1.12.0 campaign copy inspect campaign_123 --json
+npx --yes @dmfaster/cli@1.12.0 conversations list --filter unread --limit 25 --json
+npx --yes @dmfaster/mcp-server@1.12.0
 ```
 
-The 91 MCP domain tools cover prospecting, workspace, campaign, sending, reply, inbox,
+The 102 MCP domain tools cover prospecting, workspace, campaign, sending, reply, inbox,
 pipeline, company-history, industry, validation, exact-audience preview,
 private draft, launch, and pause workflows. Compatible MCP Apps hosts can render
 `workspace_open`, `companies_workspace`, and `campaign_workspace`. Selecting a
@@ -178,7 +177,7 @@ private product source or trademarks.
 All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
 
 ```bash
-npx --yes @dmfaster/cli@1.11.0 list import --name "My prospects" --file usernames.csv --json
+npx --yes @dmfaster/cli@1.12.0 list import --name "My prospects" --file usernames.csv --json
 ```
 
 The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
@@ -306,3 +305,13 @@ The local CLI and modern stdio package keep their independent credential store;
 older local grants without lead permissions use `auth upgrade --access full`.
 Claude/Cursor host installation, native rendering and directory acceptance
 remain unverified.
+
+## Agent 1.12.0 recipient messages
+
+Agents can research each recipient’s website using their own tools, then supply
+exact copy through `campaign.messages.draft.update` before the first launch or
+`campaign.messages.update` for eligible queued messages. The matching list tools
+provide exact recipient identities and versions. Writes reuse existing granted
+permissions and durable idempotency keys. Preparing copy creates no sending job;
+launch remains a separate explicit action. Product migration 0385 must be applied
+before publishing these clients.

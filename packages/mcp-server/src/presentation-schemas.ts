@@ -25,10 +25,13 @@ export const workspaceOutputSchema = z
     view: z.literal("dmfaster.workspace"),
     section: z.enum(["companies", "campaigns"]).optional(),
     filters: CompanySearchFiltersSchema.optional(),
+    savedListId: z.string().optional(),
+    savedListPageSize: z.number().int().min(1).max(100).optional(),
     result: z.union([
       AGENT_OUTPUT_SCHEMAS["campaigns.list"],
       AGENT_OUTPUT_SCHEMAS["campaign.inspect"],
       AGENT_OUTPUT_SCHEMAS["companies.search"],
+      AGENT_OUTPUT_SCHEMAS["companies.list.inspect"],
       AGENT_OUTPUT_SCHEMAS["companies.evidence.results"],
       toolFailureSchema.extend({ ok: z.literal(false) }),
     ]),

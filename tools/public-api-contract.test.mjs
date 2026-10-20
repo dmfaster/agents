@@ -12,7 +12,6 @@ const generatorPath = path.join(rootDir, "tools", "generate-public-api.mjs");
 const sdkContractsPath = path.join(rootDir, "packages", "sdk", "src", "contracts.ts");
 const mcpToolsPath = path.join(rootDir, "packages", "mcp-server", "src", "tools.ts");
 const localAuthConstantsPath = path.join(rootDir, "packages", "local-auth", "src", "constants.ts");
-
 const EXPECTED_TOOLS = new Map([
   ["analytics.summary", { effect: "read", scopes: ["workspace:read"] }],
   ["workspace.briefing", { effect: "read", scopes: ["workspace:read"] }],
@@ -26,9 +25,16 @@ const EXPECTED_TOOLS = new Map([
   ["conversation.update", { effect: "write", scopes: ["inbox:read", "inbox:write"] }],
   ["conversation.reply", { effect: "external", scopes: ["inbox:read", "inbox:write"] }],
   ["conversation.reply.inspect", { effect: "read", scopes: ["inbox:read"] }],
+  ["campaign.messages.draft.list", { effect: "read", scopes: ["campaigns:read"] }],
+  ["campaign.messages.draft.update", { effect: "draft", scopes: ["campaigns:write"] }],
+  ["campaign.messages.list", { effect: "read", scopes: ["sending:read"] }],
+  ["campaign.messages.update", { effect: "write", scopes: ["campaigns:write"] }],
   ["campaign.followups.list", { effect: "read", scopes: ["sending:read"] }],
   ["campaign.followups.cancel", { effect: "write", scopes: ["campaigns:write"] }],
   ["campaign.outcomes.list", { effect: "read", scopes: ["sending:read"] }],
+  ["sending.test.prepare", { effect: "draft", scopes: ["sending:read", "campaigns:write"] }],
+  ["sending.test.send", { effect: "external", scopes: ["sending:read", "sending:test"] }],
+  ["sending.test.inspect", { effect: "read", scopes: ["sending:read"] }],
   ["senders.inspect", { effect: "read", scopes: ["sending:read"] }],
   ["history.list", { effect: "read", scopes: ["campaigns:read", "sending:read"] }],
   ["pipeline.inspect", { effect: "read", scopes: ["pipeline:read"] }],
@@ -56,6 +62,7 @@ const EXPECTED_TOOLS = new Map([
   ["companies.suggest", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.search", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.evidence.search", { effect: "read", scopes: ["audiences:read"] }],
+  ["companies.knowledge.search", { effect: "read", scopes: ["audiences:read"], ownerOnly: true }],
   ["companies.knowledge", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.evidence.start", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.evidence.advance", { effect: "read", scopes: ["audiences:read"] }],
@@ -114,6 +121,9 @@ const EXPECTED_TOOLS = new Map([
   ["instagram.extract.start", { effect: "write", scopes: ["leads:read", "leads:write"] }],
   ["instagram.extract.inspect", { effect: "read", scopes: ["leads:read"] }],
   ["instagram.extract.results", { effect: "read", scopes: ["leads:read"] }],
+  ["instagram.purchases.list", { effect: "read", scopes: ["leads:read"] }],
+  ["instagram.purchases.inspect", { effect: "read", scopes: ["leads:read"] }],
+  ["instagram.purchases.results", { effect: "read", scopes: ["leads:read"] }],
   ["leads.status", { effect: "read", scopes: ["leads:read"] }],
   ["leads.extract.quote", { effect: "read", scopes: ["leads:read"] }],
   ["leads.extract.start", { effect: "write", scopes: ["leads:read", "leads:write"] }],
@@ -164,6 +174,7 @@ const EXPECTED_SCOPE_NAMES = [
   "calls:read",
   "leads:read",
   "leads:write",
+  "sending:test",
 ];
 
 function sourceSlice(source, start, end) {

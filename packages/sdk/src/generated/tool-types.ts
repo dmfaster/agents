@@ -13,9 +13,16 @@ export type AgentToolInputMap = {
   "conversation.update": operations["conversationUpdate"]["requestBody"]["content"]["application/json"];
   "conversation.reply": operations["conversationReply"]["requestBody"]["content"]["application/json"];
   "conversation.reply.inspect": operations["conversationReplyInspect"]["requestBody"]["content"]["application/json"];
+  "campaign.messages.draft.list": operations["campaignMessagesDraftList"]["requestBody"]["content"]["application/json"];
+  "campaign.messages.draft.update": operations["campaignMessagesDraftUpdate"]["requestBody"]["content"]["application/json"];
+  "campaign.messages.list": operations["campaignMessagesList"]["requestBody"]["content"]["application/json"];
+  "campaign.messages.update": operations["campaignMessagesUpdate"]["requestBody"]["content"]["application/json"];
   "campaign.followups.list": operations["campaignFollowupsList"]["requestBody"]["content"]["application/json"];
   "campaign.followups.cancel": operations["campaignFollowupsCancel"]["requestBody"]["content"]["application/json"];
   "campaign.outcomes.list": operations["campaignOutcomesList"]["requestBody"]["content"]["application/json"];
+  "sending.test.prepare": operations["deliveryTestPrepare"]["requestBody"]["content"]["application/json"];
+  "sending.test.send": operations["deliveryTestSend"]["requestBody"]["content"]["application/json"];
+  "sending.test.inspect": operations["deliveryTestInspect"]["requestBody"]["content"]["application/json"];
   "senders.inspect": operations["sendersInspect"]["requestBody"]["content"]["application/json"];
   "history.list": operations["historyList"]["requestBody"]["content"]["application/json"];
   "pipeline.inspect": operations["pipelineInspect"]["requestBody"]["content"]["application/json"];
@@ -43,6 +50,7 @@ export type AgentToolInputMap = {
   "companies.suggest": operations["companySuggestions"]["requestBody"]["content"]["application/json"];
   "companies.search": operations["companySearch"]["requestBody"]["content"]["application/json"];
   "companies.evidence.search": operations["companyEvidenceSearch"]["requestBody"]["content"]["application/json"];
+  "companies.knowledge.search": operations["companyKnowledgeSearch"]["requestBody"]["content"]["application/json"];
   "companies.knowledge": operations["companyKnowledge"]["requestBody"]["content"]["application/json"];
   "companies.evidence.start": operations["companyEvidenceStart"]["requestBody"]["content"]["application/json"];
   "companies.evidence.advance": operations["companyEvidenceAdvance"]["requestBody"]["content"]["application/json"];
@@ -77,6 +85,9 @@ export type AgentToolInputMap = {
   "instagram.extract.start": operations["instagramExtractionStart"]["requestBody"]["content"]["application/json"];
   "instagram.extract.inspect": operations["instagramExtractionInspect"]["requestBody"]["content"]["application/json"];
   "instagram.extract.results": operations["instagramExtractionResults"]["requestBody"]["content"]["application/json"];
+  "instagram.purchases.list": operations["instagramPurchasesList"]["requestBody"]["content"]["application/json"];
+  "instagram.purchases.inspect": operations["instagramPurchasesInspect"]["requestBody"]["content"]["application/json"];
+  "instagram.purchases.results": operations["instagramPurchasesResults"]["requestBody"]["content"]["application/json"];
   "leads.status": operations["leadsStatus"]["requestBody"]["content"]["application/json"];
   "leads.extract.quote": operations["leadExtractionQuote"]["requestBody"]["content"]["application/json"];
   "leads.extract.start": operations["leadExtractionStart"]["requestBody"]["content"]["application/json"];
@@ -130,6 +141,18 @@ export type AgentToolDataMap = {
   "conversation.reply.inspect": NonNullable<
     operations["conversationReplyInspect"]["responses"][200]["content"]["application/json"]["data"]
   >;
+  "campaign.messages.draft.list": NonNullable<
+    operations["campaignMessagesDraftList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.messages.draft.update": NonNullable<
+    operations["campaignMessagesDraftUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.messages.list": NonNullable<
+    operations["campaignMessagesList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.messages.update": NonNullable<
+    operations["campaignMessagesUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
   "campaign.followups.list": NonNullable<
     operations["campaignFollowupsList"]["responses"][200]["content"]["application/json"]["data"]
   >;
@@ -138,6 +161,15 @@ export type AgentToolDataMap = {
   >;
   "campaign.outcomes.list": NonNullable<
     operations["campaignOutcomesList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "sending.test.prepare": NonNullable<
+    operations["deliveryTestPrepare"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "sending.test.send": NonNullable<
+    operations["deliveryTestSend"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "sending.test.inspect": NonNullable<
+    operations["deliveryTestInspect"]["responses"][200]["content"]["application/json"]["data"]
   >;
   "senders.inspect": NonNullable<
     operations["sendersInspect"]["responses"][200]["content"]["application/json"]["data"]
@@ -219,6 +251,9 @@ export type AgentToolDataMap = {
   >;
   "companies.evidence.search": NonNullable<
     operations["companyEvidenceSearch"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.knowledge.search": NonNullable<
+    operations["companyKnowledgeSearch"]["responses"][200]["content"]["application/json"]["data"]
   >;
   "companies.knowledge": NonNullable<
     operations["companyKnowledge"]["responses"][200]["content"]["application/json"]["data"]
@@ -321,6 +356,15 @@ export type AgentToolDataMap = {
   >;
   "instagram.extract.results": NonNullable<
     operations["instagramExtractionResults"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "instagram.purchases.list": NonNullable<
+    operations["instagramPurchasesList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "instagram.purchases.inspect": NonNullable<
+    operations["instagramPurchasesInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "instagram.purchases.results": NonNullable<
+    operations["instagramPurchasesResults"]["responses"][200]["content"]["application/json"]["data"]
   >;
   "leads.status": NonNullable<
     operations["leadsStatus"]["responses"][200]["content"]["application/json"]["data"]

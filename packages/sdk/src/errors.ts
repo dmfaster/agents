@@ -8,6 +8,21 @@ export class DmfasterSdkError extends Error {
   }
 }
 
+/** An in-process server adapter failed; this is not a remote network failure. */
+export class DmfasterAdapterError extends DmfasterSdkError {
+  readonly retryable = false;
+  readonly requestId: string;
+  constructor(requestId: string, options?: ErrorOptions) {
+    super(
+      "DM Faster could not execute the tool request because its server adapter failed. Contact support with the request reference.",
+      "request_adapter_error",
+      options,
+    );
+    this.name = "DmfasterAdapterError";
+    this.requestId = requestId;
+  }
+}
+
 export class DmfasterHttpError extends DmfasterSdkError {
   readonly status: number;
   readonly responseBody: unknown;

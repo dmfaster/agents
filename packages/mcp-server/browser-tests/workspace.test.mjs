@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 import { mkdirSync } from "node:fs";
 import { CAMPAIGN_WORKSPACE_HTML } from "../src/campaign-workspace-html.ts";
 
-const require = createRequire(new URL("../../../site/package.json", import.meta.url));
+const require = createRequire(new URL("../../../package.json", import.meta.url));
 const { chromium, expect } = require("@playwright/test");
 let browser;
 before(async () => {
@@ -86,6 +86,23 @@ async function open(t, payload = initial(), options = {}) {
               isError: true,
               structuredContent: { ok: false, error: { message: "Campaign permission required" } },
             });
+          if (name === "history_list")
+            return respond({
+              structuredContent: {
+                ok: true,
+                data: {
+                  campaignId: options.wrongHistory ? "other-campaign" : args.campaignId,
+                  entries: options.emptyHistory
+                    ? []
+                    : [
+                        { id: "s1", sentAt: "2026-09-29T10:00:00Z", state: "Sent" },
+                        { id: "s2", sentAt: "2026-09-30T10:00:00Z", state: "Sent" },
+                      ],
+                  hasMore: true,
+                  nextCursor: "more-history",
+                },
+              },
+            });
           if (name === "connection_status")
             return respond({
               structuredContent: {
@@ -134,7 +151,7 @@ async function open(t, payload = initial(), options = {}) {
             name === "campaign_inspect"
               ? {
                   campaign,
-                  execution: { queued: 4 },
+                  execution: { queued: 4, companiesReached: 10 },
                   pipeline: { replied: 2, call_booked: 1, closed: 0 },
                   settings: {
                     pacingSeconds: 90,
@@ -168,41 +185,28 @@ async function open(t, payload = initial(), options = {}) {
   return page;
 }
 
-test("initial tool result renders once, campaign selection shares context without mutations", async (t) => {
+test("campaign overview reads scoped activity and shows compact facts without chat actions", async (t) => {
   const page = await open(t);
   await expect(page.getByText("Nordic software outreach", { exact: true })).toBeVisible();
   assert.deepEqual(await page.evaluate(() => window.__calls), []);
-  mkdirSync(new URL("../../../outputs/native-agent-workspace/", import.meta.url), {
-    recursive: true,
-  });
-  await page.screenshot({
-    path: new URL("../../../outputs/native-agent-workspace/campaign-list.png", import.meta.url)
-      .pathname,
-    fullPage: true,
-  });
   await page.getByRole("button", { name: /Nordic software outreach/ }).click();
-  await expect(page.getByRole("region", { name: "Campaign overview" })).toBeVisible();
-  await page.getByRole("button", { name: "Use this campaign in chat" }).click();
-  await expect(page.getByRole("status")).toContainText("Added to chat context");
+  await expect(page.getByRole("img", { name: "Cumulative recorded sends" })).toBeVisible();
+  await expect(page.getByText("Latest 2 sends · UTC")).toBeVisible();
+  await expect(page.locator(".campaign-overview-metrics")).toContainText("Reached10");
+  await expect(page.getByRole("button", { name: "Use this campaign in chat" })).toHaveCount(0);
+  await expect(page.locator("details")).toHaveCount(0);
   assert.deepEqual(await page.evaluate(() => window.__calls), [
     { name: "campaign_inspect", arguments: { campaignId: campaign.id } },
+    { name: "history_list", arguments: { campaignId: campaign.id, limit: 100 } },
   ]);
-  const contexts = await page.evaluate(() => window.__contexts);
-  assert.equal(contexts[0].structuredContent.campaignId, campaign.id);
-  assert.match(contexts[0].content[0].text, /not an instruction to change or send/);
-  mkdirSync(new URL("../../../outputs/native-agent-workspace/", import.meta.url), {
-    recursive: true,
-  });
-  await page.screenshot({
-    path: new URL("../../../outputs/native-agent-workspace/campaign-panel.png", import.meta.url)
-      .pathname,
-    fullPage: true,
-  });
+  assert.deepEqual(await page.evaluate(() => window.__contexts), []);
+  await page.setViewportSize({ width: 320, height: 740 });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
 });
 
 test("pagination echoes the opaque cursor and does not present a page as the full list", async (t) => {
   const page = await open(t);
-  await expect(page.getByText("21 campaigns", { exact: true })).toBeVisible();
+  await expect(page.getByText("21 campaigns", { exact: true })).toHaveCount(0);
   await page.getByRole("button", { name: "Next page" }).click();
   await expect(page.getByText("Last campaign", { exact: true })).toBeVisible();
   assert.deepEqual(await page.evaluate(() => window.__calls), [
@@ -210,22 +214,21 @@ test("pagination echoes the opaque cursor and does not present a page as the ful
   ]);
   await expect(page.getByRole("button", { name: "Next page" })).toHaveCount(0);
   await page.getByRole("button", { name: "First page" }).click();
-  await expect(page.getByText("Your first campaign starts with a conversation")).toBeVisible();
+  await expect(page.locator(".campaign-row")).toHaveCount(0);
   assert.deepEqual((await page.evaluate(() => window.__calls)).at(-1), {
     name: "campaigns_list",
     arguments: { limit: 20 },
   });
 });
 
-test("search resets pagination and shows a clear empty result at narrow width", async (t) => {
+test("campaigns start with rows and omit redundant titles, search, and totals", async (t) => {
   const page = await open(t);
   await page.setViewportSize({ width: 375, height: 740 });
-  await page.getByRole("textbox", { name: "Search campaigns" }).fill("  Missing  ");
-  await page.getByRole("button", { name: "Search", exact: true }).click();
-  await expect(page.getByText("No campaigns match this search")).toBeVisible();
-  assert.deepEqual(await page.evaluate(() => window.__calls), [
-    { name: "campaigns_list", arguments: { limit: 20, query: "Missing" } },
-  ]);
+  await expect(page.getByRole("textbox")).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Campaigns", exact: true })).toHaveCount(0);
+  await expect(page.locator(".workspace-count")).toHaveCount(0);
+  await expect(page.locator(".campaign-row")).toHaveCount(1);
+  assert.deepEqual(await page.evaluate(() => window.__calls), []);
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
 });
 
@@ -234,7 +237,7 @@ test("failed reads keep the current data and show a recoverable error", async (t
   await page.getByRole("button", { name: /Nordic software outreach/ }).click();
   await expect(page.getByRole("status")).toHaveText("Campaign permission required");
   await expect(page.getByText("Nordic software outreach", { exact: true })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Refresh" })).toBeEnabled();
+  await expect(page.getByRole("button", { name: /Nordic software outreach/ })).toBeEnabled();
 });
 
 test("first open handles denied access and an empty workspace without hidden calls", async (t) => {
@@ -249,7 +252,9 @@ test("first open handles denied access and an empty workspace without hidden cal
     t,
     initial({ campaigns: [], totalCount: 0, hasMore: false, nextCursor: null }),
   );
-  await expect(empty.getByText("Your first campaign starts with a conversation")).toBeVisible();
+  await expect(empty.getByRole("region", { name: "Campaigns", exact: true })).toBeAttached();
+  await expect(empty.locator(".campaign-row")).toHaveCount(0);
+  await expect(empty.getByText("Your first campaign starts with a conversation")).toHaveCount(0);
   assert.deepEqual(await empty.evaluate(() => window.__calls), []);
   await empty.screenshot({
     path: new URL("../../../outputs/native-agent-workspace/empty-workspace.png", import.meta.url)
@@ -267,51 +272,30 @@ test("compatibility hosts can render their initial toolOutput without toolInput 
   assert.deepEqual(await page.evaluate(() => window.__calls), []);
 });
 
-test("quiet details load only on demand, preserve scope failures and keep workspace totals out of campaign health", async (t) => {
-  const page = await open(t);
-  await page.getByRole("button", { name: /Nordic software outreach/ }).click();
-  await expect(page.getByRole("region", { name: "Campaign overview" })).toBeVisible();
-  assert.equal((await page.evaluate(() => window.__calls)).length, 1);
-  await page.getByText("Messages", { exact: true }).click();
-  await expect(page.getByText("Hello — would a short introduction be useful?")).toBeVisible();
-  await page.getByText("Messages", { exact: true }).click();
-  await page.getByText("Messages", { exact: true }).click();
-  assert.equal(
-    (await page.evaluate(() => window.__calls)).filter(
-      (call) => call.name === "campaign_copy_inspect",
-    ).length,
-    1,
-  );
-  await page.getByText("Replies & pipeline", { exact: true }).click();
-  await expect(page.getByText("Showing 1 of 2 reply contacts.")).toBeVisible();
-  await page.getByText("Sending health", { exact: true }).click();
-  await expect(page.getByText("Open the linked browser to continue.")).toBeVisible();
-  await expect(page.getByText("999", { exact: true })).toHaveCount(0);
-  await page.getByText("Connection", { exact: true }).click();
-  await expect(page.getByText("demo@example.test")).toBeVisible();
-  await expect(page.getByText("Permission needed", { exact: true })).toBeVisible();
-  const calls = await page.evaluate(() => window.__calls);
-  assert.ok(
-    calls.every(
-      (call) => call.name === "connection_status" || call.arguments.campaignId === campaign.id,
-    ),
-  );
-  await page.setViewportSize({ width: 375, height: 740 });
-  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
-});
-
-test("a denied detail stays local to its disclosure and does not erase the campaign", async (t) => {
+test("denied activity leaves the campaign facts visible and allows retry", async (t) => {
   const payload = {
     version: 1,
     view: "dmfaster.workspace",
     result: result({ campaign, execution: { queued: 4 } }, "campaign.inspect"),
   };
   const page = await open(t, payload, { failCalls: true });
-  await page.getByText("Sending health", { exact: true }).click();
-  await expect(page.getByRole("alert")).toHaveText("Campaign permission required");
+  await expect(page.getByRole("alert")).toContainText("Campaign permission required");
   await expect(page.getByRole("heading", { name: campaign.name })).toBeVisible();
   await expect(page.getByRole("button", { name: "Retry" })).toBeEnabled();
 });
+
+for (const options of [{ wrongHistory: true }, { emptyHistory: true }]) {
+  test(`activity never draws wrong-campaign or empty data ${JSON.stringify(options)}`, async (t) => {
+    const page = await open(t, initial(), options);
+    await page.getByRole("button", { name: /Nordic software outreach/ }).click();
+    await expect(
+      page.getByText(options.wrongHistory ? "Activity unavailable" : "No sends yet", {
+        exact: false,
+      }),
+    ).toBeVisible();
+    await expect(page.getByRole("img", { name: "Cumulative recorded sends" })).toHaveCount(0);
+  });
+}
 
 test("host theme changes preserve readable content, keyboard focus and narrow layouts", async (t) => {
   const page = await open(t, initial(), {
@@ -368,7 +352,7 @@ test("host theme changes preserve readable content, keyboard focus and narrow la
   await expect(surface).toHaveCSS("background-color", "rgb(255, 255, 255)");
   await expect(surface).toHaveCSS("color", "rgb(32, 33, 36)");
   await expect(page.getByRole("heading", { name: campaign.name })).toBeVisible();
-  assert.equal((await page.evaluate(() => window.__calls)).length, 1);
+  assert.equal((await page.evaluate(() => window.__calls)).length, 2);
 });
 
 test("theme-only hosts receive dark fallbacks without extra controls or reads", async (t) => {
@@ -465,69 +449,18 @@ for (const compatibility of [false, true]) {
   });
 }
 
-test("sending clocks count down, refresh only while open, and expose dependency bounds", async (t) => {
-  const at = new Date().toISOString();
-  const next = new Date(Date.parse(at) + 391000).toISOString();
-  const constraint = {
-    code: "company_wave_wait",
-    detail: "An earlier channel must finish.",
-    blockingJob: { companyName: "Northstar Studio", channel: "facebook" },
-  };
-  const page = await open(t, initial(), {
-    sendingObservation: {
-      observedAt: at,
-      channels: [
-        {
-          channel: "facebook",
-          queuedJobs: 1,
-          runningJobs: 0,
-          nextEligibleAt: next,
-          deadlineKind: "eligibility",
-          constraints: [],
-          nextJob: { companyName: "Northstar Studio" },
-        },
-        {
-          channel: "linkedin",
-          queuedJobs: 1,
-          runningJobs: 0,
-          nextEligibleAt: next,
-          deadlineKind: "lower_bound",
-          constraints: [constraint],
-        },
-      ],
-    },
+for (const width of [320, 1040]) {
+  test(`campaign rows keep status, channels and counts within ${width}px`, async (t) => {
+    const page = await open(t);
+    await page.setViewportSize({ width, height: 820 });
+    await expect(page.getByRole("button", { name: campaign.name, exact: true })).toBeVisible();
+    await expect(page.locator(".campaign-status")).toHaveText("Paused");
+    await expect(page.locator(".campaign-channels [aria-label]")).toHaveCount(2);
+    await expect(page.getByRole("button", { name: "Refresh", exact: true })).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Campaigns", exact: true })).toHaveCount(0);
+    assert.equal(
+      await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+      true,
+    );
   });
-  await page.clock.install({ time: new Date(at) });
-  await page.getByRole("button", { name: /Nordic software outreach/ }).click();
-  await page.getByText("Sending health", { exact: true }).click();
-  await expect(
-    page.getByText("Next eligible attempt in 6 minutes 31 seconds.", { exact: false }),
-  ).toBeVisible();
-  await expect(page.getByText(/At least 6 minutes 31 seconds/)).toBeVisible();
-  await expect(page.getByText(/Waiting on Northstar Studio/)).toBeVisible();
-  const sendingCalls = () =>
-    page.evaluate(() => window.__calls.filter((call) => call.name === "sending_inspect").length);
-  assert.equal(await sendingCalls(), 1);
-  const directory = new URL("../../../outputs/sender-observability/", import.meta.url);
-  mkdirSync(directory, { recursive: true });
-  await page.screenshot({ path: new URL("countdown.png", directory).pathname, fullPage: true });
-  await page.clock.runFor(31000);
-  await expect.poll(sendingCalls).toBe(2);
-  await expect(
-    page.getByText("Next eligible attempt in 6 minutes 0 seconds.", { exact: false }),
-  ).toBeVisible();
-  const section = page
-    .locator("details")
-    .filter({ has: page.locator("summary", { hasText: "Sending health" }) });
-  await section.locator("summary").click();
-  await page.clock.runFor(60000);
-  assert.equal(await sendingCalls(), 2);
-  await section.locator("summary").click();
-  await expect(
-    page.getByText("Timing observation is stale; refresh status.").first(),
-  ).toBeVisible();
-  await page.screenshot({
-    path: new URL("stale-observation.png", directory).pathname,
-    fullPage: true,
-  });
-});
+}

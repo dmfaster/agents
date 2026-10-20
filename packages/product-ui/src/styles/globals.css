@@ -1,0 +1,189 @@
+@import "tw-animate-css";
+
+/* Shared semantic tokens. The application retains its own reset and typography. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-control-border: var(--control-border);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-solid: var(--success-solid);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-info-solid: var(--info-solid);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-solid: var(--warning-solid);
+  --color-destructive-solid: var(--destructive-solid);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-solid: var(--brand-solid);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-provider-instagram: var(--provider-instagram);
+  --color-provider-facebook: var(--provider-facebook);
+  --color-provider-linkedin: var(--provider-linkedin);
+  --color-on-solid: var(--on-solid);
+  --color-overlay: var(--overlay);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* "Ink & Glass": the public site's ink, neutrals and glass blue carried into
+   the product. Ink executes work; blue marks brand, selection, focus and links.
+   Status colours are reserved for status. */
+:root {
+  --sidebar: #f5f5f6;
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #ebecee;
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: #e7e8eb;
+  --sidebar-ring: var(--ring);
+  --layer-overlay: 100;
+  --layer-floating: 110;
+  --layer-tooltip: 120;
+  --layer-toast: 130;
+  --background: #fbfbfc;
+  --foreground: #111214;
+  --card: #ffffff;
+  --card-foreground: #111214;
+  --popover: #ffffff;
+  --popover-foreground: #111214;
+  --primary: #111214;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f2f4;
+  --secondary-foreground: #111214;
+  --muted: #f3f4f5;
+  --muted-foreground: #5d6168;
+  --accent: #eff0f2;
+  --accent-foreground: #111214;
+  --destructive: #c42b1c;
+  --border: #e8e9ec;
+  --input: #d5d8dd;
+  --control-border: #868b94;
+  --ring: #1f5fc9;
+  --success: #00704a;
+  --success-soft: #e9f8f0;
+  --success-solid: #007d53;
+  --info: #1f5fc9;
+  --info-soft: #edf3fe;
+  --info-solid: #1f5fc9;
+  --warning: #8a5d00;
+  --warning-soft: #fcf5e3;
+  --warning-solid: #a36d00;
+  --destructive-solid: #c42b1c;
+  /* Glass blue from the public site's accent and paper-plane mark. */
+  --brand: #1f5fc9;
+  --brand-soft: #eef3fd;
+  --brand-solid: #1f5fc9;
+  --brand-hover: #1a51ab;
+  --brand-foreground: #ffffff;
+  /* Provider artwork retains its familiar identity in both themes. */
+  --provider-instagram: #e1306c;
+  --provider-facebook: #1877f2;
+  --provider-linkedin: #0a66c2;
+  --on-solid: #ffffff;
+  --overlay: #020617;
+  --radius: 0.5rem;
+}
+
+.dark {
+  color-scheme: dark;
+  --sidebar: #121315;
+  --sidebar-accent: #1f2124;
+  --sidebar-border: #232528;
+  --background: #0e0f11;
+  --foreground: #ececee;
+  --card: #16171a;
+  --card-foreground: #ececee;
+  --popover: #1c1e21;
+  --popover-foreground: #ececee;
+  --primary: #ececee;
+  --primary-foreground: #111214;
+  --secondary: #222428;
+  --secondary-foreground: #ececee;
+  --muted: #1e2023;
+  --muted-foreground: #9b9fa7;
+  --accent: #26282c;
+  --accent-foreground: #ececee;
+  --destructive: #f2867a;
+  --border: #26282c;
+  --input: #3a3d43;
+  --control-border: #70757e;
+  --ring: #8fb5ff;
+  --success: #5fd3a2;
+  --success-soft: #11291f;
+  --success-solid: #00875a;
+  --info: #8fb5ff;
+  --info-soft: #152238;
+  --info-solid: #2f6fdb;
+  --warning: #f0c35a;
+  --warning-soft: #2c2412;
+  --warning-solid: #b07a0a;
+  --destructive-solid: #d6402f;
+  --brand: #8fb5ff;
+  --brand-soft: #172338;
+  --brand-solid: #2f6fdb;
+  --brand-hover: #3d7ce6;
+  --brand-foreground: #ffffff;
+  --overlay: #000000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot="dropdown-menu-content"],
+  [data-slot="dialog-overlay"],
+  [data-slot="dialog-content"] {
+    animation: none;
+  }
+}
+
+/* Data tables keep a discoverable scroll track, including on overlay-scrollbar systems. */
+.data-scrollbar::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+.data-scrollbar::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+.data-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--control-border);
+  border: 3px solid var(--muted);
+  border-radius: 999px;
+}
+.data-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+@supports not selector(::-webkit-scrollbar) {
+  .data-scrollbar {
+    scrollbar-width: auto;
+    scrollbar-color: var(--control-border) var(--muted);
+  }
+}

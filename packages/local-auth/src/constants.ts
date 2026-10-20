@@ -17,6 +17,7 @@ export const DMFASTER_AGENT_SCOPES = [
   "calls:read",
   "leads:read",
   "leads:write",
+  "sending:test",
 ] as const;
 
 export const DMFASTER_AGENT_ACCESS_PROFILES = Object.freeze({

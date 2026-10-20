@@ -4,7 +4,7 @@ import {
 } from "./campaign-workspace-assets.generated.ts";
 
 export const CAMPAIGN_WORKSPACE_HTML = `<!doctype html>
-<html lang="en">
+<html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">

@@ -13,6 +13,8 @@ import {
   CAMPAIGN_WORKSPACE_RESOURCE_URI,
   LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI,
   PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+  V5_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+  V4_CAMPAIGN_WORKSPACE_RESOURCE_URI,
   V3_CAMPAIGN_WORKSPACE_RESOURCE_URI,
   V2_CAMPAIGN_WORKSPACE_RESOURCE_URI,
   MCP_APP_RESOURCE_MIME_TYPE,
@@ -151,6 +153,43 @@ test("all evidence lifecycle tools keep full structured quotes and send compact 
   }
 });
 
+test("progress-only evidence status forwards the typed flag and distinguishes omitted rows from no matches", async (t) => {
+  const data = {
+    ...evidenceInitial().result.data,
+    companies: [],
+    companiesIncluded: false as const,
+  };
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const client: AgentInvoker = {
+    async invoke(tool, input) {
+      calls.push({ tool, input });
+      return { ...result(tool), data } as AgentToolResult;
+    },
+  };
+  const wire = createWire(client);
+  t.after(() => wire.close());
+  const input = {
+    runId: data.runId,
+    expectedRevision: data.expectedRevision,
+    includeCompanies: false,
+  };
+  wire.send({
+    jsonrpc: "2.0",
+    id: 1,
+    method: "tools/call",
+    params: { name: "companies_evidence_status", arguments: input, _meta: modernEnvelope },
+  });
+  const response = await wire.receive();
+  assert.equal(response.error, undefined);
+  assert.deepEqual(calls, [{ tool: "companies.evidence.status", input }]);
+  const received = response.result as JsonObject;
+  assert.deepEqual(received.structuredContent, { ...result("companies.evidence.status"), data });
+  const content = received.content as { text: string }[];
+  assert.match(content[0]!.text, /Progress only: company rows and quotations were not fetched/);
+  assert.match(content[0]!.text, /Use companies_evidence_results/);
+  assert.doesNotMatch(content[0]!.text, /page contains 0|Original evidence/);
+});
+
 test("mention resource templates reach the current domain client with decoded identities", async (t) => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   let allowed = true;
@@ -271,6 +310,10 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   const discover = await wire.receive();
   assert.deepEqual((discover.result as JsonObject).supportedVersions, ["2026-07-28"]);
   assert.equal((discover.result as JsonObject).instructions, MCP_SERVER_INSTRUCTIONS);
+  assert(MCP_SERVER_INSTRUCTIONS.length <= 512);
+  assert.deepEqual(((discover.result as JsonObject).capabilities as JsonObject).extensions, {
+    "openai/mentions": { searchTool: "workspace_mentions" },
+  });
 
   wire.send({
     jsonrpc: "2.0",
@@ -303,7 +346,7 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
     (tools.find((tool) => tool.name === "campaign_launch")?._meta as JsonObject)[
       "openai/widgetAccessible"
     ],
-    false,
+    true,
   );
   assert.equal(
     (tools.find((tool) => tool.name === "campaign_prepare")?._meta as JsonObject)[
@@ -361,6 +404,8 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
     [
       CAMPAIGN_WORKSPACE_RESOURCE_URI,
       PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+      V5_CAMPAIGN_WORKSPACE_RESOURCE_URI,
+      V4_CAMPAIGN_WORKSPACE_RESOURCE_URI,
       V3_CAMPAIGN_WORKSPACE_RESOURCE_URI,
       V2_CAMPAIGN_WORKSPACE_RESOURCE_URI,
       LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI,
@@ -370,9 +415,7 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
 
   const mentionsTool = tools.find((tool) => tool.name === "workspace_mentions");
   assert.ok(mentionsTool);
-  assert.deepEqual((mentionsTool._meta as JsonObject)["openai/extensions"], {
-    "mentions/search": {},
-  });
+  assert.equal((mentionsTool._meta as JsonObject)["openai/extensions"], undefined);
   assert.deepEqual(((mentionsTool._meta as JsonObject).ui as JsonObject).visibility, ["app"]);
   wire.send({
     jsonrpc: "2.0",
@@ -400,6 +443,10 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   const resourceResponse = await wire.receive();
   const contents = (resourceResponse.result as JsonObject).contents as Array<JsonObject>;
   assert.equal(contents[0]?.mimeType, MCP_APP_RESOURCE_MIME_TYPE);
+  assert.deepEqual((contents[0]?._meta as JsonObject)["openai/ui"], {
+    availableDisplayModes: ["inline", "fullscreen"],
+    preferredDisplayMode: "fullscreen",
+  });
   assert.match(String(contents[0]?.text), /ui\/initialize/u);
   assert.match(String(contents[0]?.text), /campaign_prepare/u);
   assert.equal(
@@ -410,6 +457,7 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   assert.deepEqual(csp.connectDomains, []);
   assert.deepEqual(csp.frameDomains, []);
   assert.deepEqual(csp.resourceDomains, [
+    "https://app.dmfaster.com",
     "https://www.google.com",
     "https://t0.gstatic.com",
     "https://t1.gstatic.com",
@@ -525,7 +573,11 @@ test("company presentation preserves complex filters and domain reads stay headl
     "companies_filters",
     "companies_search",
     "company_inspect",
+    "history_list",
     "companies_evidence_results",
+    "companies_list_prepare",
+    "campaign_draft_prepare",
+    "campaign_launch",
   ]) {
     const meta = tools.find((item) => item.name === name)!._meta as JsonObject;
     assert.equal(meta["openai/widgetAccessible"], true);
@@ -534,8 +586,6 @@ test("company presentation preserves complex filters and domain reads stay headl
   }
   for (const name of [
     "companies_fit_start",
-    "companies_list_prepare",
-    "campaign_launch",
     "companies_evidence_start",
     "companies_evidence_advance",
     "companies_evidence_cancel",
@@ -599,3 +649,115 @@ test("saved campaign entrypoint delegates exact identity and preserves read fail
   assert.equal((payload.result as JsonObject).ok, false);
   assert.match(JSON.stringify(payload), /Campaign access denied/);
 });
+
+test("native outreach forms survive fresh MCP requests and retain read-only execution", async (t) => {
+  const calls: string[] = [];
+  const wire = createWire({
+    async invoke(tool) {
+      calls.push(tool);
+      return {
+        ...result(tool),
+        data: {
+          emailAvailable: false,
+          mailboxes: [],
+          browserProfiles: [],
+          sms: { available: false, configured: false, enabled: false, phoneNumber: "" },
+        },
+      };
+    },
+  });
+  t.after(() => wire.close());
+  const envelope = {
+    ...modernEnvelope,
+    "io.modelcontextprotocol/clientCapabilities": {
+      elicitation: { form: {} },
+      extensions: { "openai/elicitation": { form: {} } },
+    },
+  };
+  wire.send({
+    jsonrpc: "2.0",
+    id: 1,
+    method: "tools/call",
+    params: { name: "outreach_details", arguments: {}, _meta: envelope },
+  });
+  const first = await wire.receive();
+  assert.equal(first.error, undefined, JSON.stringify(first));
+  assert.equal((first.result as JsonObject).resultType, "input_required");
+  const details = { channel: "instagram", name: "Reviewed outreach", body: "Hello", dailyCap: 20 };
+  wire.send({
+    jsonrpc: "2.0",
+    id: 2,
+    method: "tools/call",
+    params: {
+      name: "outreach_details",
+      arguments: {},
+      inputResponses: { outreach: { action: "accept", content: details } },
+      _meta: envelope,
+    },
+  });
+  const second = await wire.receive();
+  assert.equal(second.error, undefined, JSON.stringify(second));
+  const data = (second.result as JsonObject).structuredContent as JsonObject;
+  assert.equal(data.status, "collected");
+  assert.deepEqual(data.details, details);
+  assert.equal(data.preparationStartsSending, false);
+  assert.deepEqual(calls, ["senders.inspect", "senders.inspect"]);
+});
+
+test(
+  "MCP cancellation reaches the domain adapter and leaves the connection usable",
+  { timeout: 5000 },
+  async (t) => {
+    let started!: () => void, observed!: () => void;
+    const entered = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+    const aborted = new Promise<void>((resolve) => {
+      observed = resolve;
+    });
+    const wire = createWire({
+      async invoke(tool, _input, options) {
+        if (tool === "workspace.briefing") {
+          assert.ok(options?.signal);
+          started();
+          await new Promise<void>((resolve) =>
+            options.signal!.addEventListener(
+              "abort",
+              () => {
+                observed();
+                resolve();
+              },
+              { once: true },
+            ),
+          );
+        }
+        return result(tool);
+      },
+    });
+    t.after(() => wire.close());
+    wire.send({
+      jsonrpc: "2.0",
+      id: 900,
+      method: "tools/call",
+      params: { name: "workspace_briefing", arguments: {}, _meta: modernEnvelope },
+    });
+    await entered;
+    wire.send({
+      jsonrpc: "2.0",
+      method: "notifications/cancelled",
+      params: { requestId: 900, reason: "stop" },
+    });
+    await aborted;
+    wire.send({
+      jsonrpc: "2.0",
+      id: 901,
+      method: "tools/call",
+      params: { name: "connection_status", arguments: {}, _meta: modernEnvelope },
+    });
+    let reply;
+    do {
+      reply = await wire.receive();
+    } while (reply.id !== 901);
+    assert.equal((reply.result as JsonObject).isError, undefined);
+  },
+);
