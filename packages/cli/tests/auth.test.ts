@@ -805,6 +805,9 @@ test("auth status --json prints structured rate-limit recovery metadata", async 
     error: {
       code: "rate_limited",
       message: "DM Faster temporarily rate-limited authentication.",
+      retryable: true,
+      nextAction: "Wait for Retry-After before retrying with the same idempotency key.",
+      docsUrl: "https://dmfaster.com/docs/agents#errors-rate_limited",
       retryAfterSeconds: 75,
       status: 429,
     },

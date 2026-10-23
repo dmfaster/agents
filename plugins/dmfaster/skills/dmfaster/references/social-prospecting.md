@@ -116,5 +116,5 @@ bounded live MCP canary: 20 profiles, 20 model attempts and 40 settled lead cred
 One match and 14 review profiles were saved, with five provider-unavailable cases
 remaining pending. Original-image decisions and exact list counts were verified;
 same-key recovery added no calls or charges. This is execution evidence, not a
-general accuracy claim. Local clients and plugins require the published 1.12.0
+general accuracy claim. Local clients and plugins require the published 2.0.0
 version; follow each run’s actual provider readiness, costs and unresolved counts.

@@ -63,6 +63,7 @@ export type PipelineCompanyRecruitingContact = {
 };
 
 export type CompanySignalsProfile = {
+  recruitment?: CompanyRecruitment | null;
   hiring: PipelineCompanyHiringSignal | null;
   funding: null | {
     grantedEur: number;
@@ -158,4 +159,23 @@ export type CompanySignalsProfile = {
       };
     };
   };
+};
+
+export type CompanyRecruitment = {
+  revision: string;
+  snapshotAt: string;
+  verifiedUntil: string | null;
+  status: "verified" | "historical" | "stale";
+  activeJobCount: number | null;
+  snapshotJobCount: number;
+  postings: Array<{
+    source: string;
+    externalId: string;
+    title: string;
+    location: string;
+    publishedAt: string;
+    sourceUrl: string;
+    status: "open" | "closed" | "not_reverified";
+    verifiedAt: string | null;
+  }>;
 };

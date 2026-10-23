@@ -1,6 +1,6 @@
 {
   "name": "@dmfaster/sdk",
-  "version": "1.12.0",
+  "version": "2.0.0",
   "description": "Typed client for the DM Faster Agent API.",
   "license": "Apache-2.0",
   "author": "DM Faster",
@@ -40,13 +40,13 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "node ../../tools/typecheck-release.mjs --emit --project tsconfig.json",
+    "typecheck": "node ../../tools/typecheck-release.mjs --project tsconfig.json",
     "test": "node --test tests/*.test.ts",
-    "check": "npm run typecheck && npm test && npm run build"
+    "check": "npm run typecheck && npm test && npm run build",
+    "typecheck:local": "node ../../tools/typecheck-local.mjs --project tsconfig.json"
   },
   "devDependencies": {
-    "@types/node": "24.13.3",
-    "typescript": "7.0.2"
+    "@types/node": "24.13.3"
   }
 }

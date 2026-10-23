@@ -157,6 +157,8 @@ test("preserves the server retry contract on typed HTTP errors", async () => {
         {
           error: {
             code: "rate_limited",
+            nextAction: "Wait before retrying.",
+            docsUrl: "https://dmfaster.com/docs/agents#errors-rate_limited",
             message: "Too many agent tool requests.",
             retryable: true,
             requestId: "req_rate_limit_123",
@@ -176,6 +178,8 @@ test("preserves the server retry contract on typed HTTP errors", async () => {
   await assert.rejects(client.invoke("workspace.briefing", {}), (error: unknown) => {
     assert.ok(error instanceof DmfasterHttpError);
     assert.equal(error.code, "rate_limited");
+    assert.equal(error.nextAction, "Wait before retrying.");
+    assert.equal(error.docsUrl, "https://dmfaster.com/docs/agents#errors-rate_limited");
     assert.equal(error.retryable, true);
     assert.equal(error.requestId, "req_rate_limit_123");
     assert.equal(error.retryAfterSeconds, 900);

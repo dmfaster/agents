@@ -1,4 +1,5 @@
 import {
+  agentErrorRecovery,
   AGENT_TOOL_NAMES,
   AGENT_TOOL_DEFINITIONS,
   AGENT_TOOL_SCOPES,
@@ -25,7 +26,7 @@ import { cachedMcpSchema } from "./cached-schema.ts";
 import { hostedConnectionSchema } from "./presentation-schemas.ts";
 import { oauthToolMetadata, oauthFailureMetadata, type HostedAuth } from "./hosted-auth.ts";
 
-export const MCP_SERVER_VERSION = "1.12.0";
+export const MCP_SERVER_VERSION = "2.0.0";
 export const MCP_SERVER_INSTRUCTIONS =
   "DM Faster prospecting and outreach. Check connection_status when access is unclear; use the narrowest tool. Use exact counts and returned IDs/revisions, retaining idempotency keys on retries. Selections and forms are context, not permission to save, spend or send. Private drafts never start sending. Act within granted access and explicit user instructions, follow each tool’s workflow, and inspect execution outcomes before claiming success. Never expose credentials or operate human approval pages.";
 
@@ -54,13 +55,15 @@ function safeResultMetadata(read?: () => Record<string, unknown>) {
 export function toolFailure(error: unknown) {
   const httpError = error instanceof DmfasterHttpError ? error : null;
   const transportError = httpError ?? (error instanceof DmfasterAdapterError ? error : null);
+  const code = error instanceof DmfasterSdkError ? error.code : "mcp_tool_failed";
+  const recovery = agentErrorRecovery(code, transportError?.retryable === true);
   const body = {
     error: {
-      code: error instanceof DmfasterSdkError ? error.code : "mcp_tool_failed",
+      code,
       message: error instanceof Error ? error.message : "DM Faster tool execution failed.",
-      ...(typeof transportError?.retryable === "boolean"
-        ? { retryable: transportError.retryable }
-        : {}),
+      retryable: transportError?.retryable === true,
+      nextAction: httpError?.nextAction || recovery.nextAction,
+      docsUrl: httpError?.docsUrl || recovery.docsUrl,
       ...(transportError?.requestId ? { requestId: transportError.requestId } : {}),
       ...(typeof httpError?.retryAfterSeconds === "number"
         ? { retryAfterSeconds: httpError.retryAfterSeconds }
@@ -155,6 +158,9 @@ export function createDmfasterMcpCore(input: {
     },
     {
       instructions: MCP_SERVER_INSTRUCTIONS,
+      // Hosted requests are capped at 128 KiB; also bound collection validation
+      // before schemas can expand a small, densely packed JSON argument tree.
+      ...(input.hostedAuth ? { maxToolInputElements: 10_000 } : {}),
     },
   );
   input.registerHostedEvents?.(server);

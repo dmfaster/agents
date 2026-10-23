@@ -1,4 +1,4 @@
-# DM Faster Agent 1.0 plugin
+# DM Faster Agent 2.0 plugin
 
 This plugin bundles the canonical DM Faster skill and the hosted OAuth MCP
 endpoint `https://app.dmfaster.com/mcp` under server name `dmfaster_hosted`.
@@ -7,7 +7,7 @@ manifests. The hosted endpoint supports MCP 2025 hosts. The separately published
 version-pinned stdio MCP package requires MCP 2026-07-28; the CLI remains available
 for headless callers.
 
-The 1.12.0 source exposes 102 bounded domain tools plus an optional
+The 2.0.0 source exposes 125 bounded domain tools plus an optional
 portable MCP Apps Companies and campaign workspaces. It adds Instagram ICP text-to-list runs and covers social prospecting, company research, exact
 audience and draft preparation, inbox and pipeline work, follow-up control,
 sender readiness and paginated outcomes. Replies require the user's explicit
@@ -31,13 +31,13 @@ resume call; the user only completes the browser-store installation/link and
 any approval explicitly required by the returned connection or action state.
 
 Compliant MCP Apps hosts can render the campaign workspace inline. Modern
-headless hosts use the same complete campaign state and 102 domain tools without
+headless hosts use the same complete campaign state and 125 domain tools without
 losing any server capability or safety guarantee; older clients do not receive
 a legacy MCP downgrade.
 
 ## Release status
 
-Version 1.12.0 adds recipient-specific message preparation for unlaunched drafts
+Version 2.0.0 adds recipient-specific message preparation for unlaunched drafts
 and edits to eligible queued messages. Users can have their own agent research
 websites and supply the exact text for each recipient. Preparing copy does not
 launch a campaign. The version-pinned packages use the
@@ -55,7 +55,7 @@ submission and host verification, even though this plugin uses a public HTTPS
 MCP endpoint. The local stdio package alone is not eligible.
 
 Repository maintainers must follow the [agent distribution release
-runbook](../../docs/releasing.md). Package publication
+runbook](../../docs/runbooks/agent-distribution-release.md). Package publication
 and plugin publication are separate approved releases.
 
 ## Authentication
@@ -64,7 +64,7 @@ Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@1.12.0 auth login --json
+npx --yes @dmfaster/cli@2.0.0 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use

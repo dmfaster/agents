@@ -10,6 +10,8 @@ export const toolFailureSchema = z
         code: z.string(),
         message: z.string(),
         retryable: z.boolean().optional(),
+        nextAction: z.string().optional(),
+        docsUrl: z.string().optional(),
         requestId: z.string().optional(),
         retryAfterSeconds: z.number().optional(),
         details: z.record(z.string(), z.unknown()).optional(),
@@ -63,7 +65,14 @@ const planOutputSchema = z
   .strict();
 export const campaignWorkspaceOutputSchema = z.union([workspaceOutputSchema, planOutputSchema]);
 
-const party = z.object({ id: z.string(), name: z.string(), email: z.string().optional() }).strict();
+const party = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    email: z.string().optional(),
+    isSandbox: z.boolean().optional(),
+  })
+  .strict();
 const credential = z
   .object({
     id: z.string(),
@@ -71,6 +80,44 @@ const credential = z
     expiresAt: z.string().nullable(),
   })
   .strict();
+const readinessFields = {
+  expiresInDays: z.number().int().nonnegative().nullable().optional(),
+  readiness: z
+    .object({
+      observedAt: z.string(),
+      calendar: z.object({ connected: z.boolean(), setupUrl: z.string() }).strict().nullable(),
+      gmail: z.array(
+        z
+          .object({
+            mailboxId: z.string(),
+            canSend: z.boolean(),
+            needsReauthorization: z.boolean(),
+            setupUrl: z.string(),
+          })
+          .strict(),
+      ),
+      sms: z
+        .object({ available: z.boolean(), configured: z.boolean(), enabled: z.boolean() })
+        .strict()
+        .nullable(),
+      browserWorkers: z
+        .object({
+          online: z.number().int(),
+          offline: z.number().int(),
+          staleSince: z.string().nullable(),
+          setupUrl: z.string(),
+        })
+        .strict()
+        .nullable(),
+      unavailable: z.array(
+        z
+          .object({ tool: z.enum(["calendar.status", "senders.inspect"]), reason: z.string() })
+          .strict(),
+      ),
+    })
+    .strict()
+    .optional(),
+};
 export const hostedConnectionSchema = z
   .object({
     status: z.literal("authenticated"),
@@ -79,7 +126,9 @@ export const hostedConnectionSchema = z
     user: party,
     workspace: party,
     credential,
+    ...readinessFields,
     scopeEligibleTools: z.array(z.string()),
+    scopeEligibleMcpTools: z.array(z.string()).optional(),
     authorizationNote: z.string(),
   })
   .strict();
@@ -91,6 +140,7 @@ export const localConnectionSchema = z.union([
       user: party,
       workspace: party,
       credential: credential.extend({ name: z.string(), client: z.string() }),
+      ...readinessFields,
       scopeEligibleTools: z.array(z.object({ tool: z.string(), mcpTool: z.string() }).strict()),
       scopeBlockedTools: z.array(
         z.object({ tool: z.string(), missingScopes: z.array(z.string()) }).strict(),

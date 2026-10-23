@@ -1,8 +1,8 @@
 {
   "name": "dmfaster-agents",
-  "version": "1.12.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Public Agent 1.0 interfaces for DM Faster.",
+  "description": "Public Agent 2.0 interfaces for DM Faster.",
   "license": "Apache-2.0",
   "type": "module",
   "repository": {
@@ -14,7 +14,8 @@
     "packages/local-auth",
     "packages/sdk",
     "packages/cli",
-    "packages/mcp-server"
+    "packages/mcp-server",
+    "tools/tooling-compat"
   ],
   "engines": {
     "node": "24.x"
@@ -33,14 +34,19 @@
     "check:agents": "npm run check:agent-api && npm run check:agent-skill && npm run check:agent-plugin && npm run build:agents && npm run check:agent-packages && npm run test:agent-packages:install && npm run typecheck:agents && npm run test:agents"
   },
   "devDependencies": {
-    "@types/node": "24.13.3",
-    "openapi-typescript": "7.13.0",
-    "typescript": "5.9.3",
+    "@types/node": "24.19.0",
+    "typescript": "7.0.2",
     "yaml": "2.8.3",
     "oxfmt": "0.66.0",
-    "@playwright/test": "1.64.1"
+    "@playwright/test": "1.64.1",
+    "tsrs": "0.18.0-ts7.1.0-dev.20260929"
   },
   "overrides": {
-    "brace-expansion": "5.0.8"
+    "brace-expansion": "5.0.12",
+    "@modelcontextprotocol/core": "2.2.0",
+    "@modelcontextprotocol/client": "2.3.0",
+    "hono": "4.12.34",
+    "postcss": "8.5.31",
+    "js-yaml": "4.3.2"
   }
 }

@@ -66,6 +66,7 @@ export const RepliesListInputSchema = z
       .regex(new RegExp(".*\\S.*"))
       .describe("Optional case-insensitive reply search text.")
       .optional(),
+    cursor: z.string().min(1).max(6000).optional(),
   })
   .strict();
 export const InboxChannelSchema = z.union([
@@ -77,6 +78,18 @@ export const InboxChannelSchema = z.union([
   z.literal("email"),
   z.literal("sms"),
 ]);
+export const ResourceVersionSchema = z
+  .string()
+  .min(20)
+  .max(32)
+  .regex(
+    new RegExp(
+      "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}(?::?\\d{2})?)$",
+    ),
+  )
+  .describe(
+    "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
+  );
 export const ConversationsListInputSchema = z
   .object({
     filter: z
@@ -102,6 +115,8 @@ export const ConversationsListInputSchema = z
         z.literal("interested"),
         z.literal("information_requested"),
         z.literal("meeting_intent"),
+        z.literal("meeting_proposed_time"),
+        z.literal("asks_pricing"),
         z.literal("not_now"),
         z.literal("wrong_person"),
         z.literal("not_interested"),
@@ -109,14 +124,22 @@ export const ConversationsListInputSchema = z
         z.literal("acknowledgement"),
         z.literal("unclear"),
       ])
+      .describe(
+        "Exact stored intent; unlike the app label filter, opt_out does not include not_interested or not_now.",
+      )
       .optional(),
     channel: InboxChannelSchema.optional(),
     mailboxId: ResourceIdSchema.optional(),
     campaignId: ResourceIdSchema.optional(),
     query: z.string().min(1).max(120).optional(),
+    updatedAfter: ResourceVersionSchema.optional(),
     includeAutomaticResponses: z.boolean().optional(),
     cursor: z.string().min(1).max(2000).optional(),
     limit: z.number().int().min(1).max(60).optional(),
+    meetingStatus: z
+      .union([z.literal("none"), z.literal("booked"), z.literal("held"), z.literal("no_show")])
+      .optional(),
+    followupDue: z.boolean().optional(),
   })
   .strict();
 export const ConversationInspectInputSchema = z
@@ -126,11 +149,6 @@ export const ConversationInspectInputSchema = z
     limit: z.number().int().min(1).max(100).optional(),
   })
   .strict();
-export const ResourceVersionSchema = z
-  .string()
-  .min(20)
-  .max(27)
-  .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"));
 export const ConversationUpdateInputSchema = z
   .object({
     conversationId: ResourceIdSchema,
@@ -155,6 +173,8 @@ export const ConversationUpdateInputSchema = z
         z.literal("interested"),
         z.literal("information_requested"),
         z.literal("meeting_intent"),
+        z.literal("meeting_proposed_time"),
+        z.literal("asks_pricing"),
         z.literal("not_now"),
         z.literal("wrong_person"),
         z.literal("not_interested"),
@@ -340,6 +360,10 @@ export const PipelineStageUpdateInputSchema = z
     stageKey: z.string().min(1).max(500),
     expectedStage: PipelineStageSchema,
     stage: PipelineStageSchema,
+    closedOutcome: z.union([z.literal("won"), z.literal("lost")]).optional(),
+    lostReason: z.string().max(2000).optional(),
+    expectedUpdatedAt: ResourceVersionSchema.optional(),
+    idempotencyKey: IdempotencyKeySchema.optional(),
   })
   .strict();
 export const PipelineNoteListInputSchema = z
@@ -924,6 +948,19 @@ export const CompanySearchFiltersSchema = z
     hasExhibitionParticipation: z.boolean().optional(),
     exhibitionEventKeys: z.array(z.string().max(160)).max(32).optional(),
     exhibitionMinEditions: z.string().max(8).optional(),
+    hasActiveHiring: z
+      .boolean()
+      .describe(
+        "Require verified open employer job postings in Finland. False removes this requirement; it does not mean not hiring. Unavailable or stale recruitment publications fail closed.",
+      )
+      .optional(),
+    hiringTitleQuery: z
+      .string()
+      .max(120)
+      .describe(
+        "Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only.",
+      )
+      .optional(),
     hasPublicFunding: z.boolean().optional(),
     fundingSources: z.array(z.string().max(40)).max(5).optional(),
     fundingFromYear: z.string().max(4).optional(),
@@ -1383,6 +1420,22 @@ export const CompanyFitCohortInputSchema = z
   .strict();
 export const CopyPerformanceInputSchema = z
   .object({
+    groupBy: z
+      .union([z.literal("rendered_text"), z.literal("template_variation")])
+      .describe(
+        "Defaults to rendered_text. template_variation requires campaignId and returns variationPerformance with immutable templates and seven-day mature cohorts.",
+      )
+      .optional(),
+    channel: z
+      .union([
+        z.literal("instagram"),
+        z.literal("facebook"),
+        z.literal("linkedin"),
+        z.literal("gmail"),
+        z.literal("sms"),
+      ])
+      .describe("Optional channel filter for template_variation only.")
+      .optional(),
     campaignId: ResourceIdSchema.optional(),
     from: z.string().min(20).max(40),
     to: z.string().min(20).max(40),
@@ -1433,6 +1486,20 @@ export const CallsListInputSchema = z
   .object({
     offset: z.number().int().min(0).max(1000000).optional(),
     limit: z.number().int().min(1).max(50).optional(),
+    cursor: z.string().max(2000).optional(),
+    lifecycle: z
+      .union([
+        z.literal("scheduled"),
+        z.literal("awaiting_outcome"),
+        z.literal("completed"),
+        z.literal("no_show"),
+        z.literal("cancelled"),
+        z.literal("rescheduled"),
+      ])
+      .optional(),
+    awaitingOutcome: z.boolean().optional(),
+    from: ResourceVersionSchema.optional(),
+    to: ResourceVersionSchema.optional(),
   })
   .strict();
 export const CallInspectInputSchema = z.object({ meetingId: ResourceIdSchema }).strict();
@@ -1649,6 +1716,257 @@ export const InstagramProspectResultsInputSchema = z
     limit: z.number().int().min(1).max(100).optional(),
   })
   .strict();
+export const AgentSalesEventTypeSchema = z.union([
+  z.literal("inbox.message.received"),
+  z.literal("inbox.auto_reply.received"),
+  z.literal("conversation.intent.changed"),
+  z.literal("conversation.changed"),
+  z.literal("conversation.followup.due"),
+  z.literal("followup.cancelled_by_reply"),
+  z.literal("meeting.booked"),
+  z.literal("meeting.rescheduled"),
+  z.literal("meeting.cancelled"),
+  z.literal("meeting.no_show"),
+  z.literal("meeting.outcome.recorded"),
+  z.literal("contact.opted_out"),
+  z.literal("campaign.state.changed"),
+  z.literal("sender.unhealthy"),
+  z.literal("reply.approval.requested"),
+  z.literal("reply.approval.decided"),
+  z.literal("credential.expiring"),
+  z.literal("webhook.test"),
+]);
+export const EventsListInputSchema = z
+  .object({
+    after: z
+      .union([z.string().min(1).max(1000), z.number().int().min(0)])
+      .refine(
+        (value) =>
+          [z.string().min(1).max(1000), z.number().int().min(0)].filter(
+            (candidate) => candidate.safeParse(value).success,
+          ).length === 1,
+        "Expected exactly one schema match",
+      )
+      .optional(),
+    types: z.array(AgentSalesEventTypeSchema).min(1).max(17).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+export const ConversationsChangesInputSchema = z
+  .object({
+    cursor: z.string().min(1).max(1000).optional(),
+    types: z
+      .array(
+        z.union([
+          z.literal("message"),
+          z.literal("intent"),
+          z.literal("status"),
+          z.literal("meeting"),
+        ]),
+      )
+      .min(1)
+      .max(4)
+      .optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+export const SuppressionsListInputSchema = z
+  .object({
+    query: z.string().min(1).max(120).optional(),
+    cursor: z.string().min(1).max(1000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+export const SuppressionEntryInputSchema = z
+  .object({
+    type: z.union([
+      z.literal("company"),
+      z.literal("phone"),
+      z.literal("email"),
+      z.literal("instagram"),
+      z.literal("facebook"),
+      z.literal("linkedin"),
+      z.literal("domain"),
+    ]),
+    value: z.string().min(1).max(500),
+    reason: z.string().min(1).max(500),
+    source: z.union([z.literal("prospect_request"), z.literal("owner"), z.literal("agent")]),
+  })
+  .strict();
+export const SuppressionsAddInputSchema = z
+  .object({
+    entries: z.array(SuppressionEntryInputSchema).min(1).max(100),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const SuppressionsRemoveInputSchema = z
+  .object({
+    id: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    reason: z.string().min(1).max(500),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const WorkspaceSandboxCreateInputSchema = z
+  .object({ name: z.string().min(1).max(100), idempotencyKey: IdempotencyKeySchema })
+  .strict();
+export const SandboxSeedInputSchema = z
+  .object({ preset: z.literal("appointment_setter_v1"), idempotencyKey: IdempotencyKeySchema })
+  .strict();
+export const SandboxInboundSimulateInputSchema = z
+  .object({
+    conversationId: z.string().min(1).max(160).optional(),
+    campaignId: z.string().min(1).max(160).optional(),
+    channel: z.union([
+      z.literal("instagram"),
+      z.literal("facebook"),
+      z.literal("linkedin"),
+      z.literal("gmail"),
+      z.literal("sms"),
+    ]),
+    text: z.string().min(1).max(16000),
+    kind: z.union([z.literal("human"), z.literal("auto_reply"), z.literal("reaction")]),
+    at: ResourceVersionSchema.optional(),
+    expectedUpdatedAt: ResourceVersionSchema.optional(),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const SandboxClockAdvanceInputSchema = z
+  .object({
+    minutes: z.number().int().min(1).max(525600),
+    expectedUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const CallOutcomeSetInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    attendance: z.union([
+      z.literal("held"),
+      z.literal("no_show"),
+      z.literal("rescheduled"),
+      z.literal("cancelled"),
+    ]),
+    result: z
+      .union([
+        z.literal("trial_started"),
+        z.literal("won"),
+        z.literal("lost"),
+        z.literal("follow_up"),
+        z.literal("not_a_fit"),
+      ])
+      .optional(),
+    lostReason: z.string().max(2000).optional(),
+    valueEur: z.number().min(0).max(999999999999.99).optional(),
+    note: z.string().max(5000).optional(),
+  })
+  .strict();
+export const MeetingLinkInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    conversationId: ResourceIdSchema.optional(),
+    companyOutreachId: ResourceIdSchema.optional(),
+  })
+  .strict();
+export const MeetingUnlinkInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const WebhooksCreateInputSchema = z
+  .object({
+    url: z.string().max(2048),
+    events: z.array(AgentSalesEventTypeSchema).min(1).max(30),
+    description: z.string().max(1000).optional(),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const WebhooksListInputSchema = z.object({}).strict();
+export const WebhooksUpdateInputSchema = z
+  .object({
+    id: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    url: z.string().max(2048).optional(),
+    events: z.array(AgentSalesEventTypeSchema).min(1).max(30).optional(),
+    description: z.string().max(1000).optional(),
+    enabled: z.boolean().optional(),
+  })
+  .strict();
+export const WebhooksDeleteInputSchema = z
+  .object({
+    id: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const WebhooksTestInputSchema = z
+  .object({
+    id: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const WebhooksReplayInputSchema = z
+  .object({
+    id: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    after: z
+      .union([z.string().max(1000), z.number().int().min(0)])
+      .refine(
+        (value) =>
+          [z.string().max(1000), z.number().int().min(0)].filter(
+            (candidate) => candidate.safeParse(value).success,
+          ).length === 1,
+        "Expected exactly one schema match",
+      )
+      .optional(),
+  })
+  .strict();
+export const MeetingsUnlinkedListInputSchema = z
+  .object({
+    cursor: z.string().max(2000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+export const PipelineReconcileInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema.optional(),
+    dryRun: z.boolean().optional(),
+    idempotencyKey: IdempotencyKeySchema.optional(),
+  })
+  .strict();
+export const WorkspaceAgentSalesGetInputSchema = z.object({}).strict();
+export const WorkspaceAgentSalesUpdateInputSchema = z
+  .object({
+    enabled: z.boolean(),
+    autoClose: z.boolean(),
+    autoSuppress: z.boolean(),
+    suppressCompany: z.boolean(),
+    expectedUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const SandboxProviderUpdateInputSchema = z
+  .object({
+    provider: z.union([
+      z.literal("calendar"),
+      z.literal("gmail"),
+      z.literal("sms"),
+      z.literal("browser"),
+    ]),
+    connected: z.boolean(),
+    expectedUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
 export const AGENT_INPUT_SCHEMAS = {
   "analytics.summary": AnalyticsSummaryInputSchema,
   "workspace.briefing": WorkspaceBriefingInputSchema,
@@ -1752,4 +2070,27 @@ export const AGENT_INPUT_SCHEMAS = {
   "leads.prospect.results": InstagramProspectResultsInputSchema,
   "leads.prospect.advance": InstagramProspectRunInputSchema,
   "leads.prospect.cancel": InstagramProspectRunInputSchema,
+  "events.list": EventsListInputSchema,
+  "conversations.changes": ConversationsChangesInputSchema,
+  "suppressions.list": SuppressionsListInputSchema,
+  "suppressions.add": SuppressionsAddInputSchema,
+  "suppressions.remove": SuppressionsRemoveInputSchema,
+  "workspace.sandbox.create": WorkspaceSandboxCreateInputSchema,
+  "sandbox.seed": SandboxSeedInputSchema,
+  "sandbox.inbound.simulate": SandboxInboundSimulateInputSchema,
+  "sandbox.clock.advance": SandboxClockAdvanceInputSchema,
+  "call.outcome.set": CallOutcomeSetInputSchema,
+  "meeting.link": MeetingLinkInputSchema,
+  "meeting.unlink": MeetingUnlinkInputSchema,
+  "webhooks.create": WebhooksCreateInputSchema,
+  "webhooks.list": WebhooksListInputSchema,
+  "webhooks.update": WebhooksUpdateInputSchema,
+  "webhooks.delete": WebhooksDeleteInputSchema,
+  "webhooks.test": WebhooksTestInputSchema,
+  "webhooks.replay": WebhooksReplayInputSchema,
+  "meetings.unlinked.list": MeetingsUnlinkedListInputSchema,
+  "pipeline.reconcile": PipelineReconcileInputSchema,
+  "workspace.agent_sales.get": WorkspaceAgentSalesGetInputSchema,
+  "workspace.agent_sales.update": WorkspaceAgentSalesUpdateInputSchema,
+  "sandbox.provider.update": SandboxProviderUpdateInputSchema,
 } as const;

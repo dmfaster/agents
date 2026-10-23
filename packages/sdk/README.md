@@ -1,6 +1,6 @@
 # @dmfaster/sdk
 
-Typed Node.js client for DM Faster Agent 1.0. It exposes bounded workspace
+Typed Node.js client for DM Faster Agent 2.0. It exposes bounded workspace
 inspection, stateless campaign planning, exact audience previews, idempotent
 private-draft preparation, and authorized campaign controls through a
 scoped, workspace-bound `dmf_pat_…` token.
@@ -10,7 +10,7 @@ scoped, workspace-bound `dmf_pat_…` token.
 > authorized source checkout.
 
 ```bash
-npm install @dmfaster/sdk@1.12.0
+npm install @dmfaster/sdk@2.0.0
 ```
 
 Non-loopback endpoints must use HTTPS. The client also refuses HTTP redirects so

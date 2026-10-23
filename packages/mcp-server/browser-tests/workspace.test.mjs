@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 import { mkdirSync } from "node:fs";
 import { CAMPAIGN_WORKSPACE_HTML } from "../src/campaign-workspace-html.ts";
 
-const require = createRequire(new URL("../../../package.json", import.meta.url));
+const require = createRequire(new URL("../../../site/package.json", import.meta.url));
 const { chromium, expect } = require("@playwright/test");
 let browser;
 before(async () => {

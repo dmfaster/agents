@@ -19,15 +19,18 @@
     "./decision-maker-roles": "./src/decision-maker-roles.ts"
   },
   "scripts": {
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "node ../../tools/typecheck-release.mjs --project tsconfig.json",
+    "lint": "oxlint -c ../../.oxlintrc.json src",
+    "check": "pnpm lint && pnpm typecheck",
+    "typecheck:local": "node ../../tools/typecheck-local.mjs --project tsconfig.json",
+    "check:local": "pnpm lint && pnpm typecheck:local"
   },
   "peerDependencies": {
     "react": ">=19.2.0",
     "react-dom": ">=19.2.0"
   },
   "devDependencies": {
-    "@types/react": "19.3.0",
-    "typescript": "7.0.2"
+    "@types/react": "19.3.0"
   },
   "dependencies": {
     "@base-ui/react": "1.8.0",

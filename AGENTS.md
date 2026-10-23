@@ -1,6 +1,6 @@
 # DM Faster public agent source
 
-This repository contains only the public DM Faster Agent 1.0 API contract,
+This repository contains only the public DM Faster Agent 2.0 API contract,
 local authentication library, SDK, CLI, MCP server, portable campaign UI, and
 shared Codex, Claude, and Cursor plugin.
 
@@ -41,7 +41,7 @@ shared Codex, Claude, and Cursor plugin.
 - Never add DM Faster application, database, extension, browser-worker, cookie,
   or private-repository dependencies.
 
-## Agent 1.0 boundary
+## Agent 2.0 boundary
 
 - Planning and inspection tools are bounded reads.
 - List and campaign preparation may create only private, disabled drafts and
@@ -77,3 +77,7 @@ shared Codex, Claude, and Cursor plugin.
 - npm versions are immutable. Fix mistakes with a new patch version.
 - Package publication and marketplace submissions require explicit user
   approval in the active task.
+
+## Agent sales foundation
+
+Use sandbox workspaces and fake providers for exercises. Verify isSandbox before writes. New scopes are opt-in. Respect suppressions and exact-content instructions; P0 does not enable autonomous sending. Read packages/public-api/CHANGELOG.md for contract semantics and use the generated catalog. Historical repair is dry-run only pending separate owner approval.

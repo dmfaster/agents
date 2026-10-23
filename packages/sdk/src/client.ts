@@ -102,6 +102,8 @@ function transportErrorFromBody(body: unknown) {
     retryable: typeof error?.retryable === "boolean" ? error.retryable : null,
     requestId: boundedTransportString(error?.requestId, 128),
     details: isRecord(error?.details) ? error.details : null,
+    nextAction: boundedTransportString(error?.nextAction, 1000),
+    docsUrl: boundedTransportString(error?.docsUrl, 2000),
   };
 }
 
@@ -288,6 +290,7 @@ export class DmfasterClient {
               accept: "application/json",
               authorization: `Bearer ${this.#token}`,
               "content-type": "application/json",
+              "x-dmfaster-contract-version": "2.0",
               ...(tool === "sending.inspect" ? { "x-dmfaster-sending-observation": "1" } : {}),
             },
             body: JSON.stringify(input),
@@ -311,6 +314,8 @@ export class DmfasterClient {
             boundedTransportString(response.headers.get("x-request-id"), 128),
           retryAfterSeconds: parseRetryAfterSeconds(response.headers.get("retry-after")),
           details: transportError.details,
+          nextAction: transportError.nextAction,
+          docsUrl: transportError.docsUrl,
         });
       }
       assertToolResult(body, tool);

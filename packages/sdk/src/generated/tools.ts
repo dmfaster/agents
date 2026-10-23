@@ -102,6 +102,29 @@ export const AGENT_TOOL_NAMES = [
   "leads.prospect.results",
   "leads.prospect.advance",
   "leads.prospect.cancel",
+  "events.list",
+  "conversations.changes",
+  "suppressions.list",
+  "suppressions.add",
+  "suppressions.remove",
+  "workspace.sandbox.create",
+  "sandbox.seed",
+  "sandbox.inbound.simulate",
+  "sandbox.clock.advance",
+  "call.outcome.set",
+  "meeting.link",
+  "meeting.unlink",
+  "webhooks.create",
+  "webhooks.list",
+  "webhooks.update",
+  "webhooks.delete",
+  "webhooks.test",
+  "webhooks.replay",
+  "meetings.unlinked.list",
+  "pipeline.reconcile",
+  "workspace.agent_sales.get",
+  "workspace.agent_sales.update",
+  "sandbox.provider.update",
 ] as const;
 export const AGENT_TOOL_POLICIES = Object.freeze({
   "analytics.summary": {
@@ -614,6 +637,121 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "events.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "conversations.changes": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "suppressions.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "suppressions.add": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "suppressions.remove": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "workspace.sandbox.create": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "sandbox.seed": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "sandbox.inbound.simulate": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "sandbox.clock.advance": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "call.outcome.set": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "meeting.link": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "meeting.unlink": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "webhooks.create": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "webhooks.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "webhooks.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "webhooks.delete": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "webhooks.test": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "webhooks.replay": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "meetings.unlinked.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "pipeline.reconcile": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "workspace.agent_sales.get": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "workspace.agent_sales.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "sandbox.provider.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
 } as const);
 export const AGENT_TOOL_SCOPES = {
   "analytics.summary": ["workspace:read"],
@@ -718,6 +856,29 @@ export const AGENT_TOOL_SCOPES = {
   "leads.prospect.results": ["leads:read", "campaigns:read"],
   "leads.prospect.advance": ["leads:read", "campaigns:read", "leads:write", "campaigns:write"],
   "leads.prospect.cancel": ["leads:read", "campaigns:read", "leads:write", "campaigns:write"],
+  "events.list": ["events:read"],
+  "conversations.changes": ["inbox:read"],
+  "suppressions.list": ["inbox:read"],
+  "suppressions.add": ["suppressions:write"],
+  "suppressions.remove": ["suppressions:write"],
+  "workspace.sandbox.create": ["sandbox:write"],
+  "sandbox.seed": ["sandbox:write"],
+  "sandbox.inbound.simulate": ["sandbox:write"],
+  "sandbox.clock.advance": ["sandbox:write"],
+  "call.outcome.set": ["calls:write"],
+  "meeting.link": ["calls:write"],
+  "meeting.unlink": ["calls:write"],
+  "webhooks.create": ["webhooks:write", "events:read"],
+  "webhooks.list": ["webhooks:write", "events:read"],
+  "webhooks.update": ["webhooks:write", "events:read"],
+  "webhooks.delete": ["webhooks:write", "events:read"],
+  "webhooks.test": ["webhooks:write", "events:read"],
+  "webhooks.replay": ["webhooks:write", "events:read"],
+  "meetings.unlinked.list": ["calls:read"],
+  "pipeline.reconcile": ["calls:read", "pipeline:write", "calls:write"],
+  "workspace.agent_sales.get": ["workspace:read"],
+  "workspace.agent_sales.update": ["inbox:write", "suppressions:write"],
+  "sandbox.provider.update": ["sandbox:write"],
 } as const;
 export const AGENT_OWNER_ONLY_TOOLS = [
   "conversation.update",
@@ -769,6 +930,141 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "leads.prospect.start",
   "leads.prospect.advance",
   "leads.prospect.cancel",
+  "events.list",
+  "suppressions.add",
+  "suppressions.remove",
+  "workspace.sandbox.create",
+  "sandbox.seed",
+  "sandbox.inbound.simulate",
+  "sandbox.clock.advance",
+  "call.outcome.set",
+  "meeting.link",
+  "meeting.unlink",
+  "webhooks.create",
+  "webhooks.list",
+  "webhooks.update",
+  "webhooks.delete",
+  "webhooks.test",
+  "webhooks.replay",
+  "meetings.unlinked.list",
+  "pipeline.reconcile",
+  "workspace.agent_sales.get",
+  "workspace.agent_sales.update",
+  "sandbox.provider.update",
+] as const;
+export const AGENT_ERROR_CATALOG = {
+  authorization_pending: {
+    nextAction: "Approve the requested scopes in the browser, then poll at the stated interval.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-authorization_pending",
+  },
+  conversation_changed: {
+    nextAction: "Inspect the conversation again and review the new state before resubmitting.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-conversation_changed",
+  },
+  credential_limit: {
+    nextAction: "Revoke an unused agent connection before connecting a new one.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-credential_limit",
+  },
+  cursor_expired: {
+    nextAction:
+      "Refresh the full inbox, then request a new conversation changes cursor without the expired cursor.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-cursor_expired",
+  },
+  idempotency_conflict: {
+    nextAction: "Inspect the original action; use a new key only for a separately intended action.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-idempotency_conflict",
+  },
+  insufficient_scope: {
+    nextAction: "Ask the workspace owner to grant the required scope through connection settings.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-insufficient_scope",
+  },
+  invalid_cursor: {
+    nextAction: "Restart from the first page without a cursor.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-invalid_cursor",
+  },
+  invalid_input: {
+    nextAction: "Correct the input using the tool schema, then retry.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-invalid_input",
+  },
+  invalid_request: {
+    nextAction: "Correct the input using the tool schema, then retry.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-invalid_request",
+  },
+  invalid_response: {
+    nextAction: "Inspect accepted actions and report the request reference to support.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-invalid_response",
+  },
+  mcp_tool_failed: {
+    nextAction:
+      "Check connection_status, inspect any accepted action, and correct the request before retrying.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-mcp_tool_failed",
+  },
+  not_found: {
+    nextAction: "List the current workspace resources and use an ID returned by that list.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-not_found",
+  },
+  owner_required: {
+    nextAction: "Ask the workspace owner to perform or approve this action.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-owner_required",
+  },
+  rate_limited: {
+    nextAction: "Wait for Retry-After before retrying with the same idempotency key.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-rate_limited",
+  },
+  request_aborted: {
+    nextAction: "Inspect the durable action receipt before retrying with the same idempotency key.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-request_aborted",
+  },
+  request_adapter_error: {
+    nextAction: "Contact support with the request reference; do not assume the action succeeded.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-request_adapter_error",
+  },
+  request_timeout: {
+    nextAction: "Inspect the durable action receipt before retrying with the same idempotency key.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-request_timeout",
+  },
+  service_unavailable: {
+    nextAction:
+      "Wait briefly, then retry with the same idempotency key. Inspect accepted actions before retrying.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-service_unavailable",
+  },
+  slow_down: {
+    nextAction: "Wait for Retry-After before polling again.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-slow_down",
+  },
+  unauthorized: {
+    nextAction: "Reconnect DM Faster to obtain a valid credential, then retry.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-unauthorized",
+  },
+  recipient_suppressed: {
+    nextAction:
+      "Do not contact this recipient. Review the opt-out record; only the owner can remove a suppression with a documented reason.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-recipient_suppressed",
+  },
+  suppression_changed: {
+    nextAction: "List suppressions again and review the current version before removal.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-suppression_changed",
+  },
+} as const;
+export const AGENT_SALES_EVENT_TYPES = [
+  "inbox.message.received",
+  "inbox.auto_reply.received",
+  "conversation.intent.changed",
+  "conversation.changed",
+  "conversation.followup.due",
+  "followup.cancelled_by_reply",
+  "meeting.booked",
+  "meeting.rescheduled",
+  "meeting.cancelled",
+  "meeting.no_show",
+  "meeting.outcome.recorded",
+  "contact.opted_out",
+  "campaign.state.changed",
+  "sender.unhealthy",
+  "reply.approval.requested",
+  "reply.approval.decided",
+  "credential.expiring",
+  "webhook.test",
 ] as const;
 export const AGENT_TOOL_DEFINITIONS = {
   "analytics.summary": {
@@ -892,7 +1188,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "replies_list",
       title: "List priority replies",
       description:
-        "Read actual reply-stage records that need attention. Never infer replies from sent counts.",
+        "Deprecated: prefer conversations_list or pipeline_cards_list. In contract 2.0, omitted campaignId reads reply-stage pipeline cards across the entire workspace. Exact filteredTotal, explicit scope and opaque cursor are returned.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -2177,7 +2473,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "copy_performance",
       title: "Find historical outreach copy performance",
       description:
-        "Read exact text from confirmed outreach jobs and observed human replies/confirmed calendar bookings. A reply or booking is associated with the first confirmed outreach in its exact conversation; this is observational evidence, not causal lift. Missing deleted job text remains unattributed.",
+        "Read historical sent-copy performance. Default rendered_text groups confirmed job text with observed human replies/bookings. Use groupBy template_variation with campaignId for immutable template revisions, seven-day mature reply cohorts and attribution coverage. Observational association is not causal lift; missing evidence remains unattributed.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -2704,6 +3000,437 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["leads", "prospect", "cancel"],
     },
   },
+  "events.list": {
+    mcp: {
+      name: "events_list",
+      title: "events list",
+      description:
+        "Read the ordered workspace event stream retained for 30 days. Payload details require the corresponding domain read scope. Reuse nextCursor for lossless polling; replay returns stable event IDs. No subscription, message or workspace change.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Workspace reads",
+      usage: "events list --json",
+      command: ["events", "list"],
+    },
+  },
+  "conversations.changes": {
+    mcp: {
+      name: "conversations_changes",
+      title: "conversations changes",
+      description:
+        "Read conversation changes in commit order. Without a cursor, returns an empty page and the current watermark. With a cursor, returns each change once, with reason and updatedAt. Persist nextCursor even on empty pages. Expired cursors require a full inbox refresh.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Workspace reads",
+      usage: "conversations changes --json",
+      command: ["conversations", "changes"],
+    },
+  },
+  "suppressions.list": {
+    mcp: {
+      name: "suppressions_list",
+      title: "suppressions list",
+      description:
+        "List active do-not-contact identities across this workspace. Reads never change suppression state.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Workspace reads",
+      usage: "suppressions list --json",
+      command: ["suppressions", "list"],
+    },
+  },
+  "suppressions.add": {
+    mcp: {
+      name: "suppressions_add",
+      title: "suppressions add",
+      description:
+        "Add workspace do-not-contact identities on explicit instruction. Active duplicates return the existing record. Reusing an idempotency key returns the original durable receipt.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Workspace writes",
+      usage: "suppressions add --json",
+      command: ["suppressions", "add"],
+    },
+  },
+  "suppressions.remove": {
+    mcp: {
+      name: "suppressions_remove",
+      title: "suppressions remove",
+      description:
+        "Owner-only removal of a do-not-contact identity after reviewing the opt-out. Requires the inspected updatedAt, a reason and an idempotency key. Preserves an audit record.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Workspace writes",
+      usage: "suppressions remove --json",
+      command: ["suppressions", "remove"],
+    },
+  },
+  "workspace.sandbox.create": {
+    mcp: {
+      name: "workspace_sandbox_create",
+      title: "workspace sandbox create",
+      description:
+        "Create an isolated sandbox workspace for this owner. All outbound provider operations are fake. Reconnect choosing the returned sandbox workspace.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Sandbox",
+      usage: "workspace sandbox create --json",
+      command: ["workspace", "sandbox", "create"],
+    },
+  },
+  "sandbox.seed": {
+    mcp: {
+      name: "sandbox_seed",
+      title: "sandbox seed",
+      description:
+        "Seed 50 synthetic companies and fixture conversations in the connected sandbox only. Stable fixture identities make repeated seeding idempotent.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Sandbox",
+      usage: "sandbox seed --json",
+      command: ["sandbox", "seed"],
+    },
+  },
+  "sandbox.inbound.simulate": {
+    mcp: {
+      name: "sandbox_inbound_simulate",
+      title: "sandbox inbound simulate",
+      description:
+        "Inject synthetic inbound content through the normal inbox projection and event stream. Existing conversation IDs require their inspected version. Never invokes a real provider.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Sandbox",
+      usage: "sandbox inbound simulate --json",
+      command: ["sandbox", "inbound", "simulate"],
+    },
+  },
+  "sandbox.clock.advance": {
+    mcp: {
+      name: "sandbox_clock_advance",
+      title: "sandbox clock advance",
+      description:
+        "Advance the connected sandbox clock without changing real workspace time. Requires the inspected workspace version and an idempotency key.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Sandbox",
+      usage: "sandbox clock advance --json",
+      command: ["sandbox", "clock", "advance"],
+    },
+  },
+  "call.outcome.set": {
+    mcp: {
+      name: "call_outcome_set",
+      title: "Record an authorized meeting outcome and update its linked pipeline card.",
+      description: "Record an authorized meeting outcome and update its linked pipeline card.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "call outcome set --input FILE",
+      command: ["call", "outcome", "set"],
+    },
+  },
+  "meeting.link": {
+    mcp: {
+      name: "meeting_link",
+      title: "Link a meeting to one workspace conversation or company without sending invitations.",
+      description:
+        "Link a meeting to one workspace conversation or company without sending invitations.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "meeting link --input FILE",
+      command: ["meeting", "link"],
+    },
+  },
+  "meeting.unlink": {
+    mcp: {
+      name: "meeting_unlink",
+      title:
+        "Remove an explicit meeting link without deleting meeting history or moving pipeline cards backwards.",
+      description:
+        "Remove an explicit meeting link without deleting meeting history or moving pipeline cards backwards.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "meeting unlink --input FILE",
+      command: ["meeting", "unlink"],
+    },
+  },
+  "webhooks.create": {
+    mcp: {
+      name: "webhooks_create",
+      title: "Webhooks create",
+      description:
+        "Create a signed event webhook. The signing secret is returned only by this creation receipt; store it securely.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Events",
+      usage: "webhooks create --input FILE",
+      command: ["webhooks", "create"],
+    },
+  },
+  "webhooks.list": {
+    mcp: {
+      name: "webhooks_list",
+      title: "Webhooks list",
+      description: "List workspace webhook subscriptions without exposing signing secrets.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Events",
+      usage: "webhooks list --input FILE",
+      command: ["webhooks", "list"],
+    },
+  },
+  "webhooks.update": {
+    mcp: {
+      name: "webhooks_update",
+      title: "Webhooks update",
+      description: "Update a webhook with compare-and-swap version protection.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Events",
+      usage: "webhooks update --input FILE",
+      command: ["webhooks", "update"],
+    },
+  },
+  "webhooks.delete": {
+    mcp: {
+      name: "webhooks_delete",
+      title: "Webhooks delete",
+      description: "Disable and soft-delete a webhook and cancel pending deliveries.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Events",
+      usage: "webhooks delete --input FILE",
+      command: ["webhooks", "delete"],
+    },
+  },
+  "webhooks.test": {
+    mcp: {
+      name: "webhooks_test",
+      title: "Webhooks test",
+      description: "Queue a signed synthetic webhook test. Does not message a prospect.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Events",
+      usage: "webhooks test --input FILE",
+      command: ["webhooks", "test"],
+    },
+  },
+  "webhooks.replay": {
+    mcp: {
+      name: "webhooks_replay",
+      title: "Webhooks replay",
+      description: "Replay up to 100 retained events in sequence, preserving their original IDs.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Events",
+      usage: "webhooks replay --input FILE",
+      command: ["webhooks", "replay"],
+    },
+  },
+  "meetings.unlinked.list": {
+    mcp: {
+      name: "meetings_unlinked_list",
+      title: "meetings unlinked list",
+      description: "List meetings with absent or low-confidence links. Read-only and owner scoped.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "meetings unlinked list --input FILE",
+      command: ["meetings", "unlinked", "list"],
+    },
+  },
+  "pipeline.reconcile": {
+    mcp: {
+      name: "pipeline_reconcile",
+      title: "pipeline reconcile",
+      description:
+        "Report exact booking and pipeline mismatches. Live workspaces are dry-run only; apply is restricted to sandboxes. Save historical corrections for separate owner approval.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "pipeline reconcile --input FILE",
+      command: ["pipeline", "reconcile"],
+    },
+  },
+  "workspace.agent_sales.get": {
+    mcp: {
+      name: "workspace_agent_sales_get",
+      title: "workspace agent_sales get",
+      description:
+        "Read owner-controlled classification, auto-close and opt-out suppression settings.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "workspace agent_sales get --input FILE",
+      command: ["workspace", "agent_sales", "get"],
+    },
+  },
+  "workspace.agent_sales.update": {
+    mcp: {
+      name: "workspace_agent_sales_update",
+      title: "workspace agent_sales update",
+      description:
+        "Change owner-controlled sales automation flags for future activity. Does not reclassify, close or suppress historical records.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "workspace agent_sales update --input FILE",
+      command: ["workspace", "agent_sales", "update"],
+    },
+  },
+  "sandbox.provider.update": {
+    mcp: {
+      name: "sandbox_provider_update",
+      title: "sandbox provider update",
+      description:
+        "Connect or disconnect a fake provider in the sandbox. No real connection is changed; disconnection emits sender.unhealthy.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "sandbox provider update --input FILE",
+      command: ["sandbox", "provider", "update"],
+    },
+  },
 } as const;
 export const AGENT_TOOL_INPUT_SCHEMAS = {
   "analytics.summary": {
@@ -3012,6 +3739,75 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   "leads.prospect.cancel": {
     $ref: "#/components/schemas/InstagramProspectRunInput",
   },
+  "events.list": {
+    $ref: "#/components/schemas/EventsListInput",
+  },
+  "conversations.changes": {
+    $ref: "#/components/schemas/ConversationsChangesInput",
+  },
+  "suppressions.list": {
+    $ref: "#/components/schemas/SuppressionsListInput",
+  },
+  "suppressions.add": {
+    $ref: "#/components/schemas/SuppressionsAddInput",
+  },
+  "suppressions.remove": {
+    $ref: "#/components/schemas/SuppressionsRemoveInput",
+  },
+  "workspace.sandbox.create": {
+    $ref: "#/components/schemas/WorkspaceSandboxCreateInput",
+  },
+  "sandbox.seed": {
+    $ref: "#/components/schemas/SandboxSeedInput",
+  },
+  "sandbox.inbound.simulate": {
+    $ref: "#/components/schemas/SandboxInboundSimulateInput",
+  },
+  "sandbox.clock.advance": {
+    $ref: "#/components/schemas/SandboxClockAdvanceInput",
+  },
+  "call.outcome.set": {
+    $ref: "#/components/schemas/CallOutcomeSetInput",
+  },
+  "meeting.link": {
+    $ref: "#/components/schemas/MeetingLinkInput",
+  },
+  "meeting.unlink": {
+    $ref: "#/components/schemas/MeetingUnlinkInput",
+  },
+  "webhooks.create": {
+    $ref: "#/components/schemas/WebhooksCreateInput",
+  },
+  "webhooks.list": {
+    $ref: "#/components/schemas/WebhooksListInput",
+  },
+  "webhooks.update": {
+    $ref: "#/components/schemas/WebhooksUpdateInput",
+  },
+  "webhooks.delete": {
+    $ref: "#/components/schemas/WebhooksDeleteInput",
+  },
+  "webhooks.test": {
+    $ref: "#/components/schemas/WebhooksTestInput",
+  },
+  "webhooks.replay": {
+    $ref: "#/components/schemas/WebhooksReplayInput",
+  },
+  "meetings.unlinked.list": {
+    $ref: "#/components/schemas/MeetingsUnlinkedListInput",
+  },
+  "pipeline.reconcile": {
+    $ref: "#/components/schemas/PipelineReconcileInput",
+  },
+  "workspace.agent_sales.get": {
+    $ref: "#/components/schemas/WorkspaceAgentSalesGetInput",
+  },
+  "workspace.agent_sales.update": {
+    $ref: "#/components/schemas/WorkspaceAgentSalesUpdateInput",
+  },
+  "sandbox.provider.update": {
+    $ref: "#/components/schemas/SandboxProviderUpdateInput",
+  },
 } as const;
 export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
   AnalyticsSummaryInput: {
@@ -3132,6 +3928,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         pattern: ".*\\S.*",
         description: "Optional case-insensitive reply search text.",
       },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 6000,
+      },
     },
   },
   ConversationsListInput: {
@@ -3147,11 +3948,15 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         enum: ["positive", "neutral", "negative", "needs_review"],
       },
       intent: {
+        description:
+          "Exact stored intent; unlike the app label filter, opt_out does not include not_interested or not_now.",
         type: "string",
         enum: [
           "interested",
           "information_requested",
           "meeting_intent",
+          "meeting_proposed_time",
+          "asks_pricing",
           "not_now",
           "wrong_person",
           "not_interested",
@@ -3174,6 +3979,9 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         minLength: 1,
         maxLength: 120,
       },
+      updatedAfter: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
       includeAutomaticResponses: {
         type: "boolean",
       },
@@ -3187,11 +3995,27 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         minimum: 1,
         maximum: 60,
       },
+      meetingStatus: {
+        type: "string",
+        enum: ["none", "booked", "held", "no_show"],
+      },
+      followupDue: {
+        type: "boolean",
+      },
     },
   },
   InboxChannel: {
     type: "string",
     enum: ["instagram", "facebook", "linkedin", "gmail", "outlook", "email", "sms"],
+  },
+  ResourceVersion: {
+    type: "string",
+    description:
+      "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
+    pattern:
+      "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}(?::?\\d{2})?)$",
+    minLength: 20,
+    maxLength: 32,
   },
   ConversationInspectInput: {
     type: "object",
@@ -3251,6 +4075,8 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           "interested",
           "information_requested",
           "meeting_intent",
+          "meeting_proposed_time",
+          "asks_pricing",
           "not_now",
           "wrong_person",
           "not_interested",
@@ -3260,12 +4086,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         ],
       },
     },
-  },
-  ResourceVersion: {
-    type: "string",
-    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
-    minLength: 20,
-    maxLength: 27,
   },
   ConversationReplyInput: {
     type: "object",
@@ -3691,6 +4511,20 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
       stage: {
         $ref: "#/components/schemas/PipelineStage",
+      },
+      closedOutcome: {
+        type: "string",
+        enum: ["won", "lost"],
+      },
+      lostReason: {
+        type: "string",
+        maxLength: 2000,
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
       },
     },
   },
@@ -5071,6 +5905,17 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "string",
         maxLength: 8,
       },
+      hasActiveHiring: {
+        type: "boolean",
+        description:
+          "Require verified open employer job postings in Finland. False removes this requirement; it does not mean not hiring. Unavailable or stale recruitment publications fail closed.",
+      },
+      hiringTitleQuery: {
+        type: "string",
+        maxLength: 120,
+        description:
+          "Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only.",
+      },
       hasPublicFunding: {
         type: "boolean",
       },
@@ -6093,6 +6938,17 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["from", "to"],
     properties: {
+      groupBy: {
+        type: "string",
+        enum: ["rendered_text", "template_variation"],
+        description:
+          "Defaults to rendered_text. template_variation requires campaignId and returns variationPerformance with immutable templates and seven-day mature cohorts.",
+      },
+      channel: {
+        type: "string",
+        enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+        description: "Optional channel filter for template_variation only.",
+      },
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -6229,6 +7085,23 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "integer",
         minimum: 1,
         maximum: 50,
+      },
+      cursor: {
+        type: "string",
+        maxLength: 2000,
+      },
+      lifecycle: {
+        type: "string",
+        enum: ["scheduled", "awaiting_outcome", "completed", "no_show", "cancelled", "rescheduled"],
+      },
+      awaitingOutcome: {
+        type: "boolean",
+      },
+      from: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      to: {
+        $ref: "#/components/schemas/ResourceVersion",
       },
     },
   },
@@ -6829,5 +7702,551 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maximum: 100,
       },
     },
+  },
+  EventsListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [],
+    properties: {
+      after: {
+        oneOf: [
+          {
+            type: "string",
+            minLength: 1,
+            maxLength: 1000,
+          },
+          {
+            type: "integer",
+            minimum: 0,
+          },
+        ],
+      },
+      types: {
+        type: "array",
+        minItems: 1,
+        maxItems: 17,
+        items: {
+          $ref: "#/components/schemas/AgentSalesEventType",
+        },
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+  },
+  AgentSalesEventType: {
+    type: "string",
+    enum: [
+      "inbox.message.received",
+      "inbox.auto_reply.received",
+      "conversation.intent.changed",
+      "conversation.changed",
+      "conversation.followup.due",
+      "followup.cancelled_by_reply",
+      "meeting.booked",
+      "meeting.rescheduled",
+      "meeting.cancelled",
+      "meeting.no_show",
+      "meeting.outcome.recorded",
+      "contact.opted_out",
+      "campaign.state.changed",
+      "sender.unhealthy",
+      "reply.approval.requested",
+      "reply.approval.decided",
+      "credential.expiring",
+      "webhook.test",
+    ],
+  },
+  ConversationsChangesInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [],
+    properties: {
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1000,
+      },
+      types: {
+        type: "array",
+        minItems: 1,
+        maxItems: 4,
+        items: {
+          type: "string",
+          enum: ["message", "intent", "status", "meeting"],
+        },
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+  },
+  SuppressionsListInput: {
+    type: "object",
+    additionalProperties: false,
+    required: [],
+    properties: {
+      query: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+  },
+  SuppressionsAddInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["entries", "idempotencyKey"],
+    properties: {
+      entries: {
+        type: "array",
+        minItems: 1,
+        maxItems: 100,
+        items: {
+          $ref: "#/components/schemas/SuppressionEntryInput",
+        },
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+  },
+  SuppressionEntryInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["type", "value", "reason", "source"],
+    properties: {
+      type: {
+        type: "string",
+        enum: ["company", "phone", "email", "instagram", "facebook", "linkedin", "domain"],
+      },
+      value: {
+        type: "string",
+        minLength: 1,
+        maxLength: 500,
+      },
+      reason: {
+        type: "string",
+        minLength: 1,
+        maxLength: 500,
+      },
+      source: {
+        type: "string",
+        enum: ["prospect_request", "owner", "agent"],
+      },
+    },
+  },
+  SuppressionsRemoveInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["id", "expectedUpdatedAt", "reason", "idempotencyKey"],
+    properties: {
+      id: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      reason: {
+        type: "string",
+        minLength: 1,
+        maxLength: 500,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+  },
+  WorkspaceSandboxCreateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      name: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["name", "idempotencyKey"],
+  },
+  SandboxSeedInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      preset: {
+        type: "string",
+        const: "appointment_setter_v1",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["preset", "idempotencyKey"],
+  },
+  SandboxInboundSimulateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      conversationId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      campaignId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      channel: {
+        type: "string",
+        enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+      },
+      text: {
+        type: "string",
+        minLength: 1,
+        maxLength: 16000,
+      },
+      kind: {
+        type: "string",
+        enum: ["human", "auto_reply", "reaction"],
+      },
+      at: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["channel", "text", "kind", "idempotencyKey"],
+  },
+  SandboxClockAdvanceInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      minutes: {
+        type: "integer",
+        minimum: 1,
+        maximum: 525600,
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["minutes", "expectedUpdatedAt", "idempotencyKey"],
+  },
+  CallOutcomeSetInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      meetingId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      attendance: {
+        type: "string",
+        enum: ["held", "no_show", "rescheduled", "cancelled"],
+      },
+      result: {
+        type: "string",
+        enum: ["trial_started", "won", "lost", "follow_up", "not_a_fit"],
+      },
+      lostReason: {
+        type: "string",
+        maxLength: 2000,
+      },
+      valueEur: {
+        type: "number",
+        minimum: 0,
+        maximum: 999999999999.99,
+      },
+      note: {
+        type: "string",
+        maxLength: 5000,
+      },
+    },
+    required: ["meetingId", "expectedUpdatedAt", "idempotencyKey", "attendance"],
+  },
+  MeetingLinkInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      meetingId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      conversationId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      companyOutreachId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
+    required: ["meetingId", "expectedUpdatedAt", "idempotencyKey"],
+  },
+  MeetingUnlinkInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      meetingId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["meetingId", "expectedUpdatedAt", "idempotencyKey"],
+  },
+  WebhooksCreateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      url: {
+        type: "string",
+        maxLength: 2048,
+      },
+      events: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/AgentSalesEventType",
+        },
+        minItems: 1,
+        maxItems: 30,
+      },
+      description: {
+        type: "string",
+        maxLength: 1000,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["url", "events", "idempotencyKey"],
+  },
+  WebhooksListInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {},
+    required: [],
+  },
+  WebhooksUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      id: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      url: {
+        type: "string",
+        maxLength: 2048,
+      },
+      events: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/AgentSalesEventType",
+        },
+        minItems: 1,
+        maxItems: 30,
+      },
+      description: {
+        type: "string",
+        maxLength: 1000,
+      },
+      enabled: {
+        type: "boolean",
+      },
+    },
+    required: ["id", "expectedUpdatedAt", "idempotencyKey"],
+  },
+  WebhooksDeleteInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      id: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["id", "expectedUpdatedAt", "idempotencyKey"],
+  },
+  WebhooksTestInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      id: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["id", "expectedUpdatedAt", "idempotencyKey"],
+  },
+  WebhooksReplayInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      id: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      after: {
+        oneOf: [
+          {
+            type: "string",
+            maxLength: 1000,
+          },
+          {
+            type: "integer",
+            minimum: 0,
+          },
+        ],
+      },
+    },
+    required: ["id", "expectedUpdatedAt", "idempotencyKey"],
+  },
+  MeetingsUnlinkedListInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      cursor: {
+        type: "string",
+        maxLength: 2000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+    required: [],
+  },
+  PipelineReconcileInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      dryRun: {
+        type: "boolean",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: [],
+  },
+  WorkspaceAgentSalesGetInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {},
+    required: [],
+  },
+  WorkspaceAgentSalesUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      enabled: {
+        type: "boolean",
+      },
+      autoClose: {
+        type: "boolean",
+      },
+      autoSuppress: {
+        type: "boolean",
+      },
+      suppressCompany: {
+        type: "boolean",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: [
+      "enabled",
+      "autoClose",
+      "autoSuppress",
+      "suppressCompany",
+      "expectedUpdatedAt",
+      "idempotencyKey",
+    ],
+  },
+  SandboxProviderUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      provider: {
+        type: "string",
+        enum: ["calendar", "gmail", "sms", "browser"],
+      },
+      connected: {
+        type: "boolean",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["provider", "connected", "expectedUpdatedAt", "idempotencyKey"],
   },
 } as const;

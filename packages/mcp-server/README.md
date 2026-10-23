@@ -20,7 +20,7 @@ the acquisition quote uses the normal account grant. See
 `src/instagram-evaluation.ts` for the optional evaluation configuration.
 These tools are not registered by hosted MCP or the current published plugin.
 
-Local stdio MCP server for 91 DM Faster Agent 1.0 domain tools, one local
+Local stdio MCP server for 91 DM Faster Agent 2.0 domain tools, one local
 `connection_status` tool, and portable `companies_workspace`, `campaign_workspace` and `workspace_open` views. It uses the MCP TypeScript SDK
 v2 serving entry in strict modern-only mode. MCP 2026-07-28 clients use the new
 per-request protocol; 2025-era initialization is explicitly rejected. The
@@ -117,11 +117,11 @@ tools satisfy the credential's scopes, with missing scopes for the others.
 Workspace role, plan, and action preconditions still apply when a tool runs.
 
 ```bash
-npx --yes @dmfaster/cli@1.12.0 auth login --json
-npx --yes @dmfaster/mcp-server@1.12.0
+npx --yes @dmfaster/cli@2.0.0 auth login --json
+npx --yes @dmfaster/mcp-server@2.0.0
 ```
 
-Login defaults to the complete Agent 1.0 capability set. Use `auth login
+Login defaults to the complete Agent 2.0 capability set. Use `auth login
 --access read`, `plan`, or `draft` when this MCP installation should have a
 smaller ceiling. The MCP server can expose all 91 domain schemas and the
 local connection and presentation schemas while the DM Faster API independently rejects
@@ -133,7 +133,7 @@ preparation, workspace controls, and the external launch action. Every mutation
 is idempotent. Launch is marked destructive and open-world. Domain tools also
 advertise output schemas generated from the public Agent API contract.
 
-The MCP names are the 91 domain tools:
+The MCP names are the 125 domain tools:
 
 - `analytics_summary`
 - `workspace_briefing`
@@ -253,14 +253,14 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@1.12.0"]
+      "args": ["--yes", "@dmfaster/mcp-server@2.0.0"]
     }
   }
 }
 ```
 
 Hosts that have not implemented MCP 2026-07-28 must use the version-pinned CLI
-until they upgrade. Agent 1.0 does not silently downgrade to the 2025 protocol.
+until they upgrade. Agent 2.0 does not silently downgrade to the 2025 protocol.
 
 Production defaults to `https://app.dmfaster.com`; use `DMFASTER_API_URL` only
 for local development or self-hosting. `DMFASTER_TOKEN` remains an explicit

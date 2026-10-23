@@ -24,7 +24,7 @@ export type AgentCredentialSummary = {
 
 export type AgentIdentity = {
   credential: AgentCredentialSummary;
-  workspace: { id: string; name: string; email?: string };
+  workspace: { id: string; name: string; email?: string; isSandbox?: boolean };
   user: { id: string; name: string; email?: string };
 };
 
@@ -78,7 +78,12 @@ function isRecord(value: unknown): value is JsonRecord {
 
 function requiredString(record: JsonRecord, key: string, description: string, maxLength = 4096) {
   const value = record[key];
-  if (typeof value !== "string" || !value.trim() || value.length > maxLength || /[\r\n\0]/.test(value)) {
+  if (
+    typeof value !== "string" ||
+    !value.trim() ||
+    value.length > maxLength ||
+    /[\r\n\0]/.test(value)
+  ) {
     throw new AgentAuthError("invalid_response", `DM Faster returned an invalid ${description}.`);
   }
   return value.trim();
@@ -86,7 +91,10 @@ function requiredString(record: JsonRecord, key: string, description: string, ma
 
 function optionalString(record: JsonRecord, key: string, maxLength = 4096) {
   const value = record[key];
-  return typeof value === "string" && value.trim() && value.length <= maxLength && !/[\r\n\0]/.test(value)
+  return typeof value === "string" &&
+    value.trim() &&
+    value.length <= maxLength &&
+    !/[\r\n\0]/.test(value)
     ? value.trim()
     : undefined;
 }
@@ -102,9 +110,7 @@ function parseRetryAfterSeconds(value: string | null, now = Date.now()) {
   if (!normalized) return null;
   if (/^\d+$/.test(normalized)) {
     const seconds = Number(normalized);
-    return Number.isSafeInteger(seconds) && seconds >= 0
-      ? Math.min(seconds, 24 * 60 * 60)
-      : null;
+    return Number.isSafeInteger(seconds) && seconds >= 0 ? Math.min(seconds, 24 * 60 * 60) : null;
   }
   const retryAt = Date.parse(normalized);
   return Number.isFinite(retryAt)
@@ -124,10 +130,18 @@ function errorForResponse(response: Response, body: unknown, now = Date.now()) {
   const status = response.status;
   const code = parseErrorCode(body);
   if (status === 401 || code === "unauthorized") {
-    return new AgentAuthError("unauthorized", "The saved DM Faster login is no longer valid.", status);
+    return new AgentAuthError(
+      "unauthorized",
+      "The saved DM Faster login is no longer valid.",
+      status,
+    );
   }
   if (code === "access_denied") {
-    return new AgentAuthError("access_denied", "DM Faster sign-in was denied in the browser.", status);
+    return new AgentAuthError(
+      "access_denied",
+      "DM Faster sign-in was denied in the browser.",
+      status,
+    );
   }
   if (status === 403 || code === "workspace_access_denied") {
     return new AgentAuthError(
@@ -137,10 +151,18 @@ function errorForResponse(response: Response, body: unknown, now = Date.now()) {
     );
   }
   if (code === "expired_token") {
-    return new AgentAuthError("expired_token", "DM Faster sign-in timed out. Run `dmfaster auth login` again.", status);
+    return new AgentAuthError(
+      "expired_token",
+      "DM Faster sign-in timed out. Run `dmfaster auth login` again.",
+      status,
+    );
   }
   if (code === "invalid_grant") {
-    return new AgentAuthError("invalid_grant", "DM Faster could not complete this sign-in. Start a new login.", status);
+    return new AgentAuthError(
+      "invalid_grant",
+      "DM Faster could not complete this sign-in. Start a new login.",
+      status,
+    );
   }
   if (code === "credential_limit") {
     return new AgentAuthError(
@@ -157,19 +179,31 @@ function errorForResponse(response: Response, body: unknown, now = Date.now()) {
       { retryAfterSeconds: parseRetryAfterSeconds(response.headers.get("retry-after"), now) },
     );
   }
-  return new AgentAuthError("request_failed", `DM Faster authentication failed with HTTP ${status}.`, status);
+  return new AgentAuthError(
+    "request_failed",
+    `DM Faster authentication failed with HTTP ${status}.`,
+    status,
+  );
 }
 
 async function readJson(response: Response) {
   const text = await response.text();
   if (Buffer.byteLength(text, "utf8") > MAX_RESPONSE_BYTES) {
-    throw new AgentAuthError("invalid_response", "DM Faster returned an oversized authentication response.");
+    throw new AgentAuthError(
+      "invalid_response",
+      "DM Faster returned an oversized authentication response.",
+    );
   }
   if (!text) return null;
   try {
     return JSON.parse(text) as unknown;
   } catch (cause) {
-    throw new AgentAuthError("invalid_response", "DM Faster returned invalid authentication JSON.", null, { cause });
+    throw new AgentAuthError(
+      "invalid_response",
+      "DM Faster returned invalid authentication JSON.",
+      null,
+      { cause },
+    );
   }
 }
 
@@ -188,10 +222,17 @@ async function authFetch(
     });
   } catch (cause) {
     if (controller.signal.aborted) {
-      throw new AgentAuthError("request_timeout", "DM Faster authentication request timed out.", null, { cause });
+      throw new AgentAuthError(
+        "request_timeout",
+        "DM Faster authentication request timed out.",
+        null,
+        { cause },
+      );
     }
     if (cause instanceof AgentAuthError) throw cause;
-    throw new AgentAuthError("network_error", "Could not reach DM Faster authentication.", null, { cause });
+    throw new AgentAuthError("network_error", "Could not reach DM Faster authentication.", null, {
+      cause,
+    });
   } finally {
     clearTimeout(timeout);
   }
@@ -199,7 +240,10 @@ async function authFetch(
 
 function parseCredential(value: unknown): AgentCredentialSummary {
   if (!isRecord(value)) {
-    throw new AgentAuthError("invalid_response", "DM Faster returned an invalid credential summary.");
+    throw new AgentAuthError(
+      "invalid_response",
+      "DM Faster returned an invalid credential summary.",
+    );
   }
   const scopes = value.scopes;
   if (!Array.isArray(scopes) || scopes.some((scope) => typeof scope !== "string")) {
@@ -223,12 +267,16 @@ function parseParty(value: unknown, description: string) {
     id: requiredString(value, "id", `${description} identifier`, 200),
     name: requiredString(value, "name", `${description} name`, 300),
     ...(email ? { email } : {}),
+    ...(typeof value.isSandbox === "boolean" ? { isSandbox: value.isSandbox } : {}),
   };
 }
 
 function parseIdentity(body: unknown): AgentIdentity {
   if (!isRecord(body)) {
-    throw new AgentAuthError("invalid_response", "DM Faster returned an invalid authentication response.");
+    throw new AgentAuthError(
+      "invalid_response",
+      "DM Faster returned an invalid authentication response.",
+    );
   }
   return {
     credential: parseCredential(body.credential),
@@ -240,7 +288,10 @@ function parseIdentity(body: unknown): AgentIdentity {
 export function createPkcePair(randomBytes: (size: number) => Buffer = nodeRandomBytes) {
   const codeVerifier = randomBytes(32).toString("base64url");
   if (!/^[A-Za-z0-9_-]{43}$/.test(codeVerifier)) {
-    throw new AgentAuthError("pkce_generation_failed", "Could not create a secure DM Faster sign-in request.");
+    throw new AgentAuthError(
+      "pkce_generation_failed",
+      "Could not create a secure DM Faster sign-in request.",
+    );
   }
   const codeChallenge = createHash("sha256").update(codeVerifier, "ascii").digest("base64url");
   return { codeVerifier, codeChallenge };
@@ -286,18 +337,29 @@ export async function beginDeviceAuthorization(input: {
   const body = await readJson(response);
   if (!response.ok) throw errorForResponse(response, body);
   if (!isRecord(body)) {
-    throw new AgentAuthError("invalid_response", "DM Faster returned an invalid device sign-in response.");
+    throw new AgentAuthError(
+      "invalid_response",
+      "DM Faster returned an invalid device sign-in response.",
+    );
   }
-  const confirmationCode = optionalString(body, "confirmationCode", 40)
-    ?? requiredString(body, "userCode", "confirmation code", 40);
-  const verificationUrlValue = optionalString(body, "verificationUrl")
-    ?? requiredString(body, "verificationUri", "browser verification URL");
+  const confirmationCode =
+    optionalString(body, "confirmationCode", 40) ??
+    requiredString(body, "userCode", "confirmation code", 40);
+  const verificationUrlValue =
+    optionalString(body, "verificationUrl") ??
+    requiredString(body, "verificationUri", "browser verification URL");
   const deviceCode = requiredString(body, "deviceCode", "device authorization");
   if (!/^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/.test(confirmationCode)) {
-    throw new AgentAuthError("invalid_response", "DM Faster returned an invalid confirmation code.");
+    throw new AgentAuthError(
+      "invalid_response",
+      "DM Faster returned an invalid confirmation code.",
+    );
   }
   if (!/^dmf_device_[A-Za-z0-9_-]{43}$/.test(deviceCode)) {
-    throw new AgentAuthError("invalid_response", "DM Faster returned an invalid device authorization.");
+    throw new AgentAuthError(
+      "invalid_response",
+      "DM Faster returned an invalid device authorization.",
+    );
   }
   return {
     deviceCode,
@@ -317,9 +379,12 @@ export async function pollDeviceAuthorization(input: {
   const baseUrl = normalizeApiBaseUrl(input.baseUrl);
   const fetchImplementation = input.adapters?.fetch ?? globalThis.fetch;
   const now = input.adapters?.now ?? Date.now;
-  const sleep = input.adapters?.sleep ?? ((milliseconds: number) => new Promise<void>((resolve) => {
-    setTimeout(resolve, milliseconds);
-  }));
+  const sleep =
+    input.adapters?.sleep ??
+    ((milliseconds: number) =>
+      new Promise<void>((resolve) => {
+        setTimeout(resolve, milliseconds);
+      }));
   const deadline = now() + input.authorization.expiresIn * 1_000;
   let intervalSeconds = input.authorization.interval;
 
@@ -343,20 +408,27 @@ export async function pollDeviceAuthorization(input: {
       );
     } catch (error) {
       if (
-        error instanceof AgentAuthError
-        && (error.code === "network_error" || error.code === "request_timeout")
-      ) continue;
+        error instanceof AgentAuthError &&
+        (error.code === "network_error" || error.code === "request_timeout")
+      )
+        continue;
       throw error;
     }
 
     const body = await readJson(response);
     if (response.ok) {
       if (!isRecord(body)) {
-        throw new AgentAuthError("invalid_response", "DM Faster returned an invalid sign-in result.");
+        throw new AgentAuthError(
+          "invalid_response",
+          "DM Faster returned an invalid sign-in result.",
+        );
       }
       const tokenType = requiredString(body, "tokenType", "token type", 20);
       if (tokenType.toLowerCase() !== "bearer") {
-        throw new AgentAuthError("invalid_response", "DM Faster returned an unsupported token type.");
+        throw new AgentAuthError(
+          "invalid_response",
+          "DM Faster returned an unsupported token type.",
+        );
       }
       return {
         accessToken: normalizeAgentAccessToken(requiredString(body, "accessToken", "access token")),
@@ -384,7 +456,10 @@ export async function pollDeviceAuthorization(input: {
     throw errorForResponse(response, body, now());
   }
 
-  throw new AgentAuthError("expired_token", "DM Faster sign-in timed out. Run `dmfaster auth login` again.");
+  throw new AgentAuthError(
+    "expired_token",
+    "DM Faster sign-in timed out. Run `dmfaster auth login` again.",
+  );
 }
 
 export async function getRemoteAuthStatus(input: {
@@ -405,7 +480,10 @@ export async function getRemoteAuthStatus(input: {
   const body = await readJson(response);
   if (!response.ok) throw errorForResponse(response, body);
   if (!isRecord(body) || body.authenticated !== true) {
-    throw new AgentAuthError("invalid_response", "DM Faster returned an invalid authentication status.");
+    throw new AgentAuthError(
+      "invalid_response",
+      "DM Faster returned an invalid authentication status.",
+    );
   }
   return parseIdentity(body);
 }

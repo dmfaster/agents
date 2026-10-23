@@ -4,7 +4,6 @@ export type CompanyPage = AgentToolDataMap["companies.search"];
 export type CompanyRow = CompanyPage["companies"][number];
 export type CompanyDetail = AgentToolDataMap["company.inspect"];
 export type CompanyFilters = AgentToolInputMap["companies.search"]["filters"];
-export type FilterMetadata = AgentToolDataMap["companies.filters"];
 export type CompanyResult = AgentToolResult<
   CompanyPage | CompanyDetail | AgentToolDataMap["companies.list.inspect"]
 >;
