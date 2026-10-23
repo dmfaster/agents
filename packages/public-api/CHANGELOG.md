@@ -1,5 +1,13 @@
 # Agent contract changelog
 
+## 2.2.0 — P2 operating guide (2026-10-23)
+
+Added: registry-generated permission catalog and per-tool required scopes, dynamic domain-tool counts, a sandbox-first appointment-setter quickstart and recipes for overnight triage, two-slot proposals, no-show rebooking and weekly actor scoreboards (P2-2–3). The public AGENTS.md describes the same operating loop.
+
+Fixed: the remaining hard-coded 78-tool heading; scopeStats documentation now preserves its selected campaign/channel/mailbox/search scope before status and interest filters. Documented Start/resume run generations, weekday masks and the separate prospect/policy timezones. No new permissions, database migration or automatic customer behavior.
+
+Follow-ups: the 40% schema-reduction target (P2-1), customer eval package/reference agent (P2-4), knowledge CRUD (P2-5), cached summaries (P2-6), per-worker capacity estimates (P2-7) and a local refresh command (P2-8) remain unshipped. Existing credential-expiry events and hosted OAuth refresh remain available; local device credentials require the documented browser replacement flow. No passing eval or universal marketplace claim.
+
 ## 2.1.0 — P1 sales workflows (2026-10-23)
 
 Added: owner-approved versioned templates and policies, exact reply drafts with a mobile approval queue, scheduled conversation next actions and inbound cancellation (P1-1–2); versioned live-campaign sequences with SMS and read-only historical enrollment previews (P1-3); single-use booking links, localized slot suggestions, phone/custom/Teams conferences and guarded reschedule/cancel (P1-4); weighted future copy and conservative Bayesian promotion, immutable revision coverage and intervals (P1-5); bounded range analytics with actor/channel/campaign/variant/day/week groups and common canonical metrics (P1-6); 50-item bulk inbox writes, cross-campaign pipeline pages and boards (P1-7); future exact-contact attribution and duplicate alias preservation, plus prepared historical copy/duplicate reports (P1-8).

@@ -3260,7 +3260,7 @@ export interface components {
             artifacts: unknown[];
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.1.0";
+            contractVersion?: "2.2.0";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;

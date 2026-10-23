@@ -324,7 +324,7 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     artifacts.set(
       "marketing/src/lib/agent-catalog.generated.ts",
       header +
-        `export const AGENT_DOC_TOOLS = ${json(names.map((name) => [definitions[name].mcp.name, definitions[name].mcp.title, definitions[name].mcp.description]))} as const;\nexport const AGENT_DOC_EVENTS = ${json(schemas.AgentSalesEventType?.enum || [])} as const;\n`,
+        `export const AGENT_DOC_TOOLS = ${json(names.map((name) => [definitions[name].mcp.name, definitions[name].mcp.title, definitions[name].mcp.description, scopes[name]]))} as const;\nexport const AGENT_DOC_EVENTS = ${json(schemas.AgentSalesEventType?.enum || [])} as const;\nexport const AGENT_DOC_SCOPES = ${json(schemas.AgentApiScope.enum)} as const;\n`,
     );
     artifacts.set(
       "site/src/lib/agent-platform/public-input-schemas.generated.ts",

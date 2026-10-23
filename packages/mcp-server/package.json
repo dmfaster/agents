@@ -1,6 +1,6 @@
 {
   "name": "@dmfaster/mcp-server",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "DM Faster prospecting and sales tools with company and saved-list mentions and an interactive workspace.",
   "license": "Apache-2.0",
   "author": "DM Faster",
@@ -35,8 +35,8 @@
     "typecheck:local": "npm run generate:ui && node ../../tools/typecheck-local.mjs --project ui/tsconfig.json && node ../../tools/typecheck-local.mjs --project tsconfig.json"
   },
   "dependencies": {
-    "@dmfaster/local-auth": "2.1.0",
-    "@dmfaster/sdk": "2.1.0",
+    "@dmfaster/local-auth": "2.2.0",
+    "@dmfaster/sdk": "2.2.0",
     "@modelcontextprotocol/server": "2.3.0",
     "zod": "4.5.4"
   },
