@@ -80,4 +80,8 @@ shared Codex, Claude, and Cursor plugin.
 
 ## Agent sales foundation
 
-Use sandbox workspaces and fake providers for exercises. Verify isSandbox before writes. New scopes are opt-in. Respect suppressions and exact-content instructions; P0 does not enable autonomous sending. Read packages/public-api/CHANGELOG.md for contract semantics and use the generated catalog. Historical repair is dry-run only pending separate owner approval.
+Use sandbox workspaces and fake providers for exercises. Verify isSandbox before writes. New scopes are opt-in. Respect suppressions and exact-content instructions; Automatic template replies require the current owner-approved policy and approved template version. Never self-approve configuration or drafts. Free text requires exact user approval. Read packages/public-api/CHANGELOG.md for contract semantics and use the generated catalog. Historical repair is dry-run only pending separate owner approval.
+
+## Agent 2.1 workflows
+
+Discover the granted 2.1 tools before use. Use reply_templates_create and reply_policy_update to request focused owner browser approval. Read the effective versions before template replies. Free text may use ownerApproved:true only when the user actually approved that exact text. Keep idempotency keys through queue approval and ambiguous retries. Followups stop on inbound human replies and suppressions; do not bypass those controls. Booking links are secret, single-use URLs and creating them does not send them. Reschedule/cancel need current versions and the original provider request key. Compare canonicalMetrics across analytics, campaign and pipeline; missing historical actors remain unknown. Historical repair and live sequence backfill remain dry-run only pending separate owner approval. Read the canonical agent-sales reference for the operating loop.

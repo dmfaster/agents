@@ -125,6 +125,24 @@ export const AGENT_TOOL_NAMES = [
   "workspace.agent_sales.get",
   "workspace.agent_sales.update",
   "sandbox.provider.update",
+  "reply.templates.list",
+  "reply.templates.create",
+  "reply.templates.update",
+  "reply.templates.delete",
+  "reply.policy.get",
+  "reply.policy.update",
+  "reply.approvals.list",
+  "conversation.draft.save",
+  "conversation.followup.set",
+  "conversation.followup.clear",
+  "followups.due",
+  "conversations.bulk.update",
+  "pipeline.board",
+  "calendar.booking.link.create",
+  "calendar.meeting.reschedule",
+  "calendar.meeting.cancel",
+  "campaign.followups.configure",
+  "campaign.variants.configure",
 ] as const;
 export const AGENT_TOOL_POLICIES = Object.freeze({
   "analytics.summary": {
@@ -752,6 +770,96 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "reply.templates.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "reply.templates.create": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "reply.templates.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "reply.templates.delete": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "reply.policy.get": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "reply.policy.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "reply.approvals.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "conversation.draft.save": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "conversation.followup.set": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "conversation.followup.clear": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "followups.due": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "conversations.bulk.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "pipeline.board": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "calendar.booking.link.create": {
+    effect: "external",
+    approval: "human_confirmation",
+    exposure: "public_api",
+  },
+  "calendar.meeting.reschedule": {
+    effect: "external",
+    approval: "human_confirmation",
+    exposure: "public_api",
+  },
+  "calendar.meeting.cancel": {
+    effect: "external",
+    approval: "human_confirmation",
+    exposure: "public_api",
+  },
+  "campaign.followups.configure": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.variants.configure": {
+    effect: "write",
+    approval: "human_confirmation",
+    exposure: "public_api",
+  },
 } as const);
 export const AGENT_TOOL_SCOPES = {
   "analytics.summary": ["workspace:read"],
@@ -879,6 +987,34 @@ export const AGENT_TOOL_SCOPES = {
   "workspace.agent_sales.get": ["workspace:read"],
   "workspace.agent_sales.update": ["inbox:write", "suppressions:write"],
   "sandbox.provider.update": ["sandbox:write"],
+  "reply.templates.list": ["inbox:read"],
+  "reply.templates.create": ["policy:write"],
+  "reply.templates.update": ["policy:write"],
+  "reply.templates.delete": ["policy:write"],
+  "reply.policy.get": ["inbox:read"],
+  "reply.policy.update": ["policy:write"],
+  "reply.approvals.list": ["inbox:read"],
+  "conversation.draft.save": ["inbox:read", "inbox:write"],
+  "conversation.followup.set": ["inbox:read", "inbox:write"],
+  "conversation.followup.clear": ["inbox:write"],
+  "followups.due": ["inbox:read"],
+  "conversations.bulk.update": ["inbox:write"],
+  "pipeline.board": ["pipeline:read"],
+  "calendar.booking.link.create": [
+    "calendar:write",
+    "calendar:read",
+    "inbox:read",
+    "pipeline:write",
+  ],
+  "calendar.meeting.reschedule": [
+    "calendar:write",
+    "calendar:read",
+    "inbox:read",
+    "pipeline:write",
+  ],
+  "calendar.meeting.cancel": ["calendar:write", "calendar:read", "inbox:read", "pipeline:write"],
+  "campaign.followups.configure": ["campaigns:write"],
+  "campaign.variants.configure": ["campaigns:write"],
 } as const;
 export const AGENT_OWNER_ONLY_TOOLS = [
   "conversation.update",
@@ -951,6 +1087,23 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "workspace.agent_sales.get",
   "workspace.agent_sales.update",
   "sandbox.provider.update",
+  "reply.templates.list",
+  "reply.templates.create",
+  "reply.templates.update",
+  "reply.templates.delete",
+  "reply.policy.get",
+  "reply.policy.update",
+  "reply.approvals.list",
+  "conversation.draft.save",
+  "conversation.followup.set",
+  "conversation.followup.clear",
+  "followups.due",
+  "conversations.bulk.update",
+  "calendar.booking.link.create",
+  "calendar.meeting.reschedule",
+  "calendar.meeting.cancel",
+  "campaign.followups.configure",
+  "campaign.variants.configure",
 ] as const;
 export const AGENT_ERROR_CATALOG = {
   authorization_pending: {
@@ -3431,6 +3584,344 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["sandbox", "provider", "update"],
     },
   },
+  "reply.templates.list": {
+    mcp: {
+      name: "reply_templates_list",
+      title: "reply templates list",
+      description: "List versioned templates and their owner approval state.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "reply templates list --json",
+      command: ["reply", "templates", "list"],
+    },
+  },
+  "reply.templates.create": {
+    mcp: {
+      name: "reply_templates_create",
+      title: "reply templates create",
+      description:
+        "Propose a new template. The owner must approve its exact version in the returned browser page.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "reply templates create --json",
+      command: ["reply", "templates", "create"],
+    },
+  },
+  "reply.templates.update": {
+    mcp: {
+      name: "reply_templates_update",
+      title: "reply templates update",
+      description:
+        "Propose a template revision for browser owner approval; the active version remains unchanged until approval.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "reply templates update --json",
+      command: ["reply", "templates", "update"],
+    },
+  },
+  "reply.templates.delete": {
+    mcp: {
+      name: "reply_templates_delete",
+      title: "reply templates delete",
+      description:
+        "Request owner-approved retirement of a template, retaining prior audit evidence.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "reply templates delete --json",
+      command: ["reply", "templates", "delete"],
+    },
+  },
+  "reply.policy.get": {
+    mcp: {
+      name: "reply_policy_get",
+      title: "reply policy get",
+      description: "Read the active owner-approved policy; an unconfigured policy is disabled.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "reply policy get --json",
+      command: ["reply", "policy", "get"],
+    },
+  },
+  "reply.policy.update": {
+    mcp: {
+      name: "reply_policy_update",
+      title: "reply policy update",
+      description:
+        "Propose an exact policy for focused browser approval. Never grants permission by itself.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "reply policy update --json",
+      command: ["reply", "policy", "update"],
+    },
+  },
+  "reply.approvals.list": {
+    mcp: {
+      name: "reply_approvals_list",
+      title: "reply approvals list",
+      description:
+        "Read pending or decided reply and configuration approvals without marking them read.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "reply approvals list --json",
+      command: ["reply", "approvals", "list"],
+    },
+  },
+  "conversation.draft.save": {
+    mcp: {
+      name: "conversation_draft_save",
+      title: "conversation draft save",
+      description:
+        "Save exact reply text or an approved template rendering for owner review. Never sends until browser approval.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "conversation draft save --json",
+      command: ["conversation", "draft", "save"],
+    },
+  },
+  "conversation.followup.set": {
+    mcp: {
+      name: "conversation_followup_set",
+      title: "conversation followup set",
+      description:
+        "Schedule a next action. Optional auto-send must use an owner-approved policy, prospect-local hours and template; any human inbound cancels it.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "conversation followup set --json",
+      command: ["conversation", "followup", "set"],
+    },
+  },
+  "conversation.followup.clear": {
+    mcp: {
+      name: "conversation_followup_clear",
+      title: "conversation followup clear",
+      description: "Clear pending next actions with an inspected conversation version.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "conversation followup clear --json",
+      command: ["conversation", "followup", "clear"],
+    },
+  },
+  "followups.due": {
+    mcp: {
+      name: "followups_due",
+      title: "followups due",
+      description:
+        "Read due next actions across all campaigns, ordered by due time, with exact bounded totals.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "followups due --json",
+      command: ["followups", "due"],
+    },
+  },
+  "conversations.bulk.update": {
+    mcp: {
+      name: "conversations_bulk_update",
+      title: "Bulk update conversations",
+      description:
+        "Apply up to 50 version-checked inbox actions with per-item receipts; one stale item does not block the others.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Inbox",
+      usage: "conversations bulk update --json",
+      command: ["conversations", "bulk", "update"],
+    },
+  },
+  "pipeline.board": {
+    mcp: {
+      name: "pipeline_board",
+      title: "Read pipeline board",
+      description:
+        "Exact workspace or campaign-set counts and top cards per stage, including won/lost and meeting outcomes.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Pipeline",
+      usage: "pipeline board --json",
+      command: ["pipeline", "board"],
+    },
+  },
+  "calendar.booking.link.create": {
+    mcp: {
+      name: "calendar_booking_link_create",
+      title: "calendar booking link create",
+      description:
+        "Create a single-use booking link for an approved conversation and seven-day availability window. The prospect supplies their email on the page. Teams/custom_url requires the owner-provided HTTPS meeting URL.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
+    },
+    cli: {
+      section: "Calendar",
+      usage: "calendar booking link create --json",
+      command: ["calendar", "booking", "link", "create"],
+    },
+  },
+  "calendar.meeting.reschedule": {
+    mcp: {
+      name: "calendar_meeting_reschedule",
+      title: "calendar meeting reschedule",
+      description:
+        "Reschedule a managed meeting and notify attendees, with a version fence and idempotent provider marker.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
+    },
+    cli: {
+      section: "Calendar",
+      usage: "calendar meeting reschedule --json",
+      command: ["calendar", "meeting", "reschedule"],
+    },
+  },
+  "calendar.meeting.cancel": {
+    mcp: {
+      name: "calendar_meeting_cancel",
+      title: "calendar meeting cancel",
+      description: "Cancel a managed meeting, optionally notify attendees, and retain its history.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: true,
+      },
+    },
+    cli: {
+      section: "Calendar",
+      usage: "calendar meeting cancel --json",
+      command: ["calendar", "meeting", "cancel"],
+    },
+  },
+  "campaign.followups.configure": {
+    mcp: {
+      name: "campaign_followups_configure",
+      title: "Configure campaign follow-ups",
+      description:
+        "Configure versioned future sequences on running or paused campaigns, including SMS. Historical contacted-no-reply enrollment is dry-run only in live workspaces; only sandbox permits applying it.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "campaign followups configure --json",
+      command: ["campaign", "followups", "configure"],
+    },
+  },
+  "campaign.variants.configure": {
+    mcp: {
+      name: "campaign_variants_configure",
+      title: "Configure weighted campaign variants",
+      description:
+        "Set explicitly approved future copy variants, weights, prospect timezone and optional conservative Bayesian winner promotion. Existing queued copy and history are immutable.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaigns",
+      usage: "campaign variants configure --json",
+      command: ["campaign", "variants", "configure"],
+    },
+  },
 } as const;
 export const AGENT_TOOL_INPUT_SCHEMAS = {
   "analytics.summary": {
@@ -3808,6 +4299,60 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   "sandbox.provider.update": {
     $ref: "#/components/schemas/SandboxProviderUpdateInput",
   },
+  "reply.templates.list": {
+    $ref: "#/components/schemas/ReplyTemplatesListInput",
+  },
+  "reply.templates.create": {
+    $ref: "#/components/schemas/ReplyTemplatesCreateInput",
+  },
+  "reply.templates.update": {
+    $ref: "#/components/schemas/ReplyTemplatesUpdateInput",
+  },
+  "reply.templates.delete": {
+    $ref: "#/components/schemas/ReplyTemplatesDeleteInput",
+  },
+  "reply.policy.get": {
+    $ref: "#/components/schemas/ReplyPolicyGetInput",
+  },
+  "reply.policy.update": {
+    $ref: "#/components/schemas/ReplyPolicyUpdateInput",
+  },
+  "reply.approvals.list": {
+    $ref: "#/components/schemas/ReplyApprovalsListInput",
+  },
+  "conversation.draft.save": {
+    $ref: "#/components/schemas/ConversationDraftSaveInput",
+  },
+  "conversation.followup.set": {
+    $ref: "#/components/schemas/ConversationFollowupSetInput",
+  },
+  "conversation.followup.clear": {
+    $ref: "#/components/schemas/ConversationFollowupClearInput",
+  },
+  "followups.due": {
+    $ref: "#/components/schemas/FollowupsDueInput",
+  },
+  "conversations.bulk.update": {
+    $ref: "#/components/schemas/ConversationsBulkUpdateInput",
+  },
+  "pipeline.board": {
+    $ref: "#/components/schemas/PipelineBoardInput",
+  },
+  "calendar.booking.link.create": {
+    $ref: "#/components/schemas/CalendarBookingLinkCreateInput",
+  },
+  "calendar.meeting.reschedule": {
+    $ref: "#/components/schemas/CalendarMeetingRescheduleInput",
+  },
+  "calendar.meeting.cancel": {
+    $ref: "#/components/schemas/CalendarMeetingCancelInput",
+  },
+  "campaign.followups.configure": {
+    $ref: "#/components/schemas/CampaignFollowupsConfigureInput",
+  },
+  "campaign.variants.configure": {
+    $ref: "#/components/schemas/CampaignVariantsConfigureInput",
+  },
 } as const;
 export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
   AnalyticsSummaryInput: {
@@ -3817,7 +4362,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     properties: {
       scope: {
         type: "string",
-        enum: ["today", "last_24_hours", "campaign_to_date"],
+        enum: ["today", "last_24_hours", "campaign_to_date", "range"],
       },
       campaign: {
         allOf: [
@@ -3826,6 +4371,20 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           },
         ],
         description: "Optional campaign identifier or exact campaign name.",
+      },
+      from: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      to: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      groupBy: {
+        type: "array",
+        maxItems: 6,
+        items: {
+          type: "string",
+          enum: ["day", "week", "channel", "campaign", "actor", "variant"],
+        },
       },
     },
   },
@@ -3837,6 +4396,15 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     minLength: 1,
     maxLength: 160,
     pattern: ".*\\S.*",
+  },
+  ResourceVersion: {
+    type: "string",
+    description:
+      "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
+    pattern:
+      "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}(?::?\\d{2})?)$",
+    minLength: 20,
+    maxLength: 32,
   },
   WorkspaceBriefingInput: {
     type: "object",
@@ -4008,15 +4576,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "string",
     enum: ["instagram", "facebook", "linkedin", "gmail", "outlook", "email", "sms"],
   },
-  ResourceVersion: {
-    type: "string",
-    description:
-      "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
-    pattern:
-      "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}(?::?\\d{2})?)$",
-    minLength: 20,
-    maxLength: 32,
-  },
   ConversationInspectInput: {
     type: "object",
     additionalProperties: false,
@@ -4094,7 +4653,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       "conversationId",
       "expectedLastInboundAt",
       "expectedLastMessageAt",
-      "text",
       "idempotencyKey",
     ],
     properties: {
@@ -4118,7 +4676,49 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxLength: 160,
         pattern: "^[a-zA-Z0-9_-]+$",
       },
+      templateId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      variables: {
+        $ref: "#/components/schemas/ReplyTemplateVariables",
+      },
+      ownerApproved: {
+        type: "boolean",
+        description:
+          "For 2.1 clients only: the owner explicitly approved this exact free text and conversation. Otherwise save a draft.",
+      },
     },
+  },
+  ReplyTemplateVariables: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      firstName: {
+        type: "string",
+        maxLength: 500,
+      },
+      companyName: {
+        type: "string",
+        maxLength: 500,
+      },
+      slotLink: {
+        type: "string",
+        maxLength: 500,
+      },
+      slot1: {
+        type: "string",
+        maxLength: 500,
+      },
+      slot2: {
+        type: "string",
+        maxLength: 500,
+      },
+      ownerName: {
+        type: "string",
+        maxLength: 500,
+      },
+    },
+    required: [],
   },
   ConversationReplyInspectInput: {
     type: "object",
@@ -4454,7 +5054,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
   PipelineCardsListInput: {
     type: "object",
     additionalProperties: false,
-    required: ["campaignId", "stage"],
+    required: [],
     properties: {
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
@@ -4465,7 +5065,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       limit: {
         type: "integer",
         minimum: 1,
-        maximum: 15,
+        maximum: 100,
       },
       cursor: {
         type: "string",
@@ -4481,6 +5081,24 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "string",
         minLength: 1,
         maxLength: 320,
+      },
+      stages: {
+        type: "array",
+        minItems: 1,
+        maxItems: 8,
+        items: {
+          type: "string",
+          enum: [
+            "contacted",
+            "replied",
+            "call_booked",
+            "meeting_held",
+            "no_show",
+            "closed",
+            "won",
+            "lost",
+          ],
+        },
       },
     },
   },
@@ -7009,6 +7627,13 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         minimum: 1,
         maximum: 100,
       },
+      calendarId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 500,
+        description:
+          "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
+      },
     },
   },
   CalendarMeetingBookInput: {
@@ -7022,7 +7647,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       "start",
       "timezone",
       "durationMinutes",
-      "attendees",
     ],
     properties: {
       conversationId: {
@@ -7068,6 +7692,26 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         },
         maxItems: 20,
         minItems: 1,
+      },
+      conference: {
+        type: "string",
+        enum: ["google_meet", "teams", "phone", "in_person", "custom_url"],
+      },
+      customUrl: {
+        type: "string",
+        pattern: "^https://",
+        maxLength: 2000,
+      },
+      attendeePhone: {
+        type: "string",
+        maxLength: 40,
+      },
+      calendarId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 500,
+        description:
+          "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
       },
     },
   },
@@ -8248,5 +8892,704 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
     required: ["provider", "connected", "expectedUpdatedAt", "idempotencyKey"],
+  },
+  ReplyTemplatesListInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+    },
+    required: [],
+  },
+  ReplyTemplatesCreateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      template: {
+        $ref: "#/components/schemas/ReplyTemplate",
+      },
+      expectedRevision: {
+        type: "integer",
+        const: 0,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["template", "expectedRevision", "idempotencyKey"],
+  },
+  ReplyTemplate: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      name: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+      },
+      language: {
+        type: "string",
+        enum: ["fi", "en"],
+      },
+      channels: {
+        type: "array",
+        items: {
+          type: "string",
+          enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+        },
+        maxItems: 5,
+      },
+      intents: {
+        type: "array",
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 80,
+        },
+        maxItems: 30,
+      },
+      body: {
+        type: "string",
+        minLength: 1,
+        maxLength: 10000,
+      },
+      maxLength: {
+        type: "integer",
+        minimum: 1,
+        maximum: 10000,
+      },
+    },
+    required: ["name", "language", "channels", "intents", "body", "maxLength"],
+  },
+  ReplyTemplatesUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      id: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      template: {
+        $ref: "#/components/schemas/ReplyTemplate",
+      },
+      expectedRevision: {
+        type: "integer",
+        minimum: 0,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["id", "template", "expectedRevision", "idempotencyKey"],
+  },
+  ReplyTemplatesDeleteInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      id: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedRevision: {
+        type: "integer",
+        minimum: 0,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["id", "expectedRevision", "idempotencyKey"],
+  },
+  ReplyPolicyGetInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {},
+    required: [],
+  },
+  ReplyPolicyUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      policy: {
+        $ref: "#/components/schemas/ReplyPolicy",
+      },
+      expectedRevision: {
+        type: "integer",
+        minimum: 0,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["policy", "expectedRevision", "idempotencyKey"],
+  },
+  ReplyPolicy: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      enabled: {
+        type: "boolean",
+      },
+      allowedIntents: {
+        type: "array",
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 80,
+        },
+        maxItems: 30,
+      },
+      allowedChannels: {
+        type: "array",
+        items: {
+          type: "string",
+          enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+        },
+        maxItems: 5,
+      },
+      allowedTemplateIds: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/ResourceId",
+        },
+        maxItems: 100,
+      },
+      freeTextAllowed: {
+        type: "boolean",
+        const: false,
+      },
+      excludeIfOptOut: {
+        type: "boolean",
+        const: true,
+      },
+      hours: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          tz: {
+            type: "string",
+            minLength: 1,
+            maxLength: 80,
+          },
+          start: {
+            type: "string",
+            pattern: "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          },
+          end: {
+            type: "string",
+            pattern: "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          },
+          weekdays: {
+            type: "array",
+            items: {
+              type: "integer",
+              minimum: 1,
+              maximum: 7,
+            },
+            maxItems: 7,
+          },
+        },
+        required: ["tz", "start", "end", "weekdays"],
+      },
+      maxAutoRepliesPerDay: {
+        type: "integer",
+        minimum: 1,
+        maximum: 1000,
+      },
+      maxPerConversationPerDay: {
+        type: "integer",
+        minimum: 1,
+        maximum: 20,
+      },
+      requireApprovalIfConfidenceBelow: {
+        type: "number",
+        minimum: 0,
+        maximum: 1,
+      },
+    },
+    required: [
+      "enabled",
+      "allowedIntents",
+      "allowedChannels",
+      "allowedTemplateIds",
+      "freeTextAllowed",
+      "excludeIfOptOut",
+      "hours",
+      "maxAutoRepliesPerDay",
+      "maxPerConversationPerDay",
+      "requireApprovalIfConfidenceBelow",
+    ],
+  },
+  ReplyApprovalsListInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+      status: {
+        type: "string",
+        enum: ["pending", "approved", "rejected"],
+      },
+    },
+    required: [],
+  },
+  ConversationDraftSaveInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      conversationId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      text: {
+        type: "string",
+        minLength: 1,
+        maxLength: 10000,
+      },
+      templateId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      variables: {
+        $ref: "#/components/schemas/ReplyTemplateVariables",
+      },
+      rationale: {
+        type: "string",
+        minLength: 1,
+        maxLength: 2000,
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["conversationId", "expectedUpdatedAt", "idempotencyKey"],
+  },
+  ConversationFollowupSetInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      conversationId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      at: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      type: {
+        type: "string",
+        enum: ["reply", "nudge", "send_info", "rebook", "call"],
+      },
+      note: {
+        type: "string",
+        minLength: 1,
+        maxLength: 2000,
+      },
+      owner: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      autoSend: {
+        $ref: "#/components/schemas/FollowupAutoSend",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["conversationId", "expectedUpdatedAt", "at", "type", "idempotencyKey"],
+  },
+  FollowupAutoSend: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      templateId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      variables: {
+        $ref: "#/components/schemas/ReplyTemplateVariables",
+      },
+    },
+    required: ["templateId"],
+  },
+  ConversationFollowupClearInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      conversationId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["conversationId", "expectedUpdatedAt", "idempotencyKey"],
+  },
+  FollowupsDueInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+      before: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      owner: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+    },
+    required: [],
+  },
+  ConversationsBulkUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      items: {
+        type: "array",
+        minItems: 1,
+        maxItems: 50,
+        items: {
+          $ref: "#/components/schemas/ConversationUpdateInput",
+        },
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["items", "idempotencyKey"],
+  },
+  PipelineBoardInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      campaignIds: {
+        type: "array",
+        maxItems: 100,
+        items: {
+          $ref: "#/components/schemas/ResourceId",
+        },
+      },
+      limitPerStage: {
+        type: "integer",
+        minimum: 1,
+        maximum: 20,
+      },
+    },
+  },
+  CalendarBookingLinkCreateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      conversationId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedConversationUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      durations: {
+        type: "array",
+        items: {
+          type: "integer",
+          minimum: 15,
+          maximum: 120,
+        },
+        minItems: 1,
+        maxItems: 4,
+      },
+      window: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          from: {
+            $ref: "#/components/schemas/ResourceVersion",
+          },
+          to: {
+            $ref: "#/components/schemas/ResourceVersion",
+          },
+        },
+        required: ["from", "to"],
+      },
+      timezone: {
+        type: "string",
+        minLength: 1,
+        maxLength: 80,
+      },
+      conference: {
+        type: "string",
+        enum: ["google_meet", "teams", "phone", "in_person", "custom_url"],
+      },
+      customUrl: {
+        type: "string",
+        pattern: "^https://",
+        maxLength: 2000,
+      },
+      maxUses: {
+        type: "integer",
+        const: 1,
+      },
+      expiresAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      language: {
+        type: "string",
+        enum: ["fi", "en"],
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      calendarId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 500,
+        description:
+          "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
+      },
+    },
+    required: [
+      "conversationId",
+      "expectedConversationUpdatedAt",
+      "durations",
+      "window",
+      "timezone",
+      "conference",
+      "maxUses",
+      "expiresAt",
+      "language",
+      "idempotencyKey",
+    ],
+  },
+  CalendarMeetingRescheduleInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      meetingId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      start: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["meetingId", "expectedUpdatedAt", "start", "idempotencyKey"],
+  },
+  CalendarMeetingCancelInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      meetingId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      reason: {
+        type: "string",
+        minLength: 1,
+        maxLength: 2000,
+      },
+      notifyAttendees: {
+        type: "boolean",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["meetingId", "expectedUpdatedAt", "reason", "notifyAttendees", "idempotencyKey"],
+  },
+  CampaignFollowupsConfigureInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedCampaignUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      sequence: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          enabled: {
+            type: "boolean",
+          },
+          steps: {
+            type: "array",
+            maxItems: 3,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                delayDays: {
+                  type: "integer",
+                  minimum: 1,
+                  maximum: 30,
+                },
+                channel: {
+                  type: "string",
+                  enum: ["inherit", "instagram", "facebook", "linkedin", "gmail", "sms"],
+                },
+                fallbackChannel: {
+                  type: "string",
+                  enum: ["none", "instagram", "facebook", "linkedin", "gmail", "sms"],
+                },
+                subject: {
+                  type: "string",
+                  maxLength: 500,
+                },
+                variants: {
+                  type: "array",
+                  minItems: 1,
+                  maxItems: 4,
+                  items: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 10000,
+                  },
+                },
+                smsBody: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 1600,
+                },
+              },
+              required: ["delayDays", "channel", "fallbackChannel", "variants"],
+            },
+          },
+        },
+        required: ["enabled", "steps"],
+      },
+      applyTo: {
+        type: "string",
+        enum: ["future_only", "contacted_no_reply"],
+      },
+      dryRun: {
+        type: "boolean",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: [
+      "campaignId",
+      "expectedCampaignUpdatedAt",
+      "sequence",
+      "applyTo",
+      "dryRun",
+      "idempotencyKey",
+    ],
+  },
+  CampaignVariantsConfigureInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      expectedCampaignUpdatedAt: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      channel: {
+        type: "string",
+        enum: ["social", "gmail", "sms"],
+      },
+      variants: {
+        type: "array",
+        minItems: 2,
+        maxItems: 4,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            id: {
+              $ref: "#/components/schemas/ResourceId",
+            },
+            body: {
+              type: "string",
+              minLength: 1,
+              maxLength: 10000,
+            },
+            subject: {
+              type: "string",
+              maxLength: 500,
+            },
+            weight: {
+              type: "number",
+              minimum: 0,
+              maximum: 10000,
+            },
+          },
+          required: ["id", "body", "weight"],
+        },
+      },
+      minSamplePerVariant: {
+        type: "integer",
+        minimum: 10,
+        maximum: 100000,
+      },
+      promote: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          metric: {
+            type: "string",
+            enum: ["reply_rate", "positive_reply_rate", "booking_rate"],
+          },
+          rule: {
+            type: "string",
+            enum: ["bayesian_95", "manual"],
+          },
+        },
+        required: ["metric", "rule"],
+      },
+      prospectTimezone: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+      },
+    },
+    required: [
+      "campaignId",
+      "expectedCampaignUpdatedAt",
+      "idempotencyKey",
+      "channel",
+      "variants",
+      "minSamplePerVariant",
+      "promote",
+    ],
   },
 } as const;

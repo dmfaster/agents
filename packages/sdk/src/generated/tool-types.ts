@@ -126,6 +126,24 @@ export type AgentToolInputMap = {
   "workspace.agent_sales.get": operations["workspaceAgentSalesGet"]["requestBody"]["content"]["application/json"];
   "workspace.agent_sales.update": operations["workspaceAgentSalesUpdate"]["requestBody"]["content"]["application/json"];
   "sandbox.provider.update": operations["sandboxProviderUpdate"]["requestBody"]["content"]["application/json"];
+  "reply.templates.list": operations["replyTemplatesList"]["requestBody"]["content"]["application/json"];
+  "reply.templates.create": operations["replyTemplatesCreate"]["requestBody"]["content"]["application/json"];
+  "reply.templates.update": operations["replyTemplatesUpdate"]["requestBody"]["content"]["application/json"];
+  "reply.templates.delete": operations["replyTemplatesDelete"]["requestBody"]["content"]["application/json"];
+  "reply.policy.get": operations["replyPolicyGet"]["requestBody"]["content"]["application/json"];
+  "reply.policy.update": operations["replyPolicyUpdate"]["requestBody"]["content"]["application/json"];
+  "reply.approvals.list": operations["replyApprovalsList"]["requestBody"]["content"]["application/json"];
+  "conversation.draft.save": operations["conversationDraftSave"]["requestBody"]["content"]["application/json"];
+  "conversation.followup.set": operations["conversationFollowupSet"]["requestBody"]["content"]["application/json"];
+  "conversation.followup.clear": operations["conversationFollowupClear"]["requestBody"]["content"]["application/json"];
+  "followups.due": operations["followupsDue"]["requestBody"]["content"]["application/json"];
+  "conversations.bulk.update": operations["conversationsBulkUpdate"]["requestBody"]["content"]["application/json"];
+  "pipeline.board": operations["pipelineBoard"]["requestBody"]["content"]["application/json"];
+  "calendar.booking.link.create": operations["calendarBookingLinkCreate"]["requestBody"]["content"]["application/json"];
+  "calendar.meeting.reschedule": operations["calendarMeetingReschedule"]["requestBody"]["content"]["application/json"];
+  "calendar.meeting.cancel": operations["calendarMeetingCancel"]["requestBody"]["content"]["application/json"];
+  "campaign.followups.configure": operations["campaignFollowupsConfigure"]["requestBody"]["content"]["application/json"];
+  "campaign.variants.configure": operations["campaignVariantsConfigure"]["requestBody"]["content"]["application/json"];
 };
 export type AgentToolDataMap = {
   "analytics.summary": NonNullable<
@@ -502,5 +520,59 @@ export type AgentToolDataMap = {
   >;
   "sandbox.provider.update": NonNullable<
     operations["sandboxProviderUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "reply.templates.list": NonNullable<
+    operations["replyTemplatesList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "reply.templates.create": NonNullable<
+    operations["replyTemplatesCreate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "reply.templates.update": NonNullable<
+    operations["replyTemplatesUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "reply.templates.delete": NonNullable<
+    operations["replyTemplatesDelete"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "reply.policy.get": NonNullable<
+    operations["replyPolicyGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "reply.policy.update": NonNullable<
+    operations["replyPolicyUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "reply.approvals.list": NonNullable<
+    operations["replyApprovalsList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "conversation.draft.save": NonNullable<
+    operations["conversationDraftSave"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "conversation.followup.set": NonNullable<
+    operations["conversationFollowupSet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "conversation.followup.clear": NonNullable<
+    operations["conversationFollowupClear"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "followups.due": NonNullable<
+    operations["followupsDue"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "conversations.bulk.update": NonNullable<
+    operations["conversationsBulkUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "pipeline.board": NonNullable<
+    operations["pipelineBoard"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "calendar.booking.link.create": NonNullable<
+    operations["calendarBookingLinkCreate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "calendar.meeting.reschedule": NonNullable<
+    operations["calendarMeetingReschedule"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "calendar.meeting.cancel": NonNullable<
+    operations["calendarMeetingCancel"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.followups.configure": NonNullable<
+    operations["campaignFollowupsConfigure"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.variants.configure": NonNullable<
+    operations["campaignVariantsConfigure"]["responses"][200]["content"]["application/json"]["data"]
   >;
 };
