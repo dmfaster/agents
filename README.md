@@ -1,4 +1,4 @@
-> Agent 2.2.0 adds recipient-specific draft and queued campaign messages.
+> Agent packages 2.3.0 add structured product feedback with durable receipts and opt-in feedback access.
 > Native host rendering and directory review remain separate checks.
 
 # DM Faster for agents
@@ -18,7 +18,7 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-The 2.2.0 source exposes 102 typed domain tools. It adds Basic-plan Instagram
+The 2.3.0 source exposes 145 typed domain tools. It adds Basic-plan Instagram
 prospecting and separately charged enrichment, quiet Companies views, website
 evidence, bounded company suggestions, and company and saved-list mentions.
 Extraction reports exact saved counts and settled credit costs. A same-key retry
@@ -98,7 +98,7 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@2.2.0 auth login --json
+npx --yes @dmfaster/cli@2.3.0 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
@@ -120,10 +120,10 @@ the owner approves the replacement. Credentials are never upgraded silently.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@2.2.0 workspace briefing --json
-npx --yes @dmfaster/cli@2.2.0 campaign copy inspect campaign_123 --json
-npx --yes @dmfaster/cli@2.2.0 conversations list --filter unread --limit 25 --json
-npx --yes @dmfaster/mcp-server@2.2.0
+npx --yes @dmfaster/cli@2.3.0 workspace briefing --json
+npx --yes @dmfaster/cli@2.3.0 campaign copy inspect campaign_123 --json
+npx --yes @dmfaster/cli@2.3.0 conversations list --filter unread --limit 25 --json
+npx --yes @dmfaster/mcp-server@2.3.0
 ```
 
 The 102 MCP domain tools cover prospecting, workspace, campaign, sending, reply, inbox,
@@ -177,7 +177,7 @@ private product source or trademarks.
 All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
 
 ```bash
-npx --yes @dmfaster/cli@2.2.0 list import --name "My prospects" --file usernames.csv --json
+npx --yes @dmfaster/cli@2.3.0 list import --name "My prospects" --file usernames.csv --json
 ```
 
 The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
@@ -315,3 +315,7 @@ provide exact recipient identities and versions. Writes reuse existing granted
 permissions and durable idempotency keys. Preparing copy creates no sending job;
 launch remains a separate explicit action. Product migration 0385 must be applied
 before publishing these clients.
+
+## Agent 2.3.0 product feedback
+
+Use `feedback_submit` with category, summary and a stable idempotency key; add observed/expected behavior or a suggestion when useful. Retry the same payload/key after an uncertain response. `feedback_list` reads the authenticated author’s reports in the current workspace. Both tools require owner-only `feedback:write`; existing grants are unchanged. Reconnect or upgrade access when the owner requests feedback capability. Omit credentials, private messages and personal data. A received receipt confirms storage, not a promised fix.
