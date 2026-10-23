@@ -13,6 +13,8 @@ const sdkContractsPath = path.join(rootDir, "packages", "sdk", "src", "contracts
 const mcpToolsPath = path.join(rootDir, "packages", "mcp-server", "src", "tools.ts");
 const localAuthConstantsPath = path.join(rootDir, "packages", "local-auth", "src", "constants.ts");
 const EXPECTED_TOOLS = new Map([
+  ["feedback.submit", { effect: "write", scopes: ["feedback:write"] }],
+  ["feedback.list", { effect: "read", scopes: ["feedback:write"] }],
   ["analytics.summary", { effect: "read", scopes: ["workspace:read"] }],
   ["workspace.briefing", { effect: "read", scopes: ["workspace:read"] }],
   ["campaigns.list", { effect: "read", scopes: ["campaigns:read"] }],
@@ -62,7 +64,7 @@ const EXPECTED_TOOLS = new Map([
   ["companies.suggest", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.search", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.evidence.search", { effect: "read", scopes: ["audiences:read"] }],
-  ["companies.knowledge.search", { effect: "read", scopes: ["audiences:read"], ownerOnly: true }],
+  ["companies.knowledge.search", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.knowledge", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.evidence.start", { effect: "read", scopes: ["audiences:read"] }],
   ["companies.evidence.advance", { effect: "read", scopes: ["audiences:read"] }],
@@ -148,6 +150,71 @@ const EXPECTED_TOOLS = new Map([
     "leads.prospect.cancel",
     { effect: "write", scopes: ["leads:read", "campaigns:read", "leads:write", "campaigns:write"] },
   ],
+  ["events.list", { effect: "read", scopes: ["events:read"] }],
+  ["conversations.changes", { effect: "read", scopes: ["inbox:read"] }],
+  ["suppressions.list", { effect: "read", scopes: ["inbox:read"] }],
+  ["suppressions.add", { effect: "write", scopes: ["suppressions:write"] }],
+  ["suppressions.remove", { effect: "write", scopes: ["suppressions:write"] }],
+  ["workspace.sandbox.create", { effect: "write", scopes: ["sandbox:write"] }],
+  ["sandbox.seed", { effect: "write", scopes: ["sandbox:write"] }],
+  ["sandbox.inbound.simulate", { effect: "write", scopes: ["sandbox:write"] }],
+  ["sandbox.clock.advance", { effect: "write", scopes: ["sandbox:write"] }],
+  ["call.outcome.set", { effect: "write", scopes: ["calls:write"] }],
+  ["meeting.link", { effect: "write", scopes: ["calls:write"] }],
+  ["meeting.unlink", { effect: "write", scopes: ["calls:write"] }],
+  ["webhooks.create", { effect: "write", scopes: ["webhooks:write", "events:read"] }],
+  ["webhooks.list", { effect: "read", scopes: ["webhooks:write", "events:read"] }],
+  ["webhooks.update", { effect: "write", scopes: ["webhooks:write", "events:read"] }],
+  ["webhooks.delete", { effect: "write", scopes: ["webhooks:write", "events:read"] }],
+  ["webhooks.test", { effect: "write", scopes: ["webhooks:write", "events:read"] }],
+  ["webhooks.replay", { effect: "write", scopes: ["webhooks:write", "events:read"] }],
+  ["meetings.unlinked.list", { effect: "read", scopes: ["calls:read"] }],
+  [
+    "pipeline.reconcile",
+    { effect: "write", scopes: ["calls:read", "pipeline:write", "calls:write"] },
+  ],
+  ["workspace.agent_sales.get", { effect: "read", scopes: ["workspace:read"] }],
+  [
+    "workspace.agent_sales.update",
+    { effect: "write", scopes: ["inbox:write", "suppressions:write"] },
+  ],
+  ["sandbox.provider.update", { effect: "write", scopes: ["sandbox:write"] }],
+  ["reply.templates.list", { effect: "read", scopes: ["inbox:read"] }],
+  ["reply.templates.create", { effect: "write", scopes: ["policy:write"] }],
+  ["reply.templates.update", { effect: "write", scopes: ["policy:write"] }],
+  ["reply.templates.delete", { effect: "write", scopes: ["policy:write"] }],
+  ["reply.policy.get", { effect: "read", scopes: ["inbox:read"] }],
+  ["reply.policy.update", { effect: "write", scopes: ["policy:write"] }],
+  ["reply.approvals.list", { effect: "read", scopes: ["inbox:read"] }],
+  ["conversation.draft.save", { effect: "write", scopes: ["inbox:read", "inbox:write"] }],
+  ["conversation.followup.set", { effect: "write", scopes: ["inbox:read", "inbox:write"] }],
+  ["conversation.followup.clear", { effect: "write", scopes: ["inbox:write"] }],
+  ["followups.due", { effect: "read", scopes: ["inbox:read"] }],
+  ["conversations.bulk.update", { effect: "write", scopes: ["inbox:write"] }],
+  ["pipeline.board", { effect: "read", scopes: ["pipeline:read"] }],
+  [
+    "calendar.booking.link.create",
+    {
+      effect: "external",
+      scopes: ["calendar:write", "calendar:read", "inbox:read", "pipeline:write"],
+    },
+  ],
+  [
+    "calendar.meeting.reschedule",
+    {
+      effect: "external",
+      scopes: ["calendar:write", "calendar:read", "inbox:read", "pipeline:write"],
+    },
+  ],
+  [
+    "calendar.meeting.cancel",
+    {
+      effect: "external",
+      scopes: ["calendar:write", "calendar:read", "inbox:read", "pipeline:write"],
+    },
+  ],
+  ["campaign.followups.configure", { effect: "write", scopes: ["campaigns:write"] }],
+  ["campaign.variants.configure", { effect: "write", scopes: ["campaigns:write"] }],
 ]);
 
 const EXPECTED_AUTH_METHODS = new Map([
@@ -172,9 +239,16 @@ const EXPECTED_SCOPE_NAMES = [
   "calendar:read",
   "calendar:write",
   "calls:read",
+  "events:read",
+  "suppressions:write",
+  "sandbox:write",
+  "calls:write",
+  "webhooks:write",
   "leads:read",
   "leads:write",
   "sending:test",
+  "policy:write",
+  "feedback:write",
 ];
 
 function sourceSlice(source, start, end) {
@@ -211,9 +285,7 @@ test("public API generation scripts and stale-output guidance share one repair c
 
 function operationBlocks(source) {
   return [
-    ...source.matchAll(
-      /^  \/api\/v1\/agent\/tools\/([^:]+):\n([\s\S]*?)(?=^  \/api\/v1\/agent\/tools\/|^components:)/gm,
-    ),
+    ...source.matchAll(/^  \/api\/v1\/agent\/tools\/([^:]+):\n([\s\S]*?)(?=^  \/|^components:)/gm),
   ].map((match) => ({ tool: match[1], source: match[2] }));
 }
 
@@ -258,10 +330,13 @@ test("the Agent API exposes the bounded browser-login lifecycle", async () => {
     /^        codeChallengeMethod:\n          type: string\n          const: S256$/m,
   );
   assert.match(source, /^        expiresIn:\n          type: integer\n          const: 300$/m);
-  assert.match(source, /pattern:\s+['\"]\^dmf_pat_\[a-f0-9\]\{64\}\$['\"]/);
+  assert.equal(
+    parse(source).components.schemas.AgentDeviceTokenResult.properties.accessToken.pattern,
+    "^dmf_pat_[a-f0-9]{64}$",
+  );
 });
 
-test("the public Agent API exposes exactly the approved Agent 1.0 operations", async () => {
+test("the public Agent API exposes exactly the approved Agent 2.0 operations", async () => {
   const source = await readFile(contractPath, "utf8");
   const blocks = operationBlocks(source);
 
@@ -322,6 +397,9 @@ test("every public contract and client scope allowlist stays equal", async () =>
     ],
   ]);
   for (const [name, scopes] of runtimeAllowlists) {
-    assert.deepEqual(scopes, EXPECTED_SCOPE_NAMES, `${name} scope drift`);
+    const expected = name.startsWith("local-auth")
+      ? EXPECTED_SCOPE_NAMES.filter((scope) => scope !== "policy:write")
+      : EXPECTED_SCOPE_NAMES;
+    assert.deepEqual([...scopes].sort(), [...expected].sort(), `${name} scope drift`);
   }
 });

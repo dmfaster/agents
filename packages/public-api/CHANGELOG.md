@@ -1,5 +1,11 @@
 # Agent contract changelog
 
+## 2.3.0 — Agent product feedback (2026-10-23)
+
+Added: `feedback.submit` and `feedback.list` with minimal structured reports, optional reproduction context, durable idempotency keys, stable receipts and author/workspace-scoped pagination. Operators can review reports through `ops_product_feedback`. Stored report text is untrusted customer content; a received receipt does not promise a fix.
+
+Compatibility: `feedback:write` is opt-in and owner-only. Existing grants are unchanged; reconnect only when requesting feedback access. The full local login profile includes feedback; policy editing remains a separate opt-in capability. Authorization schemas accept the complete 24-scope catalog.
+
 ## 2.2.0 — P2 operating guide (2026-10-23)
 
 Added: registry-generated permission catalog and per-tool required scopes, dynamic domain-tool counts, a sandbox-first appointment-setter quickstart and recipes for overnight triage, two-slot proposals, no-show rebooking and weekly actor scoreboards (P2-2–3). The public AGENTS.md describes the same operating loop.

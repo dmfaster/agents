@@ -1,6 +1,8 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
 import type { operations } from "./api.ts";
 export type AgentToolInputMap = {
+  "feedback.submit": operations["feedbackSubmit"]["requestBody"]["content"]["application/json"];
+  "feedback.list": operations["feedbackList"]["requestBody"]["content"]["application/json"];
   "analytics.summary": operations["analyticsSummary"]["requestBody"]["content"]["application/json"];
   "workspace.briefing": operations["workspaceBriefing"]["requestBody"]["content"]["application/json"];
   "campaigns.list": operations["campaignsList"]["requestBody"]["content"]["application/json"];
@@ -146,6 +148,12 @@ export type AgentToolInputMap = {
   "campaign.variants.configure": operations["campaignVariantsConfigure"]["requestBody"]["content"]["application/json"];
 };
 export type AgentToolDataMap = {
+  "feedback.submit": NonNullable<
+    operations["feedbackSubmit"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "feedback.list": NonNullable<
+    operations["feedbackList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
   "analytics.summary": NonNullable<
     operations["analyticsSummary"]["responses"][200]["content"]["application/json"]["data"]
   >;

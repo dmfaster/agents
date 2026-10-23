@@ -1,6 +1,6 @@
 {
   "name": "dmfaster-agents",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "private": true,
   "description": "Public Agent 2.0 interfaces for DM Faster.",
   "license": "Apache-2.0",
@@ -47,6 +47,9 @@
     "@modelcontextprotocol/client": "2.3.0",
     "hono": "4.12.34",
     "postcss": "8.5.31",
-    "js-yaml": "4.3.2"
+    "js-yaml": "4.3.2",
+    "openapi-typescript": {
+      "typescript": "5.9.3"
+    }
   }
 }

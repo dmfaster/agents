@@ -530,3 +530,34 @@ test("draft personalization exposes exact audience versions and unique copy befo
   ])
     assert.equal(update.inputSchema.safeParse({ ...input, ...patch }).success, false);
 });
+
+test("feedback tools publish bounded schemas and preserve one-call retry identity", async () => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const tools = createAgentToolDefinitions(fakeClient(calls));
+  const submit = tools.find((tool) => tool.name === "feedback_submit")!;
+  const list = tools.find((tool) => tool.name === "feedback_list")!;
+  assert.ok(submit);
+  assert.ok(list);
+  assert.deepEqual(submit.annotations, {
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  });
+  assert.equal(list.annotations.readOnlyHint, true);
+  const input = {
+    category: "improvement",
+    summary: "Explain cursor recovery",
+    idempotencyKey: "cursor-feedback",
+  };
+  await submit.call(input);
+  await submit.call(input);
+  assert.deepEqual(calls, [
+    { tool: "feedback.submit", input },
+    { tool: "feedback.submit", input },
+  ]);
+  assert.equal(submit.inputSchema.safeParse({ ...input, rawTranscript: "private" }).success, false);
+  assert.equal(submit.inputSchema.safeParse({ ...input, summary: "x".repeat(241) }).success, false);
+  await list.call({ limit: 2 });
+  assert.deepEqual(calls[2], { tool: "feedback.list", input: { limit: 2 } });
+});
