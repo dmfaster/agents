@@ -12,6 +12,11 @@ on:
         required: true
         type: string
 
+      focused_reason:
+        description: Explicit owner approval reason for typecheck/build-only verification (empty runs the full gate)
+        required: false
+        type: string
+
 permissions:
   contents: read
 
@@ -101,10 +106,22 @@ jobs:
         run: npm ci
 
       - name: Audit runtime dependencies
+        if: ${{ inputs.focused_reason == '' }}
         run: npm audit --omit=dev
 
       - name: Verify contracts, package contents, and clean install
+        if: ${{ inputs.focused_reason == '' }}
         run: npm run check:agents
+
+      - name: Build under explicit owner focused verification
+        if: ${{ inputs.focused_reason != '' }}
+        env:
+          FOCUSED_REASON: ${{ inputs.focused_reason }}
+        run: |
+          node -e 'if ((process.env.FOCUSED_REASON || "").trim().length < 20) throw Error("A concrete owner approval reason is required")'
+          npm run build:agents
+          npm run typecheck:agents
+          node -e 'require("node:fs").appendFileSync(process.env.GITHUB_STEP_SUMMARY, "Full regression, audits and packed-install checks omitted under explicit owner instruction: " + process.env.FOCUSED_REASON + "\n")'
 
       - name: Publish exact artifacts in dependency order
         env:

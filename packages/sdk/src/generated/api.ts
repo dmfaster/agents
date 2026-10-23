@@ -201,6 +201,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/call.outcome.set": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Record an authorized meeting outcome and update its linked pipeline card.
+         * @description Record an authorized meeting outcome and update its linked pipeline card.
+         */
+        post: operations["callOutcomeSet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/calls.list": {
         parameters: {
             query?: never;
@@ -1229,6 +1249,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/conversations.changes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * conversations changes
+         * @description Read conversation changes in commit order. Without a cursor, returns an empty page and the current watermark. With a cursor, returns each change once, with reason and updatedAt. Persist nextCursor even on empty pages. Expired cursors require a full inbox refresh.
+         */
+        post: operations["conversationsChanges"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/conversations.list": {
         parameters: {
             query?: never;
@@ -1260,9 +1300,29 @@ export interface paths {
         put?: never;
         /**
          * Find historical outreach copy performance
-         * @description Read exact text from confirmed outreach jobs and observed human replies/confirmed calendar bookings. A reply or booking is associated with the first confirmed outreach in its exact conversation; this is observational evidence, not causal lift. Missing deleted job text remains unattributed.
+         * @description Read historical sent-copy performance. Default rendered_text groups confirmed job text with observed human replies/bookings. Use groupBy template_variation with campaignId for immutable template revisions, seven-day mature reply cohorts and attribution coverage. Observational association is not causal lift; missing evidence remains unattributed.
          */
         post: operations["copyPerformance"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/events.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * events list
+         * @description Read the ordered workspace event stream retained for 30 days. Payload details require the corresponding domain read scope. Reuse nextCursor for lossless polling; replay returns stable event IDs. No subscription, message or workspace change.
+         */
+        post: operations["eventsList"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1849,6 +1909,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/meeting.link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Link a meeting to one workspace conversation or company without sending invitations.
+         * @description Link a meeting to one workspace conversation or company without sending invitations.
+         */
+        post: operations["meetingLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/meeting.unlink": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remove an explicit meeting link without deleting meeting history or moving pipeline cards backwards.
+         * @description Remove an explicit meeting link without deleting meeting history or moving pipeline cards backwards.
+         */
+        post: operations["meetingUnlink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/meetings.unlinked.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * List meetings with absent or low-confidence links. Read-only and owner scoped.
+         * @description List meetings with absent or low-confidence links. Read-only and owner scoped.
+         */
+        post: operations["meetingsUnlinkedList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/pipeline.cards.list": {
         parameters: {
             query?: never;
@@ -1924,6 +2044,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/pipeline.reconcile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Report exact booking and pipeline mismatches. Live workspaces are dry-run only; apply is restricted to sandboxes. Save historical corrections for separate owner approval.
+         * @description Report exact booking and pipeline mismatches. Live workspaces are dry-run only; apply is restricted to sandboxes. Save historical corrections for separate owner approval.
+         */
+        post: operations["pipelineReconcile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/pipeline.stage.update": {
         parameters: {
             query?: never;
@@ -1955,10 +2095,89 @@ export interface paths {
         put?: never;
         /**
          * List priority replies
-         * @description Returns bounded reply-attention records from the pipeline. When campaignId
-         *     is omitted, the selected, active, or most recent campaign is used. Read-only.
+         * @description Deprecated: prefer conversations_list or pipeline_cards_list. In contract 2.0, omitted campaignId reads reply-stage pipeline cards across the entire workspace. Exact filteredTotal, explicit scope and opaque cursor are returned.
          */
         post: operations["repliesList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/sandbox.clock.advance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * sandbox clock advance
+         * @description Advance the connected sandbox clock without changing real workspace time. Requires the inspected workspace version and an idempotency key.
+         */
+        post: operations["sandboxClockAdvance"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/sandbox.inbound.simulate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * sandbox inbound simulate
+         * @description Inject synthetic inbound content through the normal inbox projection and event stream. Existing conversation IDs require their inspected version. Never invokes a real provider.
+         */
+        post: operations["sandboxInboundSimulate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/sandbox.provider.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Connect or disconnect a fake provider in the sandbox. No real connection is changed; disconnection emits sender.unhealthy.
+         * @description Connect or disconnect a fake provider in the sandbox. No real connection is changed; disconnection emits sender.unhealthy.
+         */
+        post: operations["sandboxProviderUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/sandbox.seed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * sandbox seed
+         * @description Seed 50 synthetic companies and fixture conversations in the connected sandbox only. Stable fixture identities make repeated seeding idempotent.
+         */
+        post: operations["sandboxSeed"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2109,6 +2328,226 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/suppressions.add": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * suppressions add
+         * @description Add workspace do-not-contact identities on explicit instruction. Active duplicates return the existing record. Reusing an idempotency key returns the original durable receipt.
+         */
+        post: operations["suppressionsAdd"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/suppressions.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * suppressions list
+         * @description List active do-not-contact identities across this workspace. Reads never change suppression state.
+         */
+        post: operations["suppressionsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/suppressions.remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * suppressions remove
+         * @description Owner-only removal of a do-not-contact identity after reviewing the opt-out. Requires the inspected updatedAt, a reason and an idempotency key. Preserves an audit record.
+         */
+        post: operations["suppressionsRemove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/webhooks.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a signed event webhook. The signing secret is returned only by this creation receipt; store it securely.
+         * @description Create a signed event webhook. The signing secret is returned only by this creation receipt; store it securely.
+         */
+        post: operations["webhooksCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/webhooks.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Disable and soft-delete a webhook and cancel pending deliveries.
+         * @description Disable and soft-delete a webhook and cancel pending deliveries.
+         */
+        post: operations["webhooksDelete"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/webhooks.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * List workspace webhook subscriptions without exposing signing secrets.
+         * @description List workspace webhook subscriptions without exposing signing secrets.
+         */
+        post: operations["webhooksList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/webhooks.replay": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Replay up to 100 retained events in sequence, preserving their original IDs.
+         * @description Replay up to 100 retained events in sequence, preserving their original IDs.
+         */
+        post: operations["webhooksReplay"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/webhooks.test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Queue a signed synthetic webhook test. Does not message a prospect.
+         * @description Queue a signed synthetic webhook test. Does not message a prospect.
+         */
+        post: operations["webhooksTest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/webhooks.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update a webhook with compare-and-swap version protection.
+         * @description Update a webhook with compare-and-swap version protection.
+         */
+        post: operations["webhooksUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/workspace.agent_sales.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read owner-controlled classification, auto-close and opt-out suppression settings.
+         * @description Read owner-controlled classification, auto-close and opt-out suppression settings.
+         */
+        post: operations["workspaceAgentSalesGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/workspace.agent_sales.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Change owner-controlled sales automation flags for future activity. Does not reclassify, close or suppress historical records.
+         * @description Change owner-controlled sales automation flags for future activity. Does not reclassify, close or suppress historical records.
+         */
+        post: operations["workspaceAgentSalesUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/workspace.briefing": {
         parameters: {
             query?: never;
@@ -2123,6 +2562,26 @@ export interface paths {
          * @description Returns an authoritative workspace, campaign, and sending summary. Read-only.
          */
         post: operations["workspaceBriefing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/workspace.sandbox.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * workspace sandbox create
+         * @description Create an isolated sandbox workspace for this owner. All outbound provider operations are fake. Reconnect choosing the returned sandbox workspace.
+         */
+        post: operations["workspaceSandboxCreate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2164,11 +2623,12 @@ export interface components {
             targetListId: string;
         };
         /** @enum {string} */
-        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "inbox:write" | "pipeline:write" | "calendar:read" | "calendar:write" | "calls:read" | "leads:read" | "leads:write" | "sending:test";
+        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "inbox:write" | "pipeline:write" | "calendar:read" | "calendar:write" | "calls:read" | "events:read" | "suppressions:write" | "sandbox:write" | "calls:write" | "webhooks:write" | "leads:read" | "leads:write" | "sending:test";
         AgentAuthenticatedParty: {
             /** Format: email */
             email: string;
             id: string;
+            isSandbox?: boolean;
             name: string;
         };
         AgentAuthenticationRevoked: {
@@ -2302,6 +2762,26 @@ export interface components {
             user: components["schemas"]["AgentAuthenticatedParty"];
             workspace: components["schemas"]["AgentAuthenticatedParty"];
         };
+        AgentEvent: {
+            /** @constant */
+            apiVersion: "2.0";
+            /** Format: date-time */
+            createdAt: string;
+            data: {
+                [key: string]: unknown;
+            };
+            id: string;
+            sequence: number;
+            type: components["schemas"]["AgentSalesEventType"];
+            workspaceId: string;
+        };
+        AgentEventsScope: {
+            after: number;
+            retentionDays: number;
+            through: number;
+            types: string[];
+            workspaceId: string;
+        };
         AgentHarnessResult: {
             /** @enum {string} */
             action: "get_workspace_capabilities" | "validate_campaign_plan" | "preview_audience" | "prepare_list" | "prepare_campaign" | "preflight_campaign_launch" | "launch_campaign" | "pause_campaign";
@@ -2381,6 +2861,8 @@ export interface components {
             origin: "user" | "user_requested_generation" | "agent_draft" | "user_approved_generation";
             subject: string;
         };
+        /** @enum {string} */
+        AgentSalesEventType: "inbox.message.received" | "inbox.auto_reply.received" | "conversation.intent.changed" | "conversation.changed" | "conversation.followup.due" | "followup.cancelled_by_reply" | "meeting.booked" | "meeting.rescheduled" | "meeting.cancelled" | "meeting.no_show" | "meeting.outcome.recorded" | "contact.opted_out" | "campaign.state.changed" | "sender.unhealthy" | "reply.approval.requested" | "reply.approval.decided" | "credential.expiring" | "webhook.test";
         AgentSignalCriterion: {
             description: string;
             /** @enum {string} */
@@ -2394,7 +2876,10 @@ export interface components {
         };
         AgentToolError: {
             code: string;
+            /** Format: uri */
+            docsUrl?: string;
             message: string;
+            nextAction?: string;
             retryable: boolean;
         };
         AgentToolEvidence: {
@@ -2406,7 +2891,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel" | "events.list" | "conversations.changes" | "suppressions.list" | "suppressions.add" | "suppressions.remove" | "workspace.sandbox.create" | "sandbox.seed" | "sandbox.inbound.simulate" | "sandbox.clock.advance" | "call.outcome.set" | "meeting.link" | "meeting.unlink" | "webhooks.create" | "webhooks.list" | "webhooks.update" | "webhooks.delete" | "webhooks.test" | "webhooks.replay" | "meetings.unlinked.list" | "pipeline.reconcile" | "workspace.agent_sales.get" | "workspace.agent_sales.update" | "sandbox.provider.update";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -2418,6 +2903,8 @@ export interface components {
         AgentToolResultBase: {
             artifacts: unknown[];
             consistency: components["schemas"]["AgentToolConsistency"];
+            /** @constant */
+            contractVersion?: "2.0.0";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
@@ -2426,6 +2913,8 @@ export interface components {
             generatedAt: string;
             ok: boolean;
             policy: components["schemas"]["AgentToolPolicy"];
+            /** Format: date-time */
+            serverTime?: string;
             tool: components["schemas"]["AgentToolName"];
             /** @constant */
             version: 1;
@@ -2607,10 +3096,15 @@ export interface components {
         CallListItemPublic: {
             bookingSource: string;
             calendarManaged: boolean;
+            campaignId?: components["schemas"]["ResourceId"] | null;
+            companyOutreachId?: string;
             conferenceConfigured: boolean;
+            conversationId?: components["schemas"]["ResourceId"] | null;
             createdAt: string;
             id: string;
             lifecycle: string;
+            linkConfidence?: number | null;
+            linkMethod?: string;
             /** @enum {string} */
             recordingMode: "off" | "on";
             scheduledEndAt: string;
@@ -2620,22 +3114,68 @@ export interface components {
             updatedAt: string;
         };
         CallOutcomePublic: {
+            actor?: {
+                credentialId: components["schemas"]["ResourceId"] | null;
+                /** @enum {string} */
+                type: "agent" | "user";
+            };
             attendanceResult: string;
             followUpAt: string;
             id: string;
+            lostReason?: string;
             nextStep: string;
             occurredAt: string;
             reason: string;
             recordedAt: string;
+            result?: string;
             salesDisposition: string;
+            valueEur?: number | null;
+        };
+        CallOutcomeSetInput: {
+            /** @enum {string} */
+            attendance: "held" | "no_show" | "rescheduled" | "cancelled";
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            lostReason?: string;
+            meetingId: components["schemas"]["ResourceId"];
+            note?: string;
+            /** @enum {string} */
+            result?: "trial_started" | "won" | "lost" | "follow_up" | "not_a_fit";
+            valueEur?: number;
+        };
+        CallOutcomeSetOutput: {
+            followUpAt: components["schemas"]["ResourceVersion"] | null;
+            lifecycle: string;
+            meetingId: components["schemas"]["ResourceId"];
+            outcomeId: components["schemas"]["ResourceId"];
+            receiptId: components["schemas"]["ResourceId"];
+            updatedAt: components["schemas"]["ResourceVersion"];
+        };
+        CallOutcomeSetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallOutcomeSetOutput"] | null;
+            /** @constant */
+            tool?: "call.outcome.set";
         };
         CallsListData: {
+            filteredTotal?: number;
             items: components["schemas"]["CallListItemPublic"][];
+            nextCursor?: string | null;
             nextOffset: number | null;
+            scope?: {
+                /** @constant */
+                reason: "authorized_workspace_meetings";
+                workspaceId: components["schemas"]["ResourceId"];
+            };
         };
         CallsListInput: {
+            awaitingOutcome?: boolean;
+            cursor?: string;
+            from?: components["schemas"]["ResourceVersion"];
+            /** @enum {string} */
+            lifecycle?: "scheduled" | "awaiting_outcome" | "completed" | "no_show" | "cancelled" | "rescheduled";
             limit?: number;
             offset?: number;
+            to?: components["schemas"]["ResourceVersion"];
         };
         CallsListResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CallsListData"] | null;
@@ -2803,6 +3343,7 @@ export interface components {
             smsBody?: string;
             /** @constant */
             status: "Draft";
+            suppressedCount?: number;
             targetCount: number;
         };
         CampaignDraftPrepareInput: {
@@ -3817,6 +4358,7 @@ export interface components {
                 publicFunding?: {
                     [key: string]: unknown;
                 } | null;
+                recruitment?: components["schemas"]["CompanyRecruitmentData"] | null;
                 /** @description Supported company-owned business social account URLs. */
                 socialProfiles?: {
                     /** @enum {string} */
@@ -4047,6 +4589,26 @@ export interface components {
             /** @constant */
             tool?: "companies.list.refine";
         };
+        CompanyRecruitmentData: {
+            activeJobCount: number | null;
+            postings: {
+                externalId: string;
+                location: string;
+                publishedAt: string;
+                source: string;
+                sourceUrl: string;
+                /** @enum {string} */
+                status: "open" | "closed" | "not_reverified";
+                title: string;
+                verifiedAt: string | null;
+            }[];
+            revision: string;
+            snapshotAt: string;
+            snapshotJobCount: number;
+            /** @enum {string} */
+            status: "verified" | "historical" | "stale";
+            verifiedUntil: string | null;
+        };
         /** @description Search the same company inventory and filters as the live app. Rich rows are the default; projection list returns compact app rows. Both preserve the exact total and pagination identity. Echo querySignature and expectedRevision on subsequent pages. */
         CompanySearchData: {
             companies: ({
@@ -4103,9 +4665,13 @@ export interface components {
             fundingSources?: string[];
             /** @enum {unknown} */
             googleAdsActivityWindow?: null | "last_30_days" | "last_90_days" | "last_12_months";
+            /** @description Require verified open employer job postings in Finland. False removes this requirement; it does not mean not hiring. Unavailable or stale recruitment publications fail closed. */
+            hasActiveHiring?: boolean;
             hasExhibitionParticipation?: boolean;
             hasPublicFunding?: boolean;
             hasWebsite?: boolean;
+            /** @description Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only. */
+            hiringTitleQuery?: string;
             industryCodes?: string[];
             industryCodeSelections?: {
                 /** @constant */
@@ -4262,27 +4828,72 @@ export interface components {
             /** @constant */
             tool?: "conversation.reply";
         };
+        ConversationsChangesInput: {
+            cursor?: string;
+            limit?: number;
+            types?: ("message" | "intent" | "status" | "meeting")[];
+        };
+        ConversationsChangesOutput: {
+            changes: {
+                conversationId: string;
+                /** @enum {string} */
+                reason: "message" | "intent" | "status" | "meeting";
+                sequence: number;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            filteredTotal: number;
+            hasMore: boolean;
+            nextCursor: string;
+            scope: components["schemas"]["AgentEventsScope"];
+        };
+        ConversationsChangesResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ConversationsChangesOutput"] | null;
+            /** @constant */
+            tool?: "conversations.changes";
+        };
         ConversationsListInput: {
             campaignId?: components["schemas"]["ResourceId"];
             channel?: components["schemas"]["InboxChannel"];
             cursor?: string;
             /** @enum {string} */
             filter?: "all" | "needs_reply" | "waiting" | "unread" | "snoozed" | "closed";
+            followupDue?: boolean;
             includeAutomaticResponses?: boolean;
-            /** @enum {string} */
-            intent?: "interested" | "information_requested" | "meeting_intent" | "not_now" | "wrong_person" | "not_interested" | "opt_out" | "acknowledgement" | "unclear";
+            /**
+             * @description Exact stored intent; unlike the app label filter, opt_out does not include not_interested or not_now.
+             * @enum {string}
+             */
+            intent?: "interested" | "information_requested" | "meeting_intent" | "meeting_proposed_time" | "asks_pricing" | "not_now" | "wrong_person" | "not_interested" | "opt_out" | "acknowledgement" | "unclear";
             /** @enum {string} */
             interest?: "positive" | "neutral" | "negative" | "needs_review";
             limit?: number;
             mailboxId?: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            meetingStatus?: "none" | "booked" | "held" | "no_show";
             query?: string;
+            updatedAfter?: components["schemas"]["ResourceVersion"];
         };
         ConversationsListOutput: {
             conversations: components["schemas"]["InboxConversationSummary"][];
+            /** @description Exact count matching all filters, before the pagination cursor. */
+            filteredTotal?: number;
             /** Format: date-time */
             generatedAt: string;
             hasMore: boolean;
             nextCursor: string | null;
+            scope?: {
+                campaignId: string | null;
+                channel: string | null;
+                filter: string;
+                includeAutomaticResponses: boolean;
+                intent: string | null;
+                interest: string | null;
+                mailboxId: string | null;
+                query: string | null;
+                /** Format: date-time */
+                updatedAfter: string | null;
+            };
             scopeStats: components["schemas"]["InboxScopeStats"];
         };
         ConversationsListResult: components["schemas"]["AgentToolResultBase"] & {
@@ -4299,7 +4910,7 @@ export interface components {
             conversationId: components["schemas"]["ResourceId"];
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             /** @enum {string} */
-            interestIntent?: "interested" | "information_requested" | "meeting_intent" | "not_now" | "wrong_person" | "not_interested" | "opt_out" | "acknowledgement" | "unclear";
+            interestIntent?: "interested" | "information_requested" | "meeting_intent" | "meeting_proposed_time" | "asks_pricing" | "not_now" | "wrong_person" | "not_interested" | "opt_out" | "acknowledgement" | "unclear";
             /** @enum {string} */
             interestLevel?: "positive" | "neutral" | "negative";
             snoozedUntil?: components["schemas"]["ResourceVersion"];
@@ -4317,10 +4928,21 @@ export interface components {
             to: string;
             totalMatching: number;
             unattributedSends: number;
+            variationPerformance?: components["schemas"]["VariationPerformanceData"];
         };
         CopyPerformanceInput: {
             campaignId?: components["schemas"]["ResourceId"];
+            /**
+             * @description Optional channel filter for template_variation only.
+             * @enum {string}
+             */
+            channel?: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
             from: string;
+            /**
+             * @description Defaults to rendered_text. template_variation requires campaignId and returns variationPerformance with immutable templates and seven-day mature cohorts.
+             * @enum {string}
+             */
+            groupBy?: "rendered_text" | "template_variation";
             limit?: number;
             offset?: number;
             to: string;
@@ -4404,6 +5026,24 @@ export interface components {
         ErrorResponse: {
             error: components["schemas"]["Error"];
         };
+        EventsListInput: {
+            after?: string | number;
+            limit?: number;
+            types?: components["schemas"]["AgentSalesEventType"][];
+        };
+        EventsListOutput: {
+            events: components["schemas"]["AgentEvent"][];
+            filteredTotal: number;
+            hasMore: boolean;
+            nextCursor: string;
+            scope: components["schemas"]["AgentEventsScope"];
+            sequence: number;
+        };
+        EventsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["EventsListOutput"] | null;
+            /** @constant */
+            tool?: "events.list";
+        };
         HistoryListInput: {
             campaignId: components["schemas"]["ResourceId"];
             cursor?: string;
@@ -4450,7 +5090,11 @@ export interface components {
             isAutomaticResponse: boolean;
             media: components["schemas"]["InboxMessageMedia"][];
             /** @enum {string} */
-            messageType: "text" | "reply_signal" | "attachment" | "system";
+            messageType: "text" | "reply_signal" | "attachment" | "system" | "reaction" | "system_event" | "auto_reply";
+            reaction?: {
+                emoji: string;
+                targetMessageId: string;
+            } | null;
             /** @enum {string} */
             replyKind: "human" | "automatic" | "uncertain";
             seenAt?: string;
@@ -4459,12 +5103,21 @@ export interface components {
             text: string;
         };
         InboxConversationSummary: {
+            businessId?: string | null;
             campaignId: string;
             campaignName: string;
             channel: components["schemas"]["InboxChannel"];
+            /** Format: date-time */
+            classifiedAt?: string | null;
+            companyOutreachId?: string;
+            country?: string | null;
             id: string;
+            intentConfidence?: number | null;
+            intentReason?: string | null;
+            /** @enum {string|null} */
+            intentSource?: "model" | "rule" | "human" | "agent" | null;
             /** @enum {string} */
-            interestIntent: "" | "interested" | "information_requested" | "meeting_intent" | "not_now" | "wrong_person" | "not_interested" | "opt_out" | "acknowledgement" | "unclear";
+            interestIntent: "" | "interested" | "information_requested" | "meeting_intent" | "meeting_proposed_time" | "asks_pricing" | "not_now" | "wrong_person" | "not_interested" | "opt_out" | "acknowledgement" | "unclear";
             /** @enum {string} */
             interestLevel: "" | "positive" | "neutral" | "negative" | "needs_review";
             lastInboundAt: string;
@@ -4472,7 +5125,11 @@ export interface components {
             /** @enum {string} */
             lastMessageDirection: "" | "inbound" | "outbound";
             lastMessageText: string;
+            meetingId?: string | null;
+            /** @enum {string} */
+            meetingStatus?: "none" | "booked" | "held" | "no_show";
             needsReply: boolean;
+            nextMeetingAt?: string | null;
             /** @enum {string} */
             status: "open" | "closed";
             targetCompanyName: string;
@@ -5081,12 +5738,82 @@ export interface components {
             /** @constant */
             tool?: "list.target.remove";
         };
+        MeetingLinkInput: {
+            companyOutreachId?: components["schemas"]["ResourceId"];
+            conversationId?: components["schemas"]["ResourceId"];
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            meetingId: components["schemas"]["ResourceId"];
+        };
+        MeetingLinkOutput: {
+            campaignId: components["schemas"]["ResourceId"] | null;
+            companyOutreachId: string;
+            conversationId: components["schemas"]["ResourceId"] | null;
+            linkConfidence: number | null;
+            linkMethod: string;
+            meetingId: components["schemas"]["ResourceId"];
+            receiptId: components["schemas"]["ResourceId"];
+            revision: number;
+            updatedAt: components["schemas"]["ResourceVersion"];
+        };
+        MeetingLinkResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["MeetingLinkOutput"] | null;
+            /** @constant */
+            tool?: "meeting.link";
+        };
+        MeetingsUnlinkedListInput: {
+            cursor?: string;
+            limit?: number;
+        };
+        MeetingsUnlinkedListOutput: {
+            filteredTotal: number;
+            items: {
+                linkConfidence: number | null;
+                linkMethod: string;
+                meetingId: components["schemas"]["ResourceId"];
+                scheduledStartAt: components["schemas"]["ResourceVersion"];
+                title: string;
+                updatedAt: components["schemas"]["ResourceVersion"];
+            }[];
+            nextCursor: string | null;
+            scope: {
+                workspaceId: components["schemas"]["ResourceId"];
+            };
+        };
+        MeetingsUnlinkedListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["MeetingsUnlinkedListOutput"] | null;
+            /** @constant */
+            tool?: "meetings.unlinked.list";
+        };
+        MeetingUnlinkInput: {
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            meetingId: components["schemas"]["ResourceId"];
+        };
+        MeetingUnlinkOutput: {
+            campaignId: components["schemas"]["ResourceId"] | null;
+            companyOutreachId: string;
+            conversationId: components["schemas"]["ResourceId"] | null;
+            linkConfidence: number | null;
+            linkMethod: string;
+            meetingId: components["schemas"]["ResourceId"];
+            receiptId: components["schemas"]["ResourceId"];
+            revision: number;
+            updatedAt: components["schemas"]["ResourceVersion"];
+        };
+        MeetingUnlinkResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["MeetingUnlinkOutput"] | null;
+            /** @constant */
+            tool?: "meeting.unlink";
+        };
         OptionalCampaignInput: {
             /** @description Omit to use the selected, active, or most recent campaign. */
             campaignId?: components["schemas"]["ResourceId"];
         };
         PipelineCard: {
             campaignId: string;
+            /** @enum {string} */
+            closedOutcome?: "" | "won" | "lost";
             decisionMakerLinkedinName?: string;
             decisionMakerLinkedinRole?: string;
             decisionMakerName?: string;
@@ -5098,7 +5825,10 @@ export interface components {
             instagramHref?: string;
             isCompany: boolean;
             linkedinHref?: string;
+            lostReason?: string;
+            meetingHeld?: boolean;
             name: string;
+            noShow?: boolean;
             reachedChannels: {
                 facebook: boolean;
                 gmail: boolean;
@@ -5109,6 +5839,7 @@ export interface components {
             sentAt: string;
             stage: components["schemas"]["PipelineStage"];
             stageKey: string;
+            updatedAt?: components["schemas"]["ResourceVersion"] | null;
         };
         PipelineCardsListInput: {
             campaignId: components["schemas"]["ResourceId"];
@@ -5189,18 +5920,56 @@ export interface components {
             /** @constant */
             tool?: "pipeline.note.list";
         };
+        PipelineReconcileInput: {
+            campaignId?: components["schemas"]["ResourceId"];
+            dryRun?: boolean;
+            idempotencyKey?: components["schemas"]["IdempotencyKey"];
+        };
+        PipelineReconcileOutput: {
+            applied: string[];
+            bookedCompanies: number;
+            bookedMeetings: number;
+            dryRun: boolean;
+            filteredTotal: number;
+            items: {
+                calendarEventId: string;
+                campaignId: string | null;
+                companyOutreachId: string;
+                conversationId: string;
+                expectedUpdatedAt: components["schemas"]["ResourceVersion"] | null;
+                meetingId: string | null;
+            }[];
+            ownerApprovalRequired: boolean;
+            pipelineBookedOrClosed: number;
+            scope: {
+                campaignId: components["schemas"]["ResourceId"] | null;
+                workspaceId: components["schemas"]["ResourceId"];
+            };
+            truncated: boolean;
+        };
+        PipelineReconcileResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["PipelineReconcileOutput"] | null;
+            /** @constant */
+            tool?: "pipeline.reconcile";
+        };
         /** @enum {string} */
         PipelineStage: "contacted" | "replied" | "call_booked" | "closed";
         PipelineStageUpdateInput: {
             campaignId: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            closedOutcome?: "won" | "lost";
             entityKey: string;
             expectedStage: components["schemas"]["PipelineStage"];
+            expectedUpdatedAt?: components["schemas"]["ResourceVersion"];
+            idempotencyKey?: components["schemas"]["IdempotencyKey"];
+            lostReason?: string;
             stage: components["schemas"]["PipelineStage"];
             stageKey: string;
         };
         PipelineStageUpdateOutput: {
             campaignId: string;
             card: components["schemas"]["PipelineCard"];
+            receiptId?: string;
         };
         PipelineStageUpdateResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["PipelineStageUpdateOutput"] | null;
@@ -5209,6 +5978,7 @@ export interface components {
         };
         RepliesListInput: {
             campaignId?: components["schemas"]["ResourceId"];
+            cursor?: string;
             limit?: number;
             /** @description Optional case-insensitive reply search text. */
             query?: string;
@@ -5216,9 +5986,17 @@ export interface components {
         RepliesListOutput: {
             campaignId: string;
             campaignName: string;
+            filteredTotal?: number;
             /** Format: date-time */
             generatedAt: string;
+            hasMore?: boolean;
+            nextCursor?: string | null;
             replies: components["schemas"]["AgentLead"][];
+            scope?: {
+                campaignId: string | null;
+                /** @enum {string} */
+                reason: "explicit_campaign" | "workspace_default";
+            };
             totalReplies: number;
         };
         RepliesListResult: components["schemas"]["AgentToolResultBase"] & {
@@ -5228,6 +6006,7 @@ export interface components {
         };
         /** @description A resource identifier returned by DM Faster. Never guess an identifier from a name. */
         ResourceId: string;
+        /** @description UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window. */
         ResourceVersion: string;
         /** @description Server-issued identity from the exact audience preview. Echo this object unchanged when preparing a private list or campaign; clients must not derive it. */
         ReviewedAudience: {
@@ -5238,6 +6017,89 @@ export interface components {
             };
             excludePreviouslyContacted?: boolean;
             querySignature: string;
+        };
+        SandboxClockAdvanceInput: {
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            minutes: number;
+        };
+        SandboxClockAdvanceOutput: {
+            /** @constant */
+            isSandbox: true;
+            now: components["schemas"]["ResourceVersion"];
+            offsetMinutes: number;
+            receiptId: string;
+            updatedAt: components["schemas"]["ResourceVersion"];
+        };
+        SandboxClockAdvanceResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["SandboxClockAdvanceOutput"] | null;
+            /** @constant */
+            tool?: "sandbox.clock.advance";
+        };
+        SandboxInboundSimulateInput: {
+            at?: components["schemas"]["ResourceVersion"];
+            campaignId?: string;
+            /** @enum {string} */
+            channel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
+            conversationId?: string;
+            expectedUpdatedAt?: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @enum {string} */
+            kind: "human" | "auto_reply" | "reaction";
+            text: string;
+        };
+        SandboxInboundSimulateOutput: {
+            conversationId: string;
+            inserted: boolean;
+            /** @constant */
+            isSandbox: true;
+            receiptId: string;
+        };
+        SandboxInboundSimulateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["SandboxInboundSimulateOutput"] | null;
+            /** @constant */
+            tool?: "sandbox.inbound.simulate";
+        };
+        SandboxProviderUpdateInput: {
+            connected: boolean;
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @enum {string} */
+            provider: "calendar" | "gmail" | "sms" | "browser";
+        };
+        SandboxProviderUpdateOutput: {
+            connected: boolean;
+            /** @constant */
+            isSandbox: true;
+            /** @enum {string} */
+            provider: "calendar" | "gmail" | "sms" | "browser";
+            receiptId: components["schemas"]["ResourceId"];
+            updatedAt: components["schemas"]["ResourceVersion"];
+        };
+        SandboxProviderUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["SandboxProviderUpdateOutput"] | null;
+            /** @constant */
+            tool?: "sandbox.provider.update";
+        };
+        SandboxSeedInput: {
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @constant */
+            preset: "appointment_setter_v1";
+        };
+        SandboxSeedOutput: {
+            campaignId: string;
+            companies: number;
+            conversationIds: string[];
+            /** @constant */
+            isSandbox: true;
+            listId: string;
+            meetingIds?: string[];
+            preset: string;
+        };
+        SandboxSeedResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["SandboxSeedOutput"] | null;
+            /** @constant */
+            tool?: "sandbox.seed";
         };
         SavedInstagramList: {
             listId: string;
@@ -5412,10 +6274,227 @@ export interface components {
         SendingTime: string | null;
         /** @enum {string} */
         SupportedCountry: "FI" | "NO" | "EE" | "SE" | "DK" | "UK" | "IE" | "AE" | "AT" | "BE" | "CA" | "NL" | "NZ" | "ES" | "FR" | "HK" | "IL" | "LV" | "LT" | "IT" | "CH" | "PT" | "SA" | "SG" | "IS" | "AU" | "DE" | "US" | "ZA";
+        SuppressionEntryInput: {
+            reason: string;
+            /** @enum {string} */
+            source: "prospect_request" | "owner" | "agent";
+            /** @enum {string} */
+            type: "company" | "phone" | "email" | "instagram" | "facebook" | "linkedin" | "domain";
+            value: string;
+        };
+        SuppressionRecord: {
+            /** Format: date-time */
+            createdAt: string;
+            id: components["schemas"]["ResourceId"];
+            reason: string;
+            /** Format: date-time */
+            removedAt?: string | null;
+            /** @enum {string} */
+            source: "prospect_request" | "owner" | "agent";
+            /** @enum {string} */
+            type: "company" | "phone" | "email" | "instagram" | "facebook" | "linkedin" | "domain";
+            /** Format: date-time */
+            updatedAt: string;
+            value: string;
+        };
+        SuppressionsAddInput: {
+            entries: components["schemas"]["SuppressionEntryInput"][];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+        };
+        SuppressionsAddOutput: {
+            entries: components["schemas"]["SuppressionRecord"][];
+            receiptId: components["schemas"]["ResourceId"];
+        };
+        SuppressionsAddResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["SuppressionsAddOutput"] | null;
+            /** @constant */
+            tool?: "suppressions.add";
+        };
+        SuppressionsListInput: {
+            cursor?: string;
+            limit?: number;
+            query?: string;
+        };
+        SuppressionsListOutput: {
+            entries: components["schemas"]["SuppressionRecord"][];
+            filteredTotal: number;
+            hasMore: boolean;
+            nextCursor: string | null;
+            scope: {
+                /** @constant */
+                active: true;
+                query: string | null;
+                workspaceId: components["schemas"]["ResourceId"];
+            };
+        };
+        SuppressionsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["SuppressionsListOutput"] | null;
+            /** @constant */
+            tool?: "suppressions.list";
+        };
+        SuppressionsRemoveInput: {
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            id: components["schemas"]["ResourceId"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            reason: string;
+        };
+        SuppressionsRemoveOutput: {
+            entry: components["schemas"]["SuppressionRecord"];
+            receiptId: components["schemas"]["ResourceId"];
+        };
+        SuppressionsRemoveResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["SuppressionsRemoveOutput"] | null;
+            /** @constant */
+            tool?: "suppressions.remove";
+        };
         /** @enum {string} */
         TargetChannel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
         /** @enum {string} */
         TolVersion: "2008" | "2025";
+        VariationPerformanceData: {
+            coverage: {
+                overriddenRecipients: number;
+                recipients: number;
+                unknownTemplateRecipients: number;
+                unlinkedRecipients: number;
+            };
+            generatedAt: string;
+            items: components["schemas"]["VariationPerformanceItem"][];
+            nextOffset: number | null;
+            /** @constant */
+            responseWindowDays: 7;
+            totalMatching: number;
+        };
+        VariationPerformanceItem: {
+            awaitingRecipients: number;
+            body: string;
+            channel: string;
+            humanResponders: number;
+            linkedMatureRecipients: number;
+            matureRecipients: number;
+            replyRate: number | null;
+            revisionId: string;
+            sentRecipients: number;
+            subject: string;
+            variantIndex: number;
+        };
+        WebhooksCreateInput: {
+            description?: string;
+            events: components["schemas"]["AgentSalesEventType"][];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            url: string;
+        };
+        WebhooksCreateOutput: {
+            createdAt: components["schemas"]["ResourceVersion"];
+            description: string;
+            enabled: boolean;
+            events: components["schemas"]["AgentSalesEventType"][];
+            id: components["schemas"]["ResourceId"];
+            receiptId: components["schemas"]["ResourceId"];
+            secret: string;
+            updatedAt: components["schemas"]["ResourceVersion"];
+            url: string;
+        };
+        WebhooksCreateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WebhooksCreateOutput"] | null;
+            /** @constant */
+            tool?: "webhooks.create";
+        };
+        WebhooksDeleteInput: {
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            id: components["schemas"]["ResourceId"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+        };
+        WebhooksDeleteOutput: {
+            id: components["schemas"]["ResourceId"];
+            nextCursor: string | null;
+            queued: number;
+            receiptId: components["schemas"]["ResourceId"];
+            updatedAt: components["schemas"]["ResourceVersion"];
+        };
+        WebhooksDeleteResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WebhooksDeleteOutput"] | null;
+            /** @constant */
+            tool?: "webhooks.delete";
+        };
+        WebhooksListInput: Record<string, never>;
+        WebhooksListOutput: {
+            filteredTotal: number;
+            items: {
+                createdAt: components["schemas"]["ResourceVersion"];
+                description: string;
+                enabled: boolean;
+                events: components["schemas"]["AgentSalesEventType"][];
+                id: components["schemas"]["ResourceId"];
+                updatedAt: components["schemas"]["ResourceVersion"];
+                url: string;
+            }[];
+            nextCursor: null;
+            scope: {
+                workspaceId: components["schemas"]["ResourceId"];
+            };
+        };
+        WebhooksListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WebhooksListOutput"] | null;
+            /** @constant */
+            tool?: "webhooks.list";
+        };
+        WebhooksReplayInput: {
+            after?: string | number;
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            id: components["schemas"]["ResourceId"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+        };
+        WebhooksReplayOutput: {
+            id: components["schemas"]["ResourceId"];
+            nextCursor: string | null;
+            queued: number;
+            receiptId: components["schemas"]["ResourceId"];
+            updatedAt: components["schemas"]["ResourceVersion"];
+        };
+        WebhooksReplayResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WebhooksReplayOutput"] | null;
+            /** @constant */
+            tool?: "webhooks.replay";
+        };
+        WebhooksTestInput: {
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            id: components["schemas"]["ResourceId"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+        };
+        WebhooksTestOutput: {
+            id: components["schemas"]["ResourceId"];
+            nextCursor: string | null;
+            queued: number;
+            receiptId: components["schemas"]["ResourceId"];
+            updatedAt: components["schemas"]["ResourceVersion"];
+        };
+        WebhooksTestResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WebhooksTestOutput"] | null;
+            /** @constant */
+            tool?: "webhooks.test";
+        };
+        WebhooksUpdateInput: {
+            description?: string;
+            enabled?: boolean;
+            events?: components["schemas"]["AgentSalesEventType"][];
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            id: components["schemas"]["ResourceId"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            url?: string;
+        };
+        WebhooksUpdateOutput: {
+            id: components["schemas"]["ResourceId"];
+            nextCursor: string | null;
+            queued: number;
+            receiptId: components["schemas"]["ResourceId"];
+            updatedAt: components["schemas"]["ResourceVersion"];
+        };
+        WebhooksUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WebhooksUpdateOutput"] | null;
+            /** @constant */
+            tool?: "webhooks.update";
+        };
         WebsiteCriterionJudgment: {
             /** @description Decision on the supplied evidence, not proof of absence. Original quotes are context samples, not selected supporting citations. A review flag blocks automatic matching. */
             binary?: {
@@ -5470,6 +6549,40 @@ export interface components {
             text: string;
             /** Format: uri */
             url: string;
+        };
+        WorkspaceAgentSalesGetInput: Record<string, never>;
+        WorkspaceAgentSalesGetOutput: {
+            autoClose: boolean;
+            autoSuppress: boolean;
+            enabled: boolean;
+            suppressCompany: boolean;
+            updatedAt: components["schemas"]["ResourceVersion"];
+        };
+        WorkspaceAgentSalesGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkspaceAgentSalesGetOutput"] | null;
+            /** @constant */
+            tool?: "workspace.agent_sales.get";
+        };
+        WorkspaceAgentSalesUpdateInput: {
+            autoClose: boolean;
+            autoSuppress: boolean;
+            enabled: boolean;
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            suppressCompany: boolean;
+        };
+        WorkspaceAgentSalesUpdateOutput: {
+            autoClose: boolean;
+            autoSuppress: boolean;
+            enabled: boolean;
+            receiptId: components["schemas"]["ResourceId"];
+            suppressCompany: boolean;
+            updatedAt: components["schemas"]["ResourceVersion"];
+        };
+        WorkspaceAgentSalesUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkspaceAgentSalesUpdateOutput"] | null;
+            /** @constant */
+            tool?: "workspace.agent_sales.update";
         };
         WorkspaceBriefingInput: Record<string, never>;
         WorkspaceBriefingOutput: {
@@ -5540,6 +6653,22 @@ export interface components {
             data?: components["schemas"]["WorkspaceCompanyKnowledgeData"] | null;
             /** @constant */
             tool?: "companies.knowledge.search";
+        };
+        WorkspaceSandboxCreateInput: {
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            name: string;
+        };
+        WorkspaceSandboxCreateOutput: {
+            /** @constant */
+            isSandbox: true;
+            name: string;
+            updatedAt: components["schemas"]["ResourceVersion"];
+            workspaceId: string;
+        };
+        WorkspaceSandboxCreateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkspaceSandboxCreateOutput"] | null;
+            /** @constant */
+            tool?: "workspace.sandbox.create";
         };
     };
     responses: {
@@ -6052,6 +7181,30 @@ export interface operations {
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callOutcomeSet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallOutcomeSetInput"];
+            };
+        };
+        responses: {
+            /** @description Record an authorized meeting outcome and update its linked pipeline card. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallOutcomeSetResult"];
+                };
+            };
         };
     };
     callsList: {
@@ -7597,6 +8750,30 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    conversationsChanges: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConversationsChangesInput"];
+            };
+        };
+        responses: {
+            /** @description Workspace-scoped results. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationsChangesResult"];
+                };
+            };
+        };
+    };
     conversationsList: {
         parameters: {
             query?: never;
@@ -7655,6 +8832,30 @@ export interface operations {
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    eventsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventsListInput"];
+            };
+        };
+        responses: {
+            /** @description Workspace-scoped results. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventsListResult"];
+                };
+            };
         };
     };
     historyList: {
@@ -8527,6 +9728,78 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    meetingLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MeetingLinkInput"];
+            };
+        };
+        responses: {
+            /** @description Link a meeting to one workspace conversation or company without sending invitations. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeetingLinkResult"];
+                };
+            };
+        };
+    };
+    meetingUnlink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MeetingUnlinkInput"];
+            };
+        };
+        responses: {
+            /** @description Remove an explicit meeting link without deleting meeting history or moving pipeline cards backwards. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeetingUnlinkResult"];
+                };
+            };
+        };
+    };
+    meetingsUnlinkedList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MeetingsUnlinkedListInput"];
+            };
+        };
+        responses: {
+            /** @description List meetings with absent or low-confidence links. Read-only and owner scoped. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeetingsUnlinkedListResult"];
+                };
+            };
+        };
+    };
     pipelineCardsList: {
         parameters: {
             query?: never;
@@ -8650,6 +9923,30 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    pipelineReconcile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PipelineReconcileInput"];
+            };
+        };
+        responses: {
+            /** @description Report exact booking and pipeline mismatches. Live workspaces are dry-run only; apply is restricted to sandboxes. Save historical corrections for separate owner approval. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PipelineReconcileResult"];
+                };
+            };
+        };
+    };
     pipelineStageUpdate: {
         parameters: {
             query?: never;
@@ -8711,6 +10008,102 @@ export interface operations {
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    sandboxClockAdvance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SandboxClockAdvanceInput"];
+            };
+        };
+        responses: {
+            /** @description Workspace-scoped results. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SandboxClockAdvanceResult"];
+                };
+            };
+        };
+    };
+    sandboxInboundSimulate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SandboxInboundSimulateInput"];
+            };
+        };
+        responses: {
+            /** @description Workspace-scoped results. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SandboxInboundSimulateResult"];
+                };
+            };
+        };
+    };
+    sandboxProviderUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SandboxProviderUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Connect or disconnect a fake provider in the sandbox. No real connection is changed; disconnection emits sender.unhealthy. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SandboxProviderUpdateResult"];
+                };
+            };
+        };
+    };
+    sandboxSeed: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SandboxSeedInput"];
+            };
+        };
+        responses: {
+            /** @description Workspace-scoped results. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SandboxSeedResult"];
+                };
+            };
         };
     };
     sendersInspect: {
@@ -8926,6 +10319,270 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    suppressionsAdd: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SuppressionsAddInput"];
+            };
+        };
+        responses: {
+            /** @description Workspace-scoped results. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuppressionsAddResult"];
+                };
+            };
+        };
+    };
+    suppressionsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SuppressionsListInput"];
+            };
+        };
+        responses: {
+            /** @description Workspace-scoped results. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuppressionsListResult"];
+                };
+            };
+        };
+    };
+    suppressionsRemove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SuppressionsRemoveInput"];
+            };
+        };
+        responses: {
+            /** @description Workspace-scoped results. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SuppressionsRemoveResult"];
+                };
+            };
+        };
+    };
+    webhooksCreate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhooksCreateInput"];
+            };
+        };
+        responses: {
+            /** @description Create a signed event webhook. The signing secret is returned only by this creation receipt; store it securely. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhooksCreateResult"];
+                };
+            };
+        };
+    };
+    webhooksDelete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhooksDeleteInput"];
+            };
+        };
+        responses: {
+            /** @description Disable and soft-delete a webhook and cancel pending deliveries. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhooksDeleteResult"];
+                };
+            };
+        };
+    };
+    webhooksList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhooksListInput"];
+            };
+        };
+        responses: {
+            /** @description List workspace webhook subscriptions without exposing signing secrets. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhooksListResult"];
+                };
+            };
+        };
+    };
+    webhooksReplay: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhooksReplayInput"];
+            };
+        };
+        responses: {
+            /** @description Replay up to 100 retained events in sequence, preserving their original IDs. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhooksReplayResult"];
+                };
+            };
+        };
+    };
+    webhooksTest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhooksTestInput"];
+            };
+        };
+        responses: {
+            /** @description Queue a signed synthetic webhook test. Does not message a prospect. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhooksTestResult"];
+                };
+            };
+        };
+    };
+    webhooksUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhooksUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Update a webhook with compare-and-swap version protection. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhooksUpdateResult"];
+                };
+            };
+        };
+    };
+    workspaceAgentSalesGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceAgentSalesGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read owner-controlled classification, auto-close and opt-out suppression settings. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceAgentSalesGetResult"];
+                };
+            };
+        };
+    };
+    workspaceAgentSalesUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceAgentSalesUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Change owner-controlled sales automation flags for future activity. Does not reclassify, close or suppress historical records. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceAgentSalesUpdateResult"];
+                };
+            };
+        };
+    };
     workspaceBriefing: {
         parameters: {
             query?: never;
@@ -8957,6 +10614,30 @@ export interface operations {
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    workspaceSandboxCreate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceSandboxCreateInput"];
+            };
+        };
+        responses: {
+            /** @description Workspace-scoped results. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceSandboxCreateResult"];
+                };
+            };
         };
     };
 }

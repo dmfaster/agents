@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 import { readFile, mkdir } from "node:fs/promises";
 import { INSTAGRAM_WORKSPACE_HTML } from "../src/instagram-workspace-html.ts";
 import { initial, evaluation, installInstagramHost, png } from "./instagram-fixture.mjs";
-const require = createRequire(new URL("../../../package.json", import.meta.url));
+const require = createRequire(new URL("../../../site/package.json", import.meta.url));
 const { chromium, expect } = require("@playwright/test");
 let browser;
 before(async () => {

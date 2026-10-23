@@ -279,7 +279,18 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
   // Also used by the optional MCP App; its shape comes from the same contract.
   reference("#/components/schemas/ResourceId");
   reference("#/components/schemas/AgentCampaignState");
-  const common = `${header}export const AGENT_TOOL_NAMES = ${json(names)} as const;\nexport const AGENT_TOOL_POLICIES = Object.freeze(${json(policies)} as const);\nexport const AGENT_TOOL_SCOPES = ${json(scopes)} as const;\nexport const AGENT_OWNER_ONLY_TOOLS = ${json(ownerOnly)} as const;\n`;
+  const errors = document["x-dmfaster-errors"] || {};
+  for (const [code, value] of Object.entries(errors)) {
+    if (
+      !/^[a-z][a-z0-9_]{0,99}$/.test(code) ||
+      typeof value.nextAction !== "string" ||
+      !value.nextAction.trim() ||
+      value.docsUrl !== `https://dmfaster.com/docs/agents#errors-${code}`
+    )
+      throw Error(`Invalid error catalog entry: ${code}`);
+  }
+  const errorCatalog = `export const AGENT_ERROR_CATALOG = ${json(errors)} as const;\n`;
+  const common = `${header}export const AGENT_TOOL_NAMES = ${json(names)} as const;\nexport const AGENT_TOOL_POLICIES = Object.freeze(${json(policies)} as const);\nexport const AGENT_TOOL_SCOPES = ${json(scopes)} as const;\nexport const AGENT_OWNER_ONLY_TOOLS = ${json(ownerOnly)} as const;\n${errorCatalog}export const AGENT_SALES_EVENT_TYPES = ${json(schemas.AgentSalesEventType?.enum || [])} as const;\n`;
   const artifacts = new Map([
     [
       "packages/sdk/src/generated/tools.ts",
@@ -309,6 +320,12 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     ["site/src/lib/agent-platform/public-contract.generated.ts", common],
   ]);
   if (includeServer) {
+    artifacts.set("marketing/src/lib/agent-error-catalog.generated.ts", header + errorCatalog);
+    artifacts.set(
+      "marketing/src/lib/agent-catalog.generated.ts",
+      header +
+        `export const AGENT_DOC_TOOLS = ${json(names.map((name) => [definitions[name].mcp.name, definitions[name].mcp.title, definitions[name].mcp.description]))} as const;\nexport const AGENT_DOC_EVENTS = ${json(schemas.AgentSalesEventType?.enum || [])} as const;\n`,
+    );
     artifacts.set(
       "site/src/lib/agent-platform/public-input-schemas.generated.ts",
       artifacts.get("packages/mcp-server/src/generated/input-schemas.ts"),

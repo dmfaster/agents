@@ -1,10 +1,10 @@
-> Agent 1.12.0 adds recipient-specific draft and queued campaign messages.
+> Agent 2.0.0 adds recipient-specific draft and queued campaign messages.
 > Native host rendering and directory review remain separate checks.
 
 # DM Faster for agents
 
 This repository is the public source for
-[DM Faster](https://dmfaster.com) Agent 1.0:
+[DM Faster](https://dmfaster.com) Agent 2.0:
 
 - the versioned Agent API contract;
 - secure browser authorization backed by the operating-system credential store;
@@ -18,7 +18,7 @@ The shared plugin also includes portable Agent Plugins 1.0.0 root
 `plugin.json` and `mcp.json` files, while retaining host-specific manifests for
 clients that have not adopted the portable package format yet.
 
-The 1.12.0 source exposes 102 typed domain tools. It adds Basic-plan Instagram
+The 2.0.0 source exposes 102 typed domain tools. It adds Basic-plan Instagram
 prospecting and separately charged enrichment, quiet Companies views, website
 evidence, bounded company suggestions, and company and saved-list mentions.
 Extraction reports exact saved counts and settled credit costs. A same-key retry
@@ -98,14 +98,14 @@ Merging the manifest does not publish the universal Cursor listing.
 ## Authenticate
 
 ```bash
-npx --yes @dmfaster/cli@1.12.0 auth login --json
+npx --yes @dmfaster/cli@2.0.0 auth login --json
 ```
 
 The focused DM Faster page shows the exact workspace, expiry, scopes, and a
 confirmation code that must match the CLI. Credentials are stored in macOS
 Keychain or Linux Secret Service and are never written to plaintext config.
 Use `--access read`, `plan`, or `draft` to grant a smaller capability ceiling;
-the default `full` profile enables the complete Agent 1.0 flow.
+the default `full` profile enables the complete Agent 2.0 flow.
 
 The `full` profile includes the owner-granted `campaigns:control` permission.
 After this one-time connection approval, telling your agent “launch it” or
@@ -120,10 +120,10 @@ the owner approves the replacement. Credentials are never upgraded silently.
 ## Use the CLI or MCP server directly
 
 ```bash
-npx --yes @dmfaster/cli@1.12.0 workspace briefing --json
-npx --yes @dmfaster/cli@1.12.0 campaign copy inspect campaign_123 --json
-npx --yes @dmfaster/cli@1.12.0 conversations list --filter unread --limit 25 --json
-npx --yes @dmfaster/mcp-server@1.12.0
+npx --yes @dmfaster/cli@2.0.0 workspace briefing --json
+npx --yes @dmfaster/cli@2.0.0 campaign copy inspect campaign_123 --json
+npx --yes @dmfaster/cli@2.0.0 conversations list --filter unread --limit 25 --json
+npx --yes @dmfaster/mcp-server@2.0.0
 ```
 
 The 102 MCP domain tools cover prospecting, workspace, campaign, sending, reply, inbox,
@@ -138,7 +138,7 @@ the same complete state and keep every domain capability.
 The MCP server is deliberately stateless: send the complete latest campaign
 state on each planning call. Durable product state, permissions, idempotency,
 and action approvals remain on DM Faster's server. Clients that have not
-implemented MCP 2026-07-28 must use the version-pinned CLI; Agent 1.0 does not
+implemented MCP 2026-07-28 must use the version-pinned CLI; Agent 2.0 does not
 silently downgrade to the 2025 protocol.
 
 See [dmfaster.com/docs/agents](https://dmfaster.com/docs/agents) for host setup
@@ -177,7 +177,7 @@ private product source or trademarks.
 All account owners, including Basic, can import a one-column username CSV or newline-separated usernames into a private target list:
 
 ```bash
-npx --yes @dmfaster/cli@1.12.0 list import --name "My prospects" --file usernames.csv --json
+npx --yes @dmfaster/cli@2.0.0 list import --name "My prospects" --file usernames.csv --json
 ```
 
 The same operation is available as MCP `list_import` and SDK `client.call("list.import", { name, usernames, idempotencyKey })`. Imports accept 1–1,000 rows, remove duplicates, and report the exact saved count. They create no campaign and send no messages.
@@ -306,7 +306,7 @@ older local grants without lead permissions use `auth upgrade --access full`.
 Claude/Cursor host installation, native rendering and directory acceptance
 remain unverified.
 
-## Agent 1.12.0 recipient messages
+## Agent 2.0.0 recipient messages
 
 Agents can research each recipient’s website using their own tools, then supply
 exact copy through `campaign.messages.draft.update` before the first launch or

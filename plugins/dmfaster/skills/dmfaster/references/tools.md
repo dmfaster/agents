@@ -22,7 +22,7 @@ to perform an action. It has no domain HTTP or CLI operation.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@1.12.0
+npx --yes @dmfaster/cli@2.0.0
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
@@ -111,6 +111,8 @@ only one input in a command may use `-`.
 | `calendar_meeting_book` | `calendar.meeting.book` | `calendar meeting book --input FILE --json` | `calendar:write`, `calendar:read`, `inbox:read`, `pipeline:write` | Book a conversation meeting |
 | `calls_list` | `calls.list` | `calls list --input FILE --json` | `calls:read` | List authorized meetings |
 | `call_inspect` | `call.inspect` | `call inspect --input FILE --json` | `calls:read` | Inspect meeting and outcomes |
+| `events_list` | `events.list` | `events list --input FILE --json` | `events:read` | Replay the workspace event stream with current-scope redaction |
+| `conversations_changes` | `conversations.changes` | `conversations changes --input FILE --json` | `inbox:read` | Read committed conversation changes from an opaque watermark |
 | `leads_status` | `leads.status` | `leads status --input FILE --json` | `leads:read` | Read exact credits and recent jobs |
 | `leads_extract_quote` | `leads.extract.quote` | `leads extract quote --input FILE --json` | `leads:read` | Estimate social extraction credits |
 | `leads_extract_start` | `leads.extract.start` | `leads extract start --input FILE --json` | `leads:read`, `leads:write` | Queue a durable extraction |

@@ -548,6 +548,8 @@ test("prints typed retry metadata from SDK transport failures", async () => {
           code: "rate_limited",
           retryable: true,
           requestId: "req_cli_123",
+          nextAction: "Wait before retrying with the same key.",
+          docsUrl: "https://dmfaster.com/docs/agents#errors-rate_limited",
           retryAfterSeconds: 90,
         });
       },
@@ -560,6 +562,8 @@ test("prints typed retry metadata from SDK transport failures", async () => {
       code: "rate_limited",
       message: "Too many agent tool requests.",
       retryable: true,
+      nextAction: "Wait before retrying with the same key.",
+      docsUrl: "https://dmfaster.com/docs/agents#errors-rate_limited",
       requestId: "req_cli_123",
       retryAfterSeconds: 90,
       status: 429,

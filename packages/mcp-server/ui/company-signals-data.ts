@@ -15,6 +15,7 @@ export function companySignals(
   const funding = record(profile?.funding);
   const publicFunding = record(profile?.publicFunding);
   const hiring = record(profile?.hiring);
+  const recruitment = record(profile?.recruitment);
   const approaches = record(google.audienceSelectionApproaches);
   const targeting = record(meta.targeting);
   return {
@@ -32,6 +33,15 @@ export function companySignals(
           ...publicFunding,
           sources: records(publicFunding.sources),
           recentEvents: records(publicFunding.recentEvents),
+        }
+      : null,
+    recruitment: profile?.recruitment
+      ? {
+          ...recruitment,
+          postings: records(recruitment.postings).map((posting) => ({
+            ...posting,
+            sourceUrl: externalUrl(posting.sourceUrl),
+          })),
         }
       : null,
     hiring:

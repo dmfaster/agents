@@ -1,6 +1,6 @@
 {
   "name": "@dmfaster/mcp-server",
-  "version": "1.12.0",
+  "version": "2.0.0",
   "description": "DM Faster prospecting and sales tools with company and saved-list mentions and an interactive workspace.",
   "license": "Apache-2.0",
   "author": "DM Faster",
@@ -28,15 +28,16 @@
   },
   "scripts": {
     "generate:ui": "node tools/build-campaign-workspace-ui.mjs",
-    "build": "npm run generate:ui && tsc -p tsconfig.json",
-    "typecheck": "npm run generate:ui && tsc -p ui/tsconfig.json --noEmit && tsc -p tsconfig.json --noEmit",
+    "build": "npm run generate:ui && node ../../tools/typecheck-release.mjs --emit --project tsconfig.json",
+    "typecheck": "npm run generate:ui && node ../../tools/typecheck-release.mjs --project ui/tsconfig.json && node ../../tools/typecheck-release.mjs --project tsconfig.json",
     "test": "npm run generate:ui && node --test tests/*.test.ts",
-    "check": "npm run typecheck && npm test && npm run build"
+    "check": "npm run typecheck && npm test && npm run build",
+    "typecheck:local": "npm run generate:ui && node ../../tools/typecheck-local.mjs --project ui/tsconfig.json && node ../../tools/typecheck-local.mjs --project tsconfig.json"
   },
   "dependencies": {
-    "@dmfaster/local-auth": "1.12.0",
-    "@dmfaster/sdk": "1.12.0",
-    "@modelcontextprotocol/server": "2.0.0",
+    "@dmfaster/local-auth": "2.0.0",
+    "@dmfaster/sdk": "2.0.0",
+    "@modelcontextprotocol/server": "2.3.0",
     "zod": "4.5.4"
   },
   "devDependencies": {
@@ -50,8 +51,7 @@
     "lucide-react": "1.27.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "tailwindcss": "4.3.3",
-    "typescript": "7.0.2"
+    "tailwindcss": "4.3.3"
   },
   "exports": {
     "./core": {

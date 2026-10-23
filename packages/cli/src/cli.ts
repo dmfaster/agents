@@ -1,5 +1,7 @@
 import {
+  agentErrorRecovery,
   createDmfasterClient,
+  inspectAgentReadiness,
   runCompanyFitReview,
   collectCompanyFitResults,
   AGENT_TOOL_NAMES,
@@ -40,7 +42,7 @@ import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "1.12.0";
+export const CLI_VERSION = "2.0.0";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();
@@ -983,11 +985,16 @@ function authAdapters(context: CliContext): DeviceAuthAdapters {
 function publicClientError(error: DmfasterSdkError | AgentAuthError) {
   const httpError = error instanceof DmfasterHttpError ? error : null;
   const authError = error instanceof AgentAuthError ? error : null;
+  const retryable =
+    httpError?.retryable === true || authError?.status === 429 || (authError?.status ?? 0) >= 500;
+  const recovery = agentErrorRecovery(error.code, retryable);
   return {
     error: {
       code: error.code,
       message: error.message,
-      ...(typeof httpError?.retryable === "boolean" ? { retryable: httpError.retryable } : {}),
+      retryable,
+      nextAction: httpError?.nextAction || recovery.nextAction,
+      docsUrl: httpError?.docsUrl || recovery.docsUrl,
       ...(httpError?.requestId ? { requestId: httpError.requestId } : {}),
       ...(typeof (httpError?.retryAfterSeconds ?? authError?.retryAfterSeconds) === "number"
         ? { retryAfterSeconds: httpError?.retryAfterSeconds ?? authError?.retryAfterSeconds }
@@ -1373,6 +1380,17 @@ async function runAuthStatus(input: {
       token: input.config.token,
       ...(input.context.fetch ? { fetch: input.context.fetch } : {}),
     });
+    const client = createDmfasterClient({
+      baseUrl: input.config.baseUrl,
+      token: input.config.token,
+      ...(input.context.fetch ? { fetch: input.context.fetch } : {}),
+    });
+    const readiness = await inspectAgentReadiness({
+      scopes: identity.credential.scopes,
+      isOwner: identity.user.id === identity.workspace.id,
+      expiresAt: identity.credential.expiresAt,
+      read: (tool) => client.invoke(tool, {}),
+    });
     line(
       input.stdout,
       JSON.stringify(
@@ -1382,6 +1400,7 @@ async function runAuthStatus(input: {
           credentialSource: input.config.tokenSource,
           baseUrl: input.config.baseUrl,
           ...publicIdentity(identity),
+          ...readiness,
         },
         null,
         2,

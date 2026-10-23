@@ -103,6 +103,29 @@ export type AgentToolInputMap = {
   "leads.prospect.results": operations["instagramProspectResults"]["requestBody"]["content"]["application/json"];
   "leads.prospect.advance": operations["instagramProspectAdvance"]["requestBody"]["content"]["application/json"];
   "leads.prospect.cancel": operations["instagramProspectCancel"]["requestBody"]["content"]["application/json"];
+  "events.list": operations["eventsList"]["requestBody"]["content"]["application/json"];
+  "conversations.changes": operations["conversationsChanges"]["requestBody"]["content"]["application/json"];
+  "suppressions.list": operations["suppressionsList"]["requestBody"]["content"]["application/json"];
+  "suppressions.add": operations["suppressionsAdd"]["requestBody"]["content"]["application/json"];
+  "suppressions.remove": operations["suppressionsRemove"]["requestBody"]["content"]["application/json"];
+  "workspace.sandbox.create": operations["workspaceSandboxCreate"]["requestBody"]["content"]["application/json"];
+  "sandbox.seed": operations["sandboxSeed"]["requestBody"]["content"]["application/json"];
+  "sandbox.inbound.simulate": operations["sandboxInboundSimulate"]["requestBody"]["content"]["application/json"];
+  "sandbox.clock.advance": operations["sandboxClockAdvance"]["requestBody"]["content"]["application/json"];
+  "call.outcome.set": operations["callOutcomeSet"]["requestBody"]["content"]["application/json"];
+  "meeting.link": operations["meetingLink"]["requestBody"]["content"]["application/json"];
+  "meeting.unlink": operations["meetingUnlink"]["requestBody"]["content"]["application/json"];
+  "webhooks.create": operations["webhooksCreate"]["requestBody"]["content"]["application/json"];
+  "webhooks.list": operations["webhooksList"]["requestBody"]["content"]["application/json"];
+  "webhooks.update": operations["webhooksUpdate"]["requestBody"]["content"]["application/json"];
+  "webhooks.delete": operations["webhooksDelete"]["requestBody"]["content"]["application/json"];
+  "webhooks.test": operations["webhooksTest"]["requestBody"]["content"]["application/json"];
+  "webhooks.replay": operations["webhooksReplay"]["requestBody"]["content"]["application/json"];
+  "meetings.unlinked.list": operations["meetingsUnlinkedList"]["requestBody"]["content"]["application/json"];
+  "pipeline.reconcile": operations["pipelineReconcile"]["requestBody"]["content"]["application/json"];
+  "workspace.agent_sales.get": operations["workspaceAgentSalesGet"]["requestBody"]["content"]["application/json"];
+  "workspace.agent_sales.update": operations["workspaceAgentSalesUpdate"]["requestBody"]["content"]["application/json"];
+  "sandbox.provider.update": operations["sandboxProviderUpdate"]["requestBody"]["content"]["application/json"];
 };
 export type AgentToolDataMap = {
   "analytics.summary": NonNullable<
@@ -410,5 +433,74 @@ export type AgentToolDataMap = {
   >;
   "leads.prospect.cancel": NonNullable<
     operations["instagramProspectCancel"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "events.list": NonNullable<
+    operations["eventsList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "conversations.changes": NonNullable<
+    operations["conversationsChanges"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "suppressions.list": NonNullable<
+    operations["suppressionsList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "suppressions.add": NonNullable<
+    operations["suppressionsAdd"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "suppressions.remove": NonNullable<
+    operations["suppressionsRemove"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "workspace.sandbox.create": NonNullable<
+    operations["workspaceSandboxCreate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "sandbox.seed": NonNullable<
+    operations["sandboxSeed"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "sandbox.inbound.simulate": NonNullable<
+    operations["sandboxInboundSimulate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "sandbox.clock.advance": NonNullable<
+    operations["sandboxClockAdvance"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.outcome.set": NonNullable<
+    operations["callOutcomeSet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "meeting.link": NonNullable<
+    operations["meetingLink"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "meeting.unlink": NonNullable<
+    operations["meetingUnlink"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "webhooks.create": NonNullable<
+    operations["webhooksCreate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "webhooks.list": NonNullable<
+    operations["webhooksList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "webhooks.update": NonNullable<
+    operations["webhooksUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "webhooks.delete": NonNullable<
+    operations["webhooksDelete"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "webhooks.test": NonNullable<
+    operations["webhooksTest"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "webhooks.replay": NonNullable<
+    operations["webhooksReplay"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "meetings.unlinked.list": NonNullable<
+    operations["meetingsUnlinkedList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "pipeline.reconcile": NonNullable<
+    operations["pipelineReconcile"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "workspace.agent_sales.get": NonNullable<
+    operations["workspaceAgentSalesGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "workspace.agent_sales.update": NonNullable<
+    operations["workspaceAgentSalesUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "sandbox.provider.update": NonNullable<
+    operations["sandboxProviderUpdate"]["responses"][200]["content"]["application/json"]["data"]
   >;
 };

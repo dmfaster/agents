@@ -1,0 +1,15 @@
+# Appointment-setting foundation (Agent 2.0)
+
+Inspect `connection_status` first. Confirm workspace identity and `isSandbox`; readiness separately reports provider connection health and granted scopes. A scope is not a connected provider. Follow `setupUrl` for recovery; do not try browser cookies or private credentials.
+
+For development or a requested dry run, create a sandbox with `workspace_sandbox_create`, reconnect selecting that workspace, and verify `workspace.isSandbox:true` before `sandbox_seed`. The `appointment_setter_v1` preset supplies 50 synthetic targets, mixed-intent conversations and meetings. `sandbox_inbound_simulate` and `sandbox_clock_advance` require fresh versions where applicable and durable idempotency keys. `sandbox_provider_update` exercises disconnection; sandbox providers record fake receipts and cannot acquire real connections. Do not switch to a live workspace to make a sandbox operation succeed.
+
+Read `conversations_changes` once without a cursor to establish a watermark; keep and advance the returned cursor. Use exact `intent`, `interest`, `channel`, `meetingStatus`, `followupDue` and `updatedAfter` filters with `conversations_list`. `filteredTotal` is the exact filtered count; `scopeStats` is workspace-wide. A reaction or system marker is not a human reply. Human/agent intent overrides persist across model classification.
+
+Subscribe to classified human messages, opted-out contacts, meeting outcomes and sender health using `webhooks_create` or hosted MCP Events. Use `events_list` to recover after a disconnection. Save the secret privately; deduplicate by event `id`, preserve per-workspace sequence, and verify DMF-Signature against the raw request body with a five-minute timestamp tolerance. The same event can have multiple delivery IDs after replay. Inspect a resource again before mutating from an old event.
+
+An opt-out must stop outreach across channels. Use `suppressions_add` for an explicitly requested removal; removal of a suppression requires a reason and owner permission. Never use a second channel to bypass a suppression. Existing historical opt-outs may require a separately approved repair; absence from the ledger is not permission to ignore the prospect's request.
+
+Use `call_outcome_set` to record held/no-show/rescheduled/cancelled and won/lost/follow-up outcomes from actual evidence. Do not infer attendance from a calendar timestamp. `awaiting_outcome` means evidence is missing. `meeting_link` and `meeting_unlink` require current versions. `pipeline_reconcile` is read-only for live workspaces; historical apply needs a separate owner-reviewed maintenance task. Closed won/lost metadata preserves the existing closed stage.
+
+Keep each key stable for retries of the same intent; inspect the durable action/receipt after ambiguous transport failures. Change the key for a new intent. P0 adds no autonomous reply permission: sending still needs the user's exact approved content. Policy-approved replies, booking links and scheduled follow-ups are separate P1 capabilities and must be discovered before use.

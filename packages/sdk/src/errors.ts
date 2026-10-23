@@ -1,3 +1,19 @@
+import { AGENT_ERROR_CATALOG } from "./generated/tools.ts";
+
+export function agentErrorRecovery(code: string, retryable: boolean) {
+  const entry = (AGENT_ERROR_CATALOG as Record<string, { nextAction: string; docsUrl: string }>)[
+    code
+  ];
+  return (
+    entry || {
+      nextAction: retryable
+        ? "Retry after a short delay with the same idempotency key; inspect any accepted action first."
+        : "Review the error and the tool documentation, inspect the current resource, and correct the request before retrying.",
+      docsUrl: "https://dmfaster.com/docs/agents#errors",
+    }
+  );
+}
+
 export class DmfasterSdkError extends Error {
   readonly code: string;
 
@@ -30,6 +46,8 @@ export class DmfasterHttpError extends DmfasterSdkError {
   readonly requestId: string | null;
   readonly retryAfterSeconds: number | null;
   readonly details: Record<string, unknown> | null;
+  readonly nextAction: string | null;
+  readonly docsUrl: string | null;
 
   constructor(input: {
     message: string;
@@ -40,6 +58,8 @@ export class DmfasterHttpError extends DmfasterSdkError {
     requestId?: string | null;
     retryAfterSeconds?: number | null;
     details?: Record<string, unknown> | null;
+    nextAction?: string | null;
+    docsUrl?: string | null;
   }) {
     super(input.message, input.code || "http_error");
     this.name = "DmfasterHttpError";
@@ -49,6 +69,8 @@ export class DmfasterHttpError extends DmfasterSdkError {
     this.requestId = input.requestId ?? null;
     this.retryAfterSeconds = input.retryAfterSeconds ?? null;
     this.details = input.details ?? null;
+    this.nextAction = input.nextAction ?? null;
+    this.docsUrl = input.docsUrl ?? null;
   }
 }
 

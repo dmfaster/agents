@@ -1,9 +1,12 @@
 ---
 name: dmfaster
-description: Inspect and safely operate a user's live DM Faster sales workspace through the official Agent 1.0 MCP tools or CLI. Use when the user explicitly asks for current workspace priorities, company prospecting and filtering, company profiles and saved shortlists, campaign planning, exact audience previews, private list or campaign preparation, explicitly requested launch or pause, campaign performance, sending health, replies, pipeline, company history, or agent setup and authentication. Do not use for repository source debugging, implementation, code review, tests, migrations, deployments, extension-runtime diagnosis, or local development unless the user explicitly requests live workspace evidence. Reject browser-cookie, database, browser-worker-token, and generic HTTP workarounds.
+description: Inspect and safely operate a user's live DM Faster sales workspace through the official Agent 2.0 MCP tools or CLI. Use when the user explicitly asks for current workspace priorities, company prospecting and filtering, company profiles and saved shortlists, campaign planning, exact audience previews, private list or campaign preparation, explicitly requested launch or pause, campaign performance, sending health, replies, pipeline, company history, or agent setup and authentication. Do not use for repository source debugging, implementation, code review, tests, migrations, deployments, extension-runtime diagnosis, or local development unless the user explicitly requests live workspace evidence. Reject browser-cookie, database, browser-worker-token, and generic HTTP workarounds.
 ---
 
 # DM Faster
+
+For sandbox setup, inbox triage, events, suppression or meeting outcomes, read
+[agent-sales.md](references/agent-sales.md).
 
 For Instagram ICP text-to-list runs, follower, following, liker or commenter prospecting and credit costs,
 read [social-prospecting.md](references/social-prospecting.md).

@@ -1,5 +1,14 @@
 "use client";
 import * as React from "react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "./components/card";
+import { Badge } from "./components/badge";
 import { Button } from "./components/button";
 import { useState } from "react";
 import { Landmark, ChevronDown } from "lucide-react";
@@ -9,7 +18,7 @@ import type {
   PipelinePublicFundingSourceSummary,
   PipelinePublicFundingEvent,
 } from "./company-signals-types";
-export type { CompanySignalsProfile } from "./company-signals-types";
+export type { CompanySignalsProfile, CompanyRecruitment } from "./company-signals-types";
 type Translate = (key: string, fallback: string, values?: Record<string, string>) => string;
 type SignalLocale = { language?: "fi" | "en"; t?: Translate };
 const english: Translate = (key, fallback, values = {}) =>
@@ -950,6 +959,116 @@ const HIRING_ROLE_FALLBACK_LABELS: Record<string, string> = {
   other: "Other roles",
 };
 
+function RecruitmentCard({
+  recruitment,
+  language,
+  t,
+}: {
+  recruitment: NonNullable<CompanySignalsProfile["recruitment"]>;
+  language: "fi" | "en";
+  t: Translate;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const [observedNow, setObservedNow] = useState(() => Date.now());
+  React.useEffect(() => {
+    if (!recruitment.verifiedUntil) return;
+    const remaining = Math.max(0, Date.parse(recruitment.verifiedUntil) - Date.now());
+    const timer = setTimeout(() => setObservedNow(Date.now()), remaining + 1);
+    return () => clearTimeout(timer);
+  }, [recruitment.verifiedUntil]);
+  const verified =
+    recruitment.status === "verified" &&
+    Boolean(recruitment.verifiedUntil && Date.parse(recruitment.verifiedUntil) > observedNow);
+  const postings = expanded ? recruitment.postings : recruitment.postings.slice(0, 5);
+  return (
+    <Card data-testid="company-recruitment">
+      <CardHeader>
+        <CardTitle>{t("companies.recruitment", "Recruitment")}</CardTitle>
+        <CardDescription>
+          {verified
+            ? t(
+                recruitment.activeJobCount === 1
+                  ? "companies.openEmployerAd"
+                  : "companies.openEmployerAds",
+                recruitment.activeJobCount === 1
+                  ? "1 verified open employer ad"
+                  : "{count} verified open employer ads",
+                { count: String(recruitment.activeJobCount) },
+              )
+            : t(
+                recruitment.snapshotJobCount === 1
+                  ? "companies.historicalEmployerAd"
+                  : "companies.historicalEmployerAds",
+                recruitment.snapshotJobCount === 1
+                  ? "1 employer ad in the saved snapshot · current availability unverified"
+                  : "{count} employer ads in the saved snapshot · current availability unverified",
+                { count: String(recruitment.snapshotJobCount) },
+              )}
+        </CardDescription>
+        <Badge variant={verified ? "secondary" : "outline"}>
+          {verified
+            ? t("companies.verifiedHiring", "Verified recruitment")
+            : t("companies.historicalHiring", "Historical snapshot")}
+        </Badge>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        {postings.map((posting) => (
+          <div key={`${posting.source}:${posting.externalId}`} className="flex flex-col gap-1">
+            {/^https:\/\//u.test(posting.sourceUrl) ? (
+              <a
+                href={posting.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium underline underline-offset-4"
+              >
+                {posting.title}
+              </a>
+            ) : (
+              <p className="text-sm font-medium">{posting.title}</p>
+            )}
+            <p className="text-xs text-muted-foreground">
+              {[
+                posting.location,
+                posting.publishedAt ? formatCompanyDate(posting.publishedAt, language) : "",
+                posting.source,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {verified && posting.status === "open"
+                ? t("companies.openJob", "Open")
+                : verified && posting.status === "closed"
+                  ? t("companies.closedJob", "Closed")
+                  : t("companies.unverifiedJob", "Availability unverified")}
+            </p>
+          </div>
+        ))}
+        {recruitment.postings.length > 5 ? (
+          <Button variant="ghost" onClick={() => setExpanded(!expanded)}>
+            {expanded
+              ? t("companies.fewerJobs", "Show fewer")
+              : t("companies.moreJobs", "Show more postings")}
+          </Button>
+        ) : null}
+      </CardContent>
+      <CardFooter className="flex flex-col items-start gap-1">
+        <p className="text-xs text-muted-foreground">
+          {t("companies.recruitmentSnapshot", "Snapshot: {date}", {
+            date: formatCompanyDate(recruitment.snapshotAt, language),
+          })}
+        </p>
+        <p className="text-xs text-muted-foreground">
+          {t(
+            "companies.recruitmentCountNote",
+            "Counts cover observed postings and may omit other vacancies. Ads are not a headcount. Up to 20 postings are shown.",
+          )}
+        </p>
+      </CardFooter>
+    </Card>
+  );
+}
+
 function hiringRoleLabel(role: string, t: Translate) {
   const fallback =
     HIRING_ROLE_FALLBACK_LABELS[role] ||
@@ -964,6 +1083,8 @@ export function HiringSignalCard({
   language = "en",
   t = english,
 }: { profile: CompanySignalsProfile } & SignalLocale) {
+  if (profile.recruitment)
+    return <RecruitmentCard recruitment={profile.recruitment} language={language} t={t} />;
   const hiring = profile.hiring;
   if (!hiring?.active) return null;
   const openPositions = hiring.openPositionCount;

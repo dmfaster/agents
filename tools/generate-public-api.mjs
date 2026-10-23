@@ -27,6 +27,8 @@ if (unknownArguments.length > 0) {
 function runOpenapiTypescript(arguments_) {
   const binary = path.join(
     rootDir,
+    "tools",
+    "tooling-compat",
     "node_modules",
     ".bin",
     process.platform === "win32" ? "openapi-typescript.cmd" : "openapi-typescript",

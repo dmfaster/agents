@@ -1,5 +1,6 @@
 import {
   createDmfasterClient,
+  inspectAgentReadiness,
   DmfasterSdkError,
   AGENT_TOOL_NAMES,
   AGENT_TOOL_DEFINITIONS,
@@ -57,6 +58,17 @@ export async function inspectMcpConnection(env: NodeJS.ProcessEnv, input: McpAut
       ...(input.fetch ? { fetch: input.fetch } : {}),
     });
     const grantedScopes = new Set(identity.credential.scopes);
+    const client = createDmfasterClient({
+      baseUrl: config.baseUrl,
+      token: config.token,
+      ...(input.fetch ? { fetch: input.fetch } : {}),
+    });
+    const readiness = await inspectAgentReadiness({
+      scopes: identity.credential.scopes,
+      isOwner: identity.user.id === identity.workspace.id,
+      expiresAt: identity.credential.expiresAt,
+      read: (tool) => client.invoke(tool, {}),
+    });
     const scopeEligibleTools = AGENT_TOOL_NAMES.filter((tool) =>
       AGENT_TOOL_SCOPES[tool].every((scope) => grantedScopes.has(scope)),
     ).map((tool) => ({ tool, mcpTool: AGENT_TOOL_DEFINITIONS[tool].mcp.name }));
@@ -70,6 +82,7 @@ export async function inspectMcpConnection(env: NodeJS.ProcessEnv, input: McpAut
       workspace: identity.workspace,
       user: identity.user,
       credential: identity.credential,
+      ...readiness,
       scopeEligibleTools,
       scopeBlockedTools,
       authorizationNote:

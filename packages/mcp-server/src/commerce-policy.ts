@@ -41,7 +41,13 @@ export function mcpCommerceResult(result: AgentToolResult): AgentToolResult {
       ok: false,
       data: null,
       artifacts: [],
-      error: { code: "entitlement_required", message: entitlementMessage, retryable: false },
+      error: {
+        code: "entitlement_required",
+        message: entitlementMessage,
+        retryable: false,
+        nextAction: "Review the account's available features with its owner.",
+        docsUrl: MCP_ENTITLEMENT_INFO_URL,
+      },
     };
   }
   return {

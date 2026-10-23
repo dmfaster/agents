@@ -118,3 +118,7 @@ Verify Product migration 0385 and the four `campaign.messages` tools before
 dispatching the 1.12.0 trusted package workflow. Release the GitHub plugin catalog
 after all four exact npm versions are publicly installable. Record live tool
 discovery, clean installs, signatures, provenance, and read-only host results.
+
+## Explicit owner focused publication
+
+An active-task instruction to skip regression suites may set the workflow focused_reason input to that exact decision. This runs package build/typecheck and records omitted audits, regression and install suites. Source/ref/version/environment/provenance guards remain mandatory. P0 2.0.0 uses the 2026-10-23 owner speed-first decision. Deploy the server and additive schema before publishing clients.
