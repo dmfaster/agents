@@ -102,7 +102,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -820,7 +820,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -1350,7 +1350,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -1789,7 +1789,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -2487,7 +2487,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -3005,7 +3005,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -3913,7 +3913,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -4369,7 +4369,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -5079,7 +5079,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -5867,7 +5867,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -6443,7 +6443,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -7040,7 +7040,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -7655,7 +7655,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -8083,7 +8083,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -8464,7 +8464,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -8912,7 +8912,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -9304,7 +9304,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -9773,7 +9773,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -10141,7 +10141,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -10554,7 +10554,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -10961,7 +10961,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -11368,7 +11368,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -11775,7 +11775,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -12271,7 +12271,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -12689,7 +12689,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -13248,7 +13248,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -13774,7 +13774,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -14253,7 +14253,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -14643,7 +14643,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -15029,7 +15029,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -15448,7 +15448,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -15908,7 +15908,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -16362,7 +16362,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -16891,7 +16891,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -17271,7 +17271,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -17683,7 +17683,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -18072,7 +18072,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -18569,7 +18569,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -19046,7 +19046,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -19433,7 +19433,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -19887,7 +19887,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -20341,7 +20341,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -20965,7 +20965,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -21439,7 +21439,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -21940,7 +21940,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -22411,7 +22411,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -23147,7 +23147,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -23560,7 +23560,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -24285,7 +24285,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -25300,7 +25300,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -25798,7 +25798,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -26619,7 +26619,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -27727,7 +27727,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -28835,7 +28835,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -29943,7 +29943,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -31051,7 +31051,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -32159,7 +32159,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -32790,7 +32790,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -33217,7 +33217,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -33646,7 +33646,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -34163,7 +34163,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -34796,7 +34796,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -35203,7 +35203,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -35607,7 +35607,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -36031,7 +36031,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -36438,7 +36438,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -36806,7 +36806,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -37181,7 +37181,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -37571,7 +37571,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -37983,7 +37983,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -38429,7 +38429,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -38875,7 +38875,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -39359,7 +39359,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -39814,7 +39814,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -40553,7 +40553,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -41218,7 +41218,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -41602,7 +41602,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -42037,7 +42037,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -42421,7 +42421,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -42932,7 +42932,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -43545,7 +43545,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -43951,7 +43951,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -44408,7 +44408,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -44865,7 +44865,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -45322,7 +45322,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -45716,7 +45716,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -46183,7 +46183,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -46605,7 +46605,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -47273,7 +47273,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -47941,7 +47941,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -48609,7 +48609,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -49277,7 +49277,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -49945,7 +49945,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -50613,7 +50613,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -51281,7 +51281,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -51949,7 +51949,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -52616,7 +52616,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -53268,7 +53268,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -53920,7 +53920,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -54572,7 +54572,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -55224,7 +55224,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -55876,7 +55876,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -56531,7 +56531,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -56990,7 +56990,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -57409,7 +57409,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -57844,7 +57844,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -58255,7 +58255,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -58662,7 +58662,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -59040,7 +59040,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -59430,7 +59430,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -59799,7 +59799,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -60179,7 +60179,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -60575,7 +60575,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -61008,7 +61008,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -61441,7 +61441,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -61879,7 +61879,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -62328,7 +62328,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -62722,7 +62722,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -63116,7 +63116,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -63510,7 +63510,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -63904,7 +63904,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -64344,7 +64344,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -64840,7 +64840,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -65216,7 +65216,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -65611,7 +65611,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -65993,7 +65993,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -66583,7 +66583,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -67173,7 +67173,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -67763,7 +67763,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -68353,7 +68353,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -68943,7 +68943,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -69533,7 +69533,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -70123,7 +70123,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -70713,7 +70713,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -71303,7 +71303,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -71893,7 +71893,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -72501,7 +72501,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -72840,7 +72840,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -73179,7 +73179,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -73518,7 +73518,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -73857,7 +73857,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -74196,7 +74196,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },
@@ -74535,7 +74535,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.2.0",
           },
         },
       },

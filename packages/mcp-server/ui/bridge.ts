@@ -131,7 +131,7 @@ export class McpAppBridge {
       const initialized = (await this.request(
         "ui/initialize",
         {
-          appInfo: { name: this.#appName, version: "2.1.0" },
+          appInfo: { name: this.#appName, version: "2.2.0" },
           appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] },
           protocolVersion: MCP_APP_PROTOCOL_VERSION,
         },

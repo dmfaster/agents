@@ -6,7 +6,7 @@ description: Inspect and safely operate a user's live DM Faster sales workspace 
 # DM Faster
 
 For sandbox setup, inbox triage, events, suppression or meeting outcomes, read
-[agent-sales.md](references/agent-sales.md).
+[agent-sales.md](references/agent-sales.md). For a requested appointment-setting setup or daily-loop recipe, also read [appointment-setter.md](references/appointment-setter.md).
 
 For Instagram ICP text-to-list runs, follower, following, liker or commenter prospecting and credit costs,
 read [social-prospecting.md](references/social-prospecting.md).
