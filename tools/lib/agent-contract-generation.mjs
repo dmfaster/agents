@@ -290,7 +290,7 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
       throw Error(`Invalid error catalog entry: ${code}`);
   }
   const errorCatalog = `export const AGENT_ERROR_CATALOG = ${json(errors)} as const;\n`;
-  const common = `${header}export const AGENT_TOOL_NAMES = ${json(names)} as const;\nexport const AGENT_TOOL_POLICIES = Object.freeze(${json(policies)} as const);\nexport const AGENT_TOOL_SCOPES = ${json(scopes)} as const;\nexport const AGENT_OWNER_ONLY_TOOLS = ${json(ownerOnly)} as const;\n${errorCatalog}export const AGENT_SALES_EVENT_TYPES = ${json(schemas.AgentSalesEventType?.enum || [])} as const;\n`;
+  const common = `${header}export const AGENT_CONTRACT_VERSION = ${json(schemas.AgentToolResultBase.properties.contractVersion.const)} as const;\nexport const AGENT_TOOL_NAMES = ${json(names)} as const;\nexport const AGENT_TOOL_POLICIES = Object.freeze(${json(policies)} as const);\nexport const AGENT_TOOL_SCOPES = ${json(scopes)} as const;\nexport const AGENT_OWNER_ONLY_TOOLS = ${json(ownerOnly)} as const;\n${errorCatalog}export const AGENT_SALES_EVENT_TYPES = ${json(schemas.AgentSalesEventType?.enum || [])} as const;\n`;
   const artifacts = new Map([
     [
       "packages/sdk/src/generated/tools.ts",

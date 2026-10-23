@@ -1,4 +1,5 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
+export const AGENT_CONTRACT_VERSION = "2.1.0" as const;
 export const AGENT_TOOL_NAMES = [
   "analytics.summary",
   "workspace.briefing",
