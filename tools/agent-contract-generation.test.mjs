@@ -13,7 +13,13 @@ test("generation is deterministic and includes every adapter without private cod
     second = compileAgentContract(contract());
   assert.deepEqual(first, second);
   assert.equal(first.size, 4);
-  assert.equal(compileAgentContract(contract(), { includeServer: true }).size, 6);
+  assert.equal(compileAgentContract(contract(), { includeServer: true }).size, 8);
+  assert.match(
+    compileAgentContract(contract(), { includeServer: true }).get(
+      "marketing/src/lib/agent-error-catalog.generated.ts",
+    ),
+    /AGENT_ERROR_CATALOG/,
+  );
   assert.equal(
     compileAgentContract(contract(), { includeServer: true }).get(
       "site/src/lib/agent-platform/public-input-schemas.generated.ts",

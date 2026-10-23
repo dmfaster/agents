@@ -68,7 +68,7 @@ if (!existsSync(skillPath)) {
   if (!/generic HTTP/i.test(source) || !/database access/i.test(source)) {
     fail("SKILL.md must reject generic transport and database workarounds");
   }
-  if (!/Agent 1\.0/i.test(source)) fail("SKILL.md must describe the Agent 1.0 surface");
+  if (!/Agent 2\.0/i.test(source)) fail("SKILL.md must describe the Agent 2.0 surface");
   if (!/exact audience/i.test(source)) {
     fail("SKILL.md must preserve the exact-audience invariant");
   }

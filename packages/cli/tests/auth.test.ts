@@ -4,6 +4,7 @@ import test from "node:test";
 
 import {
   LoginLockLostError,
+  DMFASTER_AGENT_SCOPES,
   type CredentialStore,
   type LocalCredentialSource,
 } from "@dmfaster/local-auth";
@@ -62,31 +63,12 @@ function successfulExchange(token: string) {
     accessToken: token,
     tokenType: "Bearer",
     expiresAt: "2026-08-28T12:00:00.000Z",
-    scope:
-      "workspace:read campaigns:read sending:read inbox:read pipeline:read audiences:read campaigns:write campaigns:launch campaigns:control inbox:write pipeline:write calendar:read calendar:write calls:read leads:read leads:write sending:test",
+    scope: DMFASTER_AGENT_SCOPES.join(" "),
     credential: {
       id: `agent_cred_${randomBytes(8).toString("hex")}`,
       name: "DM Faster CLI",
       client: "DM Faster CLI",
-      scopes: [
-        "workspace:read",
-        "campaigns:read",
-        "sending:read",
-        "inbox:read",
-        "pipeline:read",
-        "audiences:read",
-        "campaigns:write",
-        "campaigns:launch",
-        "campaigns:control",
-        "inbox:write",
-        "pipeline:write",
-        "calendar:read",
-        "calendar:write",
-        "calls:read",
-        "leads:read",
-        "leads:write",
-        "sending:test",
-      ],
+      scopes: [...DMFASTER_AGENT_SCOPES],
       expiresAt: "2026-08-28T12:00:00.000Z",
     },
     workspace: { id: "workspace_123", name: "Workspace" },

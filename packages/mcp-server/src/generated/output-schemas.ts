@@ -1,6 +1,861 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
 import { z } from "zod";
 export const AGENT_OUTPUT_SCHEMAS = {
+  "feedback.submit": z.fromJSONSchema({
+    $ref: "#/$defs/AgentFeedbackSubmitResult",
+    $defs: {
+      AgentFeedbackSubmitResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "feedback.submit",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/AgentFeedbackSubmitData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          serverTime: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          contractVersion: {
+            type: "string",
+            const: "2.1.0",
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "feedback.submit",
+          "feedback.list",
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.messages.draft.list",
+          "campaign.messages.draft.update",
+          "campaign.messages.list",
+          "campaign.messages.update",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "sending.test.prepare",
+          "sending.test.send",
+          "sending.test.inspect",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.knowledge.search",
+          "companies.knowledge",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "sending.instagram.pacing.inspect",
+          "sending.instagram.pacing.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "instagram.extract.quote",
+          "instagram.extract.start",
+          "instagram.extract.inspect",
+          "instagram.extract.results",
+          "instagram.purchases.list",
+          "instagram.purchases.inspect",
+          "instagram.purchases.results",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+          "leads.prospect.quote",
+          "leads.prospect.start",
+          "leads.prospect.inspect",
+          "leads.prospect.results",
+          "leads.prospect.advance",
+          "leads.prospect.cancel",
+          "events.list",
+          "conversations.changes",
+          "suppressions.list",
+          "suppressions.add",
+          "suppressions.remove",
+          "workspace.sandbox.create",
+          "sandbox.seed",
+          "sandbox.inbound.simulate",
+          "sandbox.clock.advance",
+          "call.outcome.set",
+          "meeting.link",
+          "meeting.unlink",
+          "webhooks.create",
+          "webhooks.list",
+          "webhooks.update",
+          "webhooks.delete",
+          "webhooks.test",
+          "webhooks.replay",
+          "meetings.unlinked.list",
+          "pipeline.reconcile",
+          "workspace.agent_sales.get",
+          "workspace.agent_sales.update",
+          "sandbox.provider.update",
+          "reply.templates.list",
+          "reply.templates.create",
+          "reply.templates.update",
+          "reply.templates.delete",
+          "reply.policy.get",
+          "reply.policy.update",
+          "reply.approvals.list",
+          "conversation.draft.save",
+          "conversation.followup.set",
+          "conversation.followup.clear",
+          "followups.due",
+          "conversations.bulk.update",
+          "pipeline.board",
+          "calendar.booking.link.create",
+          "calendar.meeting.reschedule",
+          "calendar.meeting.cancel",
+          "campaign.followups.configure",
+          "campaign.variants.configure",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+          nextAction: {
+            type: "string",
+            minLength: 1,
+          },
+          docsUrl: {
+            type: "string",
+            pattern: "^https://",
+          },
+        },
+      },
+      AgentFeedbackSubmitData: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          receipt: {
+            $ref: "#/$defs/AgentFeedbackReceipt",
+          },
+          duplicate: {
+            type: "boolean",
+          },
+        },
+        required: ["receipt", "duplicate"],
+      },
+      AgentFeedbackReceipt: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          feedbackId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+            pattern: ".*\\S.*",
+            "x-dmfaster-trim": true,
+          },
+          receivedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          status: {
+            type: "string",
+            const: "received",
+          },
+        },
+        required: ["feedbackId", "receivedAt", "status"],
+      },
+    },
+  }),
+  "feedback.list": z.fromJSONSchema({
+    $ref: "#/$defs/AgentFeedbackListResult",
+    $defs: {
+      AgentFeedbackListResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "feedback.list",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/AgentFeedbackListData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          serverTime: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          contractVersion: {
+            type: "string",
+            const: "2.1.0",
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "feedback.submit",
+          "feedback.list",
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.messages.draft.list",
+          "campaign.messages.draft.update",
+          "campaign.messages.list",
+          "campaign.messages.update",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "sending.test.prepare",
+          "sending.test.send",
+          "sending.test.inspect",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.knowledge.search",
+          "companies.knowledge",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "sending.instagram.pacing.inspect",
+          "sending.instagram.pacing.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "instagram.extract.quote",
+          "instagram.extract.start",
+          "instagram.extract.inspect",
+          "instagram.extract.results",
+          "instagram.purchases.list",
+          "instagram.purchases.inspect",
+          "instagram.purchases.results",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+          "leads.prospect.quote",
+          "leads.prospect.start",
+          "leads.prospect.inspect",
+          "leads.prospect.results",
+          "leads.prospect.advance",
+          "leads.prospect.cancel",
+          "events.list",
+          "conversations.changes",
+          "suppressions.list",
+          "suppressions.add",
+          "suppressions.remove",
+          "workspace.sandbox.create",
+          "sandbox.seed",
+          "sandbox.inbound.simulate",
+          "sandbox.clock.advance",
+          "call.outcome.set",
+          "meeting.link",
+          "meeting.unlink",
+          "webhooks.create",
+          "webhooks.list",
+          "webhooks.update",
+          "webhooks.delete",
+          "webhooks.test",
+          "webhooks.replay",
+          "meetings.unlinked.list",
+          "pipeline.reconcile",
+          "workspace.agent_sales.get",
+          "workspace.agent_sales.update",
+          "sandbox.provider.update",
+          "reply.templates.list",
+          "reply.templates.create",
+          "reply.templates.update",
+          "reply.templates.delete",
+          "reply.policy.get",
+          "reply.policy.update",
+          "reply.approvals.list",
+          "conversation.draft.save",
+          "conversation.followup.set",
+          "conversation.followup.clear",
+          "followups.due",
+          "conversations.bulk.update",
+          "pipeline.board",
+          "calendar.booking.link.create",
+          "calendar.meeting.reschedule",
+          "calendar.meeting.cancel",
+          "campaign.followups.configure",
+          "campaign.variants.configure",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+          nextAction: {
+            type: "string",
+            minLength: 1,
+          },
+          docsUrl: {
+            type: "string",
+            pattern: "^https://",
+          },
+        },
+      },
+      AgentFeedbackListData: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          items: {
+            type: "array",
+            maxItems: 25,
+            items: {
+              $ref: "#/$defs/AgentFeedbackListItem",
+            },
+          },
+          nextCursor: {
+            type: ["string", "null"],
+          },
+        },
+        required: ["items", "nextCursor"],
+      },
+      AgentFeedbackListItem: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          receipt: {
+            $ref: "#/$defs/AgentFeedbackReceipt",
+          },
+          report: {
+            $ref: "#/$defs/AgentFeedbackReport",
+          },
+        },
+        required: ["receipt", "report"],
+      },
+      AgentFeedbackReceipt: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          feedbackId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+            pattern: ".*\\S.*",
+            "x-dmfaster-trim": true,
+          },
+          receivedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          status: {
+            type: "string",
+            const: "received",
+          },
+        },
+        required: ["feedbackId", "receivedAt", "status"],
+      },
+      AgentFeedbackReport: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          category: {
+            type: "string",
+            enum: ["bug", "missing_capability", "confusing_behavior", "performance", "improvement"],
+          },
+          summary: {
+            type: "string",
+            minLength: 1,
+            maxLength: 240,
+            pattern: ".*\\S.*",
+            "x-dmfaster-trim": true,
+            description: "One concrete problem or improvement.",
+          },
+          task: {
+            type: "string",
+            minLength: 1,
+            maxLength: 1000,
+            pattern: ".*\\S.*",
+            "x-dmfaster-trim": true,
+            description: "The task being attempted, without customer data.",
+          },
+          observed: {
+            type: "string",
+            minLength: 1,
+            maxLength: 2000,
+            pattern: ".*\\S.*",
+            "x-dmfaster-trim": true,
+            description: "What actually happened; omit private transcripts and raw tool payloads.",
+          },
+          expected: {
+            type: "string",
+            minLength: 1,
+            maxLength: 2000,
+            pattern: ".*\\S.*",
+            "x-dmfaster-trim": true,
+            description: "What should happen instead.",
+          },
+          suggestion: {
+            type: "string",
+            minLength: 1,
+            maxLength: 2000,
+            pattern: ".*\\S.*",
+            "x-dmfaster-trim": true,
+            description:
+              "Optional proposed improvement; distinguish speculation from observed behavior.",
+          },
+          toolName: {
+            type: "string",
+            minLength: 1,
+            maxLength: 120,
+            pattern: ".*\\S.*",
+            "x-dmfaster-trim": true,
+            description:
+              "Affected MCP or API tool name, if known. Unknown names are allowed for missing tools.",
+          },
+          requestId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 128,
+            pattern: ".*\\S.*",
+            "x-dmfaster-trim": true,
+            description:
+              "Optional request reference already returned by DM Faster; do not invent one.",
+          },
+          impact: {
+            type: "string",
+            enum: ["blocked", "workaround", "minor"],
+          },
+        },
+        required: ["category", "summary"],
+      },
+    },
+  }),
   "analytics.summary": z.fromJSONSchema({
     $ref: "#/$defs/AnalyticsSummaryResult",
     $defs: {
@@ -109,6 +964,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -827,6 +1684,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -1357,6 +2216,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -1796,6 +2657,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -2494,6 +3357,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -3012,6 +3877,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -3920,6 +4787,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -4376,6 +5245,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -5086,6 +5957,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -5874,6 +6747,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -6450,6 +7325,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -7047,6 +7924,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -7662,6 +8541,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -8090,6 +8971,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -8471,6 +9354,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -8919,6 +9804,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -9311,6 +10198,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -9780,6 +10669,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -10148,6 +11039,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -10561,6 +11454,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -10968,6 +11863,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -11375,6 +12272,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -11782,6 +12681,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -12278,6 +13179,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -12696,6 +13599,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -13255,6 +14160,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -13781,6 +14688,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -14260,6 +15169,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -14650,6 +15561,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -15036,6 +15949,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -15455,6 +16370,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -15915,6 +16832,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -16369,6 +17288,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -16898,6 +17819,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -17278,6 +18201,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -17690,6 +18615,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -18079,6 +19006,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -18576,6 +19505,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -19053,6 +19984,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -19440,6 +20373,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -19894,6 +20829,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -20348,6 +21285,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -20972,6 +21911,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -21446,6 +22387,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -21947,6 +22890,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -22418,6 +23363,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -23154,6 +24101,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -23567,6 +24516,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -24292,6 +25243,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -25307,6 +26260,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -25805,6 +26760,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -26626,6 +27583,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -27734,6 +28693,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -28842,6 +29803,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -29950,6 +30913,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -31058,6 +32023,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -32166,6 +33133,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -32797,6 +33766,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -33224,6 +34195,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -33653,6 +34626,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -34170,6 +35145,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -34803,6 +35780,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -35210,6 +36189,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -35614,6 +36595,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -36038,6 +37021,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -36445,6 +37430,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -36813,6 +37800,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -37188,6 +38177,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -37578,6 +38569,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -37990,6 +38983,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -38436,6 +39431,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -38882,6 +39879,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -39366,6 +40365,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -39821,6 +40822,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -40560,6 +41563,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -41225,6 +42230,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -41609,6 +42616,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -42044,6 +43053,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -42428,6 +43439,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -42939,6 +43952,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -43552,6 +44567,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -43958,6 +44975,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -44415,6 +45434,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -44872,6 +45893,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -45329,6 +46352,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -45723,6 +46748,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -46190,6 +47217,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -46612,6 +47641,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -47280,6 +48311,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -47948,6 +48981,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -48616,6 +49651,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -49284,6 +50321,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -49952,6 +50991,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -50620,6 +51661,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -51288,6 +52331,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -51956,6 +53001,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -52623,6 +53670,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -53275,6 +54324,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -53927,6 +54978,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -54579,6 +55632,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -55231,6 +56286,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -55883,6 +56940,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -56538,6 +57597,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -56997,6 +58058,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -57416,6 +58479,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -57851,6 +58916,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -58262,6 +59329,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -58669,6 +59738,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -59047,6 +60118,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -59437,6 +60510,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -59806,6 +60881,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -60186,6 +61263,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -60582,6 +61661,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -61015,6 +62096,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -61448,6 +62531,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -61886,6 +62971,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -62335,6 +63422,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -62729,6 +63818,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -63123,6 +64214,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -63517,6 +64610,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -63911,6 +65006,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -64351,6 +65448,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -64847,6 +65946,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -65223,6 +66324,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -65618,6 +66721,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -66000,6 +67105,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -66590,6 +67697,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -67180,6 +68289,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -67770,6 +68881,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -68360,6 +69473,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -68950,6 +70065,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -69540,6 +70657,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -70130,6 +71249,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -70720,6 +71841,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -71310,6 +72433,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -71900,6 +73025,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -72508,6 +73635,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -72847,6 +73976,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -73186,6 +74317,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -73525,6 +74658,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -73864,6 +74999,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -74203,6 +75340,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",
@@ -74542,6 +75681,8 @@ export const AGENT_OUTPUT_SCHEMAS = {
       AgentToolName: {
         type: "string",
         enum: [
+          "feedback.submit",
+          "feedback.list",
           "analytics.summary",
           "workspace.briefing",
           "campaigns.list",

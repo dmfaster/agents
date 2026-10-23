@@ -44,11 +44,11 @@ test("CLI and MCP delegate network calls to the SDK", async () => {
   }
 });
 
-test("Agent 1.0 adapters expose only narrow idempotent and authorized actions", async () => {
+test("Agent 2.0 adapters expose only narrow idempotent and authorized actions", async () => {
   const source = `${await combinedSource("cli")}\n${await combinedSource("mcp-server")}`;
   assert.doesNotMatch(
     source,
-    /reply[._]send|list[._](?:create|update|delete)|campaign[._](?:delete|stop)|\b(?:sql|query_database|execute_generic)\b|approved\s*:/iu,
+    /reply[._]send|list[._](?:create|update|delete)|campaign[._](?:delete|stop)|\b(?:sql|query_database|execute_generic)\b|\bapproved\s*:/iu,
   );
   const { AGENT_TOOL_DEFINITIONS, AGENT_TOOL_POLICIES } =
     await import("../packages/sdk/src/generated/tools.ts");

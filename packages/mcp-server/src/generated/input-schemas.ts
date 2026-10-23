@@ -1,5 +1,94 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
 import { z } from "zod";
+export const IdempotencyKeySchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(160)
+  .regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$"));
+export const AgentFeedbackSubmitInputSchema = z
+  .object({
+    category: z.union([
+      z.literal("bug"),
+      z.literal("missing_capability"),
+      z.literal("confusing_behavior"),
+      z.literal("performance"),
+      z.literal("improvement"),
+    ]),
+    summary: z
+      .string()
+      .trim()
+      .min(1)
+      .max(240)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("One concrete problem or improvement."),
+    task: z
+      .string()
+      .trim()
+      .min(1)
+      .max(1000)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("The task being attempted, without customer data.")
+      .optional(),
+    observed: z
+      .string()
+      .trim()
+      .min(1)
+      .max(2000)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("What actually happened; omit private transcripts and raw tool payloads.")
+      .optional(),
+    expected: z
+      .string()
+      .trim()
+      .min(1)
+      .max(2000)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("What should happen instead.")
+      .optional(),
+    suggestion: z
+      .string()
+      .trim()
+      .min(1)
+      .max(2000)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("Optional proposed improvement; distinguish speculation from observed behavior.")
+      .optional(),
+    toolName: z
+      .string()
+      .trim()
+      .min(1)
+      .max(120)
+      .regex(new RegExp(".*\\S.*"))
+      .describe(
+        "Affected MCP or API tool name, if known. Unknown names are allowed for missing tools.",
+      )
+      .optional(),
+    requestId: z
+      .string()
+      .trim()
+      .min(1)
+      .max(128)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("Optional request reference already returned by DM Faster; do not invent one.")
+      .optional(),
+    impact: z.union([z.literal("blocked"), z.literal("workaround"), z.literal("minor")]).optional(),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const AgentFeedbackListInputSchema = z
+  .object({
+    limit: z.number().int().min(1).max(25).optional(),
+    before: z
+      .string()
+      .trim()
+      .min(1)
+      .max(100)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("Use nextCursor from the previous page, unchanged.")
+      .optional(),
+  })
+  .strict();
 export const ResourceIdSchema = z
   .string()
   .trim()
@@ -242,12 +331,6 @@ export const CampaignMessagesDraftListInputSchema = z
     limit: z.number().int().min(1).max(100).optional(),
   })
   .strict();
-export const IdempotencyKeySchema = z
-  .string()
-  .trim()
-  .min(1)
-  .max(160)
-  .regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$"));
 export const CampaignMessagesDraftUpdateInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
@@ -2326,6 +2409,8 @@ export const CampaignVariantsConfigureInputSchema = z
   })
   .strict();
 export const AGENT_INPUT_SCHEMAS = {
+  "feedback.submit": AgentFeedbackSubmitInputSchema,
+  "feedback.list": AgentFeedbackListInputSchema,
   "analytics.summary": AnalyticsSummaryInputSchema,
   "workspace.briefing": WorkspaceBriefingInputSchema,
   "campaigns.list": CampaignsListInputSchema,
