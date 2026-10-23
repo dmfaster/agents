@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DM Faster Agent API
-  version: 2.0.0
+  version: 2.1.0
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
@@ -51,6 +51,8 @@ x-dmfaster-scopes:
     message real prospects.
   calls:write: Record meeting outcomes and correct meeting links.
   webhooks:write: Manage signed workspace event subscriptions.
+  policy:write: Propose reply policies and templates for focused owner browser approval. Does not
+    itself authorize sending.
 x-dmfaster-errors:
   authorization_pending:
     nextAction: Approve the requested scopes in the browser, then poll at the stated interval.
@@ -6657,6 +6659,779 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SandboxProviderUpdateResult"
+  /api/v1/agent/tools/reply.templates.list:
+    post:
+      tags:
+        - Agent tools
+      operationId: replyTemplatesList
+      summary: reply templates list
+      description: List versioned templates and their owner approval state.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - inbox:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: reply_templates_list
+        title: reply templates list
+        description: List versioned templates and their owner approval state.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Reply workflows
+        usage: reply templates list --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplyTemplatesListInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReplyTemplatesListResult"
+  /api/v1/agent/tools/reply.templates.create:
+    post:
+      tags:
+        - Agent tools
+      operationId: replyTemplatesCreate
+      summary: reply templates create
+      description: Propose a new template. The owner must approve its exact version in the returned
+        browser page.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - policy:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: reply_templates_create
+        title: reply templates create
+        description: Propose a new template. The owner must approve its exact version in the returned
+          browser page.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Reply workflows
+        usage: reply templates create --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplyTemplatesCreateInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReplyTemplatesCreateResult"
+  /api/v1/agent/tools/reply.templates.update:
+    post:
+      tags:
+        - Agent tools
+      operationId: replyTemplatesUpdate
+      summary: reply templates update
+      description: Propose a template revision for browser owner approval; the active version remains
+        unchanged until approval.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - policy:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: reply_templates_update
+        title: reply templates update
+        description: Propose a template revision for browser owner approval; the active version remains
+          unchanged until approval.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Reply workflows
+        usage: reply templates update --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplyTemplatesUpdateInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReplyTemplatesUpdateResult"
+  /api/v1/agent/tools/reply.templates.delete:
+    post:
+      tags:
+        - Agent tools
+      operationId: replyTemplatesDelete
+      summary: reply templates delete
+      description: Request owner-approved retirement of a template, retaining prior audit evidence.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - policy:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: reply_templates_delete
+        title: reply templates delete
+        description: Request owner-approved retirement of a template, retaining prior audit evidence.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Reply workflows
+        usage: reply templates delete --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplyTemplatesDeleteInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReplyTemplatesDeleteResult"
+  /api/v1/agent/tools/reply.policy.get:
+    post:
+      tags:
+        - Agent tools
+      operationId: replyPolicyGet
+      summary: reply policy get
+      description: Read the active owner-approved policy; an unconfigured policy is disabled.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - inbox:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: reply_policy_get
+        title: reply policy get
+        description: Read the active owner-approved policy; an unconfigured policy is disabled.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Reply workflows
+        usage: reply policy get --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplyPolicyGetInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReplyPolicyGetResult"
+  /api/v1/agent/tools/reply.policy.update:
+    post:
+      tags:
+        - Agent tools
+      operationId: replyPolicyUpdate
+      summary: reply policy update
+      description: Propose an exact policy for focused browser approval. Never grants permission by itself.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - policy:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: reply_policy_update
+        title: reply policy update
+        description: Propose an exact policy for focused browser approval. Never grants permission by itself.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Reply workflows
+        usage: reply policy update --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplyPolicyUpdateInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReplyPolicyUpdateResult"
+  /api/v1/agent/tools/reply.approvals.list:
+    post:
+      tags:
+        - Agent tools
+      operationId: replyApprovalsList
+      summary: reply approvals list
+      description: Read pending or decided reply and configuration approvals without marking them read.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - inbox:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: reply_approvals_list
+        title: reply approvals list
+        description: Read pending or decided reply and configuration approvals without marking them read.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Reply workflows
+        usage: reply approvals list --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplyApprovalsListInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReplyApprovalsListResult"
+  /api/v1/agent/tools/conversation.draft.save:
+    post:
+      tags:
+        - Agent tools
+      operationId: conversationDraftSave
+      summary: conversation draft save
+      description: Save exact reply text or an approved template rendering for owner review. Never sends
+        until browser approval.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - inbox:read
+        - inbox:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: conversation_draft_save
+        title: conversation draft save
+        description: Save exact reply text or an approved template rendering for owner review. Never sends
+          until browser approval.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Reply workflows
+        usage: conversation draft save --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConversationDraftSaveInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationDraftSaveResult"
+  /api/v1/agent/tools/conversation.followup.set:
+    post:
+      tags:
+        - Agent tools
+      operationId: conversationFollowupSet
+      summary: conversation followup set
+      description: Schedule a next action. Optional auto-send must use an owner-approved policy,
+        prospect-local hours and template; any human inbound cancels it.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - inbox:read
+        - inbox:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: conversation_followup_set
+        title: conversation followup set
+        description: Schedule a next action. Optional auto-send must use an owner-approved policy,
+          prospect-local hours and template; any human inbound cancels it.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Reply workflows
+        usage: conversation followup set --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConversationFollowupSetInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationFollowupSetResult"
+  /api/v1/agent/tools/conversation.followup.clear:
+    post:
+      tags:
+        - Agent tools
+      operationId: conversationFollowupClear
+      summary: conversation followup clear
+      description: Clear pending next actions with an inspected conversation version.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - inbox:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: conversation_followup_clear
+        title: conversation followup clear
+        description: Clear pending next actions with an inspected conversation version.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Reply workflows
+        usage: conversation followup clear --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConversationFollowupClearInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationFollowupClearResult"
+  /api/v1/agent/tools/followups.due:
+    post:
+      tags:
+        - Agent tools
+      operationId: followupsDue
+      summary: followups due
+      description: Read due next actions across all campaigns, ordered by due time, with exact bounded totals.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - inbox:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: followups_due
+        title: followups due
+        description: Read due next actions across all campaigns, ordered by due time, with exact bounded totals.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Reply workflows
+        usage: followups due --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FollowupsDueInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FollowupsDueResult"
+  /api/v1/agent/tools/conversations.bulk.update:
+    post:
+      tags:
+        - Agent tools
+      operationId: conversationsBulkUpdate
+      summary: Bulk update conversations
+      description: Apply up to 50 version-checked inbox actions with per-item receipts; one stale item
+        does not block the others.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - inbox:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: conversations_bulk_update
+        title: Bulk update conversations
+        description: Apply up to 50 version-checked inbox actions with per-item receipts; one stale item
+          does not block the others.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Inbox
+        usage: conversations bulk update --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConversationsBulkUpdateInput"
+      responses:
+        "200":
+          description: Workspace-scoped resource or durable operation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationsBulkUpdateResult"
+  /api/v1/agent/tools/pipeline.board:
+    post:
+      tags:
+        - Agent tools
+      operationId: pipelineBoard
+      summary: Read pipeline board
+      description: Exact workspace or campaign-set counts and top cards per stage, including won/lost and
+        meeting outcomes.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - pipeline:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: pipeline_board
+        title: Read pipeline board
+        description: Exact workspace or campaign-set counts and top cards per stage, including won/lost and
+          meeting outcomes.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Pipeline
+        usage: pipeline board --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PipelineBoardInput"
+      responses:
+        "200":
+          description: Pipeline card page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PipelineBoardResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/calendar.booking.link.create:
+    post:
+      tags:
+        - Agent tools
+      operationId: calendarBookingLinkCreate
+      summary: calendar booking link create
+      description: Create a single-use booking link for an approved conversation and seven-day
+        availability window. The prospect supplies their email on the page. Teams/custom_url
+        requires the owner-provided HTTPS meeting URL.
+      x-dmfaster-effect: external
+      x-dmfaster-required-scopes:
+        - calendar:write
+        - calendar:read
+        - inbox:read
+        - pipeline:write
+      x-dmfaster-approval: human_confirmation
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: calendar_booking_link_create
+        title: calendar booking link create
+        description: Create a single-use booking link for an approved conversation and seven-day
+          availability window. The prospect supplies their email on the page. Teams/custom_url
+          requires the owner-provided HTTPS meeting URL.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: true
+      x-dmfaster-cli:
+        section: Calendar
+        usage: calendar booking link create --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalendarBookingLinkCreateInput"
+      responses:
+        "200":
+          description: Book a conversation meeting
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalendarBookingLinkCreateResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/calendar.meeting.reschedule:
+    post:
+      tags:
+        - Agent tools
+      operationId: calendarMeetingReschedule
+      summary: calendar meeting reschedule
+      description: Reschedule a managed meeting and notify attendees, with a version fence and idempotent
+        provider marker.
+      x-dmfaster-effect: external
+      x-dmfaster-required-scopes:
+        - calendar:write
+        - calendar:read
+        - inbox:read
+        - pipeline:write
+      x-dmfaster-approval: human_confirmation
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: calendar_meeting_reschedule
+        title: calendar meeting reschedule
+        description: Reschedule a managed meeting and notify attendees, with a version fence and idempotent
+          provider marker.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: true
+      x-dmfaster-cli:
+        section: Calendar
+        usage: calendar meeting reschedule --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalendarMeetingRescheduleInput"
+      responses:
+        "200":
+          description: Book a conversation meeting
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalendarMeetingRescheduleResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/calendar.meeting.cancel:
+    post:
+      tags:
+        - Agent tools
+      operationId: calendarMeetingCancel
+      summary: calendar meeting cancel
+      description: Cancel a managed meeting, optionally notify attendees, and retain its history.
+      x-dmfaster-effect: external
+      x-dmfaster-required-scopes:
+        - calendar:write
+        - calendar:read
+        - inbox:read
+        - pipeline:write
+      x-dmfaster-approval: human_confirmation
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: calendar_meeting_cancel
+        title: calendar meeting cancel
+        description: Cancel a managed meeting, optionally notify attendees, and retain its history.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: true
+      x-dmfaster-cli:
+        section: Calendar
+        usage: calendar meeting cancel --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CalendarMeetingCancelInput"
+      responses:
+        "200":
+          description: Book a conversation meeting
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CalendarMeetingCancelResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/campaign.followups.configure:
+    post:
+      tags:
+        - Agent tools
+      operationId: campaignFollowupsConfigure
+      summary: Configure campaign follow-ups
+      description: Configure versioned future sequences on running or paused campaigns, including SMS.
+        Historical contacted-no-reply enrollment is dry-run only in live workspaces; only sandbox
+        permits applying it.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_followups_configure
+        title: Configure campaign follow-ups
+        description: Configure versioned future sequences on running or paused campaigns, including SMS.
+          Historical contacted-no-reply enrollment is dry-run only in live workspaces; only sandbox
+          permits applying it.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: campaign followups configure --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignFollowupsConfigureInput"
+      responses:
+        "200":
+          description: Durable cancellation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignFollowupsConfigureResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/campaign.variants.configure:
+    post:
+      tags:
+        - Agent tools
+      operationId: campaignVariantsConfigure
+      summary: Configure weighted campaign variants
+      description: Set explicitly approved future copy variants, weights, prospect timezone and optional
+        conservative Bayesian winner promotion. Existing queued copy and history are immutable.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - campaigns:write
+      x-dmfaster-approval: human_confirmation
+      x-dmfaster-owner-only: true
+      x-dmfaster-mcp:
+        name: campaign_variants_configure
+        title: Configure weighted campaign variants
+        description: Set explicitly approved future copy variants, weights, prospect timezone and optional
+          conservative Bayesian winner promotion. Existing queued copy and history are immutable.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: true
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaigns
+        usage: campaign variants configure --json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignVariantsConfigureInput"
+      responses:
+        "200":
+          description: Durable cancellation receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignVariantsConfigureResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
 components:
   securitySchemes:
     bearerAuth:
@@ -6872,6 +7647,7 @@ components:
         - leads:read
         - leads:write
         - sending:test
+        - policy:write
     AgentDeviceAuthorizationInput:
       type: object
       additionalProperties: false
@@ -6904,7 +7680,6 @@ components:
           type: array
           minItems: 1
           maxItems: 22
-          uniqueItems: true
           items:
             $ref: "#/components/schemas/AgentApiScope"
         expiresInDays:
@@ -6935,7 +7710,7 @@ components:
           pattern: ^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$
         verificationUrl:
           type: string
-          format: uri
+          pattern: ^https://
           description: Secret-free same-origin URL to open in the user's browser.
         expiresIn:
           type: integer
@@ -6987,7 +7762,6 @@ components:
           type: array
           minItems: 1
           maxItems: 22
-          uniqueItems: true
           items:
             $ref: "#/components/schemas/AgentApiScope"
         workspaceUserId:
@@ -8083,7 +8857,7 @@ components:
       properties:
         url:
           type: string
-          format: uri
+          pattern: ^https://
         observedAt:
           type: string
           format: date-time
@@ -8516,6 +9290,24 @@ components:
         - workspace.agent_sales.get
         - workspace.agent_sales.update
         - sandbox.provider.update
+        - reply.templates.list
+        - reply.templates.create
+        - reply.templates.update
+        - reply.templates.delete
+        - reply.policy.get
+        - reply.policy.update
+        - reply.approvals.list
+        - conversation.draft.save
+        - conversation.followup.set
+        - conversation.followup.clear
+        - followups.due
+        - conversations.bulk.update
+        - pipeline.board
+        - calendar.booking.link.create
+        - calendar.meeting.reschedule
+        - calendar.meeting.cancel
+        - campaign.followups.configure
+        - campaign.variants.configure
     AgentToolPolicy:
       type: object
       additionalProperties: false
@@ -8609,7 +9401,7 @@ components:
           minLength: 1
         docsUrl:
           type: string
-          format: uri
+          pattern: ^https://
     AgentToolResultBase:
       type: object
       additionalProperties: false
@@ -8661,7 +9453,7 @@ components:
             - type: "null"
         contractVersion:
           type: string
-          const: 2.0.0
+          const: 2.1.0
     AnalyticsSummaryResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -8673,6 +9465,7 @@ components:
             data:
               oneOf:
                 - $ref: "#/components/schemas/AnalyticsSummaryOutput"
+                - $ref: "#/components/schemas/SalesRangeAnalytics"
                 - type: "null"
     WorkspaceBriefingResult:
       allOf:
@@ -8963,10 +9756,27 @@ components:
             - today
             - last_24_hours
             - campaign_to_date
+            - range
         campaign:
           allOf:
             - $ref: "#/components/schemas/ResourceId"
           description: Optional campaign identifier or exact campaign name.
+        from:
+          $ref: "#/components/schemas/ResourceVersion"
+        to:
+          $ref: "#/components/schemas/ResourceVersion"
+        groupBy: &a47
+          type: array
+          maxItems: 6
+          items:
+            type: string
+            enum:
+              - day
+              - week
+              - channel
+              - campaign
+              - actor
+              - variant
     WorkspaceBriefingInput:
       type: object
       additionalProperties: false
@@ -9112,9 +9922,7 @@ components:
     PipelineCardsListInput:
       type: object
       additionalProperties: false
-      required:
-        - campaignId
-        - stage
+      required: []
       properties:
         campaignId:
           $ref: "#/components/schemas/ResourceId"
@@ -9123,7 +9931,7 @@ components:
         limit:
           type: integer
           minimum: 1
-          maximum: 15
+          maximum: 100
         cursor:
           type: string
           minLength: 1
@@ -9136,6 +9944,21 @@ components:
           type: string
           minLength: 1
           maxLength: 320
+        stages:
+          type: array
+          minItems: 1
+          maxItems: 8
+          items:
+            type: string
+            enum:
+              - contacted
+              - replied
+              - call_booked
+              - meeting_held
+              - no_show
+              - closed
+              - won
+              - lost
     PipelineStageUpdateInput:
       type: object
       additionalProperties: false
@@ -9808,7 +10631,6 @@ components:
           type: array
           minItems: 1
           maxItems: 5
-          uniqueItems: true
           items:
             type: string
             enum:
@@ -10047,7 +10869,6 @@ components:
           type: array
           minItems: 1
           maxItems: 5
-          uniqueItems: true
           items:
             type: string
             enum:
@@ -10864,7 +11685,6 @@ components:
           minimum: 0
         channels:
           type: array
-          uniqueItems: true
           items:
             $ref: "#/components/schemas/TargetChannel"
         dailyCap:
@@ -10954,7 +11774,7 @@ components:
           $ref: "#/components/schemas/AgentActionAuthorization"
         approvalUrl:
           type: string
-          format: uri
+          pattern: ^https://
     BrowserWorkerSetupResume:
       type: object
       additionalProperties: false
@@ -10989,7 +11809,7 @@ components:
             - offline
         setupUrl:
           type: string
-          format: uri
+          pattern: ^https://
         message:
           type: string
           minLength: 1
@@ -10999,7 +11819,6 @@ components:
           const: true
         campaignChannels:
           type: array
-          uniqueItems: true
           items:
             $ref: "#/components/schemas/TargetChannel"
         resume:
@@ -11155,7 +11974,6 @@ components:
           $ref: "#/components/schemas/CampaignStatus"
         channels:
           type: array
-          uniqueItems: true
           items:
             $ref: "#/components/schemas/TargetChannel"
         targetCount:
@@ -11439,6 +12257,8 @@ components:
         snapshotId:
           type: string
           minLength: 1
+        canonicalMetrics:
+          $ref: "#/components/schemas/SalesMetrics"
     WorkspaceBriefingOutput:
       type: object
       additionalProperties: false
@@ -11537,7 +12357,6 @@ components:
           $ref: "#/components/schemas/CampaignStatus"
         channels:
           type: array
-          uniqueItems: true
           items:
             $ref: "#/components/schemas/TargetChannel"
         messageVariants:
@@ -11716,6 +12535,8 @@ components:
             - instagramSendingWindowEndMinute
             - instagramSendingWindowWeekdays
             - timezone
+        canonicalMetrics:
+          $ref: "#/components/schemas/SalesMetrics"
     SendingIssue:
       type: object
       additionalProperties: false
@@ -12172,7 +12993,6 @@ components:
           $ref: "#/components/schemas/PipelineStage"
         channels:
           type: array
-          uniqueItems: true
           items:
             $ref: "#/components/schemas/TargetChannel"
         lastContactedAt:
@@ -12201,6 +13021,8 @@ components:
           maxItems: 8
           items:
             $ref: "#/components/schemas/AgentLead"
+        canonicalMetrics:
+          $ref: "#/components/schemas/SalesMetrics"
     PipelineCard:
       type: object
       additionalProperties: false
@@ -12276,14 +13098,15 @@ components:
         lostReason:
           type: string
           maxLength: 2000
-        updatedAt:
-          oneOf:
-            - $ref: "#/components/schemas/ResourceVersion"
-            - type: "null"
+        updatedAt: &a1
+          type: string
         meetingHeld:
           type: boolean
         noShow:
           type: boolean
+        displayStage: *a1
+        companyOutreachId: *a1
+        channel: *a1
     PipelineCardsListOutput:
       type: object
       additionalProperties: false
@@ -12296,22 +13119,35 @@ components:
         - nextCursor
       properties:
         campaignId:
-          type: string
+          oneOf:
+            - *a1
+            - type: "null"
         stage:
-          $ref: "#/components/schemas/PipelineStage"
+          oneOf:
+            - $ref: "#/components/schemas/PipelineStage"
+            - type: "null"
         cards:
           type: array
-          maxItems: 15
+          maxItems: 100
           items:
             $ref: "#/components/schemas/PipelineCard"
         stageCounts:
-          $ref: "#/components/schemas/PipelineCounts"
+          type: object
+          additionalProperties:
+            type: integer
         hasMore:
           type: boolean
         nextCursor:
           oneOf:
             - type: string
             - type: "null"
+        filteredTotal:
+          type: integer
+          minimum: 0
+        scope:
+          type: object
+          additionalProperties: true
+        projection: *a1
     PipelineStageUpdateOutput:
       type: object
       additionalProperties: false
@@ -12563,6 +13399,30 @@ components:
           oneOf:
             - type: string
             - type: "null"
+        nextActionAt:
+          oneOf:
+            - *a1
+            - type: "null"
+        nextActionType:
+          oneOf:
+            - *a1
+            - type: "null"
+        nextActionNote:
+          oneOf:
+            - *a1
+            - type: "null"
+        owner:
+          oneOf:
+            - *a1
+            - type: "null"
+        duplicateOf:
+          oneOf:
+            - *a1
+            - type: "null"
+        attributionMethod:
+          oneOf:
+            - *a1
+            - type: "null"
     ConversationUpdateInput:
       type: object
       additionalProperties: false
@@ -12636,7 +13496,6 @@ components:
         - conversationId
         - expectedLastInboundAt
         - expectedLastMessageAt
-        - text
         - idempotencyKey
       properties:
         conversationId:
@@ -12654,16 +13513,19 @@ components:
           minLength: 8
           maxLength: 160
           pattern: ^[a-zA-Z0-9_-]+$
+        templateId: &a39
+          $ref: "#/components/schemas/ResourceId"
+        variables:
+          $ref: "#/components/schemas/ReplyTemplateVariables"
+        ownerApproved:
+          type: boolean
+          description: "For 2.1 clients only: the owner explicitly approved this exact free text and
+            conversation. Otherwise save a draft."
     ConversationReplyData:
       type: object
       additionalProperties: false
       required:
         - conversationId
-        - actionId
-        - state
-        - deliveryRoute
-        - deliveryConfirmed
-        - requiresExtensionWake
       properties:
         conversationId:
           type: string
@@ -12690,6 +13552,31 @@ components:
           type: boolean
         requiresExtensionWake:
           type: boolean
+        policyDecision:
+          type: string
+          enum:
+            - auto_allowed
+            - approval_required
+            - denied
+        reasons:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 160
+          maxItems: 100
+        approval:
+          $ref: "#/components/schemas/SalesReplyResource"
+        approvalUrl:
+          type: string
+        receiptId:
+          type: string
+          minLength: 1
+          maxLength: 160
+        templateVersion: &a2
+          type: integer
+          minimum: 0
+        policyVersion: *a2
     ConversationReplyResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -13498,7 +14385,7 @@ components:
           format: date-time
         browserSetupUrl:
           type: string
-          format: uri
+          pattern: ^https://
         emailAvailable:
           type: boolean
         sms:
@@ -13921,6 +14808,23 @@ components:
               required:
                 - emoji
                 - targetMessageId
+            - type: "null"
+        actor:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+        templateId:
+          oneOf:
+            - type: string
+            - type: "null"
+        templateVersion:
+          oneOf:
+            - type: integer
+            - type: "null"
+        policyVersion:
+          oneOf:
+            - type: integer
             - type: "null"
     ConversationInspectOutput:
       type: object
@@ -14525,7 +15429,7 @@ components:
           maxLength: 254
         sourceUrl:
           type: string
-          format: uri
+          pattern: ^https://
     CompanySearchData:
       type: object
       additionalProperties: true
@@ -14736,7 +15640,7 @@ components:
                           type: string
                         url:
                           type: string
-                          format: uri
+                          pattern: ^https://
             companyEmails:
               type: array
               items:
@@ -14772,7 +15676,7 @@ components:
                       - x
                   url:
                     type: string
-                    format: uri
+                    pattern: ^https://
             websiteContacts:
               type: array
               description: Email addresses and phone numbers verified on saved company website HTML. Company-route
@@ -14794,7 +15698,7 @@ components:
                     type: string
                   sourceUrl:
                     type: string
-                    format: uri
+                    pattern: ^https://
             advertising:
               type: object
               additionalProperties: true
@@ -15587,7 +16491,7 @@ components:
         - campaignId
         - commandId
       properties:
-        campaignId: &a1
+        campaignId: &a3
           type: string
           minLength: 1
           maxLength: 160
@@ -15611,8 +16515,8 @@ components:
         - createdAt
         - observedAt
       properties:
-        campaignId: *a1
-        commandId: *a1
+        campaignId: *a3
+        commandId: *a3
         runId:
           type: string
         commandSequence:
@@ -15660,7 +16564,7 @@ components:
       required:
         - campaignId
       properties:
-        campaignId: *a1
+        campaignId: *a3
     CampaignDeliveryInspectOutput:
       type: object
       additionalProperties: true
@@ -15669,7 +16573,7 @@ components:
         - revision
         - settings
       properties:
-        campaignId: *a1
+        campaignId: *a3
         revision:
           type: string
         settings:
@@ -15699,7 +16603,7 @@ components:
         - idempotencyKey
         - patch
       properties:
-        campaignId: *a1
+        campaignId: *a3
         expectedRevision:
           type: string
           pattern: ^[a-f0-9]{64}$
@@ -15746,7 +16650,7 @@ components:
         - effectiveAt
         - replayed
       properties:
-        campaignId: *a1
+        campaignId: *a3
         revision:
           type: string
         previous:
@@ -16292,6 +17196,10 @@ components:
         attribution:
           type: string
           const: first_confirmed_outreach_per_conversation
+        credibleInterval:
+          oneOf:
+            - $ref: "#/components/schemas/CredibleInterval"
+            - type: "null"
     CopyPerformanceData:
       type: object
       additionalProperties: false
@@ -16338,6 +17246,9 @@ components:
             minLength: 1
             maxLength: 500
           maxItems: 10
+        attributionCoverage:
+          type: object
+          additionalProperties: true
     VariationPerformanceItem:
       type: object
       additionalProperties: false
@@ -16396,6 +17307,14 @@ components:
           type:
             - number
             - "null"
+        positiveResponders:
+          type: integer
+        bookedRecipients:
+          type: integer
+        credibleInterval:
+          oneOf:
+            - $ref: "#/components/schemas/CredibleInterval"
+            - type: "null"
     VariationPerformanceData:
       type: object
       additionalProperties: false
@@ -16496,6 +17415,15 @@ components:
           type: string
           minLength: 1
           maxLength: 500
+        calendars:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        calendarDiscovery:
+          type: string
+        calendarListRequiredScope:
+          type: string
     CalendarStatusResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -16541,6 +17469,12 @@ components:
           type: integer
           minimum: 1
           maximum: 100
+        calendarId:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: Calendar owned by the connected Google account. Defaults to primary; calendar_status
+            reports discoverable calendars.
     CalendarSlot:
       type: object
       additionalProperties: false
@@ -16590,6 +17524,30 @@ components:
           type: string
           minLength: 1
           maxLength: 160
+        suggestedSlots:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              start: &a4
+                $ref: "#/components/schemas/ResourceVersion"
+              end: *a4
+              display:
+                type: object
+                additionalProperties: false
+                properties:
+                  fi:
+                    type: string
+                  en:
+                    type: string
+                required:
+                  - fi
+                  - en
+            required:
+              - start
+              - end
+              - display
     CalendarAvailabilityResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -16612,7 +17570,6 @@ components:
         - start
         - timezone
         - durationMinutes
-        - attendees
       properties:
         conversationId:
           $ref: "#/components/schemas/ResourceId"
@@ -16655,6 +17612,27 @@ components:
             pattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
           maxItems: 20
           minItems: 1
+        conference: &a44
+          type: string
+          enum:
+            - google_meet
+            - teams
+            - phone
+            - in_person
+            - custom_url
+        customUrl:
+          type: string
+          pattern: ^https://
+          maxLength: 2000
+        attendeePhone:
+          type: string
+          maxLength: 40
+        calendarId:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: Calendar owned by the connected Google account. Defaults to primary; calendar_status
+            reports discoverable calendars.
     CalendarMeetingBookData:
       type: object
       additionalProperties: false
@@ -17008,12 +17986,12 @@ components:
       properties:
         active:
           type: boolean
-        remaining: &a2
+        remaining: &a5
           type: integer
           minimum: 0
-        monthlyAllowance: *a2
-        used: *a2
-        purchasedRemaining: *a2
+        monthlyAllowance: *a5
+        used: *a5
+        purchasedRemaining: *a5
         cycleEndsAt:
           anyOf:
             - type: string
@@ -17053,11 +18031,11 @@ components:
           type: string
         identifier:
           type: string
-        requestedCount: *a2
-        collectedCount: *a2
+        requestedCount: *a5
+        collectedCount: *a5
         savedCount:
           anyOf:
-            - *a2
+            - *a5
             - type: "null"
         listId:
           anyOf:
@@ -17067,7 +18045,7 @@ components:
           anyOf:
             - type: string
             - type: "null"
-        creditCost: *a2
+        creditCost: *a5
         creditState:
           type: string
           enum:
@@ -17102,12 +18080,12 @@ components:
           type: string
         status:
           type: string
-        requestedCount: *a2
-        processedCount: *a2
-        enrichedCount: *a2
-        creditCost: *a2
-        creditRefunded: *a2
-        netCreditCost: *a2
+        requestedCount: *a5
+        processedCount: *a5
+        enrichedCount: *a5
+        creditCost: *a5
+        creditRefunded: *a5
+        netCreditCost: *a5
         creditState:
           type: string
           enum:
@@ -17152,7 +18130,7 @@ components:
             - type: "null"
         requiredCredits:
           anyOf:
-            - *a2
+            - *a5
             - type: "null"
         jobId:
           anyOf:
@@ -17168,7 +18146,7 @@ components:
             - type: "null"
         estimatedCredits:
           anyOf:
-            - *a2
+            - *a5
             - type: "null"
         recentExtractions:
           type: array
@@ -17180,7 +18158,7 @@ components:
             - type: "null"
         pollAfterMs:
           anyOf:
-            - *a2
+            - *a5
             - type: "null"
         nextAction:
           type: string
@@ -17716,23 +18694,23 @@ components:
         - type
         - identifier
       properties:
-        type: &a3
+        type: &a6
           type: string
           enum:
             - followers
             - following
             - likers
             - commenters
-        identifier: &a4
+        identifier: &a7
           type: string
           minLength: 1
           maxLength: 300
           x-dmfaster-trim: true
-        count: &a5
+        count: &a8
           type: integer
           minimum: 1
           maximum: 2147483647
-        postUrls: &a6
+        postUrls: &a9
           type: array
           minItems: 1
           items:
@@ -17740,13 +18718,13 @@ components:
             minLength: 1
             maxLength: 300
             x-dmfaster-trim: true
-        priority: &a7
+        priority: &a10
           type: string
           enum:
             - high
             - normal
             - low
-        feedType: &a8
+        feedType: &a11
           type: string
           enum:
             - top
@@ -17759,13 +18737,13 @@ components:
         - identifier
         - idempotencyKey
       properties:
-        type: *a3
-        identifier: *a4
-        count: *a5
-        postUrls: *a6
-        priority: *a7
-        feedType: *a8
-        idempotencyKey: &a9
+        type: *a6
+        identifier: *a7
+        count: *a8
+        postUrls: *a9
+        priority: *a10
+        feedType: *a11
+        idempotencyKey: &a12
           type: string
           minLength: 1
           maxLength: 160
@@ -17796,8 +18774,8 @@ components:
       properties:
         jobId:
           $ref: "#/components/schemas/ResourceId"
-        count: *a5
-        idempotencyKey: *a9
+        count: *a8
+        idempotencyKey: *a12
     LeadEnrichmentPreviewInput:
       type: object
       additionalProperties: false
@@ -17819,7 +18797,7 @@ components:
           type: integer
           minimum: 0
           maximum: 2147483647
-        idempotencyKey: *a9
+        idempotencyKey: *a12
     LeadEnrichmentInspectInput:
       type: object
       additionalProperties: false
@@ -18502,15 +19480,15 @@ components:
         - apiVersion
         - data
       properties:
-        id: &a10
+        id: &a13
           type: string
         type:
           $ref: "#/components/schemas/AgentSalesEventType"
         createdAt:
           type: string
           format: date-time
-        workspaceId: *a10
-        sequence: &a11
+        workspaceId: *a13
+        sequence: &a14
           type: integer
           minimum: 0
         apiVersion:
@@ -18526,11 +19504,11 @@ components:
       properties:
         after:
           oneOf:
-            - &a12
+            - &a15
               type: string
               minLength: 1
               maxLength: 1000
-            - *a11
+            - *a14
         types:
           type: array
           minItems: 1
@@ -18546,7 +19524,7 @@ components:
       additionalProperties: false
       required: []
       properties:
-        cursor: *a12
+        cursor: *a15
         types:
           type: array
           minItems: 1
@@ -18572,13 +19550,13 @@ components:
         - types
         - retentionDays
       properties:
-        workspaceId: *a10
-        after: *a11
-        through: *a11
+        workspaceId: *a13
+        after: *a14
+        through: *a14
         types:
           type: array
-          items: *a10
-        retentionDays: *a11
+          items: *a13
+        retentionDays: *a14
     EventsListOutput:
       type: object
       additionalProperties: false
@@ -18595,11 +19573,11 @@ components:
           maxItems: 100
           items:
             $ref: "#/components/schemas/AgentEvent"
-        filteredTotal: *a11
+        filteredTotal: *a14
         hasMore:
           type: boolean
-        sequence: *a11
-        nextCursor: *a10
+        sequence: *a14
+        nextCursor: *a13
         scope:
           $ref: "#/components/schemas/AgentEventsScope"
     ConversationsChangesOutput:
@@ -18624,7 +19602,7 @@ components:
               - updatedAt
               - sequence
             properties:
-              conversationId: *a10
+              conversationId: *a13
               reason:
                 type: string
                 enum:
@@ -18635,11 +19613,11 @@ components:
               updatedAt:
                 type: string
                 format: date-time
-              sequence: *a11
-        filteredTotal: *a11
+              sequence: *a14
+        filteredTotal: *a14
         hasMore:
           type: boolean
-        nextCursor: *a10
+        nextCursor: *a13
         scope:
           $ref: "#/components/schemas/AgentEventsScope"
     EventsListResult:
@@ -19143,11 +20121,11 @@ components:
       type: object
       additionalProperties: false
       properties:
-        meetingId: &a13
+        meetingId: &a16
           $ref: "#/components/schemas/ResourceId"
-        expectedUpdatedAt: &a14
+        expectedUpdatedAt: &a17
           $ref: "#/components/schemas/ResourceVersion"
-        idempotencyKey: &a15
+        idempotencyKey: &a18
           $ref: "#/components/schemas/IdempotencyKey"
         attendance:
           type: string
@@ -19221,9 +20199,9 @@ components:
       type: object
       additionalProperties: false
       properties:
-        meetingId: *a13
-        expectedUpdatedAt: *a14
-        idempotencyKey: *a15
+        meetingId: *a16
+        expectedUpdatedAt: *a17
+        idempotencyKey: *a18
         conversationId:
           $ref: "#/components/schemas/ResourceId"
         companyOutreachId:
@@ -19232,7 +20210,7 @@ components:
         - meetingId
         - expectedUpdatedAt
         - idempotencyKey
-    MeetingLinkOutput: &a16
+    MeetingLinkOutput: &a19
       type: object
       additionalProperties: false
       properties:
@@ -19291,14 +20269,14 @@ components:
       type: object
       additionalProperties: false
       properties:
-        meetingId: *a13
-        expectedUpdatedAt: *a14
-        idempotencyKey: *a15
+        meetingId: *a16
+        expectedUpdatedAt: *a17
+        idempotencyKey: *a18
       required:
         - meetingId
         - expectedUpdatedAt
         - idempotencyKey
-    MeetingUnlinkOutput: *a16
+    MeetingUnlinkOutput: *a19
     MeetingUnlinkResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -19315,10 +20293,10 @@ components:
       type: object
       additionalProperties: false
       properties:
-        url: &a17
+        url: &a20
           type: string
           maxLength: 2048
-        events: &a18
+        events: &a21
           type: array
           items:
             $ref: "#/components/schemas/AgentSalesEventType"
@@ -19337,18 +20315,18 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id: &a19
+        id: &a22
           $ref: "#/components/schemas/ResourceId"
-        url: *a17
-        events: *a18
-        description: &a20
+        url: *a20
+        events: *a21
+        description: &a23
           type: string
           maxLength: 1000
-        enabled: &a21
+        enabled: &a24
           type: boolean
-        createdAt: &a22
+        createdAt: &a25
           $ref: "#/components/schemas/ResourceVersion"
-        updatedAt: &a23
+        updatedAt: &a26
           $ref: "#/components/schemas/ResourceVersion"
         secret:
           type: string
@@ -19392,13 +20370,13 @@ components:
             type: object
             additionalProperties: false
             properties:
-              id: *a19
-              url: *a17
-              events: *a18
-              description: *a20
-              enabled: *a21
-              createdAt: *a22
-              updatedAt: *a23
+              id: *a22
+              url: *a20
+              events: *a21
+              description: *a23
+              enabled: *a24
+              createdAt: *a25
+              updatedAt: *a26
             required:
               - id
               - url
@@ -19442,14 +20420,14 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id: &a24
+        id: &a27
           $ref: "#/components/schemas/ResourceId"
-        expectedUpdatedAt: &a25
+        expectedUpdatedAt: &a28
           $ref: "#/components/schemas/ResourceVersion"
-        idempotencyKey: &a26
+        idempotencyKey: &a29
           $ref: "#/components/schemas/IdempotencyKey"
-        url: *a17
-        events: *a18
+        url: *a20
+        events: *a21
         description:
           type: string
           maxLength: 1000
@@ -19459,7 +20437,7 @@ components:
         - id
         - expectedUpdatedAt
         - idempotencyKey
-    WebhooksUpdateOutput: &a27
+    WebhooksUpdateOutput: &a30
       type: object
       additionalProperties: false
       properties:
@@ -19498,15 +20476,15 @@ components:
     WebhooksDeleteInput:
       type: object
       additionalProperties: false
-      properties: &a28
-        id: *a24
-        expectedUpdatedAt: *a25
-        idempotencyKey: *a26
+      properties: &a31
+        id: *a27
+        expectedUpdatedAt: *a28
+        idempotencyKey: *a29
       required:
         - id
         - expectedUpdatedAt
         - idempotencyKey
-    WebhooksDeleteOutput: *a27
+    WebhooksDeleteOutput: *a30
     WebhooksDeleteResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -19522,12 +20500,12 @@ components:
     WebhooksTestInput:
       type: object
       additionalProperties: false
-      properties: *a28
+      properties: *a31
       required:
         - id
         - expectedUpdatedAt
         - idempotencyKey
-    WebhooksTestOutput: *a27
+    WebhooksTestOutput: *a30
     WebhooksTestResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -19544,9 +20522,9 @@ components:
       type: object
       additionalProperties: false
       properties:
-        id: *a24
-        expectedUpdatedAt: *a25
-        idempotencyKey: *a26
+        id: *a27
+        expectedUpdatedAt: *a28
+        idempotencyKey: *a29
         after:
           oneOf:
             - type: string
@@ -19557,7 +20535,7 @@ components:
         - id
         - expectedUpdatedAt
         - idempotencyKey
-    WebhooksReplayOutput: *a27
+    WebhooksReplayOutput: *a30
     WebhooksReplayResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -19770,13 +20748,13 @@ components:
       type: object
       additionalProperties: false
       properties:
-        enabled: &a29
+        enabled: &a32
           type: boolean
-        autoClose: &a30
+        autoClose: &a33
           type: boolean
-        autoSuppress: &a31
+        autoSuppress: &a34
           type: boolean
-        suppressCompany: &a32
+        suppressCompany: &a35
           type: boolean
         updatedAt:
           $ref: "#/components/schemas/ResourceVersion"
@@ -19802,10 +20780,10 @@ components:
       type: object
       additionalProperties: false
       properties:
-        enabled: *a29
-        autoClose: *a30
-        autoSuppress: *a31
-        suppressCompany: *a32
+        enabled: *a32
+        autoClose: *a33
+        autoSuppress: *a34
+        suppressCompany: *a35
         expectedUpdatedAt:
           $ref: "#/components/schemas/ResourceVersion"
         idempotencyKey:
@@ -19821,10 +20799,10 @@ components:
       type: object
       additionalProperties: false
       properties:
-        enabled: *a29
-        autoClose: *a30
-        autoSuppress: *a31
-        suppressCompany: *a32
+        enabled: *a32
+        autoClose: *a33
+        autoSuppress: *a34
+        suppressCompany: *a35
         updatedAt:
           $ref: "#/components/schemas/ResourceVersion"
         receiptId:
@@ -19852,14 +20830,14 @@ components:
       type: object
       additionalProperties: false
       properties:
-        provider: &a33
+        provider: &a36
           type: string
           enum:
             - calendar
             - gmail
             - sms
             - browser
-        connected: &a34
+        connected: &a37
           type: boolean
         expectedUpdatedAt:
           $ref: "#/components/schemas/ResourceVersion"
@@ -19874,8 +20852,8 @@ components:
       type: object
       additionalProperties: false
       properties:
-        provider: *a33
-        connected: *a34
+        provider: *a36
+        connected: *a37
         updatedAt:
           $ref: "#/components/schemas/ResourceVersion"
         receiptId:
@@ -19901,3 +20879,1014 @@ components:
               oneOf:
                 - $ref: "#/components/schemas/SandboxProviderUpdateOutput"
                 - type: "null"
+    ReplyTemplateVariables:
+      type: object
+      additionalProperties: false
+      properties:
+        firstName:
+          type: string
+          maxLength: 500
+        companyName:
+          type: string
+          maxLength: 500
+        slotLink:
+          type: string
+          maxLength: 500
+        slot1:
+          type: string
+          maxLength: 500
+        slot2:
+          type: string
+          maxLength: 500
+        ownerName:
+          type: string
+          maxLength: 500
+      required: []
+    ReplyTemplate:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        language:
+          type: string
+          enum:
+            - fi
+            - en
+        channels:
+          type: array
+          items:
+            type: string
+            enum: &a38
+              - instagram
+              - facebook
+              - linkedin
+              - gmail
+              - sms
+          maxItems: 5
+        intents:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 80
+          maxItems: 30
+        body:
+          type: string
+          minLength: 1
+          maxLength: 10000
+        maxLength:
+          type: integer
+          minimum: 1
+          maximum: 10000
+      required:
+        - name
+        - language
+        - channels
+        - intents
+        - body
+        - maxLength
+    ReplyPolicy:
+      type: object
+      additionalProperties: false
+      properties:
+        enabled:
+          type: boolean
+        allowedIntents:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 80
+          maxItems: 30
+        allowedChannels:
+          type: array
+          items:
+            type: string
+            enum: *a38
+          maxItems: 5
+        allowedTemplateIds:
+          type: array
+          items: *a39
+          maxItems: 100
+        freeTextAllowed:
+          type: boolean
+          const: false
+        excludeIfOptOut:
+          type: boolean
+          const: true
+        hours:
+          type: object
+          additionalProperties: false
+          properties:
+            tz:
+              type: string
+              minLength: 1
+              maxLength: 80
+            start:
+              type: string
+              pattern: ^(?:[01]\d|2[0-3]):[0-5]\d$
+            end:
+              type: string
+              pattern: ^(?:[01]\d|2[0-3]):[0-5]\d$
+            weekdays:
+              type: array
+              items:
+                type: integer
+                minimum: 1
+                maximum: 7
+              maxItems: 7
+          required:
+            - tz
+            - start
+            - end
+            - weekdays
+        maxAutoRepliesPerDay:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        maxPerConversationPerDay:
+          type: integer
+          minimum: 1
+          maximum: 20
+        requireApprovalIfConfidenceBelow:
+          type: number
+          minimum: 0
+          maximum: 1
+      required:
+        - enabled
+        - allowedIntents
+        - allowedChannels
+        - allowedTemplateIds
+        - freeTextAllowed
+        - excludeIfOptOut
+        - hours
+        - maxAutoRepliesPerDay
+        - maxPerConversationPerDay
+        - requireApprovalIfConfidenceBelow
+    SalesReplyResource:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type:
+            - string
+            - "null"
+        kind:
+          type: string
+          minLength: 1
+          maxLength: 160
+        revision: *a2
+        status:
+          type: string
+          minLength: 1
+          maxLength: 160
+        conversationId:
+          type:
+            - string
+            - "null"
+        updatedAt:
+          type:
+            - string
+            - "null"
+        template:
+          $ref: "#/components/schemas/ReplyTemplate"
+        policy:
+          $ref: "#/components/schemas/ReplyPolicy"
+      required:
+        - id
+        - revision
+        - status
+    SalesReplyOperation:
+      type: object
+      additionalProperties: false
+      properties:
+        resource:
+          $ref: "#/components/schemas/SalesReplyResource"
+        approval:
+          $ref: "#/components/schemas/SalesReplyResource"
+        followup:
+          $ref: "#/components/schemas/SalesReplyResource"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/SalesReplyResource"
+          maxItems: 100
+        filteredTotal: *a2
+        nextCursor:
+          type:
+            - string
+            - "null"
+        scope:
+          type: object
+          additionalProperties: true
+        receiptId:
+          type: string
+          minLength: 1
+          maxLength: 160
+        approvalUrl:
+          type: string
+        policyDecision:
+          type: string
+          enum:
+            - auto_allowed
+            - approval_required
+            - denied
+        conversationUpdatedAt: &a43
+          $ref: "#/components/schemas/ResourceVersion"
+        cancelledIds:
+          type: array
+          items: *a39
+          maxItems: 100
+      required: []
+    ReplyTemplatesListInput:
+      type: object
+      additionalProperties: false
+      properties:
+        cursor: &a41
+          type: string
+          minLength: 1
+          maxLength: 1000
+        limit: &a42
+          type: integer
+          minimum: 1
+          maximum: 100
+      required: []
+    ReplyTemplatesListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            tool:
+              type: string
+              const: reply.templates.list
+            data:
+              $ref: "#/components/schemas/SalesReplyOperation"
+          required:
+            - tool
+    ReplyTemplatesCreateInput:
+      type: object
+      additionalProperties: false
+      properties:
+        template:
+          $ref: "#/components/schemas/ReplyTemplate"
+        expectedRevision:
+          type: integer
+          const: 0
+        idempotencyKey: &a40
+          $ref: "#/components/schemas/IdempotencyKey"
+      required:
+        - template
+        - expectedRevision
+        - idempotencyKey
+    ReplyTemplatesCreateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            tool:
+              type: string
+              const: reply.templates.create
+            data:
+              $ref: "#/components/schemas/SalesReplyOperation"
+          required:
+            - tool
+    ReplyTemplatesUpdateInput:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *a39
+        template:
+          $ref: "#/components/schemas/ReplyTemplate"
+        expectedRevision: *a2
+        idempotencyKey: *a40
+      required:
+        - id
+        - template
+        - expectedRevision
+        - idempotencyKey
+    ReplyTemplatesUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            tool:
+              type: string
+              const: reply.templates.update
+            data:
+              $ref: "#/components/schemas/SalesReplyOperation"
+          required:
+            - tool
+    ReplyTemplatesDeleteInput:
+      type: object
+      additionalProperties: false
+      properties:
+        id: *a39
+        expectedRevision: *a2
+        idempotencyKey: *a40
+      required:
+        - id
+        - expectedRevision
+        - idempotencyKey
+    ReplyTemplatesDeleteResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            tool:
+              type: string
+              const: reply.templates.delete
+            data:
+              $ref: "#/components/schemas/SalesReplyOperation"
+          required:
+            - tool
+    ReplyPolicyGetInput:
+      type: object
+      additionalProperties: false
+      properties: {}
+      required: []
+    ReplyPolicyGetResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            tool:
+              type: string
+              const: reply.policy.get
+            data:
+              $ref: "#/components/schemas/SalesReplyOperation"
+          required:
+            - tool
+    ReplyPolicyUpdateInput:
+      type: object
+      additionalProperties: false
+      properties:
+        policy:
+          $ref: "#/components/schemas/ReplyPolicy"
+        expectedRevision: *a2
+        idempotencyKey: *a40
+      required:
+        - policy
+        - expectedRevision
+        - idempotencyKey
+    ReplyPolicyUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            tool:
+              type: string
+              const: reply.policy.update
+            data:
+              $ref: "#/components/schemas/SalesReplyOperation"
+          required:
+            - tool
+    ReplyApprovalsListInput:
+      type: object
+      additionalProperties: false
+      properties:
+        cursor: *a41
+        limit: *a42
+        status:
+          type: string
+          enum:
+            - pending
+            - approved
+            - rejected
+      required: []
+    ReplyApprovalsListResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            tool:
+              type: string
+              const: reply.approvals.list
+            data:
+              $ref: "#/components/schemas/SalesReplyOperation"
+          required:
+            - tool
+    ConversationDraftSaveInput:
+      type: object
+      additionalProperties: false
+      properties:
+        conversationId: *a39
+        expectedUpdatedAt: *a43
+        text:
+          type: string
+          minLength: 1
+          maxLength: 10000
+        templateId: *a39
+        variables:
+          $ref: "#/components/schemas/ReplyTemplateVariables"
+        rationale:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        idempotencyKey: *a40
+      required:
+        - conversationId
+        - expectedUpdatedAt
+        - idempotencyKey
+    ConversationDraftSaveResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            tool:
+              type: string
+              const: conversation.draft.save
+            data:
+              $ref: "#/components/schemas/SalesReplyOperation"
+          required:
+            - tool
+    FollowupAutoSend:
+      type: object
+      additionalProperties: false
+      properties:
+        templateId: *a39
+        variables:
+          $ref: "#/components/schemas/ReplyTemplateVariables"
+      required:
+        - templateId
+    ConversationFollowupSetInput:
+      type: object
+      additionalProperties: false
+      properties:
+        conversationId: *a39
+        expectedUpdatedAt: *a43
+        at: *a43
+        type:
+          type: string
+          enum:
+            - reply
+            - nudge
+            - send_info
+            - rebook
+            - call
+        note:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        owner: *a39
+        autoSend:
+          $ref: "#/components/schemas/FollowupAutoSend"
+        idempotencyKey: *a40
+      required:
+        - conversationId
+        - expectedUpdatedAt
+        - at
+        - type
+        - idempotencyKey
+    ConversationFollowupSetResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            tool:
+              type: string
+              const: conversation.followup.set
+            data:
+              $ref: "#/components/schemas/SalesReplyOperation"
+          required:
+            - tool
+    ConversationFollowupClearInput:
+      type: object
+      additionalProperties: false
+      properties:
+        conversationId: *a39
+        expectedUpdatedAt: *a43
+        idempotencyKey: *a40
+      required:
+        - conversationId
+        - expectedUpdatedAt
+        - idempotencyKey
+    ConversationFollowupClearResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            tool:
+              type: string
+              const: conversation.followup.clear
+            data:
+              $ref: "#/components/schemas/SalesReplyOperation"
+          required:
+            - tool
+    FollowupsDueInput:
+      type: object
+      additionalProperties: false
+      properties:
+        cursor: *a41
+        limit: *a42
+        before: *a43
+        owner: *a39
+      required: []
+    FollowupsDueResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          additionalProperties: false
+          properties:
+            tool:
+              type: string
+              const: followups.due
+            data:
+              $ref: "#/components/schemas/SalesReplyOperation"
+          required:
+            - tool
+    ConversationsBulkUpdateInput:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: "#/components/schemas/ConversationUpdateInput"
+        idempotencyKey:
+          $ref: "#/components/schemas/IdempotencyKey"
+      required:
+        - items
+        - idempotencyKey
+    ConversationsBulkUpdateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: conversations.bulk.update
+            data:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+                succeeded:
+                  type: integer
+                failed:
+                  type: integer
+                scope:
+                  type: object
+                  additionalProperties: true
+              required:
+                - items
+                - succeeded
+                - failed
+                - scope
+    PipelineBoardInput:
+      type: object
+      additionalProperties: false
+      properties:
+        campaignIds:
+          type: array
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/ResourceId"
+        limitPerStage:
+          type: integer
+          minimum: 1
+          maximum: 20
+    PipelineBoardResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: pipeline.board
+            data:
+              type: object
+              additionalProperties: true
+    CalendarBookingLinkCreateInput:
+      type: object
+      additionalProperties: false
+      properties:
+        conversationId: &a45
+          $ref: "#/components/schemas/ResourceId"
+        expectedConversationUpdatedAt: *a4
+        durations:
+          type: array
+          items:
+            type: integer
+            minimum: 15
+            maximum: 120
+          minItems: 1
+          maxItems: 4
+        window:
+          type: object
+          additionalProperties: false
+          properties:
+            from: *a4
+            to: *a4
+          required:
+            - from
+            - to
+        timezone:
+          type: string
+          minLength: 1
+          maxLength: 80
+        conference: *a44
+        customUrl:
+          type: string
+          pattern: ^https://
+          maxLength: 2000
+        maxUses:
+          type: integer
+          const: 1
+        expiresAt: *a4
+        language:
+          type: string
+          enum:
+            - fi
+            - en
+        idempotencyKey: &a46
+          $ref: "#/components/schemas/IdempotencyKey"
+        calendarId:
+          type: string
+          minLength: 1
+          maxLength: 500
+          description: Calendar owned by the connected Google account. Defaults to primary; calendar_status
+            reports discoverable calendars.
+      required:
+        - conversationId
+        - expectedConversationUpdatedAt
+        - durations
+        - window
+        - timezone
+        - conference
+        - maxUses
+        - expiresAt
+        - language
+        - idempotencyKey
+    CalendarBookingLinkCreateResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: calendar.booking.link.create
+            data:
+              type: object
+              additionalProperties: true
+    CalendarMeetingRescheduleInput:
+      type: object
+      additionalProperties: false
+      properties:
+        meetingId: *a45
+        expectedUpdatedAt: *a4
+        start: *a4
+        idempotencyKey: *a46
+      required:
+        - meetingId
+        - expectedUpdatedAt
+        - start
+        - idempotencyKey
+    CalendarMeetingRescheduleResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: calendar.meeting.reschedule
+            data:
+              type: object
+              additionalProperties: true
+    CalendarMeetingCancelInput:
+      type: object
+      additionalProperties: false
+      properties:
+        meetingId: *a45
+        expectedUpdatedAt: *a4
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        notifyAttendees:
+          type: boolean
+        idempotencyKey: *a46
+      required:
+        - meetingId
+        - expectedUpdatedAt
+        - reason
+        - notifyAttendees
+        - idempotencyKey
+    CalendarMeetingCancelResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: calendar.meeting.cancel
+            data:
+              type: object
+              additionalProperties: true
+    CampaignFollowupsConfigureInput:
+      type: object
+      additionalProperties: false
+      properties:
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
+        expectedCampaignUpdatedAt:
+          $ref: "#/components/schemas/ResourceVersion"
+        sequence:
+          type: object
+          additionalProperties: false
+          properties:
+            enabled:
+              type: boolean
+            steps:
+              type: array
+              maxItems: 3
+              items:
+                type: object
+                additionalProperties: false
+                properties:
+                  delayDays:
+                    type: integer
+                    minimum: 1
+                    maximum: 30
+                  channel:
+                    type: string
+                    enum:
+                      - inherit
+                      - instagram
+                      - facebook
+                      - linkedin
+                      - gmail
+                      - sms
+                  fallbackChannel:
+                    type: string
+                    enum:
+                      - none
+                      - instagram
+                      - facebook
+                      - linkedin
+                      - gmail
+                      - sms
+                  subject:
+                    type: string
+                    maxLength: 500
+                  variants:
+                    type: array
+                    minItems: 1
+                    maxItems: 4
+                    items:
+                      type: string
+                      minLength: 1
+                      maxLength: 10000
+                  smsBody:
+                    type: string
+                    minLength: 1
+                    maxLength: 1600
+                required:
+                  - delayDays
+                  - channel
+                  - fallbackChannel
+                  - variants
+          required:
+            - enabled
+            - steps
+        applyTo:
+          type: string
+          enum:
+            - future_only
+            - contacted_no_reply
+        dryRun:
+          type: boolean
+        idempotencyKey:
+          $ref: "#/components/schemas/IdempotencyKey"
+      required:
+        - campaignId
+        - expectedCampaignUpdatedAt
+        - sequence
+        - applyTo
+        - dryRun
+        - idempotencyKey
+    CampaignFollowupsConfigureResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: campaign.followups.configure
+            data:
+              type: object
+              additionalProperties: true
+    SalesMetricCounts:
+      type: object
+      additionalProperties: false
+      properties:
+        sent:
+          type: integer
+        reachedCompanies:
+          type: integer
+        humanReplies:
+          type: integer
+        positiveReplies:
+          type: integer
+        meetingsBooked:
+          type: integer
+        meetingsHeld:
+          type: integer
+        noShows:
+          type: integer
+        won:
+          type: integer
+        lost:
+          type: integer
+        dimensions:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+    SalesMetrics:
+      type: object
+      additionalProperties: false
+      properties:
+        from:
+          $ref: "#/components/schemas/ResourceVersion"
+        to:
+          $ref: "#/components/schemas/ResourceVersion"
+        totals:
+          $ref: "#/components/schemas/SalesMetricCounts"
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/SalesMetricCounts"
+        groupBy: *a47
+        scope:
+          type: object
+          additionalProperties: true
+        definitions:
+          type: object
+          additionalProperties:
+            type: string
+        medianFirstResponseMinutes:
+          oneOf:
+            - type: number
+            - type: "null"
+    SalesRangeAnalytics:
+      type: object
+      additionalProperties: false
+      properties:
+        from:
+          $ref: "#/components/schemas/ResourceVersion"
+        to:
+          $ref: "#/components/schemas/ResourceVersion"
+        totals:
+          $ref: "#/components/schemas/SalesMetricCounts"
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/SalesMetricCounts"
+        groupBy:
+          type: array
+          maxItems: 6
+          items:
+            type: string
+            enum:
+              - day
+              - week
+              - channel
+              - campaign
+              - actor
+              - variant
+        scope:
+          type: string
+          const: range
+        definitions:
+          type: object
+          additionalProperties:
+            type: string
+        medianFirstResponseMinutes:
+          oneOf:
+            - type: number
+            - type: "null"
+        generatedAt:
+          $ref: "#/components/schemas/ResourceVersion"
+        asOf:
+          $ref: "#/components/schemas/ResourceVersion"
+        canonicalMetrics:
+          $ref: "#/components/schemas/SalesMetrics"
+    CredibleInterval:
+      type: object
+      additionalProperties: false
+      properties:
+        low:
+          type: number
+          minimum: 0
+          maximum: 1
+        high:
+          type: number
+          minimum: 0
+          maximum: 1
+        confidence:
+          type: number
+        method: *a1
+    CampaignVariantsConfigureInput:
+      type: object
+      additionalProperties: false
+      properties:
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
+        expectedCampaignUpdatedAt:
+          $ref: "#/components/schemas/ResourceVersion"
+        idempotencyKey:
+          $ref: "#/components/schemas/IdempotencyKey"
+        channel:
+          type: string
+          enum:
+            - social
+            - gmail
+            - sms
+        variants:
+          type: array
+          minItems: 2
+          maxItems: 4
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              id:
+                $ref: "#/components/schemas/ResourceId"
+              body:
+                type: string
+                minLength: 1
+                maxLength: 10000
+              subject:
+                type: string
+                maxLength: 500
+              weight:
+                type: number
+                minimum: 0
+                maximum: 10000
+            required:
+              - id
+              - body
+              - weight
+        minSamplePerVariant:
+          type: integer
+          minimum: 10
+          maximum: 100000
+        promote:
+          type: object
+          additionalProperties: false
+          properties:
+            metric:
+              type: string
+              enum:
+                - reply_rate
+                - positive_reply_rate
+                - booking_rate
+            rule:
+              type: string
+              enum:
+                - bayesian_95
+                - manual
+          required:
+            - metric
+            - rule
+        prospectTimezone:
+          type: string
+          minLength: 1
+          maxLength: 100
+      required:
+        - campaignId
+        - expectedCampaignUpdatedAt
+        - idempotencyKey
+        - channel
+        - variants
+        - minSamplePerVariant
+        - promote
+    CampaignVariantsConfigureResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: campaign.variants.configure
+            data:
+              type: object
+              additionalProperties: true

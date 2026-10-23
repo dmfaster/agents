@@ -7,12 +7,44 @@ export const ResourceIdSchema = z
   .max(160)
   .regex(new RegExp(".*\\S.*"))
   .describe("A resource identifier returned by DM Faster. Never guess an identifier from a name.");
+export const ResourceVersionSchema = z
+  .string()
+  .min(20)
+  .max(32)
+  .regex(
+    new RegExp(
+      "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}(?::?\\d{2})?)$",
+    ),
+  )
+  .describe(
+    "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
+  );
 export const AnalyticsSummaryInputSchema = z
   .object({
-    scope: z.union([z.literal("today"), z.literal("last_24_hours"), z.literal("campaign_to_date")]),
+    scope: z.union([
+      z.literal("today"),
+      z.literal("last_24_hours"),
+      z.literal("campaign_to_date"),
+      z.literal("range"),
+    ]),
     campaign: ResourceIdSchema.describe(
       "Optional campaign identifier or exact campaign name.",
     ).optional(),
+    from: ResourceVersionSchema.optional(),
+    to: ResourceVersionSchema.optional(),
+    groupBy: z
+      .array(
+        z.union([
+          z.literal("day"),
+          z.literal("week"),
+          z.literal("channel"),
+          z.literal("campaign"),
+          z.literal("actor"),
+          z.literal("variant"),
+        ]),
+      )
+      .max(6)
+      .optional(),
   })
   .strict();
 export const WorkspaceBriefingInputSchema = z.object({}).strict();
@@ -78,18 +110,6 @@ export const InboxChannelSchema = z.union([
   z.literal("email"),
   z.literal("sms"),
 ]);
-export const ResourceVersionSchema = z
-  .string()
-  .min(20)
-  .max(32)
-  .regex(
-    new RegExp(
-      "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}(?::?\\d{2})?)$",
-    ),
-  )
-  .describe(
-    "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
-  );
 export const ConversationsListInputSchema = z
   .object({
     filter: z
@@ -185,13 +205,31 @@ export const ConversationUpdateInputSchema = z
       .optional(),
   })
   .strict();
+export const ReplyTemplateVariablesSchema = z
+  .object({
+    firstName: z.string().max(500).optional(),
+    companyName: z.string().max(500).optional(),
+    slotLink: z.string().max(500).optional(),
+    slot1: z.string().max(500).optional(),
+    slot2: z.string().max(500).optional(),
+    ownerName: z.string().max(500).optional(),
+  })
+  .strict();
 export const ConversationReplyInputSchema = z
   .object({
     conversationId: ResourceIdSchema,
     expectedLastInboundAt: ResourceVersionSchema,
     expectedLastMessageAt: ResourceVersionSchema,
-    text: z.string().min(1).max(10000),
+    text: z.string().min(1).max(10000).optional(),
     idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9_-]+$")),
+    templateId: ResourceIdSchema.optional(),
+    variables: ReplyTemplateVariablesSchema.optional(),
+    ownerApproved: z
+      .boolean()
+      .describe(
+        "For 2.1 clients only: the owner explicitly approved this exact free text and conversation. Otherwise save a draft.",
+      )
+      .optional(),
   })
   .strict();
 export const ConversationReplyInspectInputSchema = z
@@ -345,12 +383,28 @@ export const PipelineStageSchema = z.union([
 ]);
 export const PipelineCardsListInputSchema = z
   .object({
-    campaignId: ResourceIdSchema,
-    stage: PipelineStageSchema,
-    limit: z.number().int().min(1).max(15).optional(),
+    campaignId: ResourceIdSchema.optional(),
+    stage: PipelineStageSchema.optional(),
+    limit: z.number().int().min(1).max(100).optional(),
     cursor: z.string().min(1).max(4000).optional(),
     query: z.string().min(1).max(120).optional(),
     entityKey: z.string().min(1).max(320).optional(),
+    stages: z
+      .array(
+        z.union([
+          z.literal("contacted"),
+          z.literal("replied"),
+          z.literal("call_booked"),
+          z.literal("meeting_held"),
+          z.literal("no_show"),
+          z.literal("closed"),
+          z.literal("won"),
+          z.literal("lost"),
+        ]),
+      )
+      .min(1)
+      .max(8)
+      .optional(),
   })
   .strict();
 export const PipelineStageUpdateInputSchema = z
@@ -1458,6 +1512,14 @@ export const CalendarAvailabilityInputSchema = z
       z.literal(120),
     ]),
     limit: z.number().int().min(1).max(100).optional(),
+    calendarId: z
+      .string()
+      .min(1)
+      .max(500)
+      .describe(
+        "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
+      )
+      .optional(),
   })
   .strict();
 export const CalendarMeetingBookInputSchema = z
@@ -1479,7 +1541,27 @@ export const CalendarMeetingBookInputSchema = z
     attendees: z
       .array(z.string().min(3).max(320).regex(new RegExp("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")))
       .min(1)
-      .max(20),
+      .max(20)
+      .optional(),
+    conference: z
+      .union([
+        z.literal("google_meet"),
+        z.literal("teams"),
+        z.literal("phone"),
+        z.literal("in_person"),
+        z.literal("custom_url"),
+      ])
+      .optional(),
+    customUrl: z.string().max(2000).regex(new RegExp("^https://")).optional(),
+    attendeePhone: z.string().max(40).optional(),
+    calendarId: z
+      .string()
+      .min(1)
+      .max(500)
+      .describe(
+        "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
+      )
+      .optional(),
   })
   .strict();
 export const CallsListInputSchema = z
@@ -1967,6 +2049,282 @@ export const SandboxProviderUpdateInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
+export const ReplyTemplatesListInputSchema = z
+  .object({
+    cursor: z.string().min(1).max(1000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+  })
+  .strict();
+export const ReplyTemplateSchema = z
+  .object({
+    name: z.string().min(1).max(120),
+    language: z.union([z.literal("fi"), z.literal("en")]),
+    channels: z
+      .array(
+        z.union([
+          z.literal("instagram"),
+          z.literal("facebook"),
+          z.literal("linkedin"),
+          z.literal("gmail"),
+          z.literal("sms"),
+        ]),
+      )
+      .max(5),
+    intents: z.array(z.string().min(1).max(80)).max(30),
+    body: z.string().min(1).max(10000),
+    maxLength: z.number().int().min(1).max(10000),
+  })
+  .strict();
+export const ReplyTemplatesCreateInputSchema = z
+  .object({
+    template: ReplyTemplateSchema,
+    expectedRevision: z.literal(0),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const ReplyTemplatesUpdateInputSchema = z
+  .object({
+    id: ResourceIdSchema,
+    template: ReplyTemplateSchema,
+    expectedRevision: z.number().int().min(0),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const ReplyTemplatesDeleteInputSchema = z
+  .object({
+    id: ResourceIdSchema,
+    expectedRevision: z.number().int().min(0),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const ReplyPolicyGetInputSchema = z.object({}).strict();
+export const ReplyPolicySchema = z
+  .object({
+    enabled: z.boolean(),
+    allowedIntents: z.array(z.string().min(1).max(80)).max(30),
+    allowedChannels: z
+      .array(
+        z.union([
+          z.literal("instagram"),
+          z.literal("facebook"),
+          z.literal("linkedin"),
+          z.literal("gmail"),
+          z.literal("sms"),
+        ]),
+      )
+      .max(5),
+    allowedTemplateIds: z.array(ResourceIdSchema).max(100),
+    freeTextAllowed: z.literal(false),
+    excludeIfOptOut: z.literal(true),
+    hours: z
+      .object({
+        tz: z.string().min(1).max(80),
+        start: z.string().regex(new RegExp("^(?:[01]\\d|2[0-3]):[0-5]\\d$")),
+        end: z.string().regex(new RegExp("^(?:[01]\\d|2[0-3]):[0-5]\\d$")),
+        weekdays: z.array(z.number().int().min(1).max(7)).max(7),
+      })
+      .strict(),
+    maxAutoRepliesPerDay: z.number().int().min(1).max(1000),
+    maxPerConversationPerDay: z.number().int().min(1).max(20),
+    requireApprovalIfConfidenceBelow: z.number().min(0).max(1),
+  })
+  .strict();
+export const ReplyPolicyUpdateInputSchema = z
+  .object({
+    policy: ReplyPolicySchema,
+    expectedRevision: z.number().int().min(0),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const ReplyApprovalsListInputSchema = z
+  .object({
+    cursor: z.string().min(1).max(1000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    status: z
+      .union([z.literal("pending"), z.literal("approved"), z.literal("rejected")])
+      .optional(),
+  })
+  .strict();
+export const ConversationDraftSaveInputSchema = z
+  .object({
+    conversationId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    text: z.string().min(1).max(10000).optional(),
+    templateId: ResourceIdSchema.optional(),
+    variables: ReplyTemplateVariablesSchema.optional(),
+    rationale: z.string().min(1).max(2000).optional(),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const FollowupAutoSendSchema = z
+  .object({ templateId: ResourceIdSchema, variables: ReplyTemplateVariablesSchema.optional() })
+  .strict();
+export const ConversationFollowupSetInputSchema = z
+  .object({
+    conversationId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    at: ResourceVersionSchema,
+    type: z.union([
+      z.literal("reply"),
+      z.literal("nudge"),
+      z.literal("send_info"),
+      z.literal("rebook"),
+      z.literal("call"),
+    ]),
+    note: z.string().min(1).max(2000).optional(),
+    owner: ResourceIdSchema.optional(),
+    autoSend: FollowupAutoSendSchema.optional(),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const ConversationFollowupClearInputSchema = z
+  .object({
+    conversationId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const FollowupsDueInputSchema = z
+  .object({
+    cursor: z.string().min(1).max(1000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    before: ResourceVersionSchema.optional(),
+    owner: ResourceIdSchema.optional(),
+  })
+  .strict();
+export const ConversationsBulkUpdateInputSchema = z
+  .object({
+    items: z.array(ConversationUpdateInputSchema).min(1).max(50),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const PipelineBoardInputSchema = z
+  .object({
+    campaignIds: z.array(ResourceIdSchema).max(100).optional(),
+    limitPerStage: z.number().int().min(1).max(20).optional(),
+  })
+  .strict();
+export const CalendarBookingLinkCreateInputSchema = z
+  .object({
+    conversationId: ResourceIdSchema,
+    expectedConversationUpdatedAt: ResourceVersionSchema,
+    durations: z.array(z.number().int().min(15).max(120)).min(1).max(4),
+    window: z.object({ from: ResourceVersionSchema, to: ResourceVersionSchema }).strict(),
+    timezone: z.string().min(1).max(80),
+    conference: z.union([
+      z.literal("google_meet"),
+      z.literal("teams"),
+      z.literal("phone"),
+      z.literal("in_person"),
+      z.literal("custom_url"),
+    ]),
+    customUrl: z.string().max(2000).regex(new RegExp("^https://")).optional(),
+    maxUses: z.literal(1),
+    expiresAt: ResourceVersionSchema,
+    language: z.union([z.literal("fi"), z.literal("en")]),
+    idempotencyKey: IdempotencyKeySchema,
+    calendarId: z
+      .string()
+      .min(1)
+      .max(500)
+      .describe(
+        "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
+      )
+      .optional(),
+  })
+  .strict();
+export const CalendarMeetingRescheduleInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    start: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const CalendarMeetingCancelInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    reason: z.string().min(1).max(2000),
+    notifyAttendees: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const CampaignFollowupsConfigureInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    expectedCampaignUpdatedAt: ResourceVersionSchema,
+    sequence: z
+      .object({
+        enabled: z.boolean(),
+        steps: z
+          .array(
+            z
+              .object({
+                delayDays: z.number().int().min(1).max(30),
+                channel: z.union([
+                  z.literal("inherit"),
+                  z.literal("instagram"),
+                  z.literal("facebook"),
+                  z.literal("linkedin"),
+                  z.literal("gmail"),
+                  z.literal("sms"),
+                ]),
+                fallbackChannel: z.union([
+                  z.literal("none"),
+                  z.literal("instagram"),
+                  z.literal("facebook"),
+                  z.literal("linkedin"),
+                  z.literal("gmail"),
+                  z.literal("sms"),
+                ]),
+                subject: z.string().max(500).optional(),
+                variants: z.array(z.string().min(1).max(10000)).min(1).max(4),
+                smsBody: z.string().min(1).max(1600).optional(),
+              })
+              .strict(),
+          )
+          .max(3),
+      })
+      .strict(),
+    applyTo: z.union([z.literal("future_only"), z.literal("contacted_no_reply")]),
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const CampaignVariantsConfigureInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    expectedCampaignUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    channel: z.union([z.literal("social"), z.literal("gmail"), z.literal("sms")]),
+    variants: z
+      .array(
+        z
+          .object({
+            id: ResourceIdSchema,
+            body: z.string().min(1).max(10000),
+            subject: z.string().max(500).optional(),
+            weight: z.number().min(0).max(10000),
+          })
+          .strict(),
+      )
+      .min(2)
+      .max(4),
+    minSamplePerVariant: z.number().int().min(10).max(100000),
+    promote: z
+      .object({
+        metric: z.union([
+          z.literal("reply_rate"),
+          z.literal("positive_reply_rate"),
+          z.literal("booking_rate"),
+        ]),
+        rule: z.union([z.literal("bayesian_95"), z.literal("manual")]),
+      })
+      .strict(),
+    prospectTimezone: z.string().min(1).max(100).optional(),
+  })
+  .strict();
 export const AGENT_INPUT_SCHEMAS = {
   "analytics.summary": AnalyticsSummaryInputSchema,
   "workspace.briefing": WorkspaceBriefingInputSchema,
@@ -2093,4 +2451,22 @@ export const AGENT_INPUT_SCHEMAS = {
   "workspace.agent_sales.get": WorkspaceAgentSalesGetInputSchema,
   "workspace.agent_sales.update": WorkspaceAgentSalesUpdateInputSchema,
   "sandbox.provider.update": SandboxProviderUpdateInputSchema,
+  "reply.templates.list": ReplyTemplatesListInputSchema,
+  "reply.templates.create": ReplyTemplatesCreateInputSchema,
+  "reply.templates.update": ReplyTemplatesUpdateInputSchema,
+  "reply.templates.delete": ReplyTemplatesDeleteInputSchema,
+  "reply.policy.get": ReplyPolicyGetInputSchema,
+  "reply.policy.update": ReplyPolicyUpdateInputSchema,
+  "reply.approvals.list": ReplyApprovalsListInputSchema,
+  "conversation.draft.save": ConversationDraftSaveInputSchema,
+  "conversation.followup.set": ConversationFollowupSetInputSchema,
+  "conversation.followup.clear": ConversationFollowupClearInputSchema,
+  "followups.due": FollowupsDueInputSchema,
+  "conversations.bulk.update": ConversationsBulkUpdateInputSchema,
+  "pipeline.board": PipelineBoardInputSchema,
+  "calendar.booking.link.create": CalendarBookingLinkCreateInputSchema,
+  "calendar.meeting.reschedule": CalendarMeetingRescheduleInputSchema,
+  "calendar.meeting.cancel": CalendarMeetingCancelInputSchema,
+  "campaign.followups.configure": CampaignFollowupsConfigureInputSchema,
+  "campaign.variants.configure": CampaignVariantsConfigureInputSchema,
 } as const;

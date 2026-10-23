@@ -7,7 +7,7 @@ manifests. The hosted endpoint supports MCP 2025 hosts. The separately published
 version-pinned stdio MCP package requires MCP 2026-07-28; the CLI remains available
 for headless callers.
 
-The 2.0.0 source exposes 125 bounded domain tools plus an optional
+The 2.1.0 source exposes 125 bounded domain tools plus an optional
 portable MCP Apps Companies and campaign workspaces. It adds Instagram ICP text-to-list runs and covers social prospecting, company research, exact
 audience and draft preparation, inbox and pipeline work, follow-up control,
 sender readiness and paginated outcomes. Replies require the user's explicit
@@ -37,7 +37,7 @@ a legacy MCP downgrade.
 
 ## Release status
 
-Version 2.0.0 adds recipient-specific message preparation for unlaunched drafts
+Version 2.1.0 adds recipient-specific message preparation for unlaunched drafts
 and edits to eligible queued messages. Users can have their own agent research
 websites and supply the exact text for each recipient. Preparing copy does not
 launch a campaign. The version-pinned packages use the
@@ -64,7 +64,7 @@ Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@2.0.0 auth login --json
+npx --yes @dmfaster/cli@2.1.0 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use
