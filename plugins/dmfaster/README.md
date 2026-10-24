@@ -66,7 +66,7 @@ Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@2.6.0 auth login --json
+npx --yes @dmfaster/cli@2.6.1 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use
