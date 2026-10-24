@@ -1,5 +1,5 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
-export const AGENT_CONTRACT_VERSION = "2.1.0" as const;
+export const AGENT_CONTRACT_VERSION = "2.5.1" as const;
 export const AGENT_TOOL_NAMES = [
   "analytics.summary",
   "workspace.briefing",
@@ -231,6 +231,10 @@ export const AGENT_TOOL_NAMES = [
   "list.rename",
   "list.archive",
   "campaign.draft.archive",
+  "copy.approval.inspect",
+  "copy.approval.cancel",
+  "approval.cancel",
+  "approvals.list",
 ] as const;
 export const AGENT_TOOL_POLICIES = Object.freeze({
   "analytics.summary": {
@@ -1383,6 +1387,26 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "copy.approval.inspect": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "copy.approval.cancel": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "approval.cancel": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "approvals.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
 } as const);
 export const AGENT_TOOL_SCOPES = {
   "analytics.summary": ["workspace:read"],
@@ -1641,6 +1665,10 @@ export const AGENT_TOOL_SCOPES = {
   "list.rename": ["campaigns:read", "campaigns:write"],
   "list.archive": ["campaigns:read", "campaigns:write"],
   "campaign.draft.archive": ["campaigns:read", "campaigns:write"],
+  "copy.approval.inspect": ["campaigns:read"],
+  "copy.approval.cancel": ["campaigns:read", "campaigns:write"],
+  "approval.cancel": ["campaigns:read", "campaigns:write"],
+  "approvals.list": ["inbox:read"],
 } as const;
 export const AGENT_OWNER_ONLY_TOOLS = [
   "conversation.update",
@@ -1787,6 +1815,10 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "list.rename",
   "list.archive",
   "campaign.draft.archive",
+  "copy.approval.inspect",
+  "copy.approval.cancel",
+  "approval.cancel",
+  "approvals.list",
 ] as const;
 export const AGENT_ERROR_CATALOG = {
   authorization_pending: {
@@ -6353,6 +6385,80 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["campaign", "draft", "archive"],
     },
   },
+  "copy.approval.inspect": {
+    mcp: {
+      name: "copy_approval_inspect",
+      title: "Inspect campaign copy approval",
+      description:
+        "Inspect campaign copy approval. Workspace scoped; never approves copy or launches a campaign.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "copy approval inspect --input FILE",
+      command: ["copy", "approval", "inspect"],
+    },
+  },
+  "copy.approval.cancel": {
+    mcp: {
+      name: "copy_approval_cancel",
+      title: "Cancel campaign copy approval",
+      description:
+        "Cancel campaign copy approval. Workspace scoped; never approves copy or launches a campaign.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "copy approval cancel --input FILE",
+      command: ["copy", "approval", "cancel"],
+    },
+  },
+  "approval.cancel": {
+    mcp: {
+      name: "approval_cancel",
+      title: "Cancel a pending approval",
+      description: "Cancel a pending approval. Covers all approval types; never sends or approves.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "approval cancel --input FILE",
+      command: ["approval", "cancel"],
+    },
+  },
+  "approvals.list": {
+    mcp: {
+      name: "approvals_list",
+      title: "List workspace approvals",
+      description: "List workspace approvals. Covers all approval types; never sends or approves.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Reply workflows",
+      usage: "approvals list --input FILE",
+      command: ["approvals", "list"],
+    },
+  },
 } as const;
 export const AGENT_TOOL_INPUT_SCHEMAS = {
   "analytics.summary": {
@@ -7044,6 +7150,18 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "campaign.draft.archive": {
     $ref: "#/components/schemas/CampaignDraftArchiveInput",
+  },
+  "copy.approval.inspect": {
+    $ref: "#/components/schemas/CopyApprovalInspectInput",
+  },
+  "copy.approval.cancel": {
+    $ref: "#/components/schemas/CopyApprovalCancelInput",
+  },
+  "approval.cancel": {
+    $ref: "#/components/schemas/ApprovalCancelInput",
+  },
+  "approvals.list": {
+    $ref: "#/components/schemas/ApprovalsListInput",
   },
 } as const;
 export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
@@ -9015,6 +9133,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       activeOnly: {
         type: "boolean",
       },
+      includeUnknownSize: {
+        type: "boolean",
+        description:
+          "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
+      },
     },
     description:
       "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
@@ -9045,7 +9168,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           required: ["channel", "body"],
         },
         minItems: 1,
-        maxItems: 4,
+        maxItems: 20,
       },
       followups: {
         type: "array",
@@ -9073,7 +9196,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           },
           required: ["channel", "body", "delayDays"],
         },
-        maxItems: 3,
+        maxItems: 15,
       },
     },
     required: ["messages"],
@@ -13912,6 +14035,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           "send:instagram",
           "send:facebook",
           "send:linkedin",
+          "launch",
         ],
       },
       runId: {
@@ -13919,6 +14043,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         minLength: 1,
         maxLength: 100,
         description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
+      },
+      campaignId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 200,
       },
     },
     required: ["for"],
@@ -16064,8 +16193,13 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         minLength: 1,
         maxLength: 160,
       },
+      campaignId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
     },
-    required: ["plan", "idempotencyKey"],
+    required: ["idempotencyKey"],
   },
   CampaignDraftPlanInput: {
     type: "object",
@@ -16401,5 +16535,87 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
     required: ["campaignId", "expectedUpdatedAt"],
+  },
+  CopyApprovalInspectInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      approvalId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+    },
+    required: ["approvalId"],
+  },
+  CopyApprovalCancelInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      approvalId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 8,
+        maxLength: 160,
+      },
+    },
+    required: ["approvalId", "idempotencyKey"],
+  },
+  ApprovalCancelInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      approvalId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 8,
+        maxLength: 160,
+      },
+      expectedRevision: {
+        type: "integer",
+        minimum: 1,
+      },
+      reason: {
+        type: "string",
+        minLength: 1,
+        maxLength: 500,
+      },
+    },
+    required: ["approvalId", "idempotencyKey", "expectedRevision", "reason"],
+  },
+  ApprovalsListInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+      status: {
+        type: "string",
+        enum: ["pending", "approved", "rejected"],
+      },
+      runId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+        description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
+      },
+    },
+    required: [],
   },
 } as const;

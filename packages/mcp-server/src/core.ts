@@ -27,7 +27,7 @@ import { cachedMcpSchema } from "./cached-schema.ts";
 import { hostedConnectionSchema } from "./presentation-schemas.ts";
 import { oauthToolMetadata, oauthFailureMetadata, type HostedAuth } from "./hosted-auth.ts";
 
-export const MCP_SERVER_VERSION = "2.5.0";
+export const MCP_SERVER_VERSION = "2.5.1";
 export const MCP_SERVER_INSTRUCTIONS =
   "DM Faster prospecting and outreach. Check connection_status; use narrow tools, exact counts and returned IDs/revisions. Retain retry keys. Selections are not consent. Drafts never send. Follow granted access, explicit user instructions and tool workflows; verify outcomes before claiming success. Never expose credentials or operate approval pages. With feedback:write, use feedback_submit for observed friction: concise context, no private data, one stable key per report. Continue the main task.";
 
@@ -130,11 +130,12 @@ function registerWithMcpServer(
     (name) => AGENT_TOOL_DEFINITIONS[name].mcp.name === definition.name,
   )!;
   const scopes = AGENT_TOOL_SCOPES[domainName];
+  if (auth && !scopes.every((scope) => auth.grantedScopes.includes(scope))) return;
   server.registerTool(
     definition.name,
     {
       title: definition.title,
-      description: mcpToolDescription(definition.name, definition.description, auth),
+      description: `${definition.title}. ${definition.description}`.slice(0, 300),
       inputSchema: cachedMcpSchema(definition.inputSchema),
       outputSchema: cachedMcpSchema(definition.outputSchema),
       annotations: definition.annotations,
@@ -170,6 +171,7 @@ export function createDmfasterMcpCore(input: {
   registerLocalConnection?: (server: McpServer) => void;
   registerHostedEvents?: (server: McpServer) => void;
   resultMetadata?: () => Record<string, unknown>;
+  uiTools?: boolean;
 }) {
   const client = mcpCommerceClient(input.client);
   const server = new McpServer(
@@ -227,8 +229,10 @@ export function createDmfasterMcpCore(input: {
   } else {
     input.registerLocalConnection?.(server);
   }
-  registerCampaignWorkspace(server, client, toolFailure, input.hostedAuth);
-  registerWorkspaceMentions(server, client, toolFailure, input.hostedAuth);
-  registerOutreachDetails(server, client, toolFailure, input.hostedAuth);
+  if (input.uiTools) {
+    registerCampaignWorkspace(server, client, toolFailure, input.hostedAuth);
+    registerWorkspaceMentions(server, client, toolFailure, input.hostedAuth);
+    registerOutreachDetails(server, client, toolFailure, input.hostedAuth);
+  }
   return server;
 }

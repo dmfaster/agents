@@ -321,6 +321,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/approval.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel a pending approval
+         * @description Cancel a pending approval. Covers all approval types; never sends or approves.
+         */
+        post: operations["approval.cancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/approvals.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * List workspace approvals
+         * @description List workspace approvals. Covers all approval types; never sends or approves.
+         */
+        post: operations["approvals.list"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/attribution.check": {
         parameters: {
             query?: never;
@@ -2443,6 +2483,46 @@ export interface paths {
          * @description Lists actual inbox conversations with app filters and a continuation cursor. Read-only; listing does not mark messages read.
          */
         post: operations["conversationsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/copy.approval.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel campaign copy approval
+         * @description Cancel campaign copy approval. Workspace scoped; never approves copy or launches a campaign.
+         */
+        post: operations["copy.approval.cancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/copy.approval.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect campaign copy approval
+         * @description Inspect campaign copy approval. Workspace scoped; never approves copy or launches a campaign.
+         */
+        post: operations["copy.approval.inspect"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5122,7 +5202,7 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.1.0";
+            contractVersion: "2.5.1";
             data: {
                 nextInSeconds: number;
             };
@@ -5476,7 +5556,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel" | "events.list" | "conversations.changes" | "suppressions.list" | "suppressions.add" | "suppressions.remove" | "workspace.sandbox.create" | "sandbox.seed" | "sandbox.inbound.simulate" | "sandbox.clock.advance" | "call.outcome.set" | "meeting.link" | "meeting.unlink" | "webhooks.create" | "webhooks.list" | "webhooks.update" | "webhooks.delete" | "webhooks.test" | "webhooks.replay" | "meetings.unlinked.list" | "pipeline.reconcile" | "workspace.agent_sales.get" | "workspace.agent_sales.update" | "sandbox.provider.update" | "reply.templates.list" | "reply.templates.create" | "reply.templates.update" | "reply.templates.delete" | "reply.policy.get" | "reply.policy.update" | "reply.approvals.list" | "conversation.draft.save" | "conversation.followup.set" | "conversation.followup.clear" | "followups.due" | "conversations.bulk.update" | "pipeline.board" | "calendar.booking.link.create" | "calendar.meeting.reschedule" | "calendar.meeting.cancel" | "campaign.followups.configure" | "campaign.variants.configure" | "recorder.settings.get" | "recorder.settings.update" | "recorder.bots.list" | "call.transcript.get" | "call.recording.get" | "call.transcripts.get" | "call.transcripts.search" | "readiness.check" | "sender.retire" | "sender.unretire" | "attribution.check" | "campaign.reengagement.prepare" | "agents.list" | "agent.inspect" | "agent.create.request" | "agent.pause" | "agent.resume" | "agent.credential.rotate" | "event_consumers.list" | "event_consumers.create" | "events.ack" | "events.snapshot" | "webhook.deliveries.list" | "webhooks.dlq.replay" | "classification.feedback" | "classification.quality" | "classification.backfill.plan" | "work_queue.list" | "work_item.claim" | "work_item.release" | "work_item.snooze" | "work_item.complete" | "work_queue.config.get" | "work_queue.config.update" | "metrics.reconcile" | "agent.heartbeat" | "agent.run.start" | "agent.run.end" | "agent.runs.list" | "agent.run.inspect" | "workspace.halt" | "workspace.resume" | "channel.halt" | "workspace.automation.inspect" | "feedback.submit" | "feedback.list" | "entity.resolve" | "entities.get" | "people.upsert" | "companies.upsert" | "entity.merge" | "entity.split" | "budget.status" | "call.stats.get" | "call.coaching.get" | "call.analytics.query" | "call.insight.get" | "call.access.list" | "call.audit.list" | "call.activity.get" | "call.analysis.get" | "call.outcome.confirm" | "call.attendance.get" | "call.insight.review" | "recorder.event.override.get" | "recorder.event.override.update" | "call.bot.cancel" | "call.bot.remove" | "call.recording.stop" | "recorder.status" | "call.bot.join" | "recorder.join.get" | "call.participant.withdrawal.report" | "call.delete" | "copy.approval.request" | "campaign.draft.plan" | "campaign.draft.readiness" | "prospecting.preview" | "companies.lookalike" | "commitments.propose" | "commitments.list" | "commitment.update" | "commitment.confirm.batch" | "commitment.reminder.draft" | "list.rename" | "list.archive" | "campaign.draft.archive";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel" | "events.list" | "conversations.changes" | "suppressions.list" | "suppressions.add" | "suppressions.remove" | "workspace.sandbox.create" | "sandbox.seed" | "sandbox.inbound.simulate" | "sandbox.clock.advance" | "call.outcome.set" | "meeting.link" | "meeting.unlink" | "webhooks.create" | "webhooks.list" | "webhooks.update" | "webhooks.delete" | "webhooks.test" | "webhooks.replay" | "meetings.unlinked.list" | "pipeline.reconcile" | "workspace.agent_sales.get" | "workspace.agent_sales.update" | "sandbox.provider.update" | "reply.templates.list" | "reply.templates.create" | "reply.templates.update" | "reply.templates.delete" | "reply.policy.get" | "reply.policy.update" | "reply.approvals.list" | "conversation.draft.save" | "conversation.followup.set" | "conversation.followup.clear" | "followups.due" | "conversations.bulk.update" | "pipeline.board" | "calendar.booking.link.create" | "calendar.meeting.reschedule" | "calendar.meeting.cancel" | "campaign.followups.configure" | "campaign.variants.configure" | "recorder.settings.get" | "recorder.settings.update" | "recorder.bots.list" | "call.transcript.get" | "call.recording.get" | "call.transcripts.get" | "call.transcripts.search" | "readiness.check" | "sender.retire" | "sender.unretire" | "attribution.check" | "campaign.reengagement.prepare" | "agents.list" | "agent.inspect" | "agent.create.request" | "agent.pause" | "agent.resume" | "agent.credential.rotate" | "event_consumers.list" | "event_consumers.create" | "events.ack" | "events.snapshot" | "webhook.deliveries.list" | "webhooks.dlq.replay" | "classification.feedback" | "classification.quality" | "classification.backfill.plan" | "work_queue.list" | "work_item.claim" | "work_item.release" | "work_item.snooze" | "work_item.complete" | "work_queue.config.get" | "work_queue.config.update" | "metrics.reconcile" | "agent.heartbeat" | "agent.run.start" | "agent.run.end" | "agent.runs.list" | "agent.run.inspect" | "workspace.halt" | "workspace.resume" | "channel.halt" | "workspace.automation.inspect" | "feedback.submit" | "feedback.list" | "entity.resolve" | "entities.get" | "people.upsert" | "companies.upsert" | "entity.merge" | "entity.split" | "budget.status" | "call.stats.get" | "call.coaching.get" | "call.analytics.query" | "call.insight.get" | "call.access.list" | "call.audit.list" | "call.activity.get" | "call.analysis.get" | "call.outcome.confirm" | "call.attendance.get" | "call.insight.review" | "recorder.event.override.get" | "recorder.event.override.update" | "call.bot.cancel" | "call.bot.remove" | "call.recording.stop" | "recorder.status" | "call.bot.join" | "recorder.join.get" | "call.participant.withdrawal.report" | "call.delete" | "copy.approval.request" | "campaign.draft.plan" | "campaign.draft.readiness" | "prospecting.preview" | "companies.lookalike" | "commitments.propose" | "commitments.list" | "commitment.update" | "commitment.confirm.batch" | "commitment.reminder.draft" | "list.rename" | "list.archive" | "campaign.draft.archive" | "copy.approval.inspect" | "copy.approval.cancel" | "approval.cancel" | "approvals.list";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -5489,7 +5569,7 @@ export interface components {
             artifacts: unknown[];
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.1.0";
+            contractVersion?: "2.5.1";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
@@ -5629,6 +5709,30 @@ export interface components {
             data?: components["schemas"]["AnalyticsSummaryOutput"] | components["schemas"]["SalesRangeAnalytics"] | null | components["schemas"]["SalesAnalyticsV2"];
             /** @constant */
             tool?: "analytics.summary";
+        };
+        ApprovalCancelInput: {
+            approvalId: string;
+            expectedRevision: number;
+            idempotencyKey: string;
+            reason: string;
+        };
+        ApprovalCancelResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "approval.cancel";
+        };
+        ApprovalsListInput: {
+            cursor?: string;
+            limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            /** @enum {string} */
+            status?: "pending" | "approved" | "rejected";
+        };
+        ApprovalsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["SalesReplyOperation"] | null;
+            /** @constant */
+            tool: "approvals.list";
         };
         AttributionCheckInput: {
             campaignId: components["schemas"]["ResourceId"];
@@ -7426,20 +7530,27 @@ export interface components {
             generatedAt: string;
             items: {
                 awaitingConnection: boolean;
+                blockedBy?: string | null;
                 channel: string;
                 id: string;
+                /** @enum {string} */
+                kind?: "connection_check" | "message";
                 message: string;
                 scheduledAt: string | null;
+                sendsMessage?: boolean;
                 state: string;
                 step: number;
                 targetCompanyName: string;
                 targetHandle: string;
                 updatedAt: string;
+                willSend?: boolean;
             }[];
             nextCursor: string | null;
             summary: {
+                connectionChecks?: number;
                 done: number;
                 enabled?: boolean;
+                held?: number;
                 upcoming: number;
             };
             timeZone: string;
@@ -8943,6 +9054,8 @@ export interface components {
             hasWebsite?: boolean;
             /** @description Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only. */
             hiringTitleQuery?: string;
+            /** @description Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported. */
+            includeUnknownSize?: boolean;
             industryCodes?: string[];
             industryCodeSelections?: {
                 /** @constant */
@@ -9335,9 +9448,27 @@ export interface components {
             /** @constant */
             tool?: "conversation.update";
         };
-        CopyApprovalRequestInput: {
+        CopyApprovalCancelInput: {
+            approvalId: string;
             idempotencyKey: string;
-            plan: components["schemas"]["ProspectingPlan"];
+        };
+        CopyApprovalCancelResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "copy.approval.cancel";
+        };
+        CopyApprovalInspectInput: {
+            approvalId: string;
+        };
+        CopyApprovalInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "copy.approval.inspect";
+        };
+        CopyApprovalRequestInput: {
+            campaignId?: string;
+            idempotencyKey: string;
+            plan?: components["schemas"]["ProspectingPlan"];
         };
         CopyApprovalRequestResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["ProspectingOperationData"] | null;
@@ -10741,6 +10872,7 @@ export interface components {
             /** @enum {string} */
             closedOutcome?: "" | "won" | "lost";
             companyId?: components["schemas"]["ResourceId"] | null;
+            companyKey?: string | null;
             companyOutreachId?: string;
             decisionMakerLinkedinName?: string;
             decisionMakerLinkedinRole?: string;
@@ -10965,16 +11097,16 @@ export interface components {
         };
         /** @description Exact workspace-scoped prospecting or disabled draft result. authorizesLaunch is always false when readiness is returned. */
         ProspectingOperationData: {
-            approvalId?: string;
+            approvalId?: string | null;
             blockers?: string[];
-            campaignId?: string;
+            campaignId?: string | null;
             companies?: {
                 [key: string]: unknown;
             }[];
             created?: boolean;
             dryRun?: boolean;
             expectedRevision?: string;
-            listId?: string;
+            listId?: string | null;
             nextCursor?: string | null;
             /** @description Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory. */
             qualification?: {
@@ -11026,8 +11158,9 @@ export interface components {
             tool?: "prospecting.preview";
         };
         ReadinessCheckInput: {
+            campaignId?: string;
             /** @enum {string} */
-            for: "reply" | "book" | "followups" | "send:sms" | "send:gmail" | "send:instagram" | "send:facebook" | "send:linkedin";
+            for: "reply" | "book" | "followups" | "send:sms" | "send:gmail" | "send:instagram" | "send:facebook" | "send:linkedin" | "launch";
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
         };
@@ -11041,7 +11174,7 @@ export interface components {
             }[];
             checkedAt: string;
             /** @enum {string} */
-            for: "reply" | "book" | "followups" | "send:sms" | "send:gmail" | "send:instagram" | "send:facebook" | "send:linkedin";
+            for: "reply" | "book" | "followups" | "send:sms" | "send:gmail" | "send:instagram" | "send:facebook" | "send:linkedin" | "launch";
             ready: boolean;
             requiresActionPreflight: boolean;
         };
@@ -11746,6 +11879,9 @@ export interface components {
                 updatedAt?: string;
             }[];
             browserSetupUrl: string;
+            channelCapabilities?: {
+                [key: string]: unknown;
+            }[];
             emailAvailable?: boolean;
             /** Format: date-time */
             generatedAt: string;
@@ -11763,7 +11899,7 @@ export interface components {
                 replySyncEnabled: boolean;
                 sendEnabled: boolean;
                 /** @enum {string} */
-                status: "connected" | "action_required" | "paused" | "disabled";
+                status: "healthy" | "degraded" | "needs_reauth" | "disconnected" | "retired";
             }[];
             sms?: {
                 available: boolean;
@@ -11854,6 +11990,7 @@ export interface components {
                 /** @enum {string} */
                 scope: "campaign" | "workspace";
             };
+            blockedBy?: string;
             campaignId: string;
             campaignName: string;
             /** @description Campaign-only execution counts, or null when unavailable. Excludes passive reply checks and tracking jobs. */
@@ -11872,6 +12009,7 @@ export interface components {
             /** @enum {string} */
             status: "healthy" | "waiting" | "attention" | "blocked" | "idle";
             summary: string;
+            willSend?: boolean;
         };
         SendingInspectResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["SendingInspectOutput"] | null;
@@ -13385,6 +13523,60 @@ export interface operations {
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    "approval.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApprovalCancelInput"];
+            };
+        };
+        responses: {
+            /** @description Request owner approval of campaign copy */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApprovalCancelResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    "approvals.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApprovalsListInput"];
+            };
+        };
+        responses: {
+            /** @description Workspace-scoped resource or durable operation receipt. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApprovalsListResult"];
+                };
+            };
         };
     };
     attributionCheck: {
@@ -16486,6 +16678,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ConversationsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    "copy.approval.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CopyApprovalCancelInput"];
+            };
+        };
+        responses: {
+            /** @description Request owner approval of campaign copy */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CopyApprovalCancelResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    "copy.approval.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CopyApprovalInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Request owner approval of campaign copy */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CopyApprovalInspectResult"];
                 };
             };
             400: components["responses"]["BadRequest"];

@@ -10,7 +10,7 @@ scoped, workspace-bound `dmf_pat_…` token.
 > authorized source checkout.
 
 ```bash
-npm install @dmfaster/sdk@2.5.0
+npm install @dmfaster/sdk@2.5.1
 ```
 
 Non-loopback endpoints must use HTTPS. The client also refuses HTTP redirects so

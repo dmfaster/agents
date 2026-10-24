@@ -47,7 +47,7 @@ export function outreachForm(
 ) {
   const mailboxes = senders.emailAvailable
     ? senders.mailboxes.filter(
-        (m) => m.status === "connected" && m.sendEnabled && m.canSend && !m.needsReauthorization,
+        (m) => m.status === "healthy" && m.sendEnabled && m.canSend && !m.needsReauthorization,
       )
     : [];
   // Social channels remain available for planning; preflight owns provider setup.

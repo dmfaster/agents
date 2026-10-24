@@ -105,7 +105,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -354,6 +354,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -1363,7 +1367,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -1612,6 +1616,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -2510,7 +2518,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -2759,6 +2767,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -3132,7 +3144,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -3381,6 +3393,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -4265,7 +4281,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -4514,6 +4530,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -4957,7 +4977,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -5206,6 +5226,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -5487,6 +5511,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
                 type: "string",
               },
             },
+          },
+          willSend: {
+            type: "boolean",
+          },
+          blockedBy: {
+            type: "string",
           },
         },
       },
@@ -6048,7 +6078,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -6297,6 +6327,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -6687,7 +6721,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -6936,6 +6970,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -7840,7 +7878,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -8089,6 +8127,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -9053,7 +9095,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -9302,6 +9344,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -9875,7 +9921,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -10124,6 +10170,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -10728,7 +10778,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -10977,6 +11027,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -11526,7 +11580,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -11775,6 +11829,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -12137,7 +12195,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -12386,6 +12444,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -12701,7 +12763,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -12950,6 +13012,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -13332,7 +13398,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -13581,6 +13647,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -13907,7 +13977,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -14156,6 +14226,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -14382,6 +14456,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
               enabled: {
                 type: "boolean",
               },
+              held: {
+                type: "integer",
+                minimum: 0,
+              },
+              connectionChecks: {
+                type: "integer",
+                minimum: 0,
+              },
             },
           },
           view: {
@@ -14443,6 +14525,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
                 },
                 updatedAt: {
                   type: "string",
+                },
+                kind: {
+                  type: "string",
+                  enum: ["connection_check", "message"],
+                },
+                sendsMessage: {
+                  type: "boolean",
+                },
+                willSend: {
+                  type: "boolean",
+                },
+                blockedBy: {
+                  type: ["string", "null"],
                 },
               },
             },
@@ -14559,7 +14654,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -14808,6 +14903,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -15110,7 +15209,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -15359,6 +15458,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -15706,7 +15809,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -15955,6 +16058,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -16296,7 +16403,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -16545,6 +16652,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -16886,7 +16997,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -17135,6 +17246,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -17476,7 +17591,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -17725,6 +17840,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -17915,7 +18034,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           browserSetupUrl: {
             type: "string",
-            pattern: "^https://",
+            pattern: "^https?://",
           },
           emailAvailable: {
             type: "boolean",
@@ -18020,7 +18139,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
                 },
                 status: {
                   type: "string",
-                  enum: ["connected", "action_required", "paused", "disabled"],
+                  enum: ["healthy", "degraded", "needs_reauth", "disconnected", "retired"],
                 },
                 sendEnabled: {
                   type: "boolean",
@@ -18055,6 +18174,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
                   minimum: 0,
                 },
               },
+            },
+          },
+          channelCapabilities: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: true,
             },
           },
         },
@@ -18159,7 +18285,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -18408,6 +18534,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -18760,7 +18890,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -19009,6 +19139,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -19754,7 +19888,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -20003,6 +20137,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -20391,6 +20529,9 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          companyKey: {
+            type: ["string", "null"],
+          },
         },
       },
       ResourceId: {
@@ -20729,7 +20870,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -20978,6 +21119,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -21339,6 +21484,9 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          companyKey: {
+            type: ["string", "null"],
+          },
         },
       },
       PipelineStage: {
@@ -21454,7 +21602,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -21703,6 +21851,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -22027,7 +22179,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -22276,6 +22428,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -22596,7 +22752,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -22845,6 +23001,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -23198,7 +23358,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -23447,6 +23607,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -23800,7 +23964,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
                 const: "campaign.validate",
               },
               data: {
-                oneOf: [
+                anyOf: [
                   {
                     $ref: "#/$defs/AgentHarnessResult",
                   },
@@ -23885,7 +24049,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -24134,6 +24298,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -24453,13 +24621,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -24518,7 +24686,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
                 const: "audience.preview",
               },
               data: {
-                oneOf: [
+                anyOf: [
                   {
                     $ref: "#/$defs/AudiencePreviewHarnessResult",
                   },
@@ -24603,7 +24771,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -24852,6 +25020,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -25247,13 +25419,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -25393,7 +25565,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -25642,6 +25814,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -25970,7 +26146,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -26219,6 +26395,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -26565,7 +26745,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -26814,6 +26994,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -27137,7 +27321,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -27386,6 +27570,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -27817,7 +28005,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -28066,6 +28254,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -28477,7 +28669,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -28726,6 +28918,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -29047,7 +29243,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -29296,6 +29492,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -29684,7 +29884,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -29933,6 +30133,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -30321,7 +30525,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -30570,6 +30774,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -31134,7 +31342,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -31383,6 +31591,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -31797,7 +32009,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -32046,6 +32258,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -32481,7 +32697,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -32730,6 +32946,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -33141,7 +33361,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -33390,6 +33610,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -33921,6 +34145,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
           activeOnly: {
             type: "boolean",
           },
+          includeUnknownSize: {
+            type: "boolean",
+            description:
+              "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
+          },
         },
         description:
           "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
@@ -34059,7 +34288,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -34308,6 +34537,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -34655,7 +34888,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -34904,6 +35137,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -35458,6 +35695,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
           activeOnly: {
             type: "boolean",
           },
+          includeUnknownSize: {
+            type: "boolean",
+            description:
+              "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
+          },
         },
         description:
           "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
@@ -35562,7 +35804,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -35811,6 +36053,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -36655,6 +36901,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
           activeOnly: {
             type: "boolean",
           },
+          includeUnknownSize: {
+            type: "boolean",
+            description:
+              "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
+          },
         },
         description:
           "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
@@ -36759,7 +37010,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -37008,6 +37259,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -37440,7 +37695,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -37689,6 +37944,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -38444,7 +38703,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -38693,6 +38952,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -39397,6 +39660,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           activeOnly: {
             type: "boolean",
+          },
+          includeUnknownSize: {
+            type: "boolean",
+            description:
+              "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
           },
         },
         description:
@@ -39734,7 +40002,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -39983,6 +40251,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -40687,6 +40959,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           activeOnly: {
             type: "boolean",
+          },
+          includeUnknownSize: {
+            type: "boolean",
+            description:
+              "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
           },
         },
         description:
@@ -41024,7 +41301,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -41273,6 +41550,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -41977,6 +42258,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           activeOnly: {
             type: "boolean",
+          },
+          includeUnknownSize: {
+            type: "boolean",
+            description:
+              "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
           },
         },
         description:
@@ -42314,7 +42600,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -42563,6 +42849,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -43267,6 +43557,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           activeOnly: {
             type: "boolean",
+          },
+          includeUnknownSize: {
+            type: "boolean",
+            description:
+              "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
           },
         },
         description:
@@ -43604,7 +43899,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -43853,6 +44148,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -44558,6 +44857,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
           activeOnly: {
             type: "boolean",
           },
+          includeUnknownSize: {
+            type: "boolean",
+            description:
+              "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
+          },
         },
         description:
           "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
@@ -44894,7 +45198,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -45143,6 +45447,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -45708,7 +46016,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -45957,6 +46265,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -46318,7 +46630,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -46567,6 +46879,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -46930,7 +47246,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -47179,6 +47495,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -47630,7 +47950,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -47879,6 +48199,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -48452,7 +48776,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -48701,6 +49025,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -49042,7 +49370,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -49291,6 +49619,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -49629,7 +49961,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -49878,6 +50210,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -50236,7 +50572,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -50485,6 +50821,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -50826,7 +51166,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -51075,6 +51415,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -51544,7 +51888,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -51793,6 +52137,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -52102,7 +52450,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -52351,6 +52699,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -52675,7 +53027,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -52924,6 +53276,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -53270,7 +53626,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -53519,6 +53875,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -53899,7 +54259,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -54148,6 +54508,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -54528,7 +54892,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -54777,6 +55141,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -55195,7 +55563,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -55444,6 +55812,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -55833,7 +56205,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -56082,6 +56454,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -56761,7 +57137,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -57010,6 +57386,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -57850,7 +58230,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -58099,6 +58479,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -58417,7 +58801,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -58666,6 +59050,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -59029,7 +59417,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -59278,6 +59666,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -59637,7 +60029,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -59886,6 +60278,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -60396,7 +60792,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -60645,6 +61041,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -62075,7 +62475,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -62324,6 +62724,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -62664,7 +63068,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -62913,6 +63317,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -63304,7 +63712,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -63553,6 +63961,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -63944,7 +64356,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -64193,6 +64605,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -64584,7 +65000,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -64833,6 +65249,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -65161,7 +65581,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -65410,6 +65830,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -65811,7 +66235,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -66060,6 +66484,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -66416,7 +66844,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -66665,6 +67093,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -67267,7 +67699,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -67516,6 +67948,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -68121,7 +68557,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -68370,6 +68806,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -69013,7 +69453,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -69262,6 +69702,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -69867,7 +70311,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -70116,6 +70560,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -70762,7 +71210,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -71011,6 +71459,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -71654,7 +72106,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -71903,6 +72355,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -72508,7 +72964,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -72757,6 +73213,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -73400,7 +73860,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -73649,6 +74109,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -74250,7 +74714,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -74499,6 +74963,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -75085,7 +75553,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -75334,6 +75802,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -75920,7 +76392,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -76169,6 +76641,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -76755,7 +77231,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -77004,6 +77480,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -77590,7 +78070,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -77839,6 +78319,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -78425,7 +78909,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -78674,6 +79158,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -79263,7 +79751,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -79512,6 +80000,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -80020,7 +80512,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -80269,6 +80761,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -80626,7 +81122,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -80875,6 +81371,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -81247,7 +81747,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -81496,6 +81996,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -81885,7 +82389,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -82134,6 +82638,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -82516,7 +83024,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -82765,6 +83273,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -83068,7 +83580,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -83317,6 +83829,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -83641,7 +84157,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -83890,6 +84406,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -84193,7 +84713,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -84442,6 +84962,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -84750,7 +85274,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -84999,6 +85523,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -85364,7 +85892,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -85613,6 +86141,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -86015,7 +86547,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -86264,6 +86796,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -86663,7 +87199,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -86912,6 +87448,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -87348,7 +87888,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -87597,6 +88137,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -88100,7 +88644,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -88349,6 +88893,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -88671,7 +89219,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -88920,6 +89468,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -89242,7 +89794,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -89491,6 +90043,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -89813,7 +90369,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -90062,6 +90618,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -90384,7 +90944,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -90633,6 +91193,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -91069,7 +91633,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -91318,6 +91882,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -91739,7 +92307,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -91988,6 +92556,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -92289,7 +92861,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -92538,6 +93110,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -92858,7 +93434,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -93107,6 +93683,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -93421,7 +94001,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -93670,6 +94250,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -94192,7 +94776,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -94441,6 +95025,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -94963,7 +95551,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -95212,6 +95800,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -95734,7 +96326,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -95983,6 +96575,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -96505,7 +97101,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -96754,6 +97350,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -97276,7 +97876,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -97525,6 +98125,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -98047,7 +98651,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -98296,6 +98900,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -98818,7 +99426,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -99067,6 +99675,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -99592,7 +100204,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -99841,6 +100453,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -100407,7 +101023,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -100656,6 +101272,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -101219,7 +101839,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -101468,6 +102088,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -102008,7 +102632,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -102257,6 +102881,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -102571,7 +103199,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -102820,6 +103448,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -103093,7 +103725,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -103342,6 +103974,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -103615,7 +104251,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -103864,6 +104500,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -104137,7 +104777,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -104386,6 +105026,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -104659,7 +105303,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -104908,6 +105552,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -105181,7 +105829,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -105430,6 +106078,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -105709,7 +106361,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -105958,6 +106610,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -106401,7 +107057,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -106650,6 +107306,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -107089,7 +107749,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -107338,6 +107998,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -107721,7 +108385,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -107970,6 +108634,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -108554,7 +109222,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -108803,6 +109471,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -109155,7 +109827,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -109404,6 +110076,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -110048,7 +110724,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -110297,6 +110973,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -110640,7 +111320,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -110889,6 +111569,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -111083,6 +111767,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "send:instagram",
               "send:facebook",
               "send:linkedin",
+              "launch",
             ],
           },
           ready: {
@@ -111250,7 +111935,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -111499,6 +112184,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -111817,7 +112506,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -112066,6 +112755,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -112384,7 +113077,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -112633,6 +113326,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -112981,7 +113678,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -113230,6 +113927,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -113597,7 +114298,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -113846,6 +114547,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -114291,7 +114996,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -114540,6 +115245,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -114962,7 +115671,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -115211,6 +115920,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -115582,7 +116295,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -115831,6 +116544,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -116144,7 +116861,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -116393,6 +117110,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -116706,7 +117427,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -116955,6 +117676,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -117307,7 +118032,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -117556,6 +118281,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -117926,7 +118655,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -118175,6 +118904,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -118529,7 +119262,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -118778,6 +119511,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -119132,7 +119869,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -119381,6 +120118,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -119892,7 +120633,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -120141,6 +120882,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -120545,7 +121290,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -120794,6 +121539,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -121095,7 +121844,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -121344,6 +122093,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -121664,7 +122417,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -121913,6 +122666,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -122261,7 +123018,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -122510,6 +123267,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -122856,7 +123617,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -123105,6 +123866,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -123576,7 +124341,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -123825,6 +124590,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -124284,7 +125053,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -124533,6 +125302,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -124992,7 +125765,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -125241,6 +126014,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -125700,7 +126477,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -125949,6 +126726,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -126408,7 +127189,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -126657,6 +127438,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -126966,7 +127751,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -127215,6 +128000,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -127524,7 +128313,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -127773,6 +128562,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -128187,7 +128980,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -128436,6 +129229,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -128664,7 +129461,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           data: {
             type: "object",
@@ -128781,7 +129578,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -129030,6 +129827,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -129358,7 +130159,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -129607,6 +130408,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -129915,7 +130720,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -130164,6 +130969,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -130620,7 +131429,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -130869,6 +131678,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -131406,7 +132219,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -131655,6 +132468,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -131989,7 +132806,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -132238,6 +133055,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -132555,7 +133376,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -132804,6 +133625,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -133138,7 +133963,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -133387,6 +134212,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -133718,7 +134547,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -133967,6 +134796,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -134281,7 +135114,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -134530,6 +135363,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -134937,7 +135774,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -135186,6 +136023,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -135934,7 +136775,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -136183,6 +137024,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -136607,7 +137452,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -136856,6 +137701,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -137296,7 +138145,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -137545,6 +138394,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -137985,7 +138838,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -138234,6 +139087,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -138568,7 +139425,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -138817,6 +139674,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -139151,7 +140012,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -139400,6 +140261,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -139781,7 +140646,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -140030,6 +140895,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -141030,7 +141899,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -141279,6 +142148,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -141629,7 +142502,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -141878,6 +142751,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -142282,7 +143159,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -142531,6 +143408,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -143223,7 +144104,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -143472,6 +144353,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -143861,7 +144746,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -144110,6 +144995,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -144485,7 +145374,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -144734,6 +145623,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -145135,7 +146028,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -145384,6 +146277,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -147096,7 +147993,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -147345,6 +148242,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -147700,7 +148601,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -147949,6 +148850,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -148345,7 +149250,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -148594,6 +149499,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -148928,7 +149837,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -149177,6 +150086,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -149528,7 +150441,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -149777,6 +150690,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -150128,7 +151045,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -150377,6 +151294,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -150722,7 +151643,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -150971,6 +151892,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -151316,7 +152241,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -151565,6 +152490,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -151910,7 +152839,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -152159,6 +153088,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -152581,7 +153514,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -152830,6 +153763,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -153191,7 +154128,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -153440,6 +154377,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -153801,7 +154742,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -154050,6 +154991,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -154375,7 +155320,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -154624,6 +155569,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -154975,7 +155924,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -155224,6 +156173,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -155434,13 +156387,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -155580,7 +156533,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -155829,6 +156782,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -156039,13 +156996,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -156185,7 +157142,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -156434,6 +157391,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -156644,13 +157605,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -156790,7 +157751,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -157039,6 +158000,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -157249,13 +158214,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -157395,7 +158360,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -157644,6 +158609,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -157854,13 +158823,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -158000,7 +158969,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -158249,6 +159218,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -158459,13 +159432,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -158605,7 +159578,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -158854,6 +159827,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -159064,13 +160041,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -159210,7 +160187,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -159459,6 +160436,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -159669,13 +160650,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -159815,7 +160796,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -160064,6 +161045,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -160274,13 +161259,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -160420,7 +161405,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -160669,6 +161654,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -160879,13 +161868,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -161025,7 +162014,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -161274,6 +162263,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -161484,13 +162477,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -161630,7 +162623,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -161879,6 +162872,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -162089,13 +163086,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -162235,7 +163232,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.1.0",
+            const: "2.5.1",
           },
           rateLimit: {
             oneOf: [
@@ -162484,6 +163481,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "list.rename",
           "list.archive",
           "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
         ],
       },
       AgentToolPolicy: {
@@ -162694,13 +163695,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
               "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
           },
           approvalId: {
-            type: "string",
+            type: ["string", "null"],
           },
           campaignId: {
-            type: "string",
+            type: ["string", "null"],
           },
           listId: {
-            type: "string",
+            type: ["string", "null"],
           },
           created: {
             type: "boolean",
@@ -162740,6 +163741,2608 @@ export const AGENT_OUTPUT_SCHEMAS = {
             type: ["string", "null"],
           },
         },
+      },
+    },
+  }),
+  "copy.approval.inspect": z.fromJSONSchema({
+    $ref: "#/$defs/CopyApprovalInspectResult",
+    $defs: {
+      CopyApprovalInspectResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                const: "copy.approval.inspect",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/ProspectingOperationData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          serverTime: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          contractVersion: {
+            type: "string",
+            const: "2.5.1",
+          },
+          rateLimit: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentRateLimitEnvelope",
+              },
+              {
+                type: "null",
+              },
+            ],
+            description:
+              "Current authenticated credential/workspace quota, negotiated by X-DMFaster-Rate-Limit: 1. Null before authentication or when authoritative quota is unavailable.",
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.messages.draft.list",
+          "campaign.messages.draft.update",
+          "campaign.messages.list",
+          "campaign.messages.update",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "sending.test.prepare",
+          "sending.test.send",
+          "sending.test.inspect",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.knowledge.search",
+          "companies.knowledge",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "sending.instagram.pacing.inspect",
+          "sending.instagram.pacing.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "instagram.extract.quote",
+          "instagram.extract.start",
+          "instagram.extract.inspect",
+          "instagram.extract.results",
+          "instagram.purchases.list",
+          "instagram.purchases.inspect",
+          "instagram.purchases.results",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+          "leads.prospect.quote",
+          "leads.prospect.start",
+          "leads.prospect.inspect",
+          "leads.prospect.results",
+          "leads.prospect.advance",
+          "leads.prospect.cancel",
+          "events.list",
+          "conversations.changes",
+          "suppressions.list",
+          "suppressions.add",
+          "suppressions.remove",
+          "workspace.sandbox.create",
+          "sandbox.seed",
+          "sandbox.inbound.simulate",
+          "sandbox.clock.advance",
+          "call.outcome.set",
+          "meeting.link",
+          "meeting.unlink",
+          "webhooks.create",
+          "webhooks.list",
+          "webhooks.update",
+          "webhooks.delete",
+          "webhooks.test",
+          "webhooks.replay",
+          "meetings.unlinked.list",
+          "pipeline.reconcile",
+          "workspace.agent_sales.get",
+          "workspace.agent_sales.update",
+          "sandbox.provider.update",
+          "reply.templates.list",
+          "reply.templates.create",
+          "reply.templates.update",
+          "reply.templates.delete",
+          "reply.policy.get",
+          "reply.policy.update",
+          "reply.approvals.list",
+          "conversation.draft.save",
+          "conversation.followup.set",
+          "conversation.followup.clear",
+          "followups.due",
+          "conversations.bulk.update",
+          "pipeline.board",
+          "calendar.booking.link.create",
+          "calendar.meeting.reschedule",
+          "calendar.meeting.cancel",
+          "campaign.followups.configure",
+          "campaign.variants.configure",
+          "recorder.settings.get",
+          "recorder.settings.update",
+          "recorder.bots.list",
+          "call.transcript.get",
+          "call.recording.get",
+          "call.transcripts.get",
+          "call.transcripts.search",
+          "readiness.check",
+          "sender.retire",
+          "sender.unretire",
+          "attribution.check",
+          "campaign.reengagement.prepare",
+          "agents.list",
+          "agent.inspect",
+          "agent.create.request",
+          "agent.pause",
+          "agent.resume",
+          "agent.credential.rotate",
+          "event_consumers.list",
+          "event_consumers.create",
+          "events.ack",
+          "events.snapshot",
+          "webhook.deliveries.list",
+          "webhooks.dlq.replay",
+          "classification.feedback",
+          "classification.quality",
+          "classification.backfill.plan",
+          "work_queue.list",
+          "work_item.claim",
+          "work_item.release",
+          "work_item.snooze",
+          "work_item.complete",
+          "work_queue.config.get",
+          "work_queue.config.update",
+          "metrics.reconcile",
+          "agent.heartbeat",
+          "agent.run.start",
+          "agent.run.end",
+          "agent.runs.list",
+          "agent.run.inspect",
+          "workspace.halt",
+          "workspace.resume",
+          "channel.halt",
+          "workspace.automation.inspect",
+          "feedback.submit",
+          "feedback.list",
+          "entity.resolve",
+          "entities.get",
+          "people.upsert",
+          "companies.upsert",
+          "entity.merge",
+          "entity.split",
+          "budget.status",
+          "call.stats.get",
+          "call.coaching.get",
+          "call.analytics.query",
+          "call.insight.get",
+          "call.access.list",
+          "call.audit.list",
+          "call.activity.get",
+          "call.analysis.get",
+          "call.outcome.confirm",
+          "call.attendance.get",
+          "call.insight.review",
+          "recorder.event.override.get",
+          "recorder.event.override.update",
+          "call.bot.cancel",
+          "call.bot.remove",
+          "call.recording.stop",
+          "recorder.status",
+          "call.bot.join",
+          "recorder.join.get",
+          "call.participant.withdrawal.report",
+          "call.delete",
+          "copy.approval.request",
+          "campaign.draft.plan",
+          "campaign.draft.readiness",
+          "prospecting.preview",
+          "companies.lookalike",
+          "commitments.propose",
+          "commitments.list",
+          "commitment.update",
+          "commitment.confirm.batch",
+          "commitment.reminder.draft",
+          "list.rename",
+          "list.archive",
+          "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+          nextAction: {
+            type: "string",
+            minLength: 1,
+          },
+          docsUrl: {
+            type: "string",
+            pattern: "^https://",
+          },
+          requiredScope: {
+            type: "string",
+            maxLength: 200,
+          },
+          reason: {
+            type: "string",
+            maxLength: 200,
+          },
+          setupUrl: {
+            type: "string",
+            maxLength: 2000,
+          },
+          requiredConnection: {
+            type: "string",
+            maxLength: 200,
+          },
+          retryAfterMs: {
+            type: "integer",
+            minimum: 0,
+          },
+          blockedUntil: {
+            $ref: "#/$defs/ResourceVersion",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "channel", "agent"],
+          },
+          haltedBy: {
+            type: "string",
+            maxLength: 200,
+          },
+        },
+      },
+      ResourceVersion: {
+        type: "string",
+        description:
+          "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
+        pattern:
+          "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}(?::?\\d{2})?)$",
+        minLength: 20,
+        maxLength: 32,
+      },
+      AgentRateLimitEnvelope: {
+        type: "object",
+        additionalProperties: false,
+        required: ["limit", "remaining", "resetAt", "credential", "workspace"],
+        properties: {
+          limit: {
+            type: "integer",
+            minimum: 0,
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          resetAt: {
+            type: "string",
+            format: "date-time",
+          },
+          credential: {
+            $ref: "#/$defs/AgentRateLimitBucket",
+          },
+          workspace: {
+            $ref: "#/$defs/AgentRateLimitBucket",
+          },
+        },
+      },
+      AgentRateLimitBucket: {
+        type: "object",
+        additionalProperties: false,
+        required: ["limit", "remaining", "resetAt"],
+        properties: {
+          limit: {
+            type: "integer",
+            minimum: 0,
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          resetAt: {
+            type: "string",
+            format: "date-time",
+          },
+        },
+      },
+      ProspectingOperationData: {
+        type: "object",
+        additionalProperties: true,
+        description:
+          "Exact workspace-scoped prospecting or disabled draft result. authorizesLaunch is always false when readiness is returned.",
+        properties: {
+          qualification: {
+            type: "object",
+            additionalProperties: false,
+            required: ["basis", "offeringFit", "contactAffiliation", "guidance"],
+            properties: {
+              basis: {
+                type: "string",
+                const: "published_filters",
+              },
+              offeringFit: {
+                type: "string",
+                const: "not_assessed",
+              },
+              contactAffiliation: {
+                type: "string",
+                const: "not_verified",
+              },
+              guidance: {
+                type: "string",
+              },
+            },
+            description:
+              "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
+          },
+          approvalId: {
+            type: ["string", "null"],
+          },
+          campaignId: {
+            type: ["string", "null"],
+          },
+          listId: {
+            type: ["string", "null"],
+          },
+          created: {
+            type: "boolean",
+          },
+          dryRun: {
+            type: "boolean",
+          },
+          ready: {
+            type: "boolean",
+          },
+          blockers: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          total: {
+            type: "integer",
+          },
+          totalExact: {
+            type: "boolean",
+          },
+          expectedRevision: {
+            type: "string",
+          },
+          querySignature: {
+            type: "string",
+          },
+          companies: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: true,
+            },
+          },
+          nextCursor: {
+            type: ["string", "null"],
+          },
+        },
+      },
+    },
+  }),
+  "copy.approval.cancel": z.fromJSONSchema({
+    $ref: "#/$defs/CopyApprovalCancelResult",
+    $defs: {
+      CopyApprovalCancelResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                const: "copy.approval.cancel",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/ProspectingOperationData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          serverTime: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          contractVersion: {
+            type: "string",
+            const: "2.5.1",
+          },
+          rateLimit: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentRateLimitEnvelope",
+              },
+              {
+                type: "null",
+              },
+            ],
+            description:
+              "Current authenticated credential/workspace quota, negotiated by X-DMFaster-Rate-Limit: 1. Null before authentication or when authoritative quota is unavailable.",
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.messages.draft.list",
+          "campaign.messages.draft.update",
+          "campaign.messages.list",
+          "campaign.messages.update",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "sending.test.prepare",
+          "sending.test.send",
+          "sending.test.inspect",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.knowledge.search",
+          "companies.knowledge",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "sending.instagram.pacing.inspect",
+          "sending.instagram.pacing.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "instagram.extract.quote",
+          "instagram.extract.start",
+          "instagram.extract.inspect",
+          "instagram.extract.results",
+          "instagram.purchases.list",
+          "instagram.purchases.inspect",
+          "instagram.purchases.results",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+          "leads.prospect.quote",
+          "leads.prospect.start",
+          "leads.prospect.inspect",
+          "leads.prospect.results",
+          "leads.prospect.advance",
+          "leads.prospect.cancel",
+          "events.list",
+          "conversations.changes",
+          "suppressions.list",
+          "suppressions.add",
+          "suppressions.remove",
+          "workspace.sandbox.create",
+          "sandbox.seed",
+          "sandbox.inbound.simulate",
+          "sandbox.clock.advance",
+          "call.outcome.set",
+          "meeting.link",
+          "meeting.unlink",
+          "webhooks.create",
+          "webhooks.list",
+          "webhooks.update",
+          "webhooks.delete",
+          "webhooks.test",
+          "webhooks.replay",
+          "meetings.unlinked.list",
+          "pipeline.reconcile",
+          "workspace.agent_sales.get",
+          "workspace.agent_sales.update",
+          "sandbox.provider.update",
+          "reply.templates.list",
+          "reply.templates.create",
+          "reply.templates.update",
+          "reply.templates.delete",
+          "reply.policy.get",
+          "reply.policy.update",
+          "reply.approvals.list",
+          "conversation.draft.save",
+          "conversation.followup.set",
+          "conversation.followup.clear",
+          "followups.due",
+          "conversations.bulk.update",
+          "pipeline.board",
+          "calendar.booking.link.create",
+          "calendar.meeting.reschedule",
+          "calendar.meeting.cancel",
+          "campaign.followups.configure",
+          "campaign.variants.configure",
+          "recorder.settings.get",
+          "recorder.settings.update",
+          "recorder.bots.list",
+          "call.transcript.get",
+          "call.recording.get",
+          "call.transcripts.get",
+          "call.transcripts.search",
+          "readiness.check",
+          "sender.retire",
+          "sender.unretire",
+          "attribution.check",
+          "campaign.reengagement.prepare",
+          "agents.list",
+          "agent.inspect",
+          "agent.create.request",
+          "agent.pause",
+          "agent.resume",
+          "agent.credential.rotate",
+          "event_consumers.list",
+          "event_consumers.create",
+          "events.ack",
+          "events.snapshot",
+          "webhook.deliveries.list",
+          "webhooks.dlq.replay",
+          "classification.feedback",
+          "classification.quality",
+          "classification.backfill.plan",
+          "work_queue.list",
+          "work_item.claim",
+          "work_item.release",
+          "work_item.snooze",
+          "work_item.complete",
+          "work_queue.config.get",
+          "work_queue.config.update",
+          "metrics.reconcile",
+          "agent.heartbeat",
+          "agent.run.start",
+          "agent.run.end",
+          "agent.runs.list",
+          "agent.run.inspect",
+          "workspace.halt",
+          "workspace.resume",
+          "channel.halt",
+          "workspace.automation.inspect",
+          "feedback.submit",
+          "feedback.list",
+          "entity.resolve",
+          "entities.get",
+          "people.upsert",
+          "companies.upsert",
+          "entity.merge",
+          "entity.split",
+          "budget.status",
+          "call.stats.get",
+          "call.coaching.get",
+          "call.analytics.query",
+          "call.insight.get",
+          "call.access.list",
+          "call.audit.list",
+          "call.activity.get",
+          "call.analysis.get",
+          "call.outcome.confirm",
+          "call.attendance.get",
+          "call.insight.review",
+          "recorder.event.override.get",
+          "recorder.event.override.update",
+          "call.bot.cancel",
+          "call.bot.remove",
+          "call.recording.stop",
+          "recorder.status",
+          "call.bot.join",
+          "recorder.join.get",
+          "call.participant.withdrawal.report",
+          "call.delete",
+          "copy.approval.request",
+          "campaign.draft.plan",
+          "campaign.draft.readiness",
+          "prospecting.preview",
+          "companies.lookalike",
+          "commitments.propose",
+          "commitments.list",
+          "commitment.update",
+          "commitment.confirm.batch",
+          "commitment.reminder.draft",
+          "list.rename",
+          "list.archive",
+          "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+          nextAction: {
+            type: "string",
+            minLength: 1,
+          },
+          docsUrl: {
+            type: "string",
+            pattern: "^https://",
+          },
+          requiredScope: {
+            type: "string",
+            maxLength: 200,
+          },
+          reason: {
+            type: "string",
+            maxLength: 200,
+          },
+          setupUrl: {
+            type: "string",
+            maxLength: 2000,
+          },
+          requiredConnection: {
+            type: "string",
+            maxLength: 200,
+          },
+          retryAfterMs: {
+            type: "integer",
+            minimum: 0,
+          },
+          blockedUntil: {
+            $ref: "#/$defs/ResourceVersion",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "channel", "agent"],
+          },
+          haltedBy: {
+            type: "string",
+            maxLength: 200,
+          },
+        },
+      },
+      ResourceVersion: {
+        type: "string",
+        description:
+          "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
+        pattern:
+          "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}(?::?\\d{2})?)$",
+        minLength: 20,
+        maxLength: 32,
+      },
+      AgentRateLimitEnvelope: {
+        type: "object",
+        additionalProperties: false,
+        required: ["limit", "remaining", "resetAt", "credential", "workspace"],
+        properties: {
+          limit: {
+            type: "integer",
+            minimum: 0,
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          resetAt: {
+            type: "string",
+            format: "date-time",
+          },
+          credential: {
+            $ref: "#/$defs/AgentRateLimitBucket",
+          },
+          workspace: {
+            $ref: "#/$defs/AgentRateLimitBucket",
+          },
+        },
+      },
+      AgentRateLimitBucket: {
+        type: "object",
+        additionalProperties: false,
+        required: ["limit", "remaining", "resetAt"],
+        properties: {
+          limit: {
+            type: "integer",
+            minimum: 0,
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          resetAt: {
+            type: "string",
+            format: "date-time",
+          },
+        },
+      },
+      ProspectingOperationData: {
+        type: "object",
+        additionalProperties: true,
+        description:
+          "Exact workspace-scoped prospecting or disabled draft result. authorizesLaunch is always false when readiness is returned.",
+        properties: {
+          qualification: {
+            type: "object",
+            additionalProperties: false,
+            required: ["basis", "offeringFit", "contactAffiliation", "guidance"],
+            properties: {
+              basis: {
+                type: "string",
+                const: "published_filters",
+              },
+              offeringFit: {
+                type: "string",
+                const: "not_assessed",
+              },
+              contactAffiliation: {
+                type: "string",
+                const: "not_verified",
+              },
+              guidance: {
+                type: "string",
+              },
+            },
+            description:
+              "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
+          },
+          approvalId: {
+            type: ["string", "null"],
+          },
+          campaignId: {
+            type: ["string", "null"],
+          },
+          listId: {
+            type: ["string", "null"],
+          },
+          created: {
+            type: "boolean",
+          },
+          dryRun: {
+            type: "boolean",
+          },
+          ready: {
+            type: "boolean",
+          },
+          blockers: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          total: {
+            type: "integer",
+          },
+          totalExact: {
+            type: "boolean",
+          },
+          expectedRevision: {
+            type: "string",
+          },
+          querySignature: {
+            type: "string",
+          },
+          companies: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: true,
+            },
+          },
+          nextCursor: {
+            type: ["string", "null"],
+          },
+        },
+      },
+    },
+  }),
+  "approval.cancel": z.fromJSONSchema({
+    $ref: "#/$defs/ApprovalCancelResult",
+    $defs: {
+      ApprovalCancelResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                const: "approval.cancel",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/ProspectingOperationData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          serverTime: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          contractVersion: {
+            type: "string",
+            const: "2.5.1",
+          },
+          rateLimit: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentRateLimitEnvelope",
+              },
+              {
+                type: "null",
+              },
+            ],
+            description:
+              "Current authenticated credential/workspace quota, negotiated by X-DMFaster-Rate-Limit: 1. Null before authentication or when authoritative quota is unavailable.",
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.messages.draft.list",
+          "campaign.messages.draft.update",
+          "campaign.messages.list",
+          "campaign.messages.update",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "sending.test.prepare",
+          "sending.test.send",
+          "sending.test.inspect",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.knowledge.search",
+          "companies.knowledge",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "sending.instagram.pacing.inspect",
+          "sending.instagram.pacing.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "instagram.extract.quote",
+          "instagram.extract.start",
+          "instagram.extract.inspect",
+          "instagram.extract.results",
+          "instagram.purchases.list",
+          "instagram.purchases.inspect",
+          "instagram.purchases.results",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+          "leads.prospect.quote",
+          "leads.prospect.start",
+          "leads.prospect.inspect",
+          "leads.prospect.results",
+          "leads.prospect.advance",
+          "leads.prospect.cancel",
+          "events.list",
+          "conversations.changes",
+          "suppressions.list",
+          "suppressions.add",
+          "suppressions.remove",
+          "workspace.sandbox.create",
+          "sandbox.seed",
+          "sandbox.inbound.simulate",
+          "sandbox.clock.advance",
+          "call.outcome.set",
+          "meeting.link",
+          "meeting.unlink",
+          "webhooks.create",
+          "webhooks.list",
+          "webhooks.update",
+          "webhooks.delete",
+          "webhooks.test",
+          "webhooks.replay",
+          "meetings.unlinked.list",
+          "pipeline.reconcile",
+          "workspace.agent_sales.get",
+          "workspace.agent_sales.update",
+          "sandbox.provider.update",
+          "reply.templates.list",
+          "reply.templates.create",
+          "reply.templates.update",
+          "reply.templates.delete",
+          "reply.policy.get",
+          "reply.policy.update",
+          "reply.approvals.list",
+          "conversation.draft.save",
+          "conversation.followup.set",
+          "conversation.followup.clear",
+          "followups.due",
+          "conversations.bulk.update",
+          "pipeline.board",
+          "calendar.booking.link.create",
+          "calendar.meeting.reschedule",
+          "calendar.meeting.cancel",
+          "campaign.followups.configure",
+          "campaign.variants.configure",
+          "recorder.settings.get",
+          "recorder.settings.update",
+          "recorder.bots.list",
+          "call.transcript.get",
+          "call.recording.get",
+          "call.transcripts.get",
+          "call.transcripts.search",
+          "readiness.check",
+          "sender.retire",
+          "sender.unretire",
+          "attribution.check",
+          "campaign.reengagement.prepare",
+          "agents.list",
+          "agent.inspect",
+          "agent.create.request",
+          "agent.pause",
+          "agent.resume",
+          "agent.credential.rotate",
+          "event_consumers.list",
+          "event_consumers.create",
+          "events.ack",
+          "events.snapshot",
+          "webhook.deliveries.list",
+          "webhooks.dlq.replay",
+          "classification.feedback",
+          "classification.quality",
+          "classification.backfill.plan",
+          "work_queue.list",
+          "work_item.claim",
+          "work_item.release",
+          "work_item.snooze",
+          "work_item.complete",
+          "work_queue.config.get",
+          "work_queue.config.update",
+          "metrics.reconcile",
+          "agent.heartbeat",
+          "agent.run.start",
+          "agent.run.end",
+          "agent.runs.list",
+          "agent.run.inspect",
+          "workspace.halt",
+          "workspace.resume",
+          "channel.halt",
+          "workspace.automation.inspect",
+          "feedback.submit",
+          "feedback.list",
+          "entity.resolve",
+          "entities.get",
+          "people.upsert",
+          "companies.upsert",
+          "entity.merge",
+          "entity.split",
+          "budget.status",
+          "call.stats.get",
+          "call.coaching.get",
+          "call.analytics.query",
+          "call.insight.get",
+          "call.access.list",
+          "call.audit.list",
+          "call.activity.get",
+          "call.analysis.get",
+          "call.outcome.confirm",
+          "call.attendance.get",
+          "call.insight.review",
+          "recorder.event.override.get",
+          "recorder.event.override.update",
+          "call.bot.cancel",
+          "call.bot.remove",
+          "call.recording.stop",
+          "recorder.status",
+          "call.bot.join",
+          "recorder.join.get",
+          "call.participant.withdrawal.report",
+          "call.delete",
+          "copy.approval.request",
+          "campaign.draft.plan",
+          "campaign.draft.readiness",
+          "prospecting.preview",
+          "companies.lookalike",
+          "commitments.propose",
+          "commitments.list",
+          "commitment.update",
+          "commitment.confirm.batch",
+          "commitment.reminder.draft",
+          "list.rename",
+          "list.archive",
+          "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+          nextAction: {
+            type: "string",
+            minLength: 1,
+          },
+          docsUrl: {
+            type: "string",
+            pattern: "^https://",
+          },
+          requiredScope: {
+            type: "string",
+            maxLength: 200,
+          },
+          reason: {
+            type: "string",
+            maxLength: 200,
+          },
+          setupUrl: {
+            type: "string",
+            maxLength: 2000,
+          },
+          requiredConnection: {
+            type: "string",
+            maxLength: 200,
+          },
+          retryAfterMs: {
+            type: "integer",
+            minimum: 0,
+          },
+          blockedUntil: {
+            $ref: "#/$defs/ResourceVersion",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "channel", "agent"],
+          },
+          haltedBy: {
+            type: "string",
+            maxLength: 200,
+          },
+        },
+      },
+      ResourceVersion: {
+        type: "string",
+        description:
+          "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
+        pattern:
+          "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}(?::?\\d{2})?)$",
+        minLength: 20,
+        maxLength: 32,
+      },
+      AgentRateLimitEnvelope: {
+        type: "object",
+        additionalProperties: false,
+        required: ["limit", "remaining", "resetAt", "credential", "workspace"],
+        properties: {
+          limit: {
+            type: "integer",
+            minimum: 0,
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          resetAt: {
+            type: "string",
+            format: "date-time",
+          },
+          credential: {
+            $ref: "#/$defs/AgentRateLimitBucket",
+          },
+          workspace: {
+            $ref: "#/$defs/AgentRateLimitBucket",
+          },
+        },
+      },
+      AgentRateLimitBucket: {
+        type: "object",
+        additionalProperties: false,
+        required: ["limit", "remaining", "resetAt"],
+        properties: {
+          limit: {
+            type: "integer",
+            minimum: 0,
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          resetAt: {
+            type: "string",
+            format: "date-time",
+          },
+        },
+      },
+      ProspectingOperationData: {
+        type: "object",
+        additionalProperties: true,
+        description:
+          "Exact workspace-scoped prospecting or disabled draft result. authorizesLaunch is always false when readiness is returned.",
+        properties: {
+          qualification: {
+            type: "object",
+            additionalProperties: false,
+            required: ["basis", "offeringFit", "contactAffiliation", "guidance"],
+            properties: {
+              basis: {
+                type: "string",
+                const: "published_filters",
+              },
+              offeringFit: {
+                type: "string",
+                const: "not_assessed",
+              },
+              contactAffiliation: {
+                type: "string",
+                const: "not_verified",
+              },
+              guidance: {
+                type: "string",
+              },
+            },
+            description:
+              "Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory.",
+          },
+          approvalId: {
+            type: ["string", "null"],
+          },
+          campaignId: {
+            type: ["string", "null"],
+          },
+          listId: {
+            type: ["string", "null"],
+          },
+          created: {
+            type: "boolean",
+          },
+          dryRun: {
+            type: "boolean",
+          },
+          ready: {
+            type: "boolean",
+          },
+          blockers: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+          total: {
+            type: "integer",
+          },
+          totalExact: {
+            type: "boolean",
+          },
+          expectedRevision: {
+            type: "string",
+          },
+          querySignature: {
+            type: "string",
+          },
+          companies: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: true,
+            },
+          },
+          nextCursor: {
+            type: ["string", "null"],
+          },
+        },
+      },
+    },
+  }),
+  "approvals.list": z.fromJSONSchema({
+    $ref: "#/$defs/ApprovalsListResult",
+    $defs: {
+      ApprovalsListResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              tool: {
+                type: "string",
+                const: "approvals.list",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/SalesReplyOperation",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+            required: ["tool"],
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          serverTime: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          contractVersion: {
+            type: "string",
+            const: "2.5.1",
+          },
+          rateLimit: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentRateLimitEnvelope",
+              },
+              {
+                type: "null",
+              },
+            ],
+            description:
+              "Current authenticated credential/workspace quota, negotiated by X-DMFaster-Rate-Limit: 1. Null before authentication or when authoritative quota is unavailable.",
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.messages.draft.list",
+          "campaign.messages.draft.update",
+          "campaign.messages.list",
+          "campaign.messages.update",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "sending.test.prepare",
+          "sending.test.send",
+          "sending.test.inspect",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.knowledge.search",
+          "companies.knowledge",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "sending.instagram.pacing.inspect",
+          "sending.instagram.pacing.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "instagram.extract.quote",
+          "instagram.extract.start",
+          "instagram.extract.inspect",
+          "instagram.extract.results",
+          "instagram.purchases.list",
+          "instagram.purchases.inspect",
+          "instagram.purchases.results",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+          "leads.prospect.quote",
+          "leads.prospect.start",
+          "leads.prospect.inspect",
+          "leads.prospect.results",
+          "leads.prospect.advance",
+          "leads.prospect.cancel",
+          "events.list",
+          "conversations.changes",
+          "suppressions.list",
+          "suppressions.add",
+          "suppressions.remove",
+          "workspace.sandbox.create",
+          "sandbox.seed",
+          "sandbox.inbound.simulate",
+          "sandbox.clock.advance",
+          "call.outcome.set",
+          "meeting.link",
+          "meeting.unlink",
+          "webhooks.create",
+          "webhooks.list",
+          "webhooks.update",
+          "webhooks.delete",
+          "webhooks.test",
+          "webhooks.replay",
+          "meetings.unlinked.list",
+          "pipeline.reconcile",
+          "workspace.agent_sales.get",
+          "workspace.agent_sales.update",
+          "sandbox.provider.update",
+          "reply.templates.list",
+          "reply.templates.create",
+          "reply.templates.update",
+          "reply.templates.delete",
+          "reply.policy.get",
+          "reply.policy.update",
+          "reply.approvals.list",
+          "conversation.draft.save",
+          "conversation.followup.set",
+          "conversation.followup.clear",
+          "followups.due",
+          "conversations.bulk.update",
+          "pipeline.board",
+          "calendar.booking.link.create",
+          "calendar.meeting.reschedule",
+          "calendar.meeting.cancel",
+          "campaign.followups.configure",
+          "campaign.variants.configure",
+          "recorder.settings.get",
+          "recorder.settings.update",
+          "recorder.bots.list",
+          "call.transcript.get",
+          "call.recording.get",
+          "call.transcripts.get",
+          "call.transcripts.search",
+          "readiness.check",
+          "sender.retire",
+          "sender.unretire",
+          "attribution.check",
+          "campaign.reengagement.prepare",
+          "agents.list",
+          "agent.inspect",
+          "agent.create.request",
+          "agent.pause",
+          "agent.resume",
+          "agent.credential.rotate",
+          "event_consumers.list",
+          "event_consumers.create",
+          "events.ack",
+          "events.snapshot",
+          "webhook.deliveries.list",
+          "webhooks.dlq.replay",
+          "classification.feedback",
+          "classification.quality",
+          "classification.backfill.plan",
+          "work_queue.list",
+          "work_item.claim",
+          "work_item.release",
+          "work_item.snooze",
+          "work_item.complete",
+          "work_queue.config.get",
+          "work_queue.config.update",
+          "metrics.reconcile",
+          "agent.heartbeat",
+          "agent.run.start",
+          "agent.run.end",
+          "agent.runs.list",
+          "agent.run.inspect",
+          "workspace.halt",
+          "workspace.resume",
+          "channel.halt",
+          "workspace.automation.inspect",
+          "feedback.submit",
+          "feedback.list",
+          "entity.resolve",
+          "entities.get",
+          "people.upsert",
+          "companies.upsert",
+          "entity.merge",
+          "entity.split",
+          "budget.status",
+          "call.stats.get",
+          "call.coaching.get",
+          "call.analytics.query",
+          "call.insight.get",
+          "call.access.list",
+          "call.audit.list",
+          "call.activity.get",
+          "call.analysis.get",
+          "call.outcome.confirm",
+          "call.attendance.get",
+          "call.insight.review",
+          "recorder.event.override.get",
+          "recorder.event.override.update",
+          "call.bot.cancel",
+          "call.bot.remove",
+          "call.recording.stop",
+          "recorder.status",
+          "call.bot.join",
+          "recorder.join.get",
+          "call.participant.withdrawal.report",
+          "call.delete",
+          "copy.approval.request",
+          "campaign.draft.plan",
+          "campaign.draft.readiness",
+          "prospecting.preview",
+          "companies.lookalike",
+          "commitments.propose",
+          "commitments.list",
+          "commitment.update",
+          "commitment.confirm.batch",
+          "commitment.reminder.draft",
+          "list.rename",
+          "list.archive",
+          "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+          nextAction: {
+            type: "string",
+            minLength: 1,
+          },
+          docsUrl: {
+            type: "string",
+            pattern: "^https://",
+          },
+          requiredScope: {
+            type: "string",
+            maxLength: 200,
+          },
+          reason: {
+            type: "string",
+            maxLength: 200,
+          },
+          setupUrl: {
+            type: "string",
+            maxLength: 2000,
+          },
+          requiredConnection: {
+            type: "string",
+            maxLength: 200,
+          },
+          retryAfterMs: {
+            type: "integer",
+            minimum: 0,
+          },
+          blockedUntil: {
+            $ref: "#/$defs/ResourceVersion",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "channel", "agent"],
+          },
+          haltedBy: {
+            type: "string",
+            maxLength: 200,
+          },
+        },
+      },
+      ResourceVersion: {
+        type: "string",
+        description:
+          "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
+        pattern:
+          "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}(?::?\\d{2})?)$",
+        minLength: 20,
+        maxLength: 32,
+      },
+      AgentRateLimitEnvelope: {
+        type: "object",
+        additionalProperties: false,
+        required: ["limit", "remaining", "resetAt", "credential", "workspace"],
+        properties: {
+          limit: {
+            type: "integer",
+            minimum: 0,
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          resetAt: {
+            type: "string",
+            format: "date-time",
+          },
+          credential: {
+            $ref: "#/$defs/AgentRateLimitBucket",
+          },
+          workspace: {
+            $ref: "#/$defs/AgentRateLimitBucket",
+          },
+        },
+      },
+      AgentRateLimitBucket: {
+        type: "object",
+        additionalProperties: false,
+        required: ["limit", "remaining", "resetAt"],
+        properties: {
+          limit: {
+            type: "integer",
+            minimum: 0,
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          resetAt: {
+            type: "string",
+            format: "date-time",
+          },
+        },
+      },
+      SalesReplyOperation: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          resource: {
+            $ref: "#/$defs/SalesReplyResource",
+          },
+          approval: {
+            $ref: "#/$defs/SalesReplyResource",
+          },
+          followup: {
+            $ref: "#/$defs/SalesReplyResource",
+          },
+          items: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/SalesReplyResource",
+            },
+            maxItems: 100,
+          },
+          filteredTotal: {
+            type: "integer",
+            minimum: 0,
+          },
+          nextCursor: {
+            type: ["string", "null"],
+          },
+          scope: {
+            type: "object",
+            additionalProperties: true,
+          },
+          receiptId: {
+            type: "string",
+            minLength: 1,
+            maxLength: 160,
+          },
+          approvalUrl: {
+            type: "string",
+          },
+          policyDecision: {
+            type: "string",
+            enum: ["auto_allowed", "approval_required", "denied"],
+          },
+          conversationUpdatedAt: {
+            $ref: "#/$defs/ResourceVersion",
+          },
+          cancelledIds: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/ResourceId",
+            },
+            maxItems: 100,
+          },
+        },
+        required: [],
+      },
+      SalesReplyResource: {
+        type: "object",
+        additionalProperties: true,
+        properties: {
+          id: {
+            type: ["string", "null"],
+          },
+          kind: {
+            type: "string",
+            minLength: 1,
+            maxLength: 160,
+          },
+          revision: {
+            type: "integer",
+            minimum: 0,
+          },
+          status: {
+            type: "string",
+            minLength: 1,
+            maxLength: 160,
+          },
+          conversationId: {
+            type: ["string", "null"],
+          },
+          updatedAt: {
+            type: ["string", "null"],
+          },
+          template: {
+            $ref: "#/$defs/ReplyTemplate",
+          },
+          policy: {
+            $ref: "#/$defs/ReplyPolicy",
+          },
+        },
+        required: ["id", "revision", "status"],
+      },
+      ReplyTemplate: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          name: {
+            type: "string",
+            minLength: 1,
+            maxLength: 120,
+          },
+          language: {
+            type: "string",
+            enum: ["fi", "en"],
+          },
+          channels: {
+            type: "array",
+            items: {
+              type: "string",
+              enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+            },
+            maxItems: 5,
+          },
+          intents: {
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 80,
+            },
+            maxItems: 30,
+          },
+          body: {
+            type: "string",
+            minLength: 1,
+            maxLength: 10000,
+          },
+          maxLength: {
+            type: "integer",
+            minimum: 1,
+            maximum: 10000,
+          },
+        },
+        required: ["name", "language", "channels", "intents", "body", "maxLength"],
+      },
+      ReplyPolicy: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          enabled: {
+            type: "boolean",
+          },
+          allowedIntents: {
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 80,
+            },
+            maxItems: 30,
+          },
+          allowedChannels: {
+            type: "array",
+            items: {
+              type: "string",
+              enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+            },
+            maxItems: 5,
+          },
+          allowedTemplateIds: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/ResourceId",
+            },
+            maxItems: 100,
+          },
+          freeTextAllowed: {
+            type: "boolean",
+            const: false,
+          },
+          excludeIfOptOut: {
+            type: "boolean",
+            const: true,
+          },
+          hours: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              tz: {
+                type: "string",
+                minLength: 1,
+                maxLength: 80,
+              },
+              start: {
+                type: "string",
+                pattern: "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+              },
+              end: {
+                type: "string",
+                pattern: "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+              },
+              weekdays: {
+                type: "array",
+                items: {
+                  type: "integer",
+                  minimum: 1,
+                  maximum: 7,
+                },
+                maxItems: 7,
+              },
+            },
+            required: ["tz", "start", "end", "weekdays"],
+          },
+          maxAutoRepliesPerDay: {
+            type: "integer",
+            minimum: 1,
+            maximum: 1000,
+          },
+          maxPerConversationPerDay: {
+            type: "integer",
+            minimum: 1,
+            maximum: 20,
+          },
+          requireApprovalIfConfidenceBelow: {
+            type: "number",
+            minimum: 0,
+            maximum: 1,
+          },
+        },
+        required: [
+          "enabled",
+          "allowedIntents",
+          "allowedChannels",
+          "allowedTemplateIds",
+          "freeTextAllowed",
+          "excludeIfOptOut",
+          "hours",
+          "maxAutoRepliesPerDay",
+          "maxPerConversationPerDay",
+          "requireApprovalIfConfidenceBelow",
+        ],
+      },
+      ResourceId: {
+        description:
+          "A resource identifier returned by DM Faster. Never guess an identifier from a name.",
+        "x-dmfaster-trim": true,
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+        pattern: ".*\\S.*",
       },
     },
   }),
