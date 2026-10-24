@@ -102,6 +102,7 @@ if (!existsSync(skillPath)) {
     "pipeline_inspect",
     "company_timeline",
     "industry_lookup",
+    "prospect_query",
     "campaign_validate",
     "audience_preview",
     "lists_list",

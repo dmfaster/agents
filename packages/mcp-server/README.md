@@ -20,8 +20,10 @@ the acquisition quote uses the normal account grant. See
 `src/instagram-evaluation.ts` for the optional evaluation configuration.
 These tools are not registered by hosted MCP or the current published plugin.
 
-Local stdio MCP server for 91 DM Faster Agent 2.0 domain tools, one local
-`connection_status` tool, and portable `companies_workspace`, `campaign_workspace` and `workspace_open` views. It uses the MCP TypeScript SDK
+The default local stdio MCP server exposes the generated DM Faster domain-tool
+catalog and one local `connection_status` tool. Retained workspace UI adapters
+are registered only when an embedding explicitly opts into `uiTools`; the
+published CLI and hosted connection remain headless. It uses the MCP TypeScript SDK
 v2 serving entry in strict modern-only mode. MCP 2026-07-28 clients use the new
 per-request protocol; 2025-era initialization is explicitly rejected. The
 server is deliberately stateless; the caller sends the complete latest campaign
@@ -33,7 +35,7 @@ Detailed sequences and recovery rules live on their entry tool descriptions, inc
 validation, exact preview, private drafts and owner-authorized launch. Hosted connection
 guidance uses host reconnect; local connections use the CLI scope-upgrade flow.
 
-Hosts implementing the standard MCP Apps extension render
+For explicitly enabled UI adapters, hosts implementing the standard MCP Apps extension render
 `campaign_workspace` as an inline campaign editor. The self-contained
 `ui://dmfaster/campaign-workspace/v7.html` resource uses the MCP Apps
 `2026-01-26` bridge and requires no external scripts, styles, frames or cookies.
@@ -117,8 +119,8 @@ tools satisfy the credential's scopes, with missing scopes for the others.
 Workspace role, plan, and action preconditions still apply when a tool runs.
 
 ```bash
-npx --yes @dmfaster/cli@2.6.2 auth login --json
-npx --yes @dmfaster/mcp-server@2.6.2
+npx --yes @dmfaster/cli@2.7.0 auth login --json
+npx --yes @dmfaster/mcp-server@2.7.0
 ```
 
 Login defaults to the complete Agent 2.0 capability set. Use `auth login
@@ -253,7 +255,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@2.6.2"]
+      "args": ["--yes", "@dmfaster/mcp-server@2.7.0"]
     }
   }
 }
@@ -565,3 +567,8 @@ so a changed audience can return to the campaign template before a new launch.
 ### Compact catalog
 
 The default MCP catalog exposes the five prospecting workflow tools and `tools_discover` / `tools_call`. Discovery returns only granted tools and can include their exact input schema. `tools_call` accepts the MCP tool name and validates the response against the same generated contract. Read `dmfaster://docs/agents` for guidance. Local clients may set `DMFASTER_MCP_PROFILE=full`; UI-only tools remain hidden unless explicitly enabled by the host. `npm run check:agent-catalog` prints bytes and estimated tokens for both profiles and enforces the 100 KB compact budget.
+
+Tool discovery omits large output schemas by default; successful calls still return
+complete `structuredContent` and text. Embedders that need the generated contracts
+can pass `fullOutputSchemas: true` to `createDmfasterMcpCore`. Input validation and
+domain authorization apply in both modes.

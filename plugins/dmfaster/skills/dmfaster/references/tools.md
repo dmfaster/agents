@@ -22,7 +22,7 @@ to perform an action. It has no domain HTTP or CLI operation.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@2.6.2
+npx --yes @dmfaster/cli@2.7.0
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
@@ -72,6 +72,7 @@ only one input in a command may use `-`.
 | `pipeline_note_add`                | `pipeline.note.add`                | `pipeline note add --input FILE --json`                                                         | `pipeline:read`, `pipeline:write`                     | idempotent private note                                                        |
 | `company_timeline`                 | `company.timeline`                 | `company timeline <campaign-id> <outreach-id> --json`                                           | `pipeline:read`, `campaigns:read`                     | bounded read                                                                   |
 | `industry_lookup`                  | `industry.lookup`                  | `industry lookup <query> [options] --json`                                                      | `audiences:read`                                      | planning read                                                                  |
+| `prospect_query`                   | `prospect.query`                   | `prospect query --input FILE --json`                                                            | `audiences:read`                                      | exact whole-set ICP query                                                     |
 | `campaign_validate`                | `campaign.validate`                | `campaign validate --state <file> --json`                                                       | `audiences:read`                                      | planning read                                                                  |
 | `audience_preview`                 | `audience.preview`                 | `audience preview --state <file> [--sample-size N] --json`                                      | `audiences:read`                                      | exact preview read                                                             |
 | `lists_list`                       | `lists.list`                       | `lists list [--query TEXT] [--limit N] [--offset N] --json`                                     | `campaigns:read`                                      | saved-list discovery                                                           |
@@ -141,6 +142,15 @@ See [reviews-and-bookings.md](reviews-and-bookings.md) for runner, cohort, copy 
 
 ## Company research and saved contacts
 
+For a plain-language ICP, call `prospect_query` once. It resolves industry words,
+Finnish regions and cities, employee and revenue bounds, and technology names.
+The result is an exact whole-set total. Echo `nextCursor` alone for the next
+page, or `querySignature` alone to rerun the same ICP. No contact channel is
+applied unless requested. SaaS website evidence is counted and does not narrow
+the registered industry set unless `evidence` is `require`. Rows are paged;
+there is no export file. `audience_preview` remains the way to obtain the
+server-issued `reviewedAudience` for a campaign draft.
+
 Use `companies_filters` to discover the current Companies app filter options,
 then `companies_search` with the exact requested criteria. For example:
 
@@ -152,8 +162,8 @@ then `companies_search` with the exact requested criteria. For example:
 ```
 
 Company tools accept a JSON file through CLI `--input FILE`. Search
-pages contain at most 100 companies. Echo the returned `querySignature` and
-`expectedRevision` when paging; do not present the sample size as an exact total.
+pages contain at most 100 companies. Echo the returned `nextCursor` to continue.
+`querySignature` and `expectedRevision` still identify the search. Do not present the sample size as an exact total.
 Call `company_inspect` with returned country/businessId identities for full
 research details, decision-makers, contact routes, and freshness evidence.
 Filters on company search are not interchangeable with the campaign-state

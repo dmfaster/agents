@@ -14,7 +14,7 @@ const senders = {
     {
       id: "mailbox",
       emailAddress: "owner@example.invalid",
-      status: "connected",
+      status: "healthy",
       sendEnabled: true,
       canSend: true,
       needsReauthorization: false,

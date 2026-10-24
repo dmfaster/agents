@@ -4,9 +4,9 @@ import { PassThrough } from "node:stream";
 import test from "node:test";
 
 import type { AgentToolInputMap, AgentToolName, AgentToolResult } from "@dmfaster/sdk";
-import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
+import { serveStdio, StdioServerTransport } from "@modelcontextprotocol/server/stdio";
 
-import { MCP_SERVER_INSTRUCTIONS, serveDmfasterStdio } from "../src/server.ts";
+import { MCP_SERVER_INSTRUCTIONS, createDmfasterMcpServer } from "../src/server.ts";
 import { MCP_TOOL_NAMES, type AgentInvoker } from "../src/tools.ts";
 import { evidenceInitial } from "../browser-tests/companies-fixture.mjs";
 import {
@@ -52,24 +52,25 @@ function createWire(client: AgentInvoker) {
   const output = new PassThrough();
   const lines = createInterface({ input: output, crlfDelay: Infinity });
   const iterator = lines[Symbol.asyncIterator]();
-  const handle = serveDmfasterStdio(
-    client,
-    {
-      transport: new StdioServerTransport(input, output),
-    },
-    {
-      env: { DMFASTER_API_URL: "https://app.dmfaster.test" },
-      auth: {
-        credentialStore: {
-          kind: "macos-keychain",
-          async get() {
-            return null;
+  // Explicitly exercise the retained optional UI adapter; the shipped server is headless.
+  const handle = serveStdio(
+    () =>
+      createDmfasterMcpServer({
+        client,
+        uiTools: true,
+        env: { DMFASTER_API_URL: "https://app.dmfaster.test", DMFASTER_MCP_PROFILE: "full" },
+        auth: {
+          credentialStore: {
+            kind: "macos-keychain",
+            async get() {
+              return null;
+            },
+            async set() {},
+            async delete() {},
           },
-          async set() {},
-          async delete() {},
         },
-      },
-    },
+      }),
+    { transport: new StdioServerTransport(input, output), legacy: "reject" },
   );
 
   return {
@@ -94,7 +95,7 @@ const modernEnvelope = {
   "io.modelcontextprotocol/clientCapabilities": {},
 };
 
-test("all evidence lifecycle tools keep full structured quotes and send compact text over MCP", async (t) => {
+test("all evidence lifecycle tools preserve full results for structured and text-only MCP clients", async (t) => {
   const data = evidenceInitial().result.data;
   const client: AgentInvoker = {
     async invoke(tool) {
@@ -145,11 +146,7 @@ test("all evidence lifecycle tools keep full structured quotes and send compact 
     assert.deepEqual(received.structuredContent, { ...result(entry.tool), data });
     const content = received.content as { type: string; text: string }[];
     assert.equal(content.length, 1);
-    assert.match(content[0]!.text, /accepted matches so far/);
-    assert.match(content[0]!.text, /Market audience total is unavailable/);
-    assert.doesNotMatch(content[0]!.text, /contentHash|websiteUrl|criterionId/);
-    assert(content[0]!.text.length < 800);
-    assert(content[0]!.text.length < JSON.stringify(data).length);
+    assert.deepEqual(JSON.parse(content[0]!.text), received.structuredContent);
   }
 });
 
@@ -185,9 +182,8 @@ test("progress-only evidence status forwards the typed flag and distinguishes om
   const received = response.result as JsonObject;
   assert.deepEqual(received.structuredContent, { ...result("companies.evidence.status"), data });
   const content = received.content as { text: string }[];
-  assert.match(content[0]!.text, /Progress only: company rows and quotations were not fetched/);
-  assert.match(content[0]!.text, /Use companies_evidence_results/);
-  assert.doesNotMatch(content[0]!.text, /page contains 0|Original evidence/);
+  assert.deepEqual(JSON.parse(content[0]!.text), received.structuredContent);
+  assert.equal(data.companiesIncluded, false);
 });
 
 test("mention resource templates reach the current domain client with decoded identities", async (t) => {
@@ -323,36 +319,21 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   });
   const listed = await wire.receive();
   const tools = (listed.result as JsonObject).tools as Array<JsonObject>;
-  assert.deepEqual(
-    tools.map((tool) => tool.name),
-    MCP_TOOL_NAMES,
-  );
-  for (const tool of tools.filter(
-    (candidate) =>
-      ![
-        "connection_status",
-        "campaign_workspace",
-        "companies_workspace",
-        "workspace_open",
-      ].includes(String(candidate.name)),
-  )) {
-    const outputSchema = tool.outputSchema as JsonObject;
-    assert.equal(outputSchema.type, "object", `${tool.name} must advertise a result schema`);
-    if (tool.name === "agent_heartbeat") {
-      const variants = outputSchema.oneOf as JsonObject[];
-      assert.equal(variants.length, 2, "heartbeat describes full and compact results");
-      for (const variant of variants) {
-        assert.equal(variant.type, "object");
-        assert.ok(variant.properties, "each heartbeat variant describes its fields");
-      }
-      assert.ok(variants.some((variant) => (variant.properties as JsonObject).durationMs));
-      assert.ok(variants.some((variant) => !(variant.properties as JsonObject).durationMs));
-    } else {
-      assert.ok(outputSchema.properties, `${tool.name} must describe its result fields`);
-    }
+  assert.deepEqual(tools.map((tool) => tool.name).sort(), [...MCP_TOOL_NAMES].sort());
+  for (const name of [
+    "senders_inspect",
+    "agent_heartbeat",
+    "companies_search",
+    "campaign_workspace",
+    "companies_workspace",
+    "workspace_open",
+  ]) {
+    assert.equal(
+      tools.find((tool) => tool.name === name)?.outputSchema,
+      undefined,
+      `${name} omits full output schemas by default`,
+    );
   }
-  for (const tool of tools)
-    assert.ok(tool.outputSchema, `${tool.name} must advertise a result schema`);
   assert.equal(
     (tools.find((tool) => tool.name === "campaign_launch")?._meta as JsonObject)[
       "openai/widgetAccessible"
@@ -413,6 +394,7 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   assert.deepEqual(
     resources.map((resource) => resource.uri),
     [
+      "dmfaster://docs/agents",
       CAMPAIGN_WORKSPACE_RESOURCE_URI,
       PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI,
       V5_CAMPAIGN_WORKSPACE_RESOURCE_URI,
@@ -422,7 +404,11 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
       LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI,
     ],
   );
-  assert.equal(resources[0]?.mimeType, MCP_APP_RESOURCE_MIME_TYPE);
+  assert.equal(resources[0]?.mimeType, "text/markdown");
+  assert.equal(
+    resources.find((resource) => resource.uri === CAMPAIGN_WORKSPACE_RESOURCE_URI)?.mimeType,
+    MCP_APP_RESOURCE_MIME_TYPE,
+  );
 
   const mentionsTool = tools.find((tool) => tool.name === "workspace_mentions");
   assert.ok(mentionsTool);

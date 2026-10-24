@@ -461,7 +461,7 @@ test("recipient message tools preserve exact per-recipient copy and validate bou
     campaignId: "campaign",
     runId: "run",
     expectedCampaignUpdatedAt: version,
-    idempotencyKey: "copy-1",
+    idempotencyKey: "recipient-copy-1",
     edits: [
       {
         jobId: "a",
@@ -489,6 +489,7 @@ test("recipient message tools preserve exact per-recipient copy and validate bou
   assert.deepEqual(calls[1], { tool: "campaign.messages.update", input });
   await update.call({ ...input, edits: [{ ...input.edits[0], message: null }] });
   for (const patch of [
+    { idempotencyKey: "short" },
     { userId: "foreign" },
     { edits: [] },
     { edits: Array(101).fill(input.edits[0]) },
@@ -522,6 +523,7 @@ test("draft personalization exposes exact audience versions and unique copy befo
   assert.deepEqual(calls[1], { tool: "campaign.messages.draft.update", input });
   await update.call({ ...input, edits: [{ ...input.edits[0], message: null }] });
   for (const patch of [
+    { idempotencyKey: "short" },
     { userId: "foreign" },
     { edits: [] },
     { edits: Array(101).fill(input.edits[0]) },

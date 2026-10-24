@@ -152,7 +152,7 @@ test("opening an evidence workspace reads its pinned private run and preserves t
     { tool: "companies.evidence.results", input: { ...evidenceRun, pageSize: 20 } },
   ]);
   assert.equal(result.structuredContent.result, payload.result);
-  assert(result.content[0]!.text.includes("Market audience total is unavailable"));
+  assert.deepEqual(JSON.parse(result.content[0]!.text), payload.result);
   assert(workspaceOutputSchema.safeParse(result.structuredContent).success);
   assert.throws(() =>
     companiesWorkspaceInputSchema.parse({ evidenceRun, filters: { countries: ["FI"] } }),

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DM Faster Agent API
-  version: 2.6.2
+  version: 2.7.0
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
@@ -2802,7 +2802,7 @@ paths:
         name: companies_filters
         title: Discover company filters
         description:
-          Read all live Companies filter fields, country-specific options and restrictions. No campaign
+          Read all live Companies filter fields, country-specific options and restrictions, including Finnish regions. No campaign
           state required.
         annotations:
           readOnlyHint: true
@@ -2879,6 +2879,59 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CompanySuggestionsResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/prospect.query:
+    post:
+      tags:
+        - Agent tools
+      operationId: prospectQuery
+      summary: Query an ICP
+      description:
+        One call from a plain-language or structured ICP to an exact whole-set total and compact rows.
+        Pages cover every matching company. Echo nextCursor alone to continue.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - audiences:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: prospect_query
+        title: Query an ICP
+        description:
+          Give an ICP in words or codes. Returns exact totals and every matching company, paged up to 1000
+          compact rows. Echo nextCursor alone for the next page. Country defaults to Finland.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: B2B company prospecting
+        usage: prospect query --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProspectQueryInput"
+      responses:
+        "200":
+          description: ICP query
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProspectQueryResult"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -14148,6 +14201,7 @@ components:
         - campaign.pause
         - companies.filters
         - companies.suggest
+        - prospect.query
         - companies.search
         - companies.evidence.search
         - companies.knowledge.search
@@ -14549,7 +14603,7 @@ components:
               const: tool_execution
         contractVersion:
           type: string
-          const: 2.6.2
+          const: 2.7.0
         rateLimit:
           oneOf:
             - $ref: "#/components/schemas/AgentRateLimitEnvelope"
@@ -15007,6 +15061,10 @@ components:
       type: object
       additionalProperties: false
       properties:
+        responseMode:
+          type: string
+          enum: [compact, full]
+          description: Compact returns conversation identity, reply state and a bounded latest-message preview. Full returns full context. When omitted, view and fields control the response.
         from:
           $ref: "#/components/schemas/ResourceVersion"
         to:
@@ -18850,20 +18908,35 @@ components:
       properties:
         id:
           type: string
+        campaignId:
+          type: string
         channel:
+          $ref: "#/components/schemas/InboxChannel"
+        targetHandle:
           type: string
         targetName:
           type: string
+        status:
+          type: string
         needsReply:
           type: boolean
-        lastMessageAt:
-          type: string
-        lastInboundAt:
+        unreadCount:
+          type: integer
+        interestLevel:
           type: string
         interestIntent:
           type: string
+        updatedAt:
+          type: string
+        lastInboundAt:
+          type: string
+        lastMessageAt:
+          type: string
+        lastMessageDirection:
+          type: string
         lastMessageText:
           type: string
+          maxLength: 240
     InboxConversationSummary:
       type: object
       additionalProperties: false
@@ -21160,6 +21233,350 @@ components:
             data:
               oneOf:
                 - $ref: "#/components/schemas/CompanyFiltersData"
+                - type: "null"
+    ProspectQueryInput:
+      type: object
+      additionalProperties: false
+      description:
+        Plain-language icp and explicit fields. Explicit fields override the phrase. A cursor or
+        querySignature alone reruns the saved ICP. runId may be a server id run_… or any correlation
+        token of letters, numbers, dot, underscore, colon or hyphen.
+      properties:
+        country:
+          $ref: "#/components/schemas/SupportedCountry"
+        icp:
+          type: string
+          maxLength: 500
+        industries:
+          type: array
+          maxItems: 8
+          items:
+            type: string
+            minLength: 1
+            maxLength: 80
+        regions:
+          type: array
+          maxItems: 19
+          items:
+            type: string
+            maxLength: 80
+        cities:
+          type: array
+          maxItems: 32
+          items:
+            type: string
+            maxLength: 80
+        employees:
+          type: object
+          additionalProperties: false
+          properties:
+            min:
+              type: integer
+              minimum: 0
+              maximum: 1000000
+            max:
+              type: integer
+              minimum: 0
+              maximum: 1000000
+            unknown:
+              type: string
+              enum:
+                - include
+                - exclude
+                - only
+        revenueEur:
+          type: object
+          additionalProperties: false
+          properties:
+            min:
+              type: integer
+              minimum: 0
+            max:
+              type: integer
+              minimum: 0
+            unknown:
+              type: string
+              enum:
+                - include
+                - exclude
+        technologies:
+          type: array
+          maxItems: 8
+          items:
+            type: string
+            maxLength: 40
+        websiteFacts:
+          type: array
+          maxItems: 3
+          items:
+            type: string
+            enum:
+              - b2c
+              - b2b
+              - saas
+        evidence:
+          type: string
+          enum:
+            - annotate
+            - require
+            - include_evidence_only
+        fundingPublic:
+          type: boolean
+        fundingFromYear:
+          type: string
+          minLength: 4
+          maxLength: 4
+          pattern: "^20[0-9]{2}$"
+        googleAds:
+          type: string
+          enum:
+            - last_30_days
+            - last_90_days
+            - last_12_months
+        requireChannel:
+          type: string
+          enum:
+            - none
+            - any
+            - linkedin
+            - email
+            - instagram
+            - facebook
+            - sms
+        excludePreviouslyContacted:
+          type: boolean
+        activeOnly:
+          type: boolean
+        format:
+          type: string
+          enum:
+            - rows
+            - columns
+            - count
+        pageSize:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        cursor:
+          type: string
+          maxLength: 12000
+        querySignature:
+          type: string
+          maxLength: 12000
+        runId:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Optional run correlation. Also accepted as X-DMFaster-Run-Id.
+    ProspectQueryData:
+      type: object
+      additionalProperties: false
+      required:
+        - resolved
+        - totals
+        - columns
+        - rows
+        - nextCursor
+        - querySignature
+      properties:
+        resolved:
+          type: object
+          additionalProperties: false
+          required:
+            - country
+            - activeOnly
+            - channel
+            - evidence
+            - labelSource
+          properties:
+            country:
+              $ref: "#/components/schemas/SupportedCountry"
+            activeOnly:
+              type: boolean
+            industries:
+              type: array
+              maxItems: 8
+              items:
+                type: object
+                additionalProperties: false
+                required:
+                  - label
+                  - labelSource
+                properties:
+                  label:
+                    type: string
+                    maxLength: 80
+                  labelSource:
+                    type: string
+                    enum:
+                      - code
+                      - tech
+                  evidence:
+                    type: string
+                    enum:
+                      - not_checked
+            regions:
+              type: array
+              maxItems: 19
+              items:
+                type: string
+                maxLength: 80
+            cities:
+              type: array
+              maxItems: 32
+              items:
+                type: string
+                maxLength: 80
+            employees:
+              type: object
+              additionalProperties: false
+              properties:
+                min:
+                  type: integer
+                  minimum: 0
+                max:
+                  type: integer
+                  minimum: 0
+                unknown:
+                  type: string
+                  enum:
+                    - include
+                    - exclude
+                    - only
+            revenueEur:
+              type: object
+              additionalProperties: false
+              properties:
+                min:
+                  type: integer
+                  minimum: 0
+                max:
+                  type: integer
+                  minimum: 0
+                unknown:
+                  type: string
+                  enum:
+                    - include
+                    - exclude
+            technologies:
+              type: array
+              maxItems: 8
+              items:
+                type: string
+                maxLength: 40
+            websiteFacts:
+              type: array
+              maxItems: 3
+              items:
+                type: string
+                enum:
+                  - b2c
+                  - b2b
+                  - saas
+            evidence:
+              type: string
+              enum:
+                - annotate
+                - require
+                - include_evidence_only
+            channel:
+              type: string
+              enum:
+                - none
+                - any
+                - linkedin
+                - email
+                - instagram
+                - facebook
+                - sms
+            labelSource:
+              type: string
+              enum:
+                - code
+                - tech
+            excludePreviouslyContacted:
+              type: boolean
+        totals:
+          type: object
+          additionalProperties: false
+          required:
+            - exact
+          properties:
+            exact:
+              type: boolean
+            reason:
+              type: string
+              maxLength: 300
+            matched:
+              type: integer
+              minimum: 0
+            withAnyChannel:
+              type: integer
+              minimum: 0
+            eligible:
+              type: integer
+              minimum: 0
+            unknownSize:
+              type: integer
+              minimum: 0
+            unknownRevenue:
+              type: integer
+              minimum: 0
+            previouslyContacted:
+              type: integer
+              minimum: 0
+            evidencePositive:
+              type: integer
+              minimum: 0
+            evidenceUnassessed:
+              type: integer
+              minimum: 0
+            evidenceOnlyAvailable:
+              type: integer
+              minimum: 0
+        columns:
+          type: array
+          maxItems: 16
+          items:
+            type: string
+            maxLength: 40
+        rows:
+          type: array
+          maxItems: 1000
+          items:
+            type: array
+            maxItems: 16
+            items:
+              oneOf:
+                - type: string
+                  maxLength: 300
+                - type: integer
+                - type: "null"
+        nextCursor:
+          type: string
+          maxLength: 12000
+        querySignature:
+          type: string
+          maxLength: 12000
+        notes:
+          type: array
+          maxItems: 24
+          items:
+            type: string
+            maxLength: 500
+        export:
+          type: "null"
+    ProspectQueryResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              type: string
+              const: prospect.query
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/ProspectQueryData"
                 - type: "null"
     CompanySearchInput:
       type: object
@@ -31944,6 +32361,7 @@ components:
             - unassigned
             - any
         view:
+          description: Compact is the default and omits full person, company and explanation context while retaining IDs, claim and version fences. Use standard for the full work item.
           type: string
           enum:
             - compact
@@ -32872,7 +33290,7 @@ components:
           description: Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox.
         contractVersion:
           type: string
-          const: 2.6.2
+          const: 2.7.0
         data:
           type: object
           additionalProperties: false

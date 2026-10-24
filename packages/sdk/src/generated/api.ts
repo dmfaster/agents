@@ -3664,6 +3664,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/prospect.query": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Query an ICP
+         * @description One call from a plain-language or structured ICP to an exact whole-set total and compact rows. Pages cover every matching company. Echo nextCursor alone to continue.
+         */
+        post: operations["prospectQuery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/prospecting.preview": {
         parameters: {
             query?: never;
@@ -5204,7 +5224,7 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.6.2";
+            contractVersion: "2.7.0";
             data: {
                 nextInSeconds: number;
             };
@@ -5580,7 +5600,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel" | "events.list" | "conversations.changes" | "suppressions.list" | "suppressions.add" | "suppressions.remove" | "workspace.sandbox.create" | "sandbox.seed" | "sandbox.inbound.simulate" | "sandbox.clock.advance" | "call.outcome.set" | "meeting.link" | "meeting.unlink" | "webhooks.create" | "webhooks.list" | "webhooks.update" | "webhooks.delete" | "webhooks.test" | "webhooks.replay" | "meetings.unlinked.list" | "pipeline.reconcile" | "workspace.agent_sales.get" | "workspace.agent_sales.update" | "sandbox.provider.update" | "reply.templates.list" | "reply.templates.create" | "reply.templates.update" | "reply.templates.delete" | "reply.policy.get" | "reply.policy.update" | "reply.approvals.list" | "conversation.draft.save" | "conversation.followup.set" | "conversation.followup.clear" | "followups.due" | "conversations.bulk.update" | "pipeline.board" | "calendar.booking.link.create" | "calendar.meeting.reschedule" | "calendar.meeting.cancel" | "campaign.followups.configure" | "campaign.variants.configure" | "recorder.settings.get" | "recorder.settings.update" | "recorder.bots.list" | "call.transcript.get" | "call.recording.get" | "call.transcripts.get" | "call.transcripts.search" | "readiness.check" | "sender.retire" | "sender.unretire" | "attribution.check" | "campaign.reengagement.prepare" | "agents.list" | "agent.inspect" | "agent.create.request" | "agent.pause" | "agent.resume" | "agent.credential.rotate" | "event_consumers.list" | "event_consumers.create" | "events.ack" | "events.snapshot" | "webhook.deliveries.list" | "webhooks.dlq.replay" | "classification.feedback" | "classification.quality" | "classification.backfill.plan" | "work_queue.list" | "work_item.claim" | "work_item.release" | "work_item.snooze" | "work_item.complete" | "work_queue.config.get" | "work_queue.config.update" | "metrics.reconcile" | "agent.heartbeat" | "agent.run.start" | "agent.run.end" | "agent.runs.list" | "agent.run.inspect" | "workspace.halt" | "workspace.resume" | "channel.halt" | "workspace.automation.inspect" | "feedback.submit" | "feedback.list" | "entity.resolve" | "entities.get" | "people.upsert" | "companies.upsert" | "entity.merge" | "entity.split" | "budget.status" | "call.stats.get" | "call.coaching.get" | "call.analytics.query" | "call.insight.get" | "call.access.list" | "call.audit.list" | "call.activity.get" | "call.analysis.get" | "call.outcome.confirm" | "call.attendance.get" | "call.insight.review" | "recorder.event.override.get" | "recorder.event.override.update" | "call.bot.cancel" | "call.bot.remove" | "call.recording.stop" | "recorder.status" | "call.bot.join" | "recorder.join.get" | "call.participant.withdrawal.report" | "call.delete" | "copy.approval.request" | "campaign.draft.plan" | "campaign.draft.readiness" | "prospecting.preview" | "companies.lookalike" | "commitments.propose" | "commitments.list" | "commitment.update" | "commitment.confirm.batch" | "commitment.reminder.draft" | "list.rename" | "list.archive" | "campaign.draft.archive" | "copy.approval.inspect" | "copy.approval.cancel" | "approval.cancel" | "approvals.list";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "prospect.query" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel" | "events.list" | "conversations.changes" | "suppressions.list" | "suppressions.add" | "suppressions.remove" | "workspace.sandbox.create" | "sandbox.seed" | "sandbox.inbound.simulate" | "sandbox.clock.advance" | "call.outcome.set" | "meeting.link" | "meeting.unlink" | "webhooks.create" | "webhooks.list" | "webhooks.update" | "webhooks.delete" | "webhooks.test" | "webhooks.replay" | "meetings.unlinked.list" | "pipeline.reconcile" | "workspace.agent_sales.get" | "workspace.agent_sales.update" | "sandbox.provider.update" | "reply.templates.list" | "reply.templates.create" | "reply.templates.update" | "reply.templates.delete" | "reply.policy.get" | "reply.policy.update" | "reply.approvals.list" | "conversation.draft.save" | "conversation.followup.set" | "conversation.followup.clear" | "followups.due" | "conversations.bulk.update" | "pipeline.board" | "calendar.booking.link.create" | "calendar.meeting.reschedule" | "calendar.meeting.cancel" | "campaign.followups.configure" | "campaign.variants.configure" | "recorder.settings.get" | "recorder.settings.update" | "recorder.bots.list" | "call.transcript.get" | "call.recording.get" | "call.transcripts.get" | "call.transcripts.search" | "readiness.check" | "sender.retire" | "sender.unretire" | "attribution.check" | "campaign.reengagement.prepare" | "agents.list" | "agent.inspect" | "agent.create.request" | "agent.pause" | "agent.resume" | "agent.credential.rotate" | "event_consumers.list" | "event_consumers.create" | "events.ack" | "events.snapshot" | "webhook.deliveries.list" | "webhooks.dlq.replay" | "classification.feedback" | "classification.quality" | "classification.backfill.plan" | "work_queue.list" | "work_item.claim" | "work_item.release" | "work_item.snooze" | "work_item.complete" | "work_queue.config.get" | "work_queue.config.update" | "metrics.reconcile" | "agent.heartbeat" | "agent.run.start" | "agent.run.end" | "agent.runs.list" | "agent.run.inspect" | "workspace.halt" | "workspace.resume" | "channel.halt" | "workspace.automation.inspect" | "feedback.submit" | "feedback.list" | "entity.resolve" | "entities.get" | "people.upsert" | "companies.upsert" | "entity.merge" | "entity.split" | "budget.status" | "call.stats.get" | "call.coaching.get" | "call.analytics.query" | "call.insight.get" | "call.access.list" | "call.audit.list" | "call.activity.get" | "call.analysis.get" | "call.outcome.confirm" | "call.attendance.get" | "call.insight.review" | "recorder.event.override.get" | "recorder.event.override.update" | "call.bot.cancel" | "call.bot.remove" | "call.recording.stop" | "recorder.status" | "call.bot.join" | "recorder.join.get" | "call.participant.withdrawal.report" | "call.delete" | "copy.approval.request" | "campaign.draft.plan" | "campaign.draft.readiness" | "prospecting.preview" | "companies.lookalike" | "commitments.propose" | "commitments.list" | "commitment.update" | "commitment.confirm.batch" | "commitment.reminder.draft" | "list.rename" | "list.archive" | "campaign.draft.archive" | "copy.approval.inspect" | "copy.approval.cancel" | "approval.cancel" | "approvals.list";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -5594,7 +5614,7 @@ export interface components {
             build?: string;
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.6.2";
+            contractVersion?: "2.7.0";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
@@ -9508,6 +9528,11 @@ export interface components {
             /** @enum {string} */
             meetingStatus?: "none" | "booked" | "held" | "no_show";
             query?: string;
+            /**
+             * @description Compact returns conversation identity, reply state and a bounded latest-message preview. Full returns full context. When omitted, view and fields control the response.
+             * @enum {string}
+             */
+            responseMode?: "compact" | "full";
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
             to?: components["schemas"]["ResourceVersion"];
@@ -10020,14 +10045,21 @@ export interface components {
         /** @enum {string} */
         InboxChannel: "instagram" | "facebook" | "linkedin" | "gmail" | "outlook" | "email" | "sms";
         InboxConversationCompact: {
-            channel: string;
+            campaignId?: string;
+            channel: components["schemas"]["InboxChannel"];
             id: string;
             interestIntent?: string;
+            interestLevel?: string;
             lastInboundAt?: string;
             lastMessageAt?: string;
+            lastMessageDirection?: string;
             lastMessageText?: string;
             needsReply?: boolean;
+            status?: string;
+            targetHandle?: string;
             targetName?: string;
+            unreadCount?: number;
+            updatedAt?: string;
         };
         InboxConversationMessage: {
             actor?: {
@@ -11383,6 +11415,105 @@ export interface components {
             data?: components["schemas"]["ProspectingOperationData"] | null;
             /** @constant */
             tool?: "prospecting.preview";
+        };
+        ProspectQueryData: {
+            columns: string[];
+            export?: null;
+            nextCursor: string;
+            notes?: string[];
+            querySignature: string;
+            resolved: {
+                activeOnly: boolean;
+                /** @enum {string} */
+                channel: "none" | "any" | "linkedin" | "email" | "instagram" | "facebook" | "sms";
+                cities?: string[];
+                country: components["schemas"]["SupportedCountry"];
+                employees?: {
+                    max?: number;
+                    min?: number;
+                    /** @enum {string} */
+                    unknown?: "include" | "exclude" | "only";
+                };
+                /** @enum {string} */
+                evidence: "annotate" | "require" | "include_evidence_only";
+                excludePreviouslyContacted?: boolean;
+                industries?: {
+                    /** @enum {string} */
+                    evidence?: "not_checked";
+                    label: string;
+                    /** @enum {string} */
+                    labelSource: "code" | "tech";
+                }[];
+                /** @enum {string} */
+                labelSource: "code" | "tech";
+                regions?: string[];
+                revenueEur?: {
+                    max?: number;
+                    min?: number;
+                    /** @enum {string} */
+                    unknown?: "include" | "exclude";
+                };
+                technologies?: string[];
+                websiteFacts?: ("b2c" | "b2b" | "saas")[];
+            };
+            rows: (string | number | null)[][];
+            totals: {
+                eligible?: number;
+                evidenceOnlyAvailable?: number;
+                evidencePositive?: number;
+                evidenceUnassessed?: number;
+                exact: boolean;
+                matched?: number;
+                previouslyContacted?: number;
+                reason?: string;
+                unknownRevenue?: number;
+                unknownSize?: number;
+                withAnyChannel?: number;
+            };
+        };
+        /** @description Plain-language icp and explicit fields. Explicit fields override the phrase. A cursor or querySignature alone reruns the saved ICP. runId may be a server id run_… or any correlation token of letters, numbers, dot, underscore, colon or hyphen. */
+        ProspectQueryInput: {
+            activeOnly?: boolean;
+            cities?: string[];
+            country?: components["schemas"]["SupportedCountry"];
+            cursor?: string;
+            employees?: {
+                max?: number;
+                min?: number;
+                /** @enum {string} */
+                unknown?: "include" | "exclude" | "only";
+            };
+            /** @enum {string} */
+            evidence?: "annotate" | "require" | "include_evidence_only";
+            excludePreviouslyContacted?: boolean;
+            /** @enum {string} */
+            format?: "rows" | "columns" | "count";
+            fundingFromYear?: string;
+            fundingPublic?: boolean;
+            /** @enum {string} */
+            googleAds?: "last_30_days" | "last_90_days" | "last_12_months";
+            icp?: string;
+            industries?: string[];
+            pageSize?: number;
+            querySignature?: string;
+            regions?: string[];
+            /** @enum {string} */
+            requireChannel?: "none" | "any" | "linkedin" | "email" | "instagram" | "facebook" | "sms";
+            revenueEur?: {
+                max?: number;
+                min?: number;
+                /** @enum {string} */
+                unknown?: "include" | "exclude";
+            };
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            technologies?: string[];
+            websiteFacts?: ("b2c" | "b2b" | "saas")[];
+        };
+        ProspectQueryResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectQueryData"] | null;
+            /** @constant */
+            tool?: "prospect.query";
         };
         ReadinessCheckInput: {
             campaignId?: string;
@@ -12862,7 +12993,10 @@ export interface components {
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
             types?: string[];
-            /** @enum {string} */
+            /**
+             * @description Compact is the default and omits full person, company and explanation context while retaining IDs, claim and version fences. Use standard for the full work item.
+             * @enum {string}
+             */
             view?: "compact" | "standard";
         };
         WorkQueueListOutput: {
@@ -18670,6 +18804,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PipelineStageUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    prospectQuery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProspectQueryInput"];
+            };
+        };
+        responses: {
+            /** @description ICP query */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProspectQueryResult"];
                 };
             };
             400: components["responses"]["BadRequest"];

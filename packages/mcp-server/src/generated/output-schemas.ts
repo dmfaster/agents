@@ -142,7 +142,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -208,6 +208,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -1467,7 +1468,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -1533,6 +1534,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -2695,7 +2697,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -2761,6 +2763,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -3384,7 +3387,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -3450,6 +3453,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -4594,7 +4598,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -4660,6 +4664,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -5353,7 +5358,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -5419,6 +5424,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -6517,7 +6523,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -6583,6 +6589,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -7223,7 +7230,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -7289,6 +7296,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -8047,26 +8055,48 @@ export const AGENT_OUTPUT_SCHEMAS = {
           id: {
             type: "string",
           },
+          campaignId: {
+            type: "string",
+          },
           channel: {
+            $ref: "#/$defs/InboxChannel",
+          },
+          targetHandle: {
             type: "string",
           },
           targetName: {
             type: "string",
           },
+          status: {
+            type: "string",
+          },
           needsReply: {
             type: "boolean",
           },
-          lastMessageAt: {
-            type: "string",
+          unreadCount: {
+            type: "integer",
           },
-          lastInboundAt: {
+          interestLevel: {
             type: "string",
           },
           interestIntent: {
             type: "string",
           },
+          updatedAt: {
+            type: "string",
+          },
+          lastInboundAt: {
+            type: "string",
+          },
+          lastMessageAt: {
+            type: "string",
+          },
+          lastMessageDirection: {
+            type: "string",
+          },
           lastMessageText: {
             type: "string",
+            maxLength: 240,
           },
         },
       },
@@ -8491,7 +8521,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -8557,6 +8587,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -9771,7 +9802,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -9837,6 +9868,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -10660,7 +10692,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -10726,6 +10758,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -11580,7 +11613,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -11646,6 +11679,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -12445,7 +12479,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -12511,6 +12545,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -13130,7 +13165,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -13196,6 +13231,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -13802,7 +13838,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -13868,6 +13904,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -14507,7 +14544,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -14573,6 +14610,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -15190,7 +15228,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -15256,6 +15294,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -15937,7 +15976,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -16003,6 +16042,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -16596,7 +16636,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -16662,6 +16702,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -17266,7 +17307,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -17332,6 +17373,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -17971,7 +18013,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -18037,6 +18079,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -18669,7 +18712,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -18735,6 +18778,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -19326,7 +19370,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -19392,6 +19436,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -20083,7 +20128,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -20149,6 +20194,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -20751,7 +20797,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -20817,6 +20863,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -21822,7 +21869,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -21888,6 +21935,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -22877,7 +22925,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -22943,6 +22991,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -23672,7 +23721,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -23738,6 +23787,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -24319,7 +24369,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -24385,6 +24435,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -24996,7 +25047,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -25062,6 +25113,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -25665,7 +25717,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -25731,6 +25783,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -26419,7 +26472,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -26485,6 +26538,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -27204,7 +27258,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -27270,6 +27324,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -28061,7 +28116,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -28127,6 +28182,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -28710,7 +28766,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -28776,6 +28832,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -29379,7 +29436,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -29445,6 +29502,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -30066,7 +30124,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -30132,6 +30190,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -30861,7 +30920,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -30927,6 +30986,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -31636,7 +31696,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -31702,6 +31762,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -32321,7 +32382,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -32387,6 +32448,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -33073,7 +33135,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -33139,6 +33201,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -33825,7 +33888,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -33891,6 +33954,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -34758,7 +34822,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -34824,6 +34888,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -35536,7 +35601,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -35602,6 +35667,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -36335,7 +36401,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -36401,6 +36467,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -37103,7 +37170,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -37169,6 +37236,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -38084,7 +38152,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -38150,6 +38218,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -38612,6 +38681,861 @@ export const AGENT_OUTPUT_SCHEMAS = {
       },
     },
   }),
+  "prospect.query": z.fromJSONSchema({
+    $ref: "#/$defs/ProspectQueryResult",
+    $defs: {
+      ProspectQueryResult: {
+        allOf: [
+          {
+            $ref: "#/$defs/AgentToolResultBase",
+          },
+          {
+            type: "object",
+            properties: {
+              tool: {
+                type: "string",
+                const: "prospect.query",
+              },
+              data: {
+                oneOf: [
+                  {
+                    $ref: "#/$defs/ProspectQueryData",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      AgentToolResultBase: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "version",
+          "tool",
+          "policy",
+          "ok",
+          "generatedAt",
+          "durationMs",
+          "evidence",
+          "consistency",
+          "data",
+          "artifacts",
+          "error",
+        ],
+        properties: {
+          version: {
+            type: "integer",
+            const: 1,
+          },
+          tool: {
+            $ref: "#/$defs/AgentToolName",
+          },
+          policy: {
+            $ref: "#/$defs/AgentToolPolicy",
+          },
+          ok: {
+            type: "boolean",
+          },
+          generatedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          serverTime: {
+            type: "string",
+            format: "date-time",
+          },
+          durationMs: {
+            type: "integer",
+            minimum: 0,
+            maximum: 120000,
+          },
+          evidence: {
+            type: "array",
+            items: {
+              $ref: "#/$defs/AgentToolEvidence",
+            },
+          },
+          consistency: {
+            $ref: "#/$defs/AgentToolConsistency",
+          },
+          data: {},
+          artifacts: {
+            type: "array",
+            items: {},
+          },
+          error: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentToolError",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
+          contractVersion: {
+            type: "string",
+            const: "2.7.0",
+          },
+          rateLimit: {
+            oneOf: [
+              {
+                $ref: "#/$defs/AgentRateLimitEnvelope",
+              },
+              {
+                type: "null",
+              },
+            ],
+            description:
+              "Current authenticated credential/workspace quota, negotiated by X-DMFaster-Rate-Limit: 1. Null before authentication or when authoritative quota is unavailable.",
+          },
+        },
+      },
+      AgentToolName: {
+        type: "string",
+        enum: [
+          "analytics.summary",
+          "workspace.briefing",
+          "campaigns.list",
+          "campaign.inspect",
+          "campaign.copy.inspect",
+          "sending.inspect",
+          "replies.list",
+          "conversations.list",
+          "conversation.inspect",
+          "conversation.update",
+          "conversation.reply",
+          "conversation.reply.inspect",
+          "campaign.messages.draft.list",
+          "campaign.messages.draft.update",
+          "campaign.messages.list",
+          "campaign.messages.update",
+          "campaign.followups.list",
+          "campaign.followups.cancel",
+          "campaign.outcomes.list",
+          "sending.test.prepare",
+          "sending.test.send",
+          "sending.test.inspect",
+          "senders.inspect",
+          "history.list",
+          "pipeline.inspect",
+          "pipeline.cards.list",
+          "pipeline.stage.update",
+          "pipeline.note.list",
+          "pipeline.note.add",
+          "company.timeline",
+          "industry.lookup",
+          "campaign.validate",
+          "audience.preview",
+          "lists.list",
+          "list.inspect",
+          "list.target.remove",
+          "campaign.draft.prepare",
+          "campaign.draft.update",
+          "list.import",
+          "list.prepare",
+          "campaign.prepare",
+          "campaign.launch.preflight",
+          "campaign.launch",
+          "campaign.pause.preflight",
+          "campaign.pause",
+          "companies.filters",
+          "companies.suggest",
+          "prospect.query",
+          "companies.search",
+          "companies.evidence.search",
+          "companies.knowledge.search",
+          "companies.knowledge",
+          "companies.evidence.start",
+          "companies.evidence.advance",
+          "companies.evidence.status",
+          "companies.evidence.results",
+          "companies.evidence.cancel",
+          "company.inspect",
+          "companies.fit.start",
+          "companies.fit.advance",
+          "companies.fit.results",
+          "companies.fit.proposal",
+          "companies.list.prepare",
+          "companies.list.inspect",
+          "companies.list.refine",
+          "campaign.operation.inspect",
+          "campaign.delivery.inspect",
+          "campaign.delivery.update",
+          "sending.instagram.pacing.inspect",
+          "sending.instagram.pacing.update",
+          "companies.fit.status",
+          "companies.fit.cancel",
+          "companies.fit.runs.list",
+          "companies.fit.run",
+          "companies.fit.cohort",
+          "copy.performance",
+          "calendar.status",
+          "calendar.availability",
+          "calendar.meeting.book",
+          "calls.list",
+          "call.inspect",
+          "instagram.extract.quote",
+          "instagram.extract.start",
+          "instagram.extract.inspect",
+          "instagram.extract.results",
+          "instagram.purchases.list",
+          "instagram.purchases.inspect",
+          "instagram.purchases.results",
+          "leads.status",
+          "leads.extract.quote",
+          "leads.extract.start",
+          "leads.extract.inspect",
+          "leads.extract.refresh",
+          "leads.extract.continue",
+          "leads.enrich.preview",
+          "leads.enrich.start",
+          "leads.enrich.inspect",
+          "leads.prospect.quote",
+          "leads.prospect.start",
+          "leads.prospect.inspect",
+          "leads.prospect.results",
+          "leads.prospect.advance",
+          "leads.prospect.cancel",
+          "events.list",
+          "conversations.changes",
+          "suppressions.list",
+          "suppressions.add",
+          "suppressions.remove",
+          "workspace.sandbox.create",
+          "sandbox.seed",
+          "sandbox.inbound.simulate",
+          "sandbox.clock.advance",
+          "call.outcome.set",
+          "meeting.link",
+          "meeting.unlink",
+          "webhooks.create",
+          "webhooks.list",
+          "webhooks.update",
+          "webhooks.delete",
+          "webhooks.test",
+          "webhooks.replay",
+          "meetings.unlinked.list",
+          "pipeline.reconcile",
+          "workspace.agent_sales.get",
+          "workspace.agent_sales.update",
+          "sandbox.provider.update",
+          "reply.templates.list",
+          "reply.templates.create",
+          "reply.templates.update",
+          "reply.templates.delete",
+          "reply.policy.get",
+          "reply.policy.update",
+          "reply.approvals.list",
+          "conversation.draft.save",
+          "conversation.followup.set",
+          "conversation.followup.clear",
+          "followups.due",
+          "conversations.bulk.update",
+          "pipeline.board",
+          "calendar.booking.link.create",
+          "calendar.meeting.reschedule",
+          "calendar.meeting.cancel",
+          "campaign.followups.configure",
+          "campaign.variants.configure",
+          "recorder.settings.get",
+          "recorder.settings.update",
+          "recorder.bots.list",
+          "call.transcript.get",
+          "call.recording.get",
+          "call.transcripts.get",
+          "call.transcripts.search",
+          "readiness.check",
+          "sender.retire",
+          "sender.unretire",
+          "attribution.check",
+          "campaign.reengagement.prepare",
+          "agents.list",
+          "agent.inspect",
+          "agent.create.request",
+          "agent.pause",
+          "agent.resume",
+          "agent.credential.rotate",
+          "event_consumers.list",
+          "event_consumers.create",
+          "events.ack",
+          "events.snapshot",
+          "webhook.deliveries.list",
+          "webhooks.dlq.replay",
+          "classification.feedback",
+          "classification.quality",
+          "classification.backfill.plan",
+          "work_queue.list",
+          "work_item.claim",
+          "work_item.release",
+          "work_item.snooze",
+          "work_item.complete",
+          "work_queue.config.get",
+          "work_queue.config.update",
+          "metrics.reconcile",
+          "agent.heartbeat",
+          "agent.run.start",
+          "agent.run.end",
+          "agent.runs.list",
+          "agent.run.inspect",
+          "workspace.halt",
+          "workspace.resume",
+          "channel.halt",
+          "workspace.automation.inspect",
+          "feedback.submit",
+          "feedback.list",
+          "entity.resolve",
+          "entities.get",
+          "people.upsert",
+          "companies.upsert",
+          "entity.merge",
+          "entity.split",
+          "budget.status",
+          "call.stats.get",
+          "call.coaching.get",
+          "call.analytics.query",
+          "call.insight.get",
+          "call.access.list",
+          "call.audit.list",
+          "call.activity.get",
+          "call.analysis.get",
+          "call.outcome.confirm",
+          "call.attendance.get",
+          "call.insight.review",
+          "recorder.event.override.get",
+          "recorder.event.override.update",
+          "call.bot.cancel",
+          "call.bot.remove",
+          "call.recording.stop",
+          "recorder.status",
+          "call.bot.join",
+          "recorder.join.get",
+          "call.participant.withdrawal.report",
+          "call.delete",
+          "copy.approval.request",
+          "campaign.draft.plan",
+          "campaign.draft.readiness",
+          "prospecting.preview",
+          "companies.lookalike",
+          "commitments.propose",
+          "commitments.list",
+          "commitment.update",
+          "commitment.confirm.batch",
+          "commitment.reminder.draft",
+          "list.rename",
+          "list.archive",
+          "campaign.draft.archive",
+          "copy.approval.inspect",
+          "copy.approval.cancel",
+          "approval.cancel",
+          "approvals.list",
+        ],
+      },
+      AgentToolPolicy: {
+        type: "object",
+        additionalProperties: false,
+        required: ["effect", "approval", "exposure"],
+        properties: {
+          effect: {
+            type: "string",
+            enum: ["read", "draft", "write", "external"],
+          },
+          approval: {
+            type: "string",
+            enum: ["none", "human_confirmation"],
+          },
+          exposure: {
+            type: "string",
+            const: "public_api",
+          },
+        },
+      },
+      AgentToolEvidence: {
+        type: "object",
+        additionalProperties: false,
+        required: ["source", "observedAt", "scope"],
+        properties: {
+          source: {
+            type: "string",
+            enum: [
+              "workspace_campaigns",
+              "worker_control_plane",
+              "campaign_diagnostics",
+              "pipeline",
+              "inbox",
+              "company_database",
+              "classification_catalog",
+              "campaign_workflow",
+              "analytics_snapshot",
+            ],
+          },
+          observedAt: {
+            type: "string",
+            format: "date-time",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "campaign", "audience", "conversation"],
+          },
+        },
+      },
+      AgentToolConsistency: {
+        type: "object",
+        additionalProperties: false,
+        required: ["status", "checks"],
+        properties: {
+          status: {
+            type: "string",
+            enum: ["verified", "unavailable", "conflict"],
+          },
+          checks: {
+            type: "array",
+            items: {
+              type: "string",
+            },
+          },
+        },
+      },
+      AgentToolError: {
+        type: "object",
+        additionalProperties: false,
+        required: ["code", "message", "retryable"],
+        properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+          code: {
+            type: "string",
+            minLength: 1,
+            maxLength: 100,
+          },
+          message: {
+            type: "string",
+            minLength: 1,
+            maxLength: 500,
+          },
+          retryable: {
+            type: "boolean",
+          },
+          nextAction: {
+            type: "string",
+            minLength: 1,
+          },
+          docsUrl: {
+            type: "string",
+            pattern: "^https://",
+          },
+          requiredScope: {
+            type: "string",
+            maxLength: 200,
+          },
+          reason: {
+            type: "string",
+            maxLength: 200,
+          },
+          setupUrl: {
+            type: "string",
+            maxLength: 2000,
+          },
+          requiredConnection: {
+            type: "string",
+            maxLength: 200,
+          },
+          retryAfterMs: {
+            type: "integer",
+            minimum: 0,
+          },
+          blockedUntil: {
+            $ref: "#/$defs/ResourceVersion",
+          },
+          scope: {
+            type: "string",
+            enum: ["workspace", "channel", "agent"],
+          },
+          haltedBy: {
+            type: "string",
+            maxLength: 200,
+          },
+        },
+      },
+      ResourceVersion: {
+        type: "string",
+        description:
+          "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
+        pattern:
+          "^\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}(?::?\\d{2})?)$",
+        minLength: 20,
+        maxLength: 32,
+      },
+      AgentRateLimitEnvelope: {
+        type: "object",
+        additionalProperties: false,
+        required: ["limit", "remaining", "resetAt", "credential", "workspace"],
+        properties: {
+          limit: {
+            type: "integer",
+            minimum: 0,
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          resetAt: {
+            type: "string",
+            format: "date-time",
+          },
+          credential: {
+            $ref: "#/$defs/AgentRateLimitBucket",
+          },
+          workspace: {
+            $ref: "#/$defs/AgentRateLimitBucket",
+          },
+        },
+      },
+      AgentRateLimitBucket: {
+        type: "object",
+        additionalProperties: false,
+        required: ["limit", "remaining", "resetAt"],
+        properties: {
+          limit: {
+            type: "integer",
+            minimum: 0,
+          },
+          remaining: {
+            type: "integer",
+            minimum: 0,
+          },
+          resetAt: {
+            type: "string",
+            format: "date-time",
+          },
+        },
+      },
+      ProspectQueryData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["resolved", "totals", "columns", "rows", "nextCursor", "querySignature"],
+        properties: {
+          resolved: {
+            type: "object",
+            additionalProperties: false,
+            required: ["country", "activeOnly", "channel", "evidence", "labelSource"],
+            properties: {
+              country: {
+                $ref: "#/$defs/SupportedCountry",
+              },
+              activeOnly: {
+                type: "boolean",
+              },
+              industries: {
+                type: "array",
+                maxItems: 8,
+                items: {
+                  type: "object",
+                  additionalProperties: false,
+                  required: ["label", "labelSource"],
+                  properties: {
+                    label: {
+                      type: "string",
+                      maxLength: 80,
+                    },
+                    labelSource: {
+                      type: "string",
+                      enum: ["code", "tech"],
+                    },
+                    evidence: {
+                      type: "string",
+                      enum: ["not_checked"],
+                    },
+                  },
+                },
+              },
+              regions: {
+                type: "array",
+                maxItems: 19,
+                items: {
+                  type: "string",
+                  maxLength: 80,
+                },
+              },
+              cities: {
+                type: "array",
+                maxItems: 32,
+                items: {
+                  type: "string",
+                  maxLength: 80,
+                },
+              },
+              employees: {
+                type: "object",
+                additionalProperties: false,
+                properties: {
+                  min: {
+                    type: "integer",
+                    minimum: 0,
+                  },
+                  max: {
+                    type: "integer",
+                    minimum: 0,
+                  },
+                  unknown: {
+                    type: "string",
+                    enum: ["include", "exclude", "only"],
+                  },
+                },
+              },
+              revenueEur: {
+                type: "object",
+                additionalProperties: false,
+                properties: {
+                  min: {
+                    type: "integer",
+                    minimum: 0,
+                  },
+                  max: {
+                    type: "integer",
+                    minimum: 0,
+                  },
+                  unknown: {
+                    type: "string",
+                    enum: ["include", "exclude"],
+                  },
+                },
+              },
+              technologies: {
+                type: "array",
+                maxItems: 8,
+                items: {
+                  type: "string",
+                  maxLength: 40,
+                },
+              },
+              websiteFacts: {
+                type: "array",
+                maxItems: 3,
+                items: {
+                  type: "string",
+                  enum: ["b2c", "b2b", "saas"],
+                },
+              },
+              evidence: {
+                type: "string",
+                enum: ["annotate", "require", "include_evidence_only"],
+              },
+              channel: {
+                type: "string",
+                enum: ["none", "any", "linkedin", "email", "instagram", "facebook", "sms"],
+              },
+              labelSource: {
+                type: "string",
+                enum: ["code", "tech"],
+              },
+              excludePreviouslyContacted: {
+                type: "boolean",
+              },
+            },
+          },
+          totals: {
+            type: "object",
+            additionalProperties: false,
+            required: ["exact"],
+            properties: {
+              exact: {
+                type: "boolean",
+              },
+              reason: {
+                type: "string",
+                maxLength: 300,
+              },
+              matched: {
+                type: "integer",
+                minimum: 0,
+              },
+              withAnyChannel: {
+                type: "integer",
+                minimum: 0,
+              },
+              eligible: {
+                type: "integer",
+                minimum: 0,
+              },
+              unknownSize: {
+                type: "integer",
+                minimum: 0,
+              },
+              unknownRevenue: {
+                type: "integer",
+                minimum: 0,
+              },
+              previouslyContacted: {
+                type: "integer",
+                minimum: 0,
+              },
+              evidencePositive: {
+                type: "integer",
+                minimum: 0,
+              },
+              evidenceUnassessed: {
+                type: "integer",
+                minimum: 0,
+              },
+              evidenceOnlyAvailable: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+          },
+          columns: {
+            type: "array",
+            maxItems: 16,
+            items: {
+              type: "string",
+              maxLength: 40,
+            },
+          },
+          rows: {
+            type: "array",
+            maxItems: 1000,
+            items: {
+              type: "array",
+              maxItems: 16,
+              items: {
+                oneOf: [
+                  {
+                    type: "string",
+                    maxLength: 300,
+                  },
+                  {
+                    type: "integer",
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
+              },
+            },
+          },
+          nextCursor: {
+            type: "string",
+            maxLength: 12000,
+          },
+          querySignature: {
+            type: "string",
+            maxLength: 12000,
+          },
+          notes: {
+            type: "array",
+            maxItems: 24,
+            items: {
+              type: "string",
+              maxLength: 500,
+            },
+          },
+          export: {
+            type: "null",
+          },
+        },
+      },
+      SupportedCountry: {
+        type: "string",
+        enum: [
+          "FI",
+          "NO",
+          "EE",
+          "SE",
+          "DK",
+          "UK",
+          "IE",
+          "AE",
+          "AT",
+          "BE",
+          "CA",
+          "NL",
+          "NZ",
+          "ES",
+          "FR",
+          "HK",
+          "IL",
+          "LV",
+          "LT",
+          "IT",
+          "CH",
+          "PT",
+          "SA",
+          "SG",
+          "IS",
+          "AU",
+          "DE",
+          "US",
+          "ZA",
+        ],
+      },
+    },
+  }),
   "companies.search": z.fromJSONSchema({
     $ref: "#/$defs/CompanySearchResult",
     $defs: {
@@ -38747,7 +39671,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -38813,6 +39737,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -39726,7 +40651,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -39792,6 +40717,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -40995,7 +41921,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -41061,6 +41987,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -41743,7 +42670,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -41809,6 +42736,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -42814,7 +43742,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -42880,6 +43808,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -44176,7 +45105,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -44242,6 +45171,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -45538,7 +46468,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -45604,6 +46534,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -46900,7 +47831,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -46966,6 +47897,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -48262,7 +49194,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -48328,6 +49260,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -49624,7 +50557,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -49690,6 +50623,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -50512,7 +51446,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -50578,6 +51512,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -51237,7 +52172,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -51303,6 +52238,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -51957,7 +52893,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -52023,6 +52959,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -52724,7 +53661,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -52790,6 +53727,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -53621,7 +54559,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -53687,6 +54625,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -54319,7 +55258,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -54385,6 +55324,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -54980,7 +55920,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -55046,6 +55986,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -55695,7 +56636,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -55761,6 +56702,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -56352,7 +57294,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -56418,6 +57360,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -57144,7 +58087,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -57210,6 +58153,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -57810,7 +58754,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -57876,6 +58820,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -58457,7 +59402,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -58523,6 +59468,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -59160,7 +60106,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -59226,6 +60172,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -59863,7 +60810,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -59929,6 +60876,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -60600,7 +61548,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -60666,6 +61614,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -61341,7 +62290,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -61407,6 +62356,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -62087,7 +63037,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -62153,6 +63103,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -63083,7 +64034,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -63149,6 +64100,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -64249,7 +65201,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -64315,6 +65267,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -64883,7 +65836,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -64949,6 +65902,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -65562,7 +66516,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -65628,6 +66582,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -66237,7 +67192,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -66303,6 +67258,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -67073,7 +68029,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -67139,6 +68095,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -68829,7 +69786,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -68895,6 +69852,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -69492,7 +70450,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -69558,6 +70516,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -70240,7 +71199,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -70306,6 +71265,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -70947,7 +71907,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -71013,6 +71973,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -71654,7 +72615,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -71720,6 +72681,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -72298,7 +73260,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -72364,6 +73326,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -73015,7 +73978,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -73081,6 +74044,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -73687,7 +74651,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -73753,6 +74717,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -74605,7 +75570,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -74671,6 +75636,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -75526,7 +76492,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -75592,6 +76558,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -76485,7 +77452,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -76551,6 +77518,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -77406,7 +78374,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -77472,6 +78440,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -78368,7 +79337,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -78434,6 +79403,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -79327,7 +80297,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -79393,6 +80363,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -80248,7 +81219,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -80314,6 +81285,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -81207,7 +82179,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -81273,6 +82245,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -82124,7 +83097,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -82190,6 +83163,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -83033,7 +84007,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -83099,6 +84073,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -83976,7 +84951,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -84042,6 +85017,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -84878,7 +85854,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -84944,6 +85920,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -85787,7 +86764,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -85853,6 +86830,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -86737,7 +87715,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -86803,6 +87781,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -87683,7 +88662,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -87749,6 +88728,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -88507,7 +89487,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -88573,6 +89553,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -89180,7 +90161,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -89246,6 +90227,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -89868,7 +90850,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -89934,6 +90916,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -90573,7 +91556,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -90639,6 +91622,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -91278,7 +92262,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -91344,6 +92328,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -91945,7 +92930,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -92011,6 +92996,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -92633,7 +93619,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -92699,6 +93685,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -93300,7 +94287,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -93366,6 +94353,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -93965,7 +94953,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -94031,6 +95019,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -94646,7 +95635,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -94712,6 +95701,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -95364,7 +96354,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -95430,6 +96420,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -96079,7 +97070,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -96145,6 +97136,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -96831,7 +97823,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -96897,6 +97889,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -97650,7 +98643,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -97716,6 +98709,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -98288,7 +99282,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -98354,6 +99348,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -98926,7 +99921,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -98992,6 +99987,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -99564,7 +100560,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -99630,6 +100626,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -100202,7 +101199,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -100268,6 +101265,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -100954,7 +101952,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -101020,6 +102018,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -101691,7 +102690,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -101757,6 +102756,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -102315,7 +103315,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -102381,6 +103381,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -102999,7 +104000,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -103065,6 +104066,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -103670,7 +104672,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -103736,6 +104738,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -104515,7 +105518,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -104581,6 +105584,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -105401,7 +106405,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -105467,6 +106471,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -106287,7 +107292,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -106353,6 +107358,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -107166,7 +108172,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -107232,6 +108238,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -108011,7 +109018,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -108077,6 +109084,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -108890,7 +109898,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -108956,6 +109964,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -109735,7 +110744,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -109801,6 +110810,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -110617,7 +111627,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -110683,6 +111693,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -111499,7 +112510,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -111565,6 +112576,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -112378,7 +113390,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -112444,6 +113456,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -113234,7 +114247,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -113300,6 +114313,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -113864,7 +114878,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -113930,6 +114944,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -114453,7 +115468,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -114519,6 +115534,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -115049,7 +116065,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -115115,6 +116131,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -115645,7 +116662,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -115711,6 +116728,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -116241,7 +117259,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -116307,6 +117325,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -116830,7 +117849,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -116896,6 +117915,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -117425,7 +118445,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -117491,6 +118511,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -118184,7 +119205,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -118250,6 +119271,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -118939,7 +119961,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -119005,6 +120027,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -119638,7 +120661,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -119704,6 +120727,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -120538,7 +121562,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -120604,6 +121628,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -121206,7 +122231,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -121272,6 +122297,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -122166,7 +123192,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -122232,6 +123258,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -122825,7 +123852,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -122891,6 +123918,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -123503,7 +124531,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -123569,6 +124597,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -124137,7 +125166,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -124203,6 +125232,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -124771,7 +125801,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -124837,6 +125867,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -125435,7 +126466,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -125501,6 +126532,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -126118,7 +127150,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -126184,6 +127216,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -126879,7 +127912,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -126945,6 +127978,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -127617,7 +128651,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -127683,6 +128717,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -128304,7 +129339,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -128370,6 +129405,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -128933,7 +129969,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -128999,6 +130035,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -129562,7 +130599,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -129628,6 +130665,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -130230,7 +131268,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -130296,6 +131334,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -130916,7 +131955,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -130982,6 +132021,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -131586,7 +132626,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -131652,6 +132692,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -132256,7 +133297,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -132322,6 +133363,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -133083,7 +134125,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -133149,6 +134191,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -133803,7 +134846,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -133869,6 +134912,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -134420,7 +135464,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -134486,6 +135530,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -135056,7 +136101,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -135122,6 +136167,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -135720,7 +136766,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -135786,6 +136832,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -136382,7 +137429,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -136448,6 +137495,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -137173,7 +138221,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -137239,6 +138287,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -137952,7 +139001,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -138018,6 +139067,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -138731,7 +139781,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -138797,6 +139847,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -139510,7 +140561,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -139576,6 +140627,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -140289,7 +141341,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -140355,6 +141407,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -140914,7 +141967,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -140980,6 +142033,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -141539,7 +142593,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -141605,6 +142659,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -142273,7 +143328,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -142339,6 +143394,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -142780,7 +143836,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           data: {
             type: "object",
@@ -142934,7 +143990,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -143000,6 +144056,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -143578,7 +144635,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -143644,6 +144701,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -144202,7 +145260,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -144268,6 +145326,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -144974,7 +146033,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -145040,6 +146099,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -145882,7 +146942,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -145948,6 +147008,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -146532,7 +147593,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -146598,6 +147659,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -147165,7 +148227,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -147231,6 +148293,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -147815,7 +148878,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -147881,6 +148944,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -148469,7 +149533,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -148535,6 +149599,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -149140,7 +150205,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -149206,6 +150271,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -149863,7 +150929,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -149929,6 +150995,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -150931,7 +151998,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -150997,6 +152064,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -151671,7 +152739,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -151737,6 +152805,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -152427,7 +153496,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -152493,6 +153562,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -153183,7 +154253,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -153249,6 +154319,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -153833,7 +154904,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -153899,6 +154970,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -154483,7 +155555,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -154549,6 +155621,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -155183,7 +156256,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -155249,6 +156322,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -156499,7 +157573,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -156565,6 +157639,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -157165,7 +158240,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -157231,6 +158306,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -157885,7 +158961,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -157951,6 +159027,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -158893,7 +159970,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -158959,6 +160036,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -159598,7 +160676,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -159664,6 +160742,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -160289,7 +161368,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -160355,6 +161434,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -161006,7 +162086,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -161072,6 +162152,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -163034,7 +164115,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -163100,6 +164181,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -163705,7 +164787,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -163771,6 +164853,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -164417,7 +165500,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -164483,6 +165566,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -165067,7 +166151,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -165133,6 +166217,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -165734,7 +166819,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -165800,6 +166885,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -166401,7 +167487,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -166467,6 +167553,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -167062,7 +168149,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -167128,6 +168215,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -167723,7 +168811,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -167789,6 +168877,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -168384,7 +169473,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -168450,6 +169539,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -169137,7 +170227,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -169203,6 +170293,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -169814,7 +170905,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -169880,6 +170971,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -170491,7 +171583,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -170557,6 +171649,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -171132,7 +172225,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -171198,6 +172291,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -171799,7 +172893,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -171865,6 +172959,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -172471,7 +173566,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -172537,6 +173632,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -173143,7 +174239,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -173209,6 +174305,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -173815,7 +174912,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -173881,6 +174978,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -174487,7 +175585,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -174553,6 +175651,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -175159,7 +176258,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -175225,6 +176324,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -175831,7 +176931,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -175897,6 +176997,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -176503,7 +177604,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -176569,6 +177670,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -177175,7 +178277,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -177241,6 +178343,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -177847,7 +178950,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -177913,6 +179016,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -178519,7 +179623,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -178585,6 +179689,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -179191,7 +180296,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -179257,6 +180362,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -179863,7 +180969,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -179929,6 +181035,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -180535,7 +181642,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -180601,6 +181708,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -181207,7 +182315,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -181273,6 +182381,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -181879,7 +182988,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -181945,6 +183054,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
@@ -182554,7 +183664,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.6.2",
+            const: "2.7.0",
           },
           rateLimit: {
             oneOf: [
@@ -182620,6 +183730,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "campaign.pause",
           "companies.filters",
           "companies.suggest",
+          "prospect.query",
           "companies.search",
           "companies.evidence.search",
           "companies.knowledge.search",
