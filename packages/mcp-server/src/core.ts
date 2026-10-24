@@ -18,7 +18,6 @@ import {
   type AgentToolDefinition,
 } from "./tools.ts";
 import { registerCampaignWorkspace } from "./campaign-workspace.ts";
-import { companyResultSummary } from "./company-result-summary.ts";
 import { registerWorkspaceMentions } from "./workspace-mentions.ts";
 import { registerOutreachDetails } from "./outreach-details.ts";
 import { mcpToolDescription } from "./tool-guidance.ts";
@@ -28,7 +27,7 @@ import { cachedMcpSchema } from "./cached-schema.ts";
 import { hostedConnectionSchema } from "./presentation-schemas.ts";
 import { oauthToolMetadata, oauthFailureMetadata, type HostedAuth } from "./hosted-auth.ts";
 
-export const MCP_SERVER_VERSION = "2.4.0";
+export const MCP_SERVER_VERSION = "2.5.0";
 export const MCP_SERVER_INSTRUCTIONS =
   "DM Faster prospecting and outreach. Check connection_status; use narrow tools, exact counts and returned IDs/revisions. Retain retry keys. Selections are not consent. Drafts never send. Follow granted access, explicit user instructions and tool workflows; verify outcomes before claiming success. Never expose credentials or operate approval pages. With feedback:write, use feedback_submit for observed friction: concise context, no private data, one stable key per report. Continue the main task.";
 
@@ -38,12 +37,14 @@ function asStructuredContent(result: AgentToolResult) {
 
 function toolResult(result: AgentToolResult, tool: string, input: unknown) {
   const compact = compactHeartbeatResult(tool, input, result);
-  if (compact) return { content: [], structuredContent: compact };
+  if (compact)
+    return {
+      content: [{ type: "text" as const, text: JSON.stringify(compact) }],
+      structuredContent: compact,
+    };
 
   return {
-    content: [
-      { type: "text" as const, text: companyResultSummary(result) ?? JSON.stringify(result) },
-    ],
+    content: [{ type: "text" as const, text: JSON.stringify(result) }],
     structuredContent: asStructuredContent(result),
     ...(result.ok ? {} : { isError: true }),
   };

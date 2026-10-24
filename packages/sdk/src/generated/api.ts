@@ -1046,6 +1046,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/campaign.draft.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive an unstarted agent draft
+         * @description Remove only a disabled, unstarted agent-created campaign with a current version and no authoritative sending work.
+         */
+        post: operations["campaignDraftArchive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/campaign.draft.plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Plan or create a complete disabled campaign
+         * @description Compact ICP to draft workflow. Supply plan for dryRun (default true), or an approved copy approvalId and idempotencyKey with dryRun false to atomically create a named list and disabled draft. One selected channel: LinkedIn, email, SMS, Instagram or Facebook subject to capabilities. Supports variants, follow-ups and prospect-local window. Never launches.
+         */
+        post: operations["campaignDraftPlan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/campaign.draft.prepare": {
         parameters: {
             query?: never;
@@ -1060,6 +1100,26 @@ export interface paths {
          * @description Create an idempotent disabled campaign from a reviewed saved list. Instagram lists default to Instagram. For company lists supply channel or channels, expectedAudienceCount, and the exact sum of selected channelCounts as expectedTargetCount from companies.list.inspect. Multichannel LinkedIn requires a separate linkedinInviteNote of at most 300 characters. Email uses channel gmail and channelCounts.email; supply gmailSubject, explicitly confirmed gmailRecipientConsentConfirmed and connected mailboxIds from senders.inspect. messageVariants become email body variants. SMS requires workspace setup and a separate smsBody. Echo the list version and supply delivery settings. Never launches or sends messages.
          */
         post: operations["campaignDraftPrepare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/campaign.draft.readiness": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check draft readiness without launch intent
+         * @description Read-only copy approval, labels, sender and shared launch preflight checks. Never creates an authorization or launches.
+         */
+        post: operations["campaignDraftReadiness"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1549,6 +1609,106 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/commitment.confirm.batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm call commitments
+         * @description Confirm explicit proposed commitments as linked follow-up work. Requires current call access and pipeline write scope; never sends.
+         */
+        post: operations["commitmentConfirmBatch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/commitment.reminder.draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Draft a commitment reminder
+         * @description Create a pending owner-reviewed reply draft for the linked conversation. Never sends.
+         */
+        post: operations["commitmentReminderDraft"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/commitment.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update a call commitment
+         * @description Confirm, complete, cancel or reschedule a version-bound commitment. Never sends a reminder.
+         */
+        post: operations["commitmentUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/commitments.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read call commitments
+         * @description Read retained call commitments with current call access, redacted quote and timestamps. Source deletion, expiry or replacement hides the quote and commitment.
+         */
+        post: operations["commitmentsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/commitments.propose": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Propose commitments from a fresh call
+         * @description Extract explicit Finnish or English commitments from a retained, accessible transcript page. Fresh calls only; historical extraction is blocked. Quotes are referenced, never copied into storage.
+         */
+        post: operations["commitmentsPropose"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/companies.evidence.advance": {
         parameters: {
             query?: never;
@@ -1969,6 +2129,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/companies.lookalike": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Find deterministic company lookalikes
+         * @description Workspace-scoped conversion or explicit seeds. Deterministic industry, size, revenue, region, technology, ads and channel similarity. Excludes existing workspace company contacts.
+         */
+        post: operations["companiesLookalike"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/companies.search": {
         parameters: {
             query?: never;
@@ -2263,6 +2443,26 @@ export interface paths {
          * @description Lists actual inbox conversations with app filters and a continuation cursor. Read-only; listing does not mark messages read.
          */
         post: operations["conversationsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/copy.approval.request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request owner approval of campaign copy
+         * @description Create an owner review of exact campaign copy and audience. Email recipient consent is entered by the owner in the approval page. Never sends or authorizes launch.
+         */
+        post: operations["copyApprovalRequest"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3009,6 +3209,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/list.archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Archive an unused agent list
+         * @description Remove an unused agent-created list with a current version. Refuses lists referenced by a campaign.
+         */
+        post: operations["listArchive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/list.import": {
         parameters: {
             query?: never;
@@ -3063,6 +3283,26 @@ export interface paths {
          * @description Requires an exact audience and creates only a private workspace list.
          */
         post: operations["listPrepare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/list.rename": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rename a saved list
+         * @description Rename an owned list using its current timestamp. Does not alter membership.
+         */
+        post: operations["listRename"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3338,6 +3578,26 @@ export interface paths {
          * @description Changes one existing card only when its stage still matches the inspected stage. Marking a meeting booked requires recorded evidence or the user's explicit instruction.
          */
         post: operations["pipelineStageUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/prospecting.preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview a compact exact prospect audience
+         * @description Filters-only exact audience, contact status, channel counts, saturation and eligible sample. Same audience engine as campaign.draft.plan. Bounded to 25000 matches; narrow larger audiences.
+         */
+        post: operations["prospectingPreview"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4900,6 +5160,8 @@ export interface components {
         };
         AgentHeartbeatResult: components["schemas"]["AgentHeartbeatFullResult"] | components["schemas"]["AgentHeartbeatCompactResult"];
         AgentIndustryClarificationOption: {
+            companyCount?: number;
+            country?: components["schemas"]["SupportedCountry"];
             id: string;
             label: string;
             selections: components["schemas"]["AgentIndustryCodeSelection"][];
@@ -5162,7 +5424,7 @@ export interface components {
             tool?: "agent.run.start";
         };
         /** @enum {string} */
-        AgentSalesEventType: "call.stats.ready" | "call.stats.updated" | "call.coaching.flagged" | "call.attendance.detected" | "call.insight.failed" | "call.bot.scheduled" | "call.bot.cancelled" | "call.bot.joined" | "call.bot.failed" | "call.recording.ready" | "call.recording.stopped" | "call.transcript.ready" | "call.analysis.ready" | "call.deleted" | "recorder.cap.reached" | "recorder.health.degraded" | "inbox.message.received" | "inbox.auto_reply.received" | "conversation.intent.changed" | "conversation.changed" | "conversation.followup.due" | "followup.cancelled_by_reply" | "meeting.booked" | "meeting.rescheduled" | "meeting.cancelled" | "meeting.no_show" | "meeting.outcome.recorded" | "contact.opted_out" | "campaign.state.changed" | "sender.unhealthy" | "reply.approval.requested" | "reply.approval.decided" | "credential.expiring" | "webhook.test" | "sender.recovered" | "calendar.connected" | "calendar.disconnected" | "agent.paused" | "agent.resumed" | "credential.rotated" | "message.sent" | "message.delivery.failed" | "message.bounced" | "reaction.received" | "system_event.received" | "conversation.assigned" | "conversation.takeover.started" | "conversation.takeover.ended" | "work_item.created" | "work_item.updated" | "work_queue.rebuilt" | "meeting.reminder.due" | "meeting.ended" | "booking_link.opened" | "booking_link.used" | "booking_link.expired" | "suppression.added" | "suppression.removed" | "agent.lagging" | "agent.stale" | "budget.threshold_reached" | "kill_switch.changed" | "webhook.delivery.failed" | "metrics.recomputed";
+        AgentSalesEventType: "call.stats.ready" | "call.stats.updated" | "call.coaching.flagged" | "call.attendance.detected" | "call.insight.failed" | "call.bot.scheduled" | "call.bot.cancelled" | "call.bot.joined" | "call.bot.failed" | "call.recording.ready" | "call.recording.stopped" | "call.transcript.ready" | "call.analysis.ready" | "call.deleted" | "recorder.cap.reached" | "recorder.health.degraded" | "inbox.message.received" | "inbox.auto_reply.received" | "conversation.intent.changed" | "conversation.changed" | "conversation.followup.due" | "followup.cancelled_by_reply" | "meeting.booked" | "meeting.rescheduled" | "meeting.cancelled" | "meeting.no_show" | "meeting.outcome.recorded" | "contact.opted_out" | "campaign.state.changed" | "sender.unhealthy" | "reply.approval.requested" | "copy.approval_requested" | "commitment.done" | "commitment.overdue" | "commitment.due" | "commitment.created" | "copy.approval_approved" | "copy.approval_rejected" | "reply.approval.decided" | "credential.expiring" | "webhook.test" | "sender.recovered" | "calendar.connected" | "calendar.disconnected" | "agent.paused" | "agent.resumed" | "credential.rotated" | "message.sent" | "message.delivery.failed" | "message.bounced" | "reaction.received" | "system_event.received" | "conversation.assigned" | "conversation.takeover.started" | "conversation.takeover.ended" | "work_item.created" | "work_item.updated" | "work_queue.rebuilt" | "meeting.reminder.due" | "meeting.ended" | "booking_link.opened" | "booking_link.used" | "booking_link.expired" | "suppression.added" | "suppression.removed" | "agent.lagging" | "agent.stale" | "budget.threshold_reached" | "kill_switch.changed" | "webhook.delivery.failed" | "metrics.recomputed";
         AgentSignalCriterion: {
             description: string;
             /** @enum {string} */
@@ -5214,7 +5476,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel" | "events.list" | "conversations.changes" | "suppressions.list" | "suppressions.add" | "suppressions.remove" | "workspace.sandbox.create" | "sandbox.seed" | "sandbox.inbound.simulate" | "sandbox.clock.advance" | "call.outcome.set" | "meeting.link" | "meeting.unlink" | "webhooks.create" | "webhooks.list" | "webhooks.update" | "webhooks.delete" | "webhooks.test" | "webhooks.replay" | "meetings.unlinked.list" | "pipeline.reconcile" | "workspace.agent_sales.get" | "workspace.agent_sales.update" | "sandbox.provider.update" | "reply.templates.list" | "reply.templates.create" | "reply.templates.update" | "reply.templates.delete" | "reply.policy.get" | "reply.policy.update" | "reply.approvals.list" | "conversation.draft.save" | "conversation.followup.set" | "conversation.followup.clear" | "followups.due" | "conversations.bulk.update" | "pipeline.board" | "calendar.booking.link.create" | "calendar.meeting.reschedule" | "calendar.meeting.cancel" | "campaign.followups.configure" | "campaign.variants.configure" | "recorder.settings.get" | "recorder.settings.update" | "recorder.bots.list" | "call.transcript.get" | "call.recording.get" | "call.transcripts.get" | "call.transcripts.search" | "readiness.check" | "sender.retire" | "sender.unretire" | "attribution.check" | "campaign.reengagement.prepare" | "agents.list" | "agent.inspect" | "agent.create.request" | "agent.pause" | "agent.resume" | "agent.credential.rotate" | "event_consumers.list" | "event_consumers.create" | "events.ack" | "events.snapshot" | "webhook.deliveries.list" | "webhooks.dlq.replay" | "classification.feedback" | "classification.quality" | "classification.backfill.plan" | "work_queue.list" | "work_item.claim" | "work_item.release" | "work_item.snooze" | "work_item.complete" | "work_queue.config.get" | "work_queue.config.update" | "metrics.reconcile" | "agent.heartbeat" | "agent.run.start" | "agent.run.end" | "agent.runs.list" | "agent.run.inspect" | "workspace.halt" | "workspace.resume" | "channel.halt" | "workspace.automation.inspect" | "feedback.submit" | "feedback.list" | "entity.resolve" | "entities.get" | "people.upsert" | "companies.upsert" | "entity.merge" | "entity.split" | "budget.status" | "call.stats.get" | "call.coaching.get" | "call.analytics.query" | "call.insight.get" | "call.access.list" | "call.audit.list" | "call.activity.get" | "call.analysis.get" | "call.outcome.confirm" | "call.attendance.get" | "call.insight.review" | "recorder.event.override.get" | "recorder.event.override.update" | "call.bot.cancel" | "call.bot.remove" | "call.recording.stop" | "recorder.status" | "call.bot.join" | "recorder.join.get" | "call.participant.withdrawal.report" | "call.delete";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel" | "events.list" | "conversations.changes" | "suppressions.list" | "suppressions.add" | "suppressions.remove" | "workspace.sandbox.create" | "sandbox.seed" | "sandbox.inbound.simulate" | "sandbox.clock.advance" | "call.outcome.set" | "meeting.link" | "meeting.unlink" | "webhooks.create" | "webhooks.list" | "webhooks.update" | "webhooks.delete" | "webhooks.test" | "webhooks.replay" | "meetings.unlinked.list" | "pipeline.reconcile" | "workspace.agent_sales.get" | "workspace.agent_sales.update" | "sandbox.provider.update" | "reply.templates.list" | "reply.templates.create" | "reply.templates.update" | "reply.templates.delete" | "reply.policy.get" | "reply.policy.update" | "reply.approvals.list" | "conversation.draft.save" | "conversation.followup.set" | "conversation.followup.clear" | "followups.due" | "conversations.bulk.update" | "pipeline.board" | "calendar.booking.link.create" | "calendar.meeting.reschedule" | "calendar.meeting.cancel" | "campaign.followups.configure" | "campaign.variants.configure" | "recorder.settings.get" | "recorder.settings.update" | "recorder.bots.list" | "call.transcript.get" | "call.recording.get" | "call.transcripts.get" | "call.transcripts.search" | "readiness.check" | "sender.retire" | "sender.unretire" | "attribution.check" | "campaign.reengagement.prepare" | "agents.list" | "agent.inspect" | "agent.create.request" | "agent.pause" | "agent.resume" | "agent.credential.rotate" | "event_consumers.list" | "event_consumers.create" | "events.ack" | "events.snapshot" | "webhook.deliveries.list" | "webhooks.dlq.replay" | "classification.feedback" | "classification.quality" | "classification.backfill.plan" | "work_queue.list" | "work_item.claim" | "work_item.release" | "work_item.snooze" | "work_item.complete" | "work_queue.config.get" | "work_queue.config.update" | "metrics.reconcile" | "agent.heartbeat" | "agent.run.start" | "agent.run.end" | "agent.runs.list" | "agent.run.inspect" | "workspace.halt" | "workspace.resume" | "channel.halt" | "workspace.automation.inspect" | "feedback.submit" | "feedback.list" | "entity.resolve" | "entities.get" | "people.upsert" | "companies.upsert" | "entity.merge" | "entity.split" | "budget.status" | "call.stats.get" | "call.coaching.get" | "call.analytics.query" | "call.insight.get" | "call.access.list" | "call.audit.list" | "call.activity.get" | "call.analysis.get" | "call.outcome.confirm" | "call.attendance.get" | "call.insight.review" | "recorder.event.override.get" | "recorder.event.override.update" | "call.bot.cancel" | "call.bot.remove" | "call.recording.stop" | "recorder.status" | "call.bot.join" | "recorder.join.get" | "call.participant.withdrawal.report" | "call.delete" | "copy.approval.request" | "campaign.draft.plan" | "campaign.draft.readiness" | "prospecting.preview" | "companies.lookalike" | "commitments.propose" | "commitments.list" | "commitment.update" | "commitment.confirm.batch" | "commitment.reminder.draft" | "list.rename" | "list.archive" | "campaign.draft.archive";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -5400,13 +5662,17 @@ export interface components {
             data?: components["schemas"]["AudiencePreviewHarnessData"] | null;
         };
         AudiencePreviewInput: {
+            channels?: ("instagram" | "facebook" | "linkedin" | "gmail" | "sms")[];
+            contactStatus?: ("never" | "contacted" | "replied" | "booked" | "closed" | "suppressed" | "contacted_no_reply_older_than_90d")[];
+            excludePreviouslyContacted?: boolean;
+            filters?: components["schemas"]["CompanySearchFilters"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
             sampleSize?: number;
-            state: components["schemas"]["AgentCampaignState"];
+            state?: components["schemas"]["AgentCampaignState"];
         };
         AudiencePreviewResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["AudiencePreviewHarnessResult"] | null;
+            data?: components["schemas"]["AudiencePreviewHarnessResult"] | null | components["schemas"]["ProspectingOperationData"];
             /** @constant */
             tool?: "audience.preview";
         };
@@ -6911,6 +7177,26 @@ export interface components {
             /** @constant */
             tool?: "campaign.delivery.update";
         };
+        CampaignDraftArchiveInput: {
+            campaignId: string;
+            expectedUpdatedAt: string;
+        };
+        CampaignDraftArchiveResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "campaign.draft.archive";
+        };
+        CampaignDraftPlanInput: {
+            approvalId?: string;
+            dryRun?: boolean;
+            idempotencyKey?: string;
+            plan?: components["schemas"]["ProspectingPlan"];
+        };
+        CampaignDraftPlanResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "campaign.draft.plan";
+        };
         CampaignDraftPrepareData: {
             audienceCount: number;
             campaignId: string;
@@ -6960,7 +7246,7 @@ export interface components {
             expectedAudienceCount?: number;
             expectedListUpdatedAt: components["schemas"]["ResourceVersion"];
             /** @description Exact sum of selected channelCounts, not the number of distinct companies. */
-            expectedTargetCount: number;
+            expectedTargetCount?: number;
             /**
              * @description Explicit user confirmation of recipient permission, required for email.
              * @constant
@@ -6990,6 +7276,14 @@ export interface components {
             data?: components["schemas"]["CampaignDraftPrepareData"] | null;
             /** @constant */
             tool?: "campaign.draft.prepare";
+        };
+        CampaignDraftReadinessInput: {
+            campaignId: string;
+        };
+        CampaignDraftReadinessResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "campaign.draft.readiness";
         };
         CampaignDraftUpdateData: {
             campaignId: string;
@@ -7559,12 +7853,14 @@ export interface components {
             updatedAt: string;
         };
         CampaignValidateInput: {
+            approvalId?: string;
+            plan?: components["schemas"]["ProspectingPlan"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
-            state: components["schemas"]["AgentCampaignState"];
+            state?: components["schemas"]["AgentCampaignState"];
         };
         CampaignValidateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["AgentHarnessResult"] | null;
+            data?: components["schemas"]["AgentHarnessResult"] | null | components["schemas"]["ProspectingOperationData"];
             /** @constant */
             tool?: "campaign.validate";
         };
@@ -7703,6 +7999,83 @@ export interface components {
             data?: components["schemas"]["ClassificationQualityOutput"] | null;
             /** @constant */
             tool?: "classification.quality";
+        };
+        CommitmentConfirmBatchInput: {
+            idempotencyKey: string;
+            items: {
+                dueAt?: string;
+                expectedUpdatedAt: string;
+                id: string;
+            }[];
+        };
+        CommitmentConfirmBatchResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "commitment.confirm.batch";
+        };
+        CommitmentReminderDraftInput: {
+            expectedConversationUpdatedAt: string;
+            id: string;
+            idempotencyKey: string;
+            text: string;
+        };
+        CommitmentReminderDraftResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "commitment.reminder.draft";
+        };
+        CommitmentsListInput: {
+            cursor?: string;
+            dueBefore?: string;
+            limit?: number;
+            /** @enum {unknown} */
+            ownerSide?: "us" | "prospect";
+            pipelineCardId?: string;
+            /** @enum {unknown} */
+            status?: "proposed" | "confirmed" | "due" | "done" | "cancelled" | "overdue";
+        };
+        CommitmentsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "commitments.list";
+        };
+        CommitmentsProposeInput: {
+            cursor?: string;
+            idempotencyKey: string;
+            meetingId: string;
+            timezone?: string;
+        };
+        CommitmentsProposeResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "commitments.propose";
+        };
+        CommitmentUpdateInput: {
+            dueAt?: string;
+            expectedUpdatedAt: string;
+            id: string;
+            idempotencyKey: string;
+            /** @enum {unknown} */
+            status: "confirmed" | "done" | "cancelled";
+        };
+        CommitmentUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "commitment.update";
+        };
+        CompaniesLookalikeInput: {
+            country?: components["schemas"]["SupportedCountry"];
+            cursor?: string;
+            limit?: number;
+            seed: {
+                companyKeys?: string[];
+                pipelineStages?: ("call_booked" | "meeting_held" | "won")[];
+            };
+        };
+        CompaniesLookalikeResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "companies.lookalike";
         };
         CompaniesUpsertInput: {
             companyId?: components["schemas"]["ResourceId"];
@@ -8552,7 +8925,7 @@ export interface components {
             businessIdRegistrationStart?: string;
             cities?: string[];
             companyForm?: string;
-            countries: components["schemas"]["SupportedCountry"][];
+            countries?: components["schemas"]["SupportedCountry"][];
             country?: components["schemas"]["SupportedCountry"];
             employeeMax?: string;
             employeeMin?: string;
@@ -8599,7 +8972,9 @@ export interface components {
             websiteFacts?: ("b2c" | "b2b" | "saas")[];
         };
         CompanySearchInput: {
+            contactStatus?: ("never" | "contacted" | "replied" | "booked" | "closed" | "suppressed" | "contacted_no_reply_older_than_90d")[];
             cursor?: string;
+            excludePreviouslyContacted?: boolean;
             /** @description Echo the complete opaque revision returned by the first search page, including any website-classification identity. Never truncate it. */
             expectedRevision?: string;
             filters: components["schemas"]["CompanySearchFilters"];
@@ -8959,6 +9334,15 @@ export interface components {
             data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["ConversationUpdateData"] | null;
             /** @constant */
             tool?: "conversation.update";
+        };
+        CopyApprovalRequestInput: {
+            idempotencyKey: string;
+            plan: components["schemas"]["ProspectingPlan"];
+        };
+        CopyApprovalRequestResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "copy.approval.request";
         };
         CopyPerformanceData: {
             attributionCoverage?: {
@@ -9467,8 +9851,9 @@ export interface components {
             waiting: number;
         };
         IndustryLookupInput: {
+            country?: components["schemas"]["SupportedCountry"];
             /** @enum {string} */
-            language?: "en" | "fi";
+            language?: "en" | "fi" | "sv";
             query: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
@@ -10000,6 +10385,15 @@ export interface components {
             enabled: boolean;
             steps: components["schemas"]["CampaignFollowUpStepInput"][];
         };
+        ListArchiveInput: {
+            expectedUpdatedAt: string;
+            listId: string;
+        };
+        ListArchiveResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "list.archive";
+        };
         ListImportData: {
             created: boolean;
             duplicateCount: number;
@@ -10057,11 +10451,26 @@ export interface components {
             /** @constant */
             tool?: "list.prepare";
         };
+        ListRenameInput: {
+            expectedUpdatedAt: string;
+            listId: string;
+            name: string;
+        };
+        ListRenameResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "list.rename";
+        };
         ListsListData: {
             lists: {
+                channelCounts?: {
+                    [key: string]: number;
+                };
                 isCompanyLeadList: boolean;
                 listId: string;
                 name: string;
+                total?: number;
+                updatedAt?: string;
             }[];
             nextOffset: number | null;
             total: number;
@@ -10538,6 +10947,83 @@ export interface components {
             data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["PipelineStageUpdateOutput"] | null;
             /** @constant */
             tool?: "pipeline.stage.update";
+        };
+        ProspectingCopy: {
+            followups?: {
+                body: string;
+                /** @enum {unknown} */
+                channel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
+                delayDays: number;
+                subject?: string;
+            }[];
+            messages: {
+                body: string;
+                /** @enum {unknown} */
+                channel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
+                subject?: string;
+            }[];
+        };
+        /** @description Exact workspace-scoped prospecting or disabled draft result. authorizesLaunch is always false when readiness is returned. */
+        ProspectingOperationData: {
+            approvalId?: string;
+            blockers?: string[];
+            campaignId?: string;
+            companies?: {
+                [key: string]: unknown;
+            }[];
+            created?: boolean;
+            dryRun?: boolean;
+            expectedRevision?: string;
+            listId?: string;
+            nextCursor?: string | null;
+            /** @description Search matches saved filters; it does not independently qualify the offering, buyer type, or current contact employment. Exact totals refer to the published inventory. */
+            qualification?: {
+                /** @constant */
+                basis: "published_filters";
+                /** @constant */
+                contactAffiliation: "not_verified";
+                guidance: string;
+                /** @constant */
+                offeringFit: "not_assessed";
+            };
+            querySignature?: string;
+            ready?: boolean;
+            total?: number;
+            totalExact?: boolean;
+        } & {
+            [key: string]: unknown;
+        };
+        ProspectingPlan: {
+            copy: components["schemas"]["ProspectingCopy"];
+            dailyCap?: number;
+            excludePreviouslyContacted?: boolean;
+            filters: components["schemas"]["CompanySearchFilters"];
+            labels?: "agent_test"[];
+            listName?: string;
+            mailboxIds?: string[];
+            name: string;
+            pacingSeconds?: number;
+            window?: {
+                endMinute: number;
+                startMinute: number;
+                timezone: string;
+                weekdays?: number;
+            };
+        };
+        ProspectingPreviewInput: {
+            channels?: ("instagram" | "facebook" | "linkedin" | "gmail" | "sms")[];
+            contactStatus?: ("never" | "contacted" | "replied" | "booked" | "closed" | "suppressed" | "contacted_no_reply_older_than_90d")[];
+            excludePreviouslyContacted?: boolean;
+            expectedRevision?: string;
+            filters: components["schemas"]["CompanySearchFilters"];
+            offset?: number;
+            querySignature?: string;
+            sampleSize?: number;
+        };
+        ProspectingPreviewResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ProspectingOperationData"] | null;
+            /** @constant */
+            tool?: "prospecting.preview";
         };
         ReadinessCheckInput: {
             /** @enum {string} */
@@ -13934,6 +14420,66 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    campaignDraftArchive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignDraftArchiveInput"];
+            };
+        };
+        responses: {
+            /** @description Archive an unstarted agent draft */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignDraftArchiveResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    campaignDraftPlan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignDraftPlanInput"];
+            };
+        };
+        responses: {
+            /** @description Plan or create a complete disabled campaign */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignDraftPlanResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     campaignDraftPrepare: {
         parameters: {
             query?: never;
@@ -13954,6 +14500,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CampaignDraftPrepareResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    campaignDraftReadiness: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignDraftReadinessInput"];
+            };
+        };
+        responses: {
+            /** @description Check draft readiness without launch intent */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignDraftReadinessResult"];
                 };
             };
             400: components["responses"]["BadRequest"];
@@ -14688,6 +15264,156 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    commitmentConfirmBatch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommitmentConfirmBatchInput"];
+            };
+        };
+        responses: {
+            /** @description Confirm call commitments */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommitmentConfirmBatchResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    commitmentReminderDraft: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommitmentReminderDraftInput"];
+            };
+        };
+        responses: {
+            /** @description Draft a commitment reminder */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommitmentReminderDraftResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    commitmentUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommitmentUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Update a call commitment */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommitmentUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    commitmentsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommitmentsListInput"];
+            };
+        };
+        responses: {
+            /** @description Read call commitments */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommitmentsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    commitmentsPropose: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CommitmentsProposeInput"];
+            };
+        };
+        responses: {
+            /** @description Propose commitments from a fresh call */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommitmentsProposeResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     companyEvidenceAdvance: {
         parameters: {
             query?: never;
@@ -15316,6 +16042,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    companiesLookalike: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompaniesLookalikeInput"];
+            };
+        };
+        responses: {
+            /** @description Find deterministic company lookalikes */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompaniesLookalikeResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     companySearch: {
         parameters: {
             query?: never;
@@ -15730,6 +16486,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ConversationsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    copyApprovalRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CopyApprovalRequestInput"];
+            };
+        };
+        responses: {
+            /** @description Request owner approval of campaign copy */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CopyApprovalRequestResult"];
                 };
             };
             400: components["responses"]["BadRequest"];
@@ -16826,6 +17612,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    listArchive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListArchiveInput"];
+            };
+        };
+        responses: {
+            /** @description Archive an unused agent list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListArchiveResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     listImport: {
         parameters: {
             query?: never;
@@ -16906,6 +17722,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListPrepareResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    listRename: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListRenameInput"];
+            };
+        };
+        responses: {
+            /** @description Rename a saved list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListRenameResult"];
                 };
             };
             400: components["responses"]["BadRequest"];
@@ -17305,6 +18151,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PipelineStageUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    prospectingPreview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProspectingPreviewInput"];
+            };
+        };
+        responses: {
+            /** @description Preview a compact exact prospect audience */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProspectingPreviewResult"];
                 };
             };
             400: components["responses"]["BadRequest"];

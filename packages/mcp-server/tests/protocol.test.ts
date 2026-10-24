@@ -338,7 +338,18 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   )) {
     const outputSchema = tool.outputSchema as JsonObject;
     assert.equal(outputSchema.type, "object", `${tool.name} must advertise a result schema`);
-    assert.ok(outputSchema.properties, `${tool.name} must describe its result fields`);
+    if (tool.name === "agent_heartbeat") {
+      const variants = outputSchema.oneOf as JsonObject[];
+      assert.equal(variants.length, 2, "heartbeat describes full and compact results");
+      for (const variant of variants) {
+        assert.equal(variant.type, "object");
+        assert.ok(variant.properties, "each heartbeat variant describes its fields");
+      }
+      assert.ok(variants.some((variant) => (variant.properties as JsonObject).durationMs));
+      assert.ok(variants.some((variant) => !(variant.properties as JsonObject).durationMs));
+    } else {
+      assert.ok(outputSchema.properties, `${tool.name} must describe its result fields`);
+    }
   }
   for (const tool of tools)
     assert.ok(tool.outputSchema, `${tool.name} must advertise a result schema`);
@@ -763,18 +774,58 @@ test(
 );
 
 test("heartbeat fits in 300 bytes over the actual MCP wire and full diagnostics remain available", async (t) => {
-  const { AGENT_TOOL_POLICIES,AGENT_CONTRACT_VERSION }=await import("@dmfaster/sdk");
-  const data={agentId:"agt_sandbox",status:"working",at:"2026-10-23T20:00:00.000Z",nextInSeconds:900,dryRun:false};
-  const wire=createWire({async invoke(tool){return {...result(tool),policy:AGENT_TOOL_POLICIES[tool],serverTime:data.at,contractVersion:AGENT_CONTRACT_VERSION,data};}});
-  t.after(()=>wire.close());
-  wire.send({jsonrpc:"2.0",id:1,method:"tools/call",params:{name:"agent_heartbeat",arguments:{agentId:data.agentId,status:"working"},_meta:modernEnvelope}});
-  const response=await wire.receive();
-  assert.equal(response.error,undefined);
-  const bytes=Buffer.byteLength(JSON.stringify(response)); t.diagnostic(`Heartbeat JSON-RPC response: ${bytes} bytes`);
-  assert.ok(bytes<=300,JSON.stringify(response));
-  const ack=response.result as JsonObject;assert.deepEqual(ack.content,[]);
-  assert.equal((ack.structuredContent as JsonObject).ok,true);
-  wire.send({jsonrpc:"2.0",id:2,method:"tools/call",params:{name:"agent_heartbeat",arguments:{agentId:data.agentId,status:"working",responseMode:"full"},_meta:modernEnvelope}});
-  const full=await wire.receive();assert.equal(full.error,undefined);
-  assert.equal(((full.result as JsonObject).structuredContent as JsonObject).tool,"agent.heartbeat");
+  const { AGENT_TOOL_POLICIES, AGENT_CONTRACT_VERSION } = await import("@dmfaster/sdk");
+  const data = {
+    agentId: "agt_sandbox",
+    status: "working",
+    at: "2026-10-23T20:00:00.000Z",
+    nextInSeconds: 900,
+    dryRun: false,
+  };
+  const wire = createWire({
+    async invoke(tool) {
+      return {
+        ...result(tool),
+        policy: AGENT_TOOL_POLICIES[tool],
+        serverTime: data.at,
+        contractVersion: AGENT_CONTRACT_VERSION,
+        data,
+      };
+    },
+  });
+  t.after(() => wire.close());
+  wire.send({
+    jsonrpc: "2.0",
+    id: 1,
+    method: "tools/call",
+    params: {
+      name: "agent_heartbeat",
+      arguments: { agentId: data.agentId, status: "working" },
+      _meta: modernEnvelope,
+    },
+  });
+  const response = await wire.receive();
+  assert.equal(response.error, undefined);
+  const bytes = Buffer.byteLength(JSON.stringify(response));
+  t.diagnostic(`Heartbeat JSON-RPC response: ${bytes} bytes`);
+  assert.ok(bytes <= 300, JSON.stringify(response));
+  const ack = response.result as JsonObject;
+  assert.deepEqual(ack.content, []);
+  assert.equal((ack.structuredContent as JsonObject).ok, true);
+  wire.send({
+    jsonrpc: "2.0",
+    id: 2,
+    method: "tools/call",
+    params: {
+      name: "agent_heartbeat",
+      arguments: { agentId: data.agentId, status: "working", responseMode: "full" },
+      _meta: modernEnvelope,
+    },
+  });
+  const full = await wire.receive();
+  assert.equal(full.error, undefined);
+  assert.equal(
+    ((full.result as JsonObject).structuredContent as JsonObject).tool,
+    "agent.heartbeat",
+  );
 });

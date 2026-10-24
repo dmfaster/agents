@@ -42,7 +42,7 @@ import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "2.4.0";
+export const CLI_VERSION = "2.5.0";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();
@@ -595,7 +595,7 @@ async function parseStateCommand(
   context: CliContext,
   options: { requireReviewedAudience?: boolean } = {},
 ): Promise<{
-  state: AgentToolInputMap["campaign.validate"]["state"];
+  state: NonNullable<AgentToolInputMap["campaign.validate"]["state"]>;
   sampleSize?: number;
   idempotencyKey?: string;
   reviewedAudience?: AgentToolInputMap["campaign.prepare"]["reviewedAudience"];
@@ -631,10 +631,9 @@ async function parseStateCommand(
   if (statePath === "-" && reviewedAudiencePath === "-") {
     throw new UsageError("Use standard input for either --state or --reviewed-audience, not both.");
   }
-  const state = (await parseCampaignStateFile(
-    statePath,
-    context,
-  )) as AgentToolInputMap["campaign.validate"]["state"];
+  const state = (await parseCampaignStateFile(statePath, context)) as NonNullable<
+    AgentToolInputMap["campaign.validate"]["state"]
+  >;
   const reviewedAudience = reviewedAudiencePath
     ? await parseReviewedAudienceFile(reviewedAudiencePath, context)
     : undefined;
