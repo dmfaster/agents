@@ -83,7 +83,7 @@ export async function searchWorkspaceMentions(
         const result = await client.invoke(
           "companies.suggest",
           {
-            countries: SupportedCountrySchema.options.map((country) => country.value),
+            countries: SupportedCountrySchema.options,
             query: normalized,
             limit: 10,
           },

@@ -39,7 +39,7 @@ function toolResult(result: AgentToolResult, tool: string, input: unknown) {
   const compact = compactHeartbeatResult(tool, input, result);
   if (compact)
     return {
-      content: [{ type: "text" as const, text: JSON.stringify(compact) }],
+      content: [],
       structuredContent: compact,
     };
 
@@ -125,6 +125,7 @@ function registerWithMcpServer(
   definition: AgentToolDefinition,
   auth?: HostedAuth,
   resultMetadata?: () => Record<string, unknown>,
+  fullOutputSchemas = false,
 ) {
   const domainName = AGENT_TOOL_NAMES.find(
     (name) => AGENT_TOOL_DEFINITIONS[name].mcp.name === definition.name,
@@ -140,7 +141,7 @@ function registerWithMcpServer(
         300,
       ),
       inputSchema: cachedMcpSchema(definition.inputSchema),
-      outputSchema: cachedMcpSchema(definition.outputSchema),
+      ...(fullOutputSchemas ? { outputSchema: cachedMcpSchema(definition.outputSchema) } : {}),
       annotations: definition.annotations,
       _meta: {
         ...oauthToolMetadata(auth, scopes),
@@ -167,6 +168,8 @@ function registerWithMcpServer(
 
 export function createDmfasterMcpCore(input: {
   client: AgentInvoker;
+  /** Include full generated output schemas for clients that need contract introspection. */
+  fullOutputSchemas?: boolean;
   hostedAuth?: HostedAuth;
   hostedConnection?: () => Promise<Record<string, unknown>>;
   registerLocalConnection?: (server: McpServer) => void;
@@ -216,7 +219,8 @@ export function createDmfasterMcpCore(input: {
       );
     });
   let definitions = permitted();
-  const coreNames = new Set([
+  const coreOrder = [
+    "prospect_query",
     "industry_lookup",
     "companies_search",
     "audience_preview",
@@ -225,13 +229,18 @@ export function createDmfasterMcpCore(input: {
     "copy_approval_request",
     "campaign_draft_readiness",
     "work_queue_list",
-  ]);
+  ];
+  const coreNames = new Set(coreOrder);
   const registered = new Map<string, NonNullable<ReturnType<typeof registerWithMcpServer>>>();
   const synchronizeCatalog = () => {
     definitions = permitted();
-    const visible = definitions.filter(
-      (d) => input.catalogProfile === "full" || coreNames.has(d.name),
-    );
+    const visible = definitions
+      .filter((d) => input.catalogProfile === "full" || coreNames.has(d.name))
+      .sort((left, right) => {
+        const leftIndex = coreOrder.indexOf(left.name);
+        const rightIndex = coreOrder.indexOf(right.name);
+        return (leftIndex < 0 ? coreOrder.length : leftIndex) - (rightIndex < 0 ? coreOrder.length : rightIndex);
+      });
     for (const [name, tool] of registered)
       if (!visible.some((d) => d.name === name)) {
         tool.remove();
@@ -239,7 +248,13 @@ export function createDmfasterMcpCore(input: {
       }
     for (const definition of visible)
       if (!registered.has(definition.name)) {
-        const tool = registerWithMcpServer(server, definition, activeAuth, input.resultMetadata);
+        const tool = registerWithMcpServer(
+          server,
+          definition,
+          activeAuth,
+          input.resultMetadata,
+          input.fullOutputSchemas,
+        );
         if (tool) registered.set(definition.name, tool);
       }
   };
@@ -272,10 +287,20 @@ export function createDmfasterMcpCore(input: {
       },
     },
     async ({ query, limit, includeSchema }) => {
-      const terms = (query || "").toLowerCase().split(/\s+/).filter(Boolean);
-      const matches = definitions.filter((d) =>
-        terms.every((term) => `${d.name} ${d.title} ${d.description}`.toLowerCase().includes(term)),
-      );
+      const stop = new Set(["a", "an", "the", "of", "for", "to", "and", "or", "option", "options"]);
+      const terms = (query || "")
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((term) => term.length > 1 && !stop.has(term));
+      const matches = definitions
+        .map((definition) => {
+          const haystack = `${definition.name} ${definition.title} ${definition.description}`.toLowerCase();
+          const score = terms.reduce((total, term) => total + (haystack.includes(term) ? 1 : 0), 0);
+          return { definition, score };
+        })
+        .filter((item) => !terms.length || item.score > 0)
+        .sort((left, right) => right.score - left.score || left.definition.name.localeCompare(right.definition.name))
+        .map((item) => item.definition);
       const items = matches.slice(0, Math.min(limit || 10, includeSchema ? 3 : 30)).map((d) => ({
         name: d.name,
         description: `${d.title}. ${d.description}`.slice(0, 300),
@@ -380,7 +405,13 @@ export function createDmfasterMcpCore(input: {
     input.registerLocalConnection?.(server);
   }
   if (input.uiTools) {
-    registerCampaignWorkspace(server, client, toolFailure, input.hostedAuth);
+    registerCampaignWorkspace(
+      server,
+      client,
+      toolFailure,
+      input.hostedAuth,
+      input.fullOutputSchemas,
+    );
     registerWorkspaceMentions(server, client, toolFailure, input.hostedAuth);
     registerOutreachDetails(server, client, toolFailure, input.hostedAuth);
   }

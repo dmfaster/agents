@@ -1,5 +1,5 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
-export const AGENT_CONTRACT_VERSION = "2.6.2" as const;
+export const AGENT_CONTRACT_VERSION = "2.7.0" as const;
 export const AGENT_TOOL_NAMES = [
   "analytics.summary",
   "workspace.briefing",
@@ -48,6 +48,7 @@ export const AGENT_TOOL_NAMES = [
   "campaign.pause",
   "companies.filters",
   "companies.suggest",
+  "prospect.query",
   "companies.search",
   "companies.evidence.search",
   "companies.knowledge.search",
@@ -468,6 +469,11 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     exposure: "public_api",
   },
   "companies.suggest": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "prospect.query": {
     effect: "read",
     approval: "none",
     exposure: "public_api",
@@ -1456,6 +1462,7 @@ export const AGENT_TOOL_SCOPES = {
   "campaign.pause": ["campaigns:write"],
   "companies.filters": ["audiences:read"],
   "companies.suggest": ["audiences:read"],
+  "prospect.query": ["audiences:read"],
   "companies.search": ["audiences:read"],
   "companies.evidence.search": ["audiences:read"],
   "companies.knowledge.search": ["audiences:read"],
@@ -2943,7 +2950,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "companies_filters",
       title: "Discover company filters",
       description:
-        "Read all live Companies filter fields, country-specific options and restrictions. No campaign state required.",
+        "Read all live Companies filter fields, country-specific options and restrictions, including Finnish regions. No campaign state required.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -2974,6 +2981,25 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "B2B company prospecting",
       usage: "companies suggest --input FILE",
       command: ["companies", "suggest"],
+    },
+  },
+  "prospect.query": {
+    mcp: {
+      name: "prospect_query",
+      title: "Query an ICP",
+      description:
+        "Give an ICP in words or codes. Returns exact totals and every matching company, paged up to 1000 compact rows. Echo nextCursor alone for the next page. Country defaults to Finland.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "B2B company prospecting",
+      usage: "prospect query --input FILE",
+      command: ["prospect", "query"],
     },
   },
   "companies.search": {
@@ -6655,6 +6681,9 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   "companies.suggest": {
     $ref: "#/components/schemas/CompanySuggestionsInput",
   },
+  "prospect.query": {
+    $ref: "#/components/schemas/ProspectQueryInput",
+  },
   "companies.search": {
     $ref: "#/components/schemas/CompanySearchInput",
   },
@@ -7442,6 +7471,12 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      responseMode: {
+        type: "string",
+        enum: ["compact", "full"],
+        description:
+          "Compact returns conversation identity, reply state and a bounded latest-message preview. Full returns full context. When omitted, view and fields control the response.",
+      },
       from: {
         $ref: "#/components/schemas/ResourceVersion",
       },
@@ -10062,6 +10097,150 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "integer",
         minimum: 1,
         maximum: 10,
+      },
+      runId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+        description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
+      },
+    },
+  },
+  ProspectQueryInput: {
+    type: "object",
+    additionalProperties: false,
+    description:
+      "Plain-language icp and explicit fields. Explicit fields override the phrase. A cursor or querySignature alone reruns the saved ICP. runId may be a server id run_… or any correlation token of letters, numbers, dot, underscore, colon or hyphen.",
+    properties: {
+      country: {
+        $ref: "#/components/schemas/SupportedCountry",
+      },
+      icp: {
+        type: "string",
+        maxLength: 500,
+      },
+      industries: {
+        type: "array",
+        maxItems: 8,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 80,
+        },
+      },
+      regions: {
+        type: "array",
+        maxItems: 19,
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+      },
+      cities: {
+        type: "array",
+        maxItems: 32,
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+      },
+      employees: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          min: {
+            type: "integer",
+            minimum: 0,
+            maximum: 1000000,
+          },
+          max: {
+            type: "integer",
+            minimum: 0,
+            maximum: 1000000,
+          },
+          unknown: {
+            type: "string",
+            enum: ["include", "exclude", "only"],
+          },
+        },
+      },
+      revenueEur: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          min: {
+            type: "integer",
+            minimum: 0,
+          },
+          max: {
+            type: "integer",
+            minimum: 0,
+          },
+          unknown: {
+            type: "string",
+            enum: ["include", "exclude"],
+          },
+        },
+      },
+      technologies: {
+        type: "array",
+        maxItems: 8,
+        items: {
+          type: "string",
+          maxLength: 40,
+        },
+      },
+      websiteFacts: {
+        type: "array",
+        maxItems: 3,
+        items: {
+          type: "string",
+          enum: ["b2c", "b2b", "saas"],
+        },
+      },
+      evidence: {
+        type: "string",
+        enum: ["annotate", "require", "include_evidence_only"],
+      },
+      fundingPublic: {
+        type: "boolean",
+      },
+      fundingFromYear: {
+        type: "string",
+        minLength: 4,
+        maxLength: 4,
+        pattern: "^20[0-9]{2}$",
+      },
+      googleAds: {
+        type: "string",
+        enum: ["last_30_days", "last_90_days", "last_12_months"],
+      },
+      requireChannel: {
+        type: "string",
+        enum: ["none", "any", "linkedin", "email", "instagram", "facebook", "sms"],
+      },
+      excludePreviouslyContacted: {
+        type: "boolean",
+      },
+      activeOnly: {
+        type: "boolean",
+      },
+      format: {
+        type: "string",
+        enum: ["rows", "columns", "count"],
+      },
+      pageSize: {
+        type: "integer",
+        minimum: 1,
+        maximum: 1000,
+      },
+      cursor: {
+        type: "string",
+        maxLength: 12000,
+      },
+      querySignature: {
+        type: "string",
+        maxLength: 12000,
       },
       runId: {
         type: "string",
@@ -15111,6 +15290,8 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         enum: ["me", "unassigned", "any"],
       },
       view: {
+        description:
+          "Compact is the default and omits full person, company and explanation context while retaining IDs, claim and version fences. Use standard for the full work item.",
         type: "string",
         enum: ["compact", "standard"],
       },

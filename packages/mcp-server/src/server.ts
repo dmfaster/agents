@@ -160,10 +160,12 @@ export function createDmfasterMcpServer(input: {
   env?: NodeJS.ProcessEnv;
   auth?: McpAuthInput;
   instagramEvaluation?: InstagramEvaluationConfig;
+  uiTools?: boolean;
 }) {
   return createDmfasterMcpCore({
     catalogProfile: input.env?.DMFASTER_MCP_PROFILE === "full" ? "full" : "compact",
     client: input.client,
+    uiTools: input.uiTools === true,
     registerLocalConnection(server) {
       registerConnectionStatus(server, input.env ?? process.env, input.auth ?? {});
       const evaluation =

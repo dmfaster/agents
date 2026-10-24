@@ -124,6 +124,7 @@ export function registerCampaignWorkspace(
     isError: boolean;
   },
   auth?: HostedAuth,
+  fullOutputSchemas = false,
 ) {
   const openWorkspace = async (campaignId?: string, options?: AgentToolCallOptions) => {
     try {
@@ -290,7 +291,7 @@ export function registerCampaignWorkspace(
         "Opening reads through existing workspace permissions and never changes data. Headless hosts receive structured content.",
       ].join(" "),
       inputSchema: campaignWorkspaceInputSchema,
-      outputSchema: campaignWorkspaceOutputSchema,
+      ...(fullOutputSchemas ? { outputSchema: campaignWorkspaceOutputSchema } : {}),
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -326,7 +327,7 @@ export function registerCampaignWorkspace(
         auth,
       ),
       inputSchema: companiesWorkspaceInputSchema,
-      outputSchema: workspaceOutputSchema,
+      ...(fullOutputSchemas ? { outputSchema: workspaceOutputSchema } : {}),
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -362,7 +363,7 @@ export function registerCampaignWorkspace(
               "Open the Companies section for company filters, a saved list or website evidence.",
           },
         ),
-      outputSchema: workspaceOutputSchema,
+      ...(fullOutputSchemas ? { outputSchema: workspaceOutputSchema } : {}),
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,

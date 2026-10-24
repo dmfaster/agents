@@ -48,6 +48,7 @@ export type AgentToolInputMap = {
   "campaign.pause": operations["campaignPause"]["requestBody"]["content"]["application/json"];
   "companies.filters": operations["companyFilters"]["requestBody"]["content"]["application/json"];
   "companies.suggest": operations["companySuggestions"]["requestBody"]["content"]["application/json"];
+  "prospect.query": operations["prospectQuery"]["requestBody"]["content"]["application/json"];
   "companies.search": operations["companySearch"]["requestBody"]["content"]["application/json"];
   "companies.evidence.search": operations["companyEvidenceSearch"]["requestBody"]["content"]["application/json"];
   "companies.knowledge.search": operations["companyKnowledgeSearch"]["requestBody"]["content"]["application/json"];
@@ -377,6 +378,9 @@ export type AgentToolDataMap = {
   >;
   "companies.suggest": NonNullable<
     operations["companySuggestions"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "prospect.query": NonNullable<
+    operations["prospectQuery"]["responses"][200]["content"]["application/json"]["data"]
   >;
   "companies.search": NonNullable<
     operations["companySearch"]["responses"][200]["content"]["application/json"]["data"]

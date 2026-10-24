@@ -31,5 +31,10 @@ test("connection default stays under 2 KiB and names/full are explicit", () => {
   const names = projectConnectionStatus(full, "names");
   assert.ok(Array.isArray(names.scopeEligibleMcpTools));
   assert.equal("scopeEligibleTools" in names, false);
-  assert.deepEqual(projectConnectionStatus(full, "full"), { ...full, toolsView: "full" });
+  assert.deepEqual(projectConnectionStatus(full, "full"), {
+    ...full,
+    blockedTools: [],
+    grantUrl: "https://app.dmfaster.com/settings",
+    toolsView: "full",
+  });
 });

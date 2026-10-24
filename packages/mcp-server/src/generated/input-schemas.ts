@@ -1,13 +1,17 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
 import { z } from "zod";
-export const ResourceIdSchema = z
+const SharedInput1Schema = z
+  .enum(["today", "last_24_hours", "campaign_to_date", "range"])
+  .describe("Defaults to range over the last 30 days ending now when omitted.");
+const SharedInput2Schema = z
   .string()
   .trim()
   .min(1)
   .max(160)
   .regex(new RegExp(".*\\S.*"))
   .describe("A resource identifier returned by DM Faster. Never guess an identifier from a name.");
-export const ResourceVersionSchema = z
+export const ResourceIdSchema = SharedInput2Schema;
+const SharedInput3Schema = z
   .string()
   .min(20)
   .max(32)
@@ -19,104 +23,66 @@ export const ResourceVersionSchema = z
   .describe(
     "UTC resource version. Legacy PostgreSQL timestamps with an explicit offset remain accepted during the 2.x deprecation window.",
   );
+export const ResourceVersionSchema = SharedInput3Schema;
+const SharedInput4Schema = z
+  .string()
+  .min(1)
+  .max(100)
+  .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.");
 export const AnalyticsSummaryInputSchema = z
   .object({
-    scope: z
-      .union([
-        z.literal("today"),
-        z.literal("last_24_hours"),
-        z.literal("campaign_to_date"),
-        z.literal("range"),
-      ])
-      .describe("Defaults to range over the last 30 days ending now when omitted.")
-      .optional(),
+    scope: SharedInput1Schema.optional(),
     campaign: ResourceIdSchema.describe(
       "Optional campaign identifier or exact campaign name.",
     ).optional(),
     from: ResourceVersionSchema.optional(),
     to: ResourceVersionSchema.optional(),
     groupBy: z
-      .array(
-        z.union([
-          z.literal("day"),
-          z.literal("week"),
-          z.literal("channel"),
-          z.literal("campaign"),
-          z.literal("actor"),
-          z.literal("variant"),
-        ]),
-      )
+      .array(z.enum(["day", "week", "channel", "campaign", "actor", "variant"]))
       .max(6)
       .optional(),
     timezone: z.string().max(100).optional(),
     include: z
-      .array(
-        z.union([
-          z.literal("canonical"),
-          z.literal("legacy"),
-          z.literal("metrics"),
-          z.literal("definitions"),
-        ]),
-      )
+      .array(z.enum(["canonical", "legacy", "metrics", "definitions"]))
       .max(3)
       .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WorkspaceBriefingInputSchema = z
   .object({
     include: z
-      .array(z.union([z.literal("metrics"), z.literal("legacy")]))
+      .array(z.enum(["metrics", "legacy"]))
       .max(1)
       .optional(),
     from: ResourceVersionSchema.optional(),
     to: ResourceVersionSchema.optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
-export const CampaignStatusSchema = z.union([
-  z.literal("Draft"),
-  z.literal("Queued"),
-  z.literal("Running"),
-  z.literal("Paused"),
-  z.literal("Cooldown"),
-  z.literal("Completed"),
+const SharedInput5Schema = z.enum([
+  "Draft",
+  "Queued",
+  "Running",
+  "Paused",
+  "Cooldown",
+  "Completed",
 ]);
-export const TargetChannelSchema = z.union([
-  z.literal("instagram"),
-  z.literal("facebook"),
-  z.literal("linkedin"),
-  z.literal("gmail"),
-  z.literal("sms"),
-]);
+export const CampaignStatusSchema = SharedInput5Schema;
+export const TargetChannelSchema = z.enum(["instagram", "facebook", "linkedin", "gmail", "sms"]);
+const SharedInput6Schema = z
+  .string()
+  .min(1)
+  .max(500)
+  .describe("Opaque nextCursor returned by the preceding page.");
 export const CampaignsListInputSchema = z
   .object({
     status: CampaignStatusSchema.optional(),
     query: z.string().min(1).max(120).describe("Case-insensitive campaign name search.").optional(),
     channel: TargetChannelSchema.optional(),
     limit: z.number().int().min(1).max(25).optional(),
-    cursor: z
-      .string()
-      .min(1)
-      .max(500)
-      .describe("Opaque nextCursor returned by the preceding page.")
-      .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    cursor: SharedInput6Schema.optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const OptionalCampaignInputSchema = z
@@ -125,118 +91,96 @@ export const OptionalCampaignInputSchema = z
       "Omit to use the selected, active, or most recent campaign.",
     ).optional(),
     include: z
-      .array(z.union([z.literal("legacy"), z.literal("metrics")]))
+      .array(z.enum(["legacy", "metrics"]))
       .max(1)
       .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignInspectInputSchema = OptionalCampaignInputSchema;
 export const CampaignCopyInspectInputSchema = z
-  .object({
-    campaignId: ResourceIdSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ campaignId: ResourceIdSchema, runId: SharedInput4Schema.optional() })
   .strict();
 export const SendingInspectInputSchema = OptionalCampaignInputSchema;
+const SharedInput7Schema = z
+  .string()
+  .min(1)
+  .max(120)
+  .regex(new RegExp(".*\\S.*"))
+  .describe("Optional case-insensitive reply search text.");
 export const RepliesListInputSchema = z
   .object({
     campaignId: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(20).optional(),
-    query: z
-      .string()
-      .min(1)
-      .max(120)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("Optional case-insensitive reply search text.")
-      .optional(),
+    query: SharedInput7Schema.optional(),
     cursor: z.string().min(1).max(6000).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
-export const InboxChannelSchema = z.union([
-  z.literal("instagram"),
-  z.literal("facebook"),
-  z.literal("linkedin"),
-  z.literal("gmail"),
-  z.literal("outlook"),
-  z.literal("email"),
-  z.literal("sms"),
+const SharedInput8Schema = z
+  .enum(["compact", "full"])
+  .describe(
+    "Compact returns conversation identity, reply state and a bounded latest-message preview. Full returns full context. When omitted, view and fields control the response.",
+  );
+const SharedInput9Schema = z.enum([
+  "id",
+  "channel",
+  "targetName",
+  "needsReply",
+  "lastMessageAt",
+  "lastInboundAt",
+  "interestIntent",
+  "lastMessageText",
 ]);
+const SharedInput10Schema = z.enum([
+  "all",
+  "needs_reply",
+  "waiting",
+  "unread",
+  "snoozed",
+  "closed",
+]);
+const SharedInput11Schema = z
+  .enum([
+    "interested",
+    "information_requested",
+    "meeting_intent",
+    "meeting_proposed_time",
+    "asks_pricing",
+    "not_now",
+    "wrong_person",
+    "not_interested",
+    "opt_out",
+    "acknowledgement",
+    "unclear",
+  ])
+  .describe(
+    "Exact stored intent; unlike the app label filter, opt_out does not include not_interested or not_now.",
+  );
+const SharedInput12Schema = z.enum([
+  "instagram",
+  "facebook",
+  "linkedin",
+  "gmail",
+  "outlook",
+  "email",
+  "sms",
+]);
+export const InboxChannelSchema = SharedInput12Schema;
 export const ConversationsListInputSchema = z
   .object({
+    responseMode: SharedInput8Schema.optional(),
     from: ResourceVersionSchema.optional(),
     to: ResourceVersionSchema.optional(),
     fields: z
-      .array(
-        z.union([
-          z.literal("id"),
-          z.literal("channel"),
-          z.literal("targetName"),
-          z.literal("needsReply"),
-          z.literal("lastMessageAt"),
-          z.literal("lastInboundAt"),
-          z.literal("interestIntent"),
-          z.literal("lastMessageText"),
-        ]),
-      )
+      .array(SharedInput9Schema)
       .max(8)
       .describe("Select compact conversation fields; id and channel are always retained.")
       .optional(),
-    view: z
-      .union([z.literal("compact"), z.literal("standard"), z.literal("full"), z.literal("summary")])
-      .optional(),
-    filter: z
-      .union([
-        z.literal("all"),
-        z.literal("needs_reply"),
-        z.literal("waiting"),
-        z.literal("unread"),
-        z.literal("snoozed"),
-        z.literal("closed"),
-      ])
-      .optional(),
-    interest: z
-      .union([
-        z.literal("positive"),
-        z.literal("neutral"),
-        z.literal("negative"),
-        z.literal("needs_review"),
-      ])
-      .optional(),
-    intent: z
-      .union([
-        z.literal("interested"),
-        z.literal("information_requested"),
-        z.literal("meeting_intent"),
-        z.literal("meeting_proposed_time"),
-        z.literal("asks_pricing"),
-        z.literal("not_now"),
-        z.literal("wrong_person"),
-        z.literal("not_interested"),
-        z.literal("opt_out"),
-        z.literal("acknowledgement"),
-        z.literal("unclear"),
-      ])
-      .describe(
-        "Exact stored intent; unlike the app label filter, opt_out does not include not_interested or not_now.",
-      )
-      .optional(),
+    view: z.enum(["compact", "standard", "full", "summary"]).optional(),
+    filter: SharedInput10Schema.optional(),
+    interest: z.enum(["positive", "neutral", "negative", "needs_review"]).optional(),
+    intent: SharedInput11Schema.optional(),
     channel: InboxChannelSchema.optional(),
     mailboxId: ResourceIdSchema.optional(),
     campaignId: ResourceIdSchema.optional(),
@@ -245,20 +189,13 @@ export const ConversationsListInputSchema = z
     includeAutomaticResponses: z.boolean().optional(),
     cursor: z.string().min(1).max(2000).optional(),
     limit: z.number().int().min(1).max(60).optional(),
-    meetingStatus: z
-      .union([z.literal("none"), z.literal("booked"), z.literal("held"), z.literal("no_show")])
-      .optional(),
+    meetingStatus: z.enum(["none", "booked", "held", "no_show"]).optional(),
     followupDue: z.boolean().optional(),
     include: z
-      .array(z.union([z.literal("legacy"), z.literal("metrics")]))
+      .array(z.enum(["legacy", "metrics"]))
       .max(1)
       .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ConversationInspectInputSchema = z
@@ -266,55 +203,43 @@ export const ConversationInspectInputSchema = z
     conversationId: ResourceIdSchema,
     cursor: z.string().min(1).max(2000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput13Schema = z.enum([
+  "mark_read",
+  "mark_unread",
+  "close",
+  "reopen",
+  "snooze",
+  "unsnooze",
+  "assign_to_me",
+  "unassign",
+  "set_interest",
+]);
+const SharedInput14Schema = z.enum([
+  "interested",
+  "information_requested",
+  "meeting_intent",
+  "meeting_proposed_time",
+  "asks_pricing",
+  "not_now",
+  "wrong_person",
+  "not_interested",
+  "opt_out",
+  "acknowledgement",
+  "unclear",
+]);
 export const ConversationUpdateInputSchema = z
   .object({
     dryRun: z.boolean().optional(),
     conversationId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
-    action: z.union([
-      z.literal("mark_read"),
-      z.literal("mark_unread"),
-      z.literal("close"),
-      z.literal("reopen"),
-      z.literal("snooze"),
-      z.literal("unsnooze"),
-      z.literal("assign_to_me"),
-      z.literal("unassign"),
-      z.literal("set_interest"),
-    ]),
+    action: SharedInput13Schema,
     snoozedUntil: ResourceVersionSchema.optional(),
-    interestLevel: z
-      .union([z.literal("positive"), z.literal("neutral"), z.literal("negative")])
-      .optional(),
-    interestIntent: z
-      .union([
-        z.literal("interested"),
-        z.literal("information_requested"),
-        z.literal("meeting_intent"),
-        z.literal("meeting_proposed_time"),
-        z.literal("asks_pricing"),
-        z.literal("not_now"),
-        z.literal("wrong_person"),
-        z.literal("not_interested"),
-        z.literal("opt_out"),
-        z.literal("acknowledgement"),
-        z.literal("unclear"),
-      ])
-      .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    interestLevel: z.enum(["positive", "neutral", "negative"]).optional(),
+    interestIntent: SharedInput14Schema.optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const IdempotencyKeySchema = z
@@ -352,36 +277,18 @@ export const ConversationReplyInputSchema = z
         "For 2.1 clients only: the owner explicitly approved this exact free text and conversation. Otherwise save a draft.",
       )
       .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ConversationReplyInspectInputSchema = z
-  .object({
-    idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ idempotencyKey: IdempotencyKeySchema, runId: SharedInput4Schema.optional() })
   .strict();
 export const CampaignMessagesDraftListInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
     afterId: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignMessagesDraftUpdateInputSchema = z
@@ -401,19 +308,14 @@ export const CampaignMessagesDraftUpdateInputSchema = z
         z
           .object({
             targetHandle: z.string().min(1).max(180),
-            channel: z.union([z.literal("instagram"), z.literal("facebook")]),
+            channel: z.enum(["instagram", "facebook"]),
             message: z.union([z.string().min(1).max(1000).regex(new RegExp("\\S")), z.null()]),
           })
           .strict(),
       )
       .min(1)
       .max(100),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignMessagesListInputSchema = z
@@ -421,21 +323,24 @@ export const CampaignMessagesListInputSchema = z
     campaignId: ResourceIdSchema,
     expectedRunId: ResourceIdSchema.optional(),
     channels: z
-      .array(z.union([z.literal("instagram"), z.literal("facebook"), z.literal("linkedin")]))
+      .array(z.enum(["instagram", "facebook", "linkedin"]))
       .min(1)
       .max(3)
       .optional(),
     jobIds: z.array(ResourceIdSchema).min(1).max(100).optional(),
     afterJobId: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput15Schema = z
+  .string()
+  .min(1)
+  .max(2000)
+  .regex(new RegExp("\\S"))
+  .describe(
+    "Exact recipient copy, preserving whitespace and Unicode. Null removes the override and restores current campaign or sequence copy.",
+  );
 export const CampaignMessagesUpdateInputSchema = z
   .object({
     dryRun: z
@@ -454,22 +359,11 @@ export const CampaignMessagesUpdateInputSchema = z
           .object({
             jobId: ResourceIdSchema,
             targetHandle: z.string().min(1).max(180),
-            channel: z.union([
-              z.literal("instagram"),
-              z.literal("facebook"),
-              z.literal("linkedin"),
-            ]),
+            channel: z.enum(["instagram", "facebook", "linkedin"]),
             expectedJobUpdatedAt: ResourceVersionSchema,
             message: z
               .union([
-                z
-                  .string()
-                  .min(1)
-                  .max(2000)
-                  .regex(new RegExp("\\S"))
-                  .describe(
-                    "Exact recipient copy, preserving whitespace and Unicode. Null removes the override and restores current campaign or sequence copy.",
-                  ),
+                SharedInput15Schema,
                 z
                   .null()
                   .describe(
@@ -490,14 +384,9 @@ export const CampaignFollowupsListInputSchema = z
   .object({
     limit: z.number().int().min(1).max(100).optional(),
     campaignId: ResourceIdSchema,
-    view: z.union([z.literal("upcoming"), z.literal("done")]).optional(),
+    view: z.enum(["upcoming", "done"]).optional(),
     cursor: z.string().min(1).max(512).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignFollowupsCancelInputSchema = z
@@ -512,12 +401,7 @@ export const CampaignFollowupsCancelInputSchema = z
     expectedCampaignUpdatedAt: ResourceVersionSchema,
     jobIds: z.array(ResourceIdSchema).min(1).max(50),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignOutcomesListInputSchema = z
@@ -525,12 +409,7 @@ export const CampaignOutcomesListInputSchema = z
     campaignId: ResourceIdSchema,
     cursor: z.string().min(1).max(512).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const DeliveryTestPrepareInputSchema = z
@@ -541,17 +420,12 @@ export const DeliveryTestPrepareInputSchema = z
         "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
       )
       .optional(),
-    channel: z.union([z.literal("email"), z.literal("sms")]),
+    channel: z.enum(["email", "sms"]),
     to: z.string().trim().min(3).max(254),
     mailboxId: ResourceIdSchema.optional(),
     recipientConsentConfirmed: z.literal(true),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const DeliveryTestSendInputSchema = z
@@ -564,23 +438,13 @@ export const DeliveryTestSendInputSchema = z
       .optional(),
     testId: z.string().regex(new RegExp("^delivery_test_[a-f0-9]{64}$")),
     reviewDigest: z.string().regex(new RegExp("^[a-f0-9]{64}$")),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const DeliveryTestInspectInputSchema = z
   .object({
     testId: z.string().regex(new RegExp("^delivery_test_[a-f0-9]{64}$")),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const HistoryListInputSchema = z
@@ -589,20 +453,20 @@ export const HistoryListInputSchema = z
     cursor: z.string().min(1).max(512).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     search: z.string().min(3).max(120).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const PipelineInspectInputSchema = OptionalCampaignInputSchema;
-export const PipelineStageSchema = z.union([
-  z.literal("contacted"),
-  z.literal("replied"),
-  z.literal("call_booked"),
-  z.literal("closed"),
+export const PipelineStageSchema = z.enum(["contacted", "replied", "call_booked", "closed"]);
+const SharedInput16Schema = z.enum([
+  "contacted",
+  "replied",
+  "call_booked",
+  "meeting_held",
+  "no_show",
+  "closed",
+  "won",
+  "lost",
 ]);
 export const PipelineCardsListInputSchema = z
   .object({
@@ -612,32 +476,12 @@ export const PipelineCardsListInputSchema = z
     cursor: z.string().min(1).max(4000).optional(),
     query: z.string().min(1).max(120).optional(),
     entityKey: z.string().min(1).max(320).optional(),
-    stages: z
-      .array(
-        z.union([
-          z.literal("contacted"),
-          z.literal("replied"),
-          z.literal("call_booked"),
-          z.literal("meeting_held"),
-          z.literal("no_show"),
-          z.literal("closed"),
-          z.literal("won"),
-          z.literal("lost"),
-        ]),
-      )
-      .min(1)
-      .max(8)
-      .optional(),
+    stages: z.array(SharedInput16Schema).min(1).max(8).optional(),
     include: z
-      .array(z.union([z.literal("legacy"), z.literal("metrics")]))
+      .array(z.enum(["legacy", "metrics"]))
       .max(1)
       .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const PipelineStageUpdateInputSchema = z
@@ -648,28 +492,18 @@ export const PipelineStageUpdateInputSchema = z
     stageKey: z.string().min(1).max(500),
     expectedStage: PipelineStageSchema,
     stage: PipelineStageSchema,
-    closedOutcome: z.union([z.literal("won"), z.literal("lost")]).optional(),
+    closedOutcome: z.enum(["won", "lost"]).optional(),
     lostReason: z.string().max(2000).optional(),
     expectedUpdatedAt: ResourceVersionSchema.optional(),
     idempotencyKey: IdempotencyKeySchema.optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const PipelineNoteListInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
     entityKey: z.string().min(1).max(320),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const PipelineNoteAddInputSchema = z
@@ -684,58 +518,49 @@ export const PipelineNoteAddInputSchema = z
     entityKey: z.string().min(1).max(320),
     body: z.string().min(1).max(2000),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CompanyTimelineInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
     companyOutreachId: ResourceIdSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
-export const SupportedCountrySchema = z.union([
-  z.literal("FI"),
-  z.literal("NO"),
-  z.literal("EE"),
-  z.literal("SE"),
-  z.literal("DK"),
-  z.literal("UK"),
-  z.literal("IE"),
-  z.literal("AE"),
-  z.literal("AT"),
-  z.literal("BE"),
-  z.literal("CA"),
-  z.literal("NL"),
-  z.literal("NZ"),
-  z.literal("ES"),
-  z.literal("FR"),
-  z.literal("HK"),
-  z.literal("IL"),
-  z.literal("LV"),
-  z.literal("LT"),
-  z.literal("IT"),
-  z.literal("CH"),
-  z.literal("PT"),
-  z.literal("SA"),
-  z.literal("SG"),
-  z.literal("IS"),
-  z.literal("AU"),
-  z.literal("DE"),
-  z.literal("US"),
-  z.literal("ZA"),
+const SharedInput17Schema = z.enum([
+  "FI",
+  "NO",
+  "EE",
+  "SE",
+  "DK",
+  "UK",
+  "IE",
+  "AE",
+  "AT",
+  "BE",
+  "CA",
+  "NL",
+  "NZ",
+  "ES",
+  "FR",
+  "HK",
+  "IL",
+  "LV",
+  "LT",
+  "IT",
+  "CH",
+  "PT",
+  "SA",
+  "SG",
+  "IS",
+  "AU",
+  "DE",
+  "US",
+  "ZA",
 ]);
-export const TolVersionSchema = z.union([z.literal("2008"), z.literal("2025")]);
+export const SupportedCountrySchema = SharedInput17Schema;
+export const TolVersionSchema = z.enum(["2008", "2025"]);
 export const IndustryLookupInputSchema = z
   .object({
     countries: z.array(SupportedCountrySchema).min(1).max(1).optional(),
@@ -750,13 +575,8 @@ export const IndustryLookupInputSchema = z
         "Expected exactly one schema match",
       )
       .optional(),
-    language: z.union([z.literal("en"), z.literal("fi"), z.literal("sv")]).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    language: z.enum(["en", "fi", "sv"]).optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const AgentBusinessProfileSchema = z
@@ -793,11 +613,7 @@ export const AgentIndustryClarificationOptionSchema = z
   .strict();
 export const AgentIndustryResolutionSchema = z
   .object({
-    status: z.union([
-      z.literal("resolved"),
-      z.literal("needs_clarification"),
-      z.literal("unsupported"),
-    ]),
+    status: z.enum(["resolved", "needs_clarification", "unsupported"]),
     sourceText: z.string().max(800),
     resolvedLabel: z.string().max(240),
     primaryVersion: TolVersionSchema,
@@ -864,10 +680,10 @@ export const AgentMetaAdsFilterSchema = z
         "Expected exactly one schema match",
       ),
     targetGender: z
-      .union([z.union([z.literal("all"), z.literal("men"), z.literal("women")]), z.null()])
+      .union([z.enum(["all", "men", "women"]), z.null()])
       .refine(
         (value) =>
-          [z.union([z.literal("all"), z.literal("men"), z.literal("women")]), z.null()].filter(
+          [z.enum(["all", "men", "women"]), z.null()].filter(
             (candidate) => candidate.safeParse(value).success,
           ).length === 1,
         "Expected exactly one schema match",
@@ -876,19 +692,16 @@ export const AgentMetaAdsFilterSchema = z
     includeUncorroborated: z.boolean(),
   })
   .strict();
+const SharedInput18Schema = z.enum([
+  "recent_funding",
+  "active_hiring",
+  "leadership_change",
+  "technology_usage",
+  "content_activity",
+  "purchase_intent",
+]);
 export const AgentSignalCriterionSchema = z
-  .object({
-    key: z.union([
-      z.literal("recent_funding"),
-      z.literal("active_hiring"),
-      z.literal("leadership_change"),
-      z.literal("technology_usage"),
-      z.literal("content_activity"),
-      z.literal("purchase_intent"),
-    ]),
-    required: z.boolean(),
-    description: z.string(),
-  })
+  .object({ key: SharedInput18Schema, required: z.boolean(), description: z.string() })
   .strict();
 export const AgentCampaignDeliverySettingsSchema = z
   .object({
@@ -907,17 +720,18 @@ export const AgentCampaignDeliverySettingsSchema = z
     confirmed: z.boolean(),
   })
   .strict();
+const SharedInput19Schema = z.enum([
+  "user",
+  "user_requested_generation",
+  "agent_draft",
+  "user_approved_generation",
+]);
 export const AgentOutreachMessageSchema = z
   .object({
     channels: z.array(TargetChannelSchema),
     subject: z.string(),
     body: z.string(),
-    origin: z.union([
-      z.literal("user"),
-      z.literal("user_requested_generation"),
-      z.literal("agent_draft"),
-      z.literal("user_approved_generation"),
-    ]),
+    origin: SharedInput19Schema,
   })
   .strict();
 export const AgentCampaignBriefSchema = z
@@ -933,24 +747,12 @@ export const AgentCampaignBriefSchema = z
     decisionMakerRoles: z.array(z.string()),
     companySize: AgentCompanySizeSchema,
     googleAdsActivityWindow: z
-      .union([
-        z.union([
-          z.literal("last_30_days"),
-          z.literal("last_90_days"),
-          z.literal("last_12_months"),
-        ]),
-        z.null(),
-      ])
+      .union([z.enum(["last_30_days", "last_90_days", "last_12_months"]), z.null()])
       .refine(
         (value) =>
-          [
-            z.union([
-              z.literal("last_30_days"),
-              z.literal("last_90_days"),
-              z.literal("last_12_months"),
-            ]),
-            z.null(),
-          ].filter((candidate) => candidate.safeParse(value).success).length === 1,
+          [z.enum(["last_30_days", "last_90_days", "last_12_months"]), z.null()].filter(
+            (candidate) => candidate.safeParse(value).success,
+          ).length === 1,
         "Expected exactly one schema match",
       )
       .optional(),
@@ -1008,6 +810,18 @@ export const ProspectingAudiencePageSchema = z
   .describe(
     "Bounded inventory page. Exact eligibility totals cover this page only; follow returned nextOffset for subsequent pages. Each draft page requires its own idempotencyKey.",
   );
+const SharedInput20Schema = z
+  .string()
+  .max(120)
+  .describe(
+    "Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only.",
+  );
+const SharedInput21Schema = z.union([
+  z.literal(null),
+  z.literal("last_30_days"),
+  z.literal("last_90_days"),
+  z.literal("last_12_months"),
+]);
 export const CompanySearchFiltersSchema = z
   .object({
     country: SupportedCountrySchema.optional(),
@@ -1019,7 +833,7 @@ export const CompanySearchFiltersSchema = z
         z
           .object({
             classification: z.literal("TOL"),
-            version: z.union([z.literal("2008"), z.literal("2025")]),
+            version: z.enum(["2008", "2025"]),
             codes: z.array(z.string().max(5)).max(64),
           })
           .strict(),
@@ -1048,7 +862,7 @@ export const CompanySearchFiltersSchema = z
       )
       .optional(),
     websiteFacts: z
-      .array(z.union([z.literal("b2c"), z.literal("b2b"), z.literal("saas")]))
+      .array(z.enum(["b2c", "b2b", "saas"]))
       .max(3)
       .describe(
         "Positive-only saved Finnish website classifications with non-exhaustive coverage. Multiple selected facts must all match. b2c is a provisional consumer-targeting candidate; b2b and saas are independently scored positive candidates. Omission applies no website-fact restriction; absence is not a negative classification. Available only for Finnish audiences.",
@@ -1063,30 +877,15 @@ export const CompanySearchFiltersSchema = z
         "Require verified open employer job postings in Finland. False removes this requirement; it does not mean not hiring. Unavailable or stale recruitment publications fail closed.",
       )
       .optional(),
-    hiringTitleQuery: z
-      .string()
-      .max(120)
-      .describe(
-        "Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only.",
-      )
-      .optional(),
+    hiringTitleQuery: SharedInput20Schema.optional(),
     hasPublicFunding: z.boolean().optional(),
     fundingSources: z.array(z.string().max(40)).max(5).optional(),
     fundingFromYear: z.string().max(4).optional(),
-    googleAdsActivityWindow: z
-      .union([
-        z.literal(null),
-        z.literal("last_30_days"),
-        z.literal("last_90_days"),
-        z.literal("last_12_months"),
-      ])
-      .optional(),
+    googleAdsActivityWindow: SharedInput21Schema.optional(),
     metaAdsActiveOnly: z.boolean().optional(),
     metaAdsMinimumEuReach: z.string().max(10).optional(),
     metaAdsTargetAge: z.string().max(3).optional(),
-    metaAdsTargetGender: z
-      .union([z.literal(""), z.literal("all"), z.literal("men"), z.literal("women")])
-      .optional(),
+    metaAdsTargetGender: z.enum(["", "all", "men", "women"]).optional(),
     metaAdsTargetLocation: z.string().max(80).optional(),
     metaAdsIncludeUncorroborated: z.boolean().optional(),
     hasWebsite: z.boolean().optional(),
@@ -1102,6 +901,7 @@ export const CompanySearchFiltersSchema = z
   .describe(
     "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies_filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
   );
+const SharedInput22Schema = z.enum(["instagram", "facebook", "linkedin", "gmail", "email", "sms"]);
 export const ProspectingCopySchema = z
   .object({
     variables: z
@@ -1117,14 +917,7 @@ export const ProspectingCopySchema = z
       .array(
         z
           .object({
-            channel: z.union([
-              z.literal("instagram"),
-              z.literal("facebook"),
-              z.literal("linkedin"),
-              z.literal("gmail"),
-              z.literal("email"),
-              z.literal("sms"),
-            ]),
+            channel: SharedInput22Schema,
             subject: z.string().max(500).optional(),
             body: z.string().min(1).max(1600),
           })
@@ -1136,14 +929,7 @@ export const ProspectingCopySchema = z
       .array(
         z
           .object({
-            channel: z.union([
-              z.literal("instagram"),
-              z.literal("facebook"),
-              z.literal("linkedin"),
-              z.literal("gmail"),
-              z.literal("email"),
-              z.literal("sms"),
-            ]),
+            channel: SharedInput22Schema,
             subject: z.string().max(500).optional(),
             body: z.string().min(1).max(1600),
             delayDays: z.number().int().min(1).max(30),
@@ -1180,53 +966,31 @@ export const ProspectingPlanSchema = z
 export const CampaignValidateInputSchema = z
   .object({
     state: AgentCampaignStateSchema.optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
     plan: ProspectingPlanSchema.optional(),
     approvalId: z.string().min(1).max(160).optional(),
   })
   .strict();
+const SharedInput23Schema = z.enum([
+  "never",
+  "contacted",
+  "replied",
+  "booked",
+  "closed",
+  "suppressed",
+  "contacted_no_reply_older_than_90d",
+]);
 export const AudiencePreviewInputSchema = z
   .object({
     state: AgentCampaignStateSchema.optional(),
     sampleSize: z.number().int().min(1).max(25).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
     filters: CompanySearchFiltersSchema.optional(),
     channels: z
-      .array(
-        z.union([
-          z.literal("instagram"),
-          z.literal("facebook"),
-          z.literal("linkedin"),
-          z.literal("gmail"),
-          z.literal("sms"),
-        ]),
-      )
+      .array(z.enum(["instagram", "facebook", "linkedin", "gmail", "sms"]))
       .max(5)
       .optional(),
-    contactStatus: z
-      .array(
-        z.union([
-          z.literal("never"),
-          z.literal("contacted"),
-          z.literal("replied"),
-          z.literal("booked"),
-          z.literal("closed"),
-          z.literal("suppressed"),
-          z.literal("contacted_no_reply_older_than_90d"),
-        ]),
-      )
-      .max(7)
-      .optional(),
+    contactStatus: z.array(SharedInput23Schema).max(7).optional(),
     excludePreviouslyContacted: z.boolean().optional(),
   })
   .strict();
@@ -1239,12 +1003,7 @@ export const ListsListInputSchema = z
       .optional(),
     limit: z.number().int().min(1).max(25).optional(),
     offset: z.number().int().min(0).max(1000000).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ListInspectInputSchema = z
@@ -1253,12 +1012,7 @@ export const ListInspectInputSchema = z
     username: z.string().min(1).max(64).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     offset: z.number().int().min(0).max(1000000).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ListTargetRemoveInputSchema = z
@@ -1272,14 +1026,30 @@ export const ListTargetRemoveInputSchema = z
     listId: ResourceIdSchema,
     username: z.string().min(1).max(64),
     expectedListUpdatedAt: ResourceVersionSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput24Schema = z
+  .enum(["instagram", "facebook", "linkedin", "gmail", "sms"])
+  .describe(
+    "Single-channel shorthand. Supply this or channels for company lists; defaults to Instagram for username lists.",
+  );
+const SharedInput25Schema = z
+  .string()
+  .min(1)
+  .max(500)
+  .describe("Email subject shared by all messageVariants, which become the email body variants.");
+const SharedInput26Schema = z
+  .string()
+  .min(1)
+  .max(1600)
+  .describe("Separate SMS message, required when SMS is selected.");
+const SharedInput27Schema = z
+  .string()
+  .max(300)
+  .describe(
+    "Separate LinkedIn invitation note, required when LinkedIn is combined with another channel.",
+  );
 export const CampaignDraftPrepareInputSchema = z
   .object({
     dryRun: z
@@ -1288,58 +1058,21 @@ export const CampaignDraftPrepareInputSchema = z
         "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
       )
       .optional(),
-    channel: z
-      .union([
-        z.literal("instagram"),
-        z.literal("facebook"),
-        z.literal("linkedin"),
-        z.literal("gmail"),
-        z.literal("sms"),
-      ])
-      .describe(
-        "Single-channel shorthand. Supply this or channels for company lists; defaults to Instagram for username lists.",
-      )
-      .optional(),
+    channel: SharedInput24Schema.optional(),
     channels: z
-      .array(
-        z.union([
-          z.literal("instagram"),
-          z.literal("facebook"),
-          z.literal("linkedin"),
-          z.literal("gmail"),
-          z.literal("sms"),
-        ]),
-      )
+      .array(z.enum(["instagram", "facebook", "linkedin", "gmail", "sms"]))
       .min(1)
       .max(5)
       .describe("Channels on one campaign. Mutually exclusive with channel.")
       .optional(),
-    gmailSubject: z
-      .string()
-      .min(1)
-      .max(500)
-      .describe(
-        "Email subject shared by all messageVariants, which become the email body variants.",
-      )
-      .optional(),
+    gmailSubject: SharedInput25Schema.optional(),
     gmailRecipientConsentConfirmed: z
       .literal(true)
       .describe("Explicit user confirmation of recipient permission, required for email.")
       .optional(),
     mailboxIds: z.array(ResourceIdSchema).min(1).max(8).optional(),
-    smsBody: z
-      .string()
-      .min(1)
-      .max(1600)
-      .describe("Separate SMS message, required when SMS is selected.")
-      .optional(),
-    linkedinInviteNote: z
-      .string()
-      .max(300)
-      .describe(
-        "Separate LinkedIn invitation note, required when LinkedIn is combined with another channel.",
-      )
-      .optional(),
+    smsBody: SharedInput26Schema.optional(),
+    linkedinInviteNote: SharedInput27Schema.optional(),
     expectedAudienceCount: z
       .number()
       .int()
@@ -1367,33 +1100,14 @@ export const CampaignDraftPrepareInputSchema = z
     onlyNewChats: z.literal(true),
     skipPreviouslyMessaged: z.literal(true),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignFollowUpStepInputSchema = z
   .object({
     delayDays: z.number().int().min(1).max(30),
-    channel: z.union([
-      z.literal("inherit"),
-      z.literal("instagram"),
-      z.literal("facebook"),
-      z.literal("linkedin"),
-      z.literal("gmail"),
-    ]),
-    fallbackChannel: z
-      .union([
-        z.literal("none"),
-        z.literal("instagram"),
-        z.literal("facebook"),
-        z.literal("linkedin"),
-        z.literal("gmail"),
-      ])
-      .optional(),
+    channel: z.enum(["inherit", "instagram", "facebook", "linkedin", "gmail"]),
+    fallbackChannel: z.enum(["none", "instagram", "facebook", "linkedin", "gmail"]).optional(),
     subject: z.string().max(500).optional(),
     variants: z.array(z.string().min(1).max(1000)).min(1).max(4),
   })
@@ -1422,9 +1136,7 @@ export const CampaignDraftUpdateInputSchema = z
         instagramEnabled: z.boolean().optional(),
         facebookEnabled: z.boolean().optional(),
         linkedinEnabled: z.boolean().optional(),
-        linkedinInviteMode: z
-          .union([z.literal("invite_only"), z.literal("invite_with_note")])
-          .optional(),
+        linkedinInviteMode: z.enum(["invite_only", "invite_with_note"]).optional(),
         linkedinInviteNote: z.string().max(300).optional(),
         followUpSequence: CampaignFollowUpSequenceInputSchema.describe(
           "Shared social follow-ups, or the accepted-message sequence for a LinkedIn-only campaign.",
@@ -1441,12 +1153,7 @@ export const CampaignDraftUpdateInputSchema = z
       })
       .strict()
       .refine((value) => Object.keys(value).length >= 1, "Provide at least 1 properties"),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ListImportInputSchema = z
@@ -1466,12 +1173,7 @@ export const ListImportInputSchema = z
         "Instagram handles; whitespace and a leading @ are removed and case is normalized. Invalid handles reject the whole import.",
       ),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ReviewedAudienceSchema = z
@@ -1501,12 +1203,7 @@ export const ListPrepareInputSchema = z
     sampleSize: z.number().int().min(1).max(25).optional(),
     idempotencyKey: IdempotencyKeySchema.optional(),
     reviewedAudience: ReviewedAudienceSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignPrepareInputSchema = ListPrepareInputSchema;
@@ -1520,12 +1217,7 @@ export const CampaignActionPreflightInputSchema = z
       .optional(),
     campaignId: ResourceIdSchema,
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignActionInputSchema = z
@@ -1539,43 +1231,27 @@ export const CampaignActionInputSchema = z
     campaignId: ResourceIdSchema,
     idempotencyKey: IdempotencyKeySchema,
     authorizationId: z.string().regex(new RegExp("^agent_action_[a-f0-9]{32}$")),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput28Schema = z.enum([
+  "filterFields",
+  "defaults",
+  "availability",
+  "metadata",
+  "technologies",
+  "fundingSources",
+  "restrictions",
+]);
 export const CompanyFiltersInputSchema = z
   .object({
     country: SupportedCountrySchema.optional(),
-    sections: z
-      .array(
-        z.union([
-          z.literal("filterFields"),
-          z.literal("defaults"),
-          z.literal("availability"),
-          z.literal("metadata"),
-          z.literal("technologies"),
-          z.literal("fundingSources"),
-          z.literal("restrictions"),
-        ]),
-      )
-      .max(8)
-      .optional(),
-    view: z
-      .union([z.literal("compact"), z.literal("standard"), z.literal("full"), z.literal("summary")])
-      .optional(),
+    sections: z.array(SharedInput28Schema).max(8).optional(),
+    view: z.enum(["compact", "standard", "full", "summary"]).optional(),
     countries: z.array(SupportedCountrySchema).min(1).max(32).optional(),
     states: z.array(z.string().max(80)).max(32).optional(),
     citySearch: z.string().max(120).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CompanySuggestionsInputSchema = z
@@ -1584,55 +1260,86 @@ export const CompanySuggestionsInputSchema = z
     query: z.string().min(2).max(120),
     countries: z.array(SupportedCountrySchema).min(1).max(32).optional(),
     limit: z.number().int().min(1).max(10).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput29Schema = z.enum([
+  "none",
+  "any",
+  "linkedin",
+  "email",
+  "instagram",
+  "facebook",
+  "sms",
+]);
+export const ProspectQueryInputSchema = z
+  .object({
+    country: SupportedCountrySchema.optional(),
+    icp: z.string().max(500).optional(),
+    industries: z.array(z.string().min(1).max(80)).max(8).optional(),
+    regions: z.array(z.string().max(80)).max(19).optional(),
+    cities: z.array(z.string().max(80)).max(32).optional(),
+    employees: z
+      .object({
+        min: z.number().int().min(0).max(1000000).optional(),
+        max: z.number().int().min(0).max(1000000).optional(),
+        unknown: z.enum(["include", "exclude", "only"]).optional(),
+      })
+      .strict()
+      .optional(),
+    revenueEur: z
+      .object({
+        min: z.number().int().min(0).optional(),
+        max: z.number().int().min(0).optional(),
+        unknown: z.enum(["include", "exclude"]).optional(),
+      })
+      .strict()
+      .optional(),
+    technologies: z.array(z.string().max(40)).max(8).optional(),
+    websiteFacts: z
+      .array(z.enum(["b2c", "b2b", "saas"]))
+      .max(3)
+      .optional(),
+    evidence: z.enum(["annotate", "require", "include_evidence_only"]).optional(),
+    fundingPublic: z.boolean().optional(),
+    fundingFromYear: z.string().min(4).max(4).regex(new RegExp("^20[0-9]{2}$")).optional(),
+    googleAds: z.enum(["last_30_days", "last_90_days", "last_12_months"]).optional(),
+    requireChannel: SharedInput29Schema.optional(),
+    excludePreviouslyContacted: z.boolean().optional(),
+    activeOnly: z.boolean().optional(),
+    format: z.enum(["rows", "columns", "count"]).optional(),
+    pageSize: z.number().int().min(1).max(1000).optional(),
+    cursor: z.string().max(12000).optional(),
+    querySignature: z.string().max(12000).optional(),
+    runId: SharedInput4Schema.optional(),
+  })
+  .strict()
+  .describe(
+    "Plain-language icp and explicit fields. Explicit fields override the phrase. A cursor or querySignature alone reruns the saved ICP. runId may be a server id run_… or any correlation token of letters, numbers, dot, underscore, colon or hyphen.",
+  );
+const SharedInput30Schema = z
+  .enum(["list", "rich"])
+  .describe(
+    "List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company_inspect.",
+  );
+const SharedInput31Schema = z
+  .string()
+  .max(1024)
+  .describe(
+    "Echo the complete opaque revision returned by the first search page, including any website-classification identity. Never truncate it.",
+  );
 export const CompanySearchInputSchema = z
   .object({
     limit: z.number().int().min(1).max(100).optional(),
     filters: CompanySearchFiltersSchema,
-    projection: z
-      .union([z.literal("list"), z.literal("rich")])
-      .describe(
-        "List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company_inspect.",
-      )
-      .optional(),
+    projection: SharedInput30Schema.optional(),
     page: z.number().int().min(1).max(10000).optional(),
     pageSize: z.number().int().min(1).max(100).optional(),
     cursor: z.string().max(1000).optional(),
-    expectedRevision: z
-      .string()
-      .max(1024)
-      .describe(
-        "Echo the complete opaque revision returned by the first search page, including any website-classification identity. Never truncate it.",
-      )
-      .optional(),
+    expectedRevision: SharedInput31Schema.optional(),
     querySignature: z.string().max(200).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-    contactStatus: z
-      .array(
-        z.union([
-          z.literal("never"),
-          z.literal("contacted"),
-          z.literal("replied"),
-          z.literal("booked"),
-          z.literal("closed"),
-          z.literal("suppressed"),
-          z.literal("contacted_no_reply_older_than_90d"),
-        ]),
-      )
-      .max(7)
-      .optional(),
+    runId: SharedInput4Schema.optional(),
+    contactStatus: z.array(SharedInput23Schema).max(7).optional(),
     excludePreviouslyContacted: z.boolean().optional(),
   })
   .strict();
@@ -1640,7 +1347,7 @@ export const WebsiteEvidenceCriterionSchema = z
   .object({
     id: z.string().min(1).max(60),
     statement: z.string().min(1).max(800),
-    requirement: z.union([z.literal("advertised"), z.literal("any_support")]),
+    requirement: z.enum(["advertised", "any_support"]),
     retrievalTerms: z
       .array(z.string().min(1).max(100))
       .min(0)
@@ -1660,7 +1367,7 @@ export const WebsiteEvidenceCriterionSchema = z
   .strict();
 export const CompanyEvidenceSearchInputSchema = z
   .object({
-    country: z.union([z.literal("FI")]),
+    country: z.enum(["FI"]),
     query: z.string().min(1).max(1500),
     criteria: z.array(WebsiteEvidenceCriterionSchema).min(1).max(4),
     filters: CompanySearchFiltersSchema.describe(
@@ -1678,78 +1385,68 @@ export const CompanyEvidenceSearchInputSchema = z
     cursor: z.string().min(1).max(200).optional(),
     expectedRevision: z.string().min(1).max(200).optional(),
     querySignature: z.string().min(1).max(200).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput32Schema = z.enum([
+  "offers_software",
+  "offers_saas_b2b",
+  "offers_it_services",
+  "offers_marketing",
+  "offers_consulting",
+  "offers_accounting",
+  "offers_legal",
+  "offers_recruitment",
+  "offers_training",
+  "offers_engineering",
+  "offers_industrial_services",
+  "offers_construction",
+  "offers_property_services",
+  "offers_logistics",
+  "offers_manufactured_goods",
+  "offers_wholesale",
+  "offers_machinery",
+  "offers_food",
+  "offers_healthcare",
+  "offers_finance",
+  "offers_energy",
+  "offers_hospitality",
+  "role_manufacturer",
+  "role_reseller",
+  "role_service_provider",
+  "buyer_business",
+  "buyer_consumer",
+  "buyer_public_sector",
+  "buyer_manufacturing",
+  "buyer_construction",
+  "buyer_property",
+  "buyer_retail",
+  "buyer_healthcare",
+  "buyer_hospitality",
+  "buyer_logistics",
+  "buyer_technology",
+  "buyer_finance",
+  "buyer_energy",
+  "buyer_education",
+  "buyer_agriculture",
+]);
 export const WorkspaceCompanyKnowledgeInputSchema = z
   .object({
     query: z.string().max(200).optional(),
-    facets: z
-      .array(
-        z.union([
-          z.literal("offers_software"),
-          z.literal("offers_saas_b2b"),
-          z.literal("offers_it_services"),
-          z.literal("offers_marketing"),
-          z.literal("offers_consulting"),
-          z.literal("offers_accounting"),
-          z.literal("offers_legal"),
-          z.literal("offers_recruitment"),
-          z.literal("offers_training"),
-          z.literal("offers_engineering"),
-          z.literal("offers_industrial_services"),
-          z.literal("offers_construction"),
-          z.literal("offers_property_services"),
-          z.literal("offers_logistics"),
-          z.literal("offers_manufactured_goods"),
-          z.literal("offers_wholesale"),
-          z.literal("offers_machinery"),
-          z.literal("offers_food"),
-          z.literal("offers_healthcare"),
-          z.literal("offers_finance"),
-          z.literal("offers_energy"),
-          z.literal("offers_hospitality"),
-          z.literal("role_manufacturer"),
-          z.literal("role_reseller"),
-          z.literal("role_service_provider"),
-          z.literal("buyer_business"),
-          z.literal("buyer_consumer"),
-          z.literal("buyer_public_sector"),
-          z.literal("buyer_manufacturing"),
-          z.literal("buyer_construction"),
-          z.literal("buyer_property"),
-          z.literal("buyer_retail"),
-          z.literal("buyer_healthcare"),
-          z.literal("buyer_hospitality"),
-          z.literal("buyer_logistics"),
-          z.literal("buyer_technology"),
-          z.literal("buyer_finance"),
-          z.literal("buyer_energy"),
-          z.literal("buyer_education"),
-          z.literal("buyer_agriculture"),
-        ]),
-      )
-      .max(40)
-      .optional(),
+    facets: z.array(SharedInput32Schema).max(40).optional(),
     page: z.number().int().min(1).max(10000).optional(),
     pageSize: z.number().int().min(1).max(100).optional(),
     expectedRevision: z.string().min(64).max(64).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput33Schema = z
+  .string()
+  .regex(new RegExp("^[a-f0-9]{64}$"))
+  .describe("Pin subsequent source pages to the knowledgeRevision returned by the first read.");
 export const CompanyKnowledgeInputSchema = z
   .object({
-    country: z.union([z.literal("FI")]),
+    country: z.enum(["FI"]),
     businessId: z.string().min(1).max(192),
     maxAgeDays: z.number().int().min(1).max(90).optional(),
     sourcePage: z
@@ -1766,45 +1463,31 @@ export const CompanyKnowledgeInputSchema = z
       .max(20)
       .describe("Original passages per page; defaults to 10.")
       .optional(),
-    expectedKnowledgeRevision: z
-      .string()
-      .regex(new RegExp("^[a-f0-9]{64}$"))
-      .describe("Pin subsequent source pages to the knowledgeRevision returned by the first read.")
-      .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    expectedKnowledgeRevision: SharedInput33Schema.optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput34Schema = z
+  .enum(["binary", "passage"])
+  .describe(
+    "Binary evaluates related website sections together in one compact request per company. Passage preserves separate relationship statuses and explicit-denial merging. Omission preserves passage behavior.",
+  );
+const SharedInput35Schema = z
+  .enum(["requested_only", "general"])
+  .describe(
+    "Binary mode only. New runs default to requested_only and ask only uncached requested criteria; general explicitly adds reusable standard offering/buyer questions to the same call on complete sources. Existing omitted-policy keys recover their original general run. Cached requested answers never trigger extra inference. Country and other deterministic filters are checked in code.",
+  );
 export const CompanyEvidenceStartInputSchema = z
   .object({
-    country: z.union([z.literal("FI")]),
+    country: z.enum(["FI"]),
     query: z.string().min(1).max(1500),
     criteria: z.array(WebsiteEvidenceCriterionSchema).min(1).max(4),
-    evaluationMode: z
-      .union([z.literal("binary"), z.literal("passage")])
-      .describe(
-        "Binary evaluates related website sections together in one compact request per company. Passage preserves separate relationship statuses and explicit-denial merging. Omission preserves passage behavior.",
-      )
-      .optional(),
-    factExpansion: z
-      .union([z.literal("requested_only"), z.literal("general")])
-      .describe(
-        "Binary mode only. New runs default to requested_only and ask only uncached requested criteria; general explicitly adds reusable standard offering/buyer questions to the same call on complete sources. Existing omitted-policy keys recover their original general run. Cached requested answers never trigger extra inference. Country and other deterministic filters are checked in code.",
-      )
-      .optional(),
+    evaluationMode: SharedInput34Schema.optional(),
+    factExpansion: SharedInput35Schema.optional(),
     filters: CompanySearchFiltersSchema.optional(),
     maxAgeDays: z.number().int().min(1).max(90).optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CompanyEvidenceAdvanceInputSchema = z
@@ -1832,7 +1515,7 @@ export const CompanyEvidenceResultsInputSchema = z
     expectedRevision: z.string().min(64).max(64),
     cursor: z.string().min(1).max(200).optional(),
     pageSize: z.number().int().min(1).max(20).optional(),
-    view: z.union([z.literal("matches"), z.literal("unresolved"), z.literal("all")]).optional(),
+    view: z.enum(["matches", "unresolved", "all"]).optional(),
   })
   .strict();
 export const CompanyEvidenceCancelInputSchema = z
@@ -1842,14 +1525,14 @@ export const CompanyInspectInputSchema = z
   .object({
     country: SupportedCountrySchema,
     businessId: z.string().min(1).max(192),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput36Schema = z
+  .string()
+  .min(20)
+  .max(500)
+  .describe("What B2B appointment-setting service is being sold to these companies.");
 export const CompanyFitStartInputSchema = z
   .object({
     dryRun: z
@@ -1864,11 +1547,7 @@ export const CompanyFitStartInputSchema = z
     expectedListUpdatedAt: ResourceVersionSchema,
     expectedTotal: z.number().int().min(1).max(25000),
     expectedTargetCount: z.number().int().min(0).max(125000),
-    offer: z
-      .string()
-      .min(20)
-      .max(500)
-      .describe("What B2B appointment-setting service is being sold to these companies."),
+    offer: SharedInput36Schema,
     refreshEvidence: z
       .boolean()
       .describe("Ignore recent evidence from the same workspace and fetch websites anew.")
@@ -1886,12 +1565,7 @@ export const CompanyFitStartInputSchema = z
     unknownsFromRunId: ResourceIdSchema.describe(
       "Review only unknowns from this completed, recent run; carry forward its other assessments only for the same offer, website and exact audience.",
     ).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CompanyFitAdvanceInputSchema = z
@@ -1909,12 +1583,10 @@ export const CompanyFitAdvanceInputSchema = z
 export const CompanyFitResultsInputSchema = z
   .object({
     runId: ResourceIdSchema,
-    tier: z
-      .union([z.literal("strong"), z.literal("possible"), z.literal("poor"), z.literal("unknown")])
-      .optional(),
+    tier: z.enum(["strong", "possible", "poor", "unknown"]).optional(),
     offset: z.number().int().min(0).max(1000000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    sort: z.union([z.literal("priority"), z.literal("audience")]).optional(),
+    sort: z.enum(["priority", "audience"]).optional(),
     expectedComplete: z
       .number()
       .int()
@@ -1959,30 +1631,25 @@ export const CompanyListPrepareInputSchema = z
       .min(1)
       .max(50),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CompanyListInspectInputSchema = z
   .object({
-    view: z.union([z.literal("compact"), z.literal("standard"), z.literal("full")]).optional(),
+    view: z.enum(["compact", "standard", "full"]).optional(),
     fields: z.array(z.string().max(80)).max(30).optional(),
     listId: ResourceIdSchema,
     offset: z.number().int().min(0).max(1000000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     expectedUpdatedAt: z.string().max(160).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput37Schema = z
+  .string()
+  .min(64)
+  .max(64)
+  .describe("Echo selectionDigest from the matching dry run when apply is true.");
 export const CompanyListRefineInputSchema = z
   .object({
     dryRun: z
@@ -2027,35 +1694,20 @@ export const CompanyListRefineInputSchema = z
     expectedRemaining: z.number().int().min(1).max(25000),
     expectedRemainingTargetCount: z.number().int().min(1).max(125000),
     idempotencyKey: IdempotencyKeySchema,
-    reviewedSelectionDigest: z
-      .string()
-      .min(64)
-      .max(64)
-      .describe("Echo selectionDigest from the matching dry run when apply is true.")
-      .optional(),
+    reviewedSelectionDigest: SharedInput37Schema.optional(),
     apply: z
       .boolean()
       .describe(
         "False previews exact removals without a write. True applies the same reviewed selection to the disabled draft list.",
       ),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignOperationInspectInputSchema = z
   .object({
     campaignId: z.string().min(1).max(160),
     commandId: z.string().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]+$")),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignDeliveryInspectInputSchema = z
@@ -2069,12 +1721,7 @@ export const CampaignDeliveryInspectInputSchema = z
     afterJobId: z.string().max(160).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     campaignId: z.string().min(1).max(160),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignDeliveryUpdateInputSchema = z
@@ -2099,24 +1746,19 @@ export const CampaignDeliveryUpdateInputSchema = z
       })
       .strict()
       .refine((value) => Object.keys(value).length >= 1, "Provide at least 1 properties"),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const InstagramPacingInspectInputSchema = z
-  .object({
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ runId: SharedInput4Schema.optional() })
   .strict();
+const SharedInput38Schema = z
+  .string()
+  .regex(
+    new RegExp(
+      "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-8][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$",
+    ),
+  );
 export const InstagramPacingPolicySchema = z
   .object({
     gapMinSeconds: z.number().int().min(12).max(3600),
@@ -2134,16 +1776,7 @@ export const InstagramPacingUpdateInputSchema = z
         "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
       )
       .optional(),
-    expectedRevision: z.union([
-      z
-        .string()
-        .regex(
-          new RegExp(
-            "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-8][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$",
-          ),
-        ),
-      z.null(),
-    ]),
+    expectedRevision: z.union([SharedInput38Schema, z.null()]),
     idempotencyKey: IdempotencyKeySchema,
     reason: z.string().min(3).max(500),
     policy: z
@@ -2155,12 +1788,7 @@ export const InstagramPacingUpdateInputSchema = z
           ).length === 1,
         "Expected exactly one schema match",
       ),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CompanyFitStatusInputSchema = z.object({ runId: ResourceIdSchema }).strict();
@@ -2183,12 +1811,7 @@ export const CompanyFitRunsListInputSchema = z
     campaignId: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(25).optional(),
     before: CompanyFitRunCursorSchema.optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CompanyFitRunInputSchema = z
@@ -2211,84 +1834,62 @@ export const CompanyFitCohortInputSchema = z
     minimumPriority: z.number().int().min(1).max(100).optional(),
   })
   .strict();
+const SharedInput39Schema = z
+  .enum(["rendered_text", "template_variation"])
+  .describe(
+    "Defaults to rendered_text. template_variation requires campaignId and returns variationPerformance with immutable templates and seven-day mature cohorts.",
+  );
+const SharedInput40Schema = z
+  .enum(["instagram", "facebook", "linkedin", "gmail", "sms"])
+  .describe("Optional channel filter for template_variation only.");
 export const CopyPerformanceInputSchema = z
   .object({
-    groupBy: z
-      .union([z.literal("rendered_text"), z.literal("template_variation")])
-      .describe(
-        "Defaults to rendered_text. template_variation requires campaignId and returns variationPerformance with immutable templates and seven-day mature cohorts.",
-      )
-      .optional(),
-    channel: z
-      .union([
-        z.literal("instagram"),
-        z.literal("facebook"),
-        z.literal("linkedin"),
-        z.literal("gmail"),
-        z.literal("sms"),
-      ])
-      .describe("Optional channel filter for template_variation only.")
-      .optional(),
+    groupBy: SharedInput39Schema.optional(),
+    channel: SharedInput40Schema.optional(),
     campaignId: ResourceIdSchema.optional(),
     from: ResourceVersionSchema,
     to: ResourceVersionSchema,
     limit: z.number().int().min(1).max(25).optional(),
     offset: z.number().int().min(0).max(1000000).optional(),
     include: z
-      .array(z.union([z.literal("legacy"), z.literal("metrics")]))
+      .array(z.enum(["legacy", "metrics"]))
       .max(1)
       .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CalendarStatusInputSchema = z
-  .object({
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ runId: SharedInput4Schema.optional() })
   .strict();
+const SharedInput41Schema = z
+  .string()
+  .min(1)
+  .max(80)
+  .describe("IANA timezone. Defaults to the workspace timezone.");
+const SharedInput42Schema = z.union([
+  z.literal(15),
+  z.literal(30),
+  z.literal(45),
+  z.literal(60),
+  z.literal(90),
+  z.literal(120),
+]);
+const SharedInput43Schema = z
+  .string()
+  .min(1)
+  .max(500)
+  .describe(
+    "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
+  );
 export const CalendarAvailabilityInputSchema = z
   .object({
     from: ResourceVersionSchema,
     to: ResourceVersionSchema,
-    timezone: z
-      .string()
-      .min(1)
-      .max(80)
-      .describe("IANA timezone. Defaults to the workspace timezone.")
-      .optional(),
-    durationMinutes: z.union([
-      z.literal(15),
-      z.literal(30),
-      z.literal(45),
-      z.literal(60),
-      z.literal(90),
-      z.literal(120),
-    ]),
+    timezone: SharedInput41Schema.optional(),
+    durationMinutes: SharedInput42Schema,
     limit: z.number().int().min(1).max(100).optional(),
-    calendarId: z
-      .string()
-      .min(1)
-      .max(500)
-      .describe(
-        "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
-      )
-      .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    calendarId: SharedInput43Schema.optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CalendarMeetingBookInputSchema = z
@@ -2300,87 +1901,49 @@ export const CalendarMeetingBookInputSchema = z
     title: z.string().min(1).max(200),
     start: ResourceVersionSchema,
     timezone: z.string().min(1).max(80),
-    durationMinutes: z.union([
-      z.literal(15),
-      z.literal(30),
-      z.literal(45),
-      z.literal(60),
-      z.literal(90),
-      z.literal(120),
-    ]),
+    durationMinutes: SharedInput42Schema,
     attendees: z
       .array(z.string().min(3).max(320).regex(new RegExp("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")))
       .min(1)
       .max(20)
       .optional(),
-    conference: z
-      .union([
-        z.literal("google_meet"),
-        z.literal("teams"),
-        z.literal("phone"),
-        z.literal("in_person"),
-        z.literal("custom_url"),
-      ])
-      .optional(),
+    conference: z.enum(["google_meet", "teams", "phone", "in_person", "custom_url"]).optional(),
     customUrl: z.string().max(2000).regex(new RegExp("^https://")).optional(),
     attendeePhone: z.string().max(40).optional(),
-    calendarId: z
-      .string()
-      .min(1)
-      .max(500)
-      .describe(
-        "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
-      )
-      .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    calendarId: SharedInput43Schema.optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput44Schema = z.enum([
+  "scheduled",
+  "awaiting_outcome",
+  "completed",
+  "no_show",
+  "cancelled",
+  "rescheduled",
+]);
 export const CallsListInputSchema = z
   .object({
     offset: z.number().int().min(0).max(1000000).optional(),
     limit: z.number().int().min(1).max(50).optional(),
     cursor: z.string().max(2000).optional(),
-    lifecycle: z
-      .union([
-        z.literal("scheduled"),
-        z.literal("awaiting_outcome"),
-        z.literal("completed"),
-        z.literal("no_show"),
-        z.literal("cancelled"),
-        z.literal("rescheduled"),
-      ])
-      .optional(),
+    lifecycle: SharedInput44Schema.optional(),
     awaitingOutcome: z.boolean().optional(),
     from: ResourceVersionSchema.optional(),
     to: ResourceVersionSchema.optional(),
     hasTranscript: z.boolean().optional(),
     outcomeProposed: z.boolean().optional(),
-    linkState: z.union([z.literal("linked"), z.literal("unlinked")]).optional(),
+    linkState: z.enum(["linked", "unlinked"]).optional(),
     source: z.string().min(1).max(200).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CallInspectInputSchema = z
   .object({
     meetingId: ResourceIdSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
     include: z
-      .array(z.union([z.literal("speakers")]))
+      .array(z.enum(["speakers"]))
       .max(1)
       .optional(),
   })
@@ -2388,21 +1951,11 @@ export const CallInspectInputSchema = z
 export const InstagramExtractionQuoteInputSchema = z
   .object({
     username: z.string().trim().min(1).max(31).regex(new RegExp("^@?[A-Za-z0-9._]{1,30}$")),
-    type: z.union([
-      z.literal("followers"),
-      z.literal("following"),
-      z.literal("likers"),
-      z.literal("commenters"),
-    ]),
+    type: z.enum(["followers", "following", "likers", "commenters"]),
     count: z.number().int().min(1).max(2147483647),
-    currency: z.union([z.literal("USD"), z.literal("EUR")]).optional(),
+    currency: z.enum(["USD", "EUR"]).optional(),
     postUrl: z.string().trim().min(1).max(300).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const InstagramExtractionStartInputSchema = z
@@ -2414,58 +1967,30 @@ export const InstagramExtractionStartInputSchema = z
       )
       .optional(),
     username: z.string().trim().min(1).max(31).regex(new RegExp("^@?[A-Za-z0-9._]{1,30}$")),
-    type: z.union([
-      z.literal("followers"),
-      z.literal("following"),
-      z.literal("likers"),
-      z.literal("commenters"),
-    ]),
+    type: z.enum(["followers", "following", "likers", "commenters"]),
     count: z.number().int().min(1).max(2147483647),
-    currency: z.union([z.literal("USD"), z.literal("EUR")]).optional(),
+    currency: z.enum(["USD", "EUR"]).optional(),
     postUrl: z.string().trim().min(1).max(300).optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const InstagramExtractionInspectInputSchema = z
-  .object({
-    jobId: ResourceIdSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ jobId: ResourceIdSchema, runId: SharedInput4Schema.optional() })
   .strict();
 export const InstagramExtractionResultsInputSchema = z
   .object({
     jobId: ResourceIdSchema,
     cursor: z.string().min(1).max(30).regex(new RegExp("^[A-Za-z0-9._]+$")).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const InstagramPurchasesListInputSchema = z
   .object({
     cursor: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(20).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const InstagramPurchasesInspectInputSchema = z
@@ -2473,12 +1998,7 @@ export const InstagramPurchasesInspectInputSchema = z
     orderId: ResourceIdSchema,
     cursor: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(20).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const InstagramPurchasesResultsInputSchema = z
@@ -2487,91 +2007,48 @@ export const InstagramPurchasesResultsInputSchema = z
     jobId: ResourceIdSchema,
     cursor: z.string().min(1).max(30).regex(new RegExp("^[A-Za-z0-9._]+$")).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const LeadsStatusInputSchema = z
   .object({
     cursor: z.string().trim().min(1).max(1000).optional(),
     limit: z.number().int().min(1).max(50).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const LeadExtractionQuoteInputSchema = z
   .object({
-    type: z.union([
-      z.literal("followers"),
-      z.literal("following"),
-      z.literal("likers"),
-      z.literal("commenters"),
-    ]),
+    type: z.enum(["followers", "following", "likers", "commenters"]),
     identifier: z.string().trim().min(1).max(300),
     count: z.number().int().min(1).max(2147483647).optional(),
     postUrls: z.array(z.string().trim().min(1).max(300)).min(1).optional(),
-    priority: z.union([z.literal("high"), z.literal("normal"), z.literal("low")]).optional(),
-    feedType: z.union([z.literal("top"), z.literal("recent")]).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    priority: z.enum(["high", "normal", "low"]).optional(),
+    feedType: z.enum(["top", "recent"]).optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const LeadExtractionStartInputSchema = z
   .object({
     dryRun: z.boolean().optional(),
-    type: z.union([
-      z.literal("followers"),
-      z.literal("following"),
-      z.literal("likers"),
-      z.literal("commenters"),
-    ]),
+    type: z.enum(["followers", "following", "likers", "commenters"]),
     identifier: z.string().trim().min(1).max(300),
     count: z.number().int().min(1).max(2147483647).optional(),
     postUrls: z.array(z.string().trim().min(1).max(300)).min(1).optional(),
-    priority: z.union([z.literal("high"), z.literal("normal"), z.literal("low")]).optional(),
-    feedType: z.union([z.literal("top"), z.literal("recent")]).optional(),
+    priority: z.enum(["high", "normal", "low"]).optional(),
+    feedType: z.enum(["top", "recent"]).optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const LeadExtractionInspectInputSchema = z
-  .object({
-    jobId: ResourceIdSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ jobId: ResourceIdSchema, runId: SharedInput4Schema.optional() })
   .strict();
 export const LeadExtractionRefreshInputSchema = z
   .object({
     dryRun: z.boolean().optional(),
     jobId: ResourceIdSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const LeadExtractionContinueInputSchema = z
@@ -2580,24 +2057,11 @@ export const LeadExtractionContinueInputSchema = z
     jobId: ResourceIdSchema,
     count: z.number().int().min(1).max(2147483647).optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const LeadEnrichmentPreviewInputSchema = z
-  .object({
-    listId: ResourceIdSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ listId: ResourceIdSchema, runId: SharedInput4Schema.optional() })
   .strict();
 export const LeadEnrichmentStartInputSchema = z
   .object({
@@ -2605,32 +2069,19 @@ export const LeadEnrichmentStartInputSchema = z
     listId: ResourceIdSchema,
     maxCredits: z.number().int().min(0).max(2147483647).optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const LeadEnrichmentInspectInputSchema = z
-  .object({
-    jobId: ResourceIdSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ jobId: ResourceIdSchema, runId: SharedInput4Schema.optional() })
   .strict();
 export const InstagramProspectCriterionSchema = z
   .object({
     id: z.string().min(1).max(40).regex(new RegExp("^[a-z][a-z0-9_]{0,39}$")),
     statement: z.string().min(1).max(1000),
-    basis: z.union([z.literal("text"), z.literal("visual")]),
-    role: z.union([z.literal("required"), z.literal("preferred")]),
-    unknown: z.union([z.literal("review"), z.literal("exclude")]),
+    basis: z.enum(["text", "visual"]),
+    role: z.enum(["required", "preferred"]),
+    unknown: z.enum(["review", "exclude"]),
     literalRule: z
       .union([
         z
@@ -2640,12 +2091,7 @@ export const InstagramProspectCriterionSchema = z
             max: z.number().int().min(0).optional(),
           })
           .strict(),
-        z
-          .object({
-            kind: z.union([z.literal("privacy"), z.literal("verification")]),
-            equals: z.boolean(),
-          })
-          .strict(),
+        z.object({ kind: z.enum(["privacy", "verification"]), equals: z.boolean() }).strict(),
       ])
       .refine(
         (value) =>
@@ -2657,12 +2103,7 @@ export const InstagramProspectCriterionSchema = z
                 max: z.number().int().min(0).optional(),
               })
               .strict(),
-            z
-              .object({
-                kind: z.union([z.literal("privacy"), z.literal("verification")]),
-                equals: z.boolean(),
-              })
-              .strict(),
+            z.object({ kind: z.enum(["privacy", "verification"]), equals: z.boolean() }).strict(),
           ].filter((candidate) => candidate.safeParse(value).success).length === 1,
         "Expected exactly one schema match",
       )
@@ -2671,12 +2112,7 @@ export const InstagramProspectCriterionSchema = z
   .strict();
 export const InstagramProspectSourceSchema = z
   .object({
-    type: z.union([
-      z.literal("followers"),
-      z.literal("following"),
-      z.literal("likers"),
-      z.literal("commenters"),
-    ]),
+    type: z.enum(["followers", "following", "likers", "commenters"]),
     identifier: z.string().min(1).max(2048),
     count: z.number().int().min(1).max(1000).optional(),
   })
@@ -2694,17 +2130,12 @@ export const InstagramProspectInputSchema = z
     maxCandidates: z.number().int().min(1).max(1000).optional(),
     maxCredits: z.number().int().min(1).max(100000).optional(),
     maxModelCalls: z.number().int().min(1).max(1000).optional(),
-    media: z.union([z.literal("none"), z.literal("avatar"), z.literal("recent_posts")]).optional(),
-    model: z.union([z.literal("clef"), z.literal("clef-flash")]).optional(),
+    media: z.enum(["none", "avatar", "recent_posts"]).optional(),
+    model: z.enum(["clef", "clef-flash"]).optional(),
     includeReview: z.boolean().optional(),
     excludePreviouslyContacted: z.boolean().optional(),
     name: z.string().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const InstagramProspectStartInputSchema = z
@@ -2720,17 +2151,12 @@ export const InstagramProspectStartInputSchema = z
     maxCandidates: z.number().int().min(1).max(1000).optional(),
     maxCredits: z.number().int().min(1).max(100000).optional(),
     maxModelCalls: z.number().int().min(1).max(1000).optional(),
-    media: z.union([z.literal("none"), z.literal("avatar"), z.literal("recent_posts")]).optional(),
-    model: z.union([z.literal("clef"), z.literal("clef-flash")]).optional(),
+    media: z.enum(["none", "avatar", "recent_posts"]).optional(),
+    model: z.enum(["clef", "clef-flash"]).optional(),
     includeReview: z.boolean().optional(),
     excludePreviouslyContacted: z.boolean().optional(),
     name: z.string().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
     dryRun: z
       .boolean()
       .describe(
@@ -2754,92 +2180,85 @@ export const InstagramProspectRunInputSchema = z
 export const InstagramProspectResultsInputSchema = z
   .object({
     runId: z.string().min(1).max(100),
-    status: z
-      .union([
-        z.literal("pending"),
-        z.literal("accept"),
-        z.literal("review"),
-        z.literal("exclude"),
-        z.literal("suppressed"),
-      ])
-      .optional(),
+    status: z.enum(["pending", "accept", "review", "exclude", "suppressed"]).optional(),
     cursor: z.string().max(2000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
   })
   .strict();
-export const AgentSalesEventTypeSchema = z.union([
-  z.literal("call.stats.ready"),
-  z.literal("call.stats.updated"),
-  z.literal("call.coaching.flagged"),
-  z.literal("call.attendance.detected"),
-  z.literal("call.insight.failed"),
-  z.literal("call.bot.scheduled"),
-  z.literal("call.bot.cancelled"),
-  z.literal("call.bot.joined"),
-  z.literal("call.bot.failed"),
-  z.literal("call.recording.ready"),
-  z.literal("call.recording.stopped"),
-  z.literal("call.transcript.ready"),
-  z.literal("call.analysis.ready"),
-  z.literal("call.deleted"),
-  z.literal("recorder.cap.reached"),
-  z.literal("recorder.health.degraded"),
-  z.literal("inbox.message.received"),
-  z.literal("inbox.auto_reply.received"),
-  z.literal("conversation.intent.changed"),
-  z.literal("conversation.changed"),
-  z.literal("conversation.followup.due"),
-  z.literal("followup.cancelled_by_reply"),
-  z.literal("meeting.booked"),
-  z.literal("meeting.rescheduled"),
-  z.literal("meeting.cancelled"),
-  z.literal("meeting.no_show"),
-  z.literal("meeting.outcome.recorded"),
-  z.literal("contact.opted_out"),
-  z.literal("campaign.state.changed"),
-  z.literal("sender.unhealthy"),
-  z.literal("reply.approval.requested"),
-  z.literal("copy.approval_requested"),
-  z.literal("commitment.done"),
-  z.literal("commitment.overdue"),
-  z.literal("commitment.due"),
-  z.literal("commitment.created"),
-  z.literal("copy.approval_approved"),
-  z.literal("copy.approval_rejected"),
-  z.literal("reply.approval.decided"),
-  z.literal("credential.expiring"),
-  z.literal("webhook.test"),
-  z.literal("sender.recovered"),
-  z.literal("calendar.connected"),
-  z.literal("calendar.disconnected"),
-  z.literal("agent.paused"),
-  z.literal("agent.resumed"),
-  z.literal("credential.rotated"),
-  z.literal("message.sent"),
-  z.literal("message.delivery.failed"),
-  z.literal("message.bounced"),
-  z.literal("reaction.received"),
-  z.literal("system_event.received"),
-  z.literal("conversation.assigned"),
-  z.literal("conversation.takeover.started"),
-  z.literal("conversation.takeover.ended"),
-  z.literal("work_item.created"),
-  z.literal("work_item.updated"),
-  z.literal("work_queue.rebuilt"),
-  z.literal("meeting.reminder.due"),
-  z.literal("meeting.ended"),
-  z.literal("booking_link.opened"),
-  z.literal("booking_link.used"),
-  z.literal("booking_link.expired"),
-  z.literal("suppression.added"),
-  z.literal("suppression.removed"),
-  z.literal("agent.lagging"),
-  z.literal("agent.stale"),
-  z.literal("budget.threshold_reached"),
-  z.literal("kill_switch.changed"),
-  z.literal("webhook.delivery.failed"),
-  z.literal("metrics.recomputed"),
+const SharedInput45Schema = z.enum([
+  "call.stats.ready",
+  "call.stats.updated",
+  "call.coaching.flagged",
+  "call.attendance.detected",
+  "call.insight.failed",
+  "call.bot.scheduled",
+  "call.bot.cancelled",
+  "call.bot.joined",
+  "call.bot.failed",
+  "call.recording.ready",
+  "call.recording.stopped",
+  "call.transcript.ready",
+  "call.analysis.ready",
+  "call.deleted",
+  "recorder.cap.reached",
+  "recorder.health.degraded",
+  "inbox.message.received",
+  "inbox.auto_reply.received",
+  "conversation.intent.changed",
+  "conversation.changed",
+  "conversation.followup.due",
+  "followup.cancelled_by_reply",
+  "meeting.booked",
+  "meeting.rescheduled",
+  "meeting.cancelled",
+  "meeting.no_show",
+  "meeting.outcome.recorded",
+  "contact.opted_out",
+  "campaign.state.changed",
+  "sender.unhealthy",
+  "reply.approval.requested",
+  "copy.approval_requested",
+  "commitment.done",
+  "commitment.overdue",
+  "commitment.due",
+  "commitment.created",
+  "copy.approval_approved",
+  "copy.approval_rejected",
+  "reply.approval.decided",
+  "credential.expiring",
+  "webhook.test",
+  "sender.recovered",
+  "calendar.connected",
+  "calendar.disconnected",
+  "agent.paused",
+  "agent.resumed",
+  "credential.rotated",
+  "message.sent",
+  "message.delivery.failed",
+  "message.bounced",
+  "reaction.received",
+  "system_event.received",
+  "conversation.assigned",
+  "conversation.takeover.started",
+  "conversation.takeover.ended",
+  "work_item.created",
+  "work_item.updated",
+  "work_queue.rebuilt",
+  "meeting.reminder.due",
+  "meeting.ended",
+  "booking_link.opened",
+  "booking_link.used",
+  "booking_link.expired",
+  "suppression.added",
+  "suppression.removed",
+  "agent.lagging",
+  "agent.stale",
+  "budget.threshold_reached",
+  "kill_switch.changed",
+  "webhook.delivery.failed",
+  "metrics.recomputed",
 ]);
+export const AgentSalesEventTypeSchema = SharedInput45Schema;
 export const EventsListInputSchema = z
   .object({
     after: z
@@ -2857,15 +2276,10 @@ export const EventsListInputSchema = z
     consumerId: ResourceIdSchema.optional(),
     waitSeconds: z.number().int().min(0).max(30).optional(),
     expand: z
-      .array(z.union([z.literal("message"), z.literal("conversation"), z.literal("campaign")]))
+      .array(z.enum(["message", "conversation", "campaign"]))
       .max(3)
       .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ConversationsChangesInputSchema = z
@@ -2875,25 +2289,13 @@ export const ConversationsChangesInputSchema = z
     ).optional(),
     cursor: z.string().min(1).max(1000).optional(),
     types: z
-      .array(
-        z.union([
-          z.literal("message"),
-          z.literal("intent"),
-          z.literal("status"),
-          z.literal("meeting"),
-        ]),
-      )
+      .array(z.enum(["message", "intent", "status", "meeting"]))
       .min(1)
       .max(4)
       .optional(),
     limit: z.number().int().min(1).max(100).optional(),
     after: z.string().max(1000).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const SuppressionsListInputSchema = z
@@ -2901,28 +2303,24 @@ export const SuppressionsListInputSchema = z
     query: z.string().min(1).max(120).optional(),
     cursor: z.string().min(1).max(1000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput46Schema = z.enum([
+  "company",
+  "phone",
+  "email",
+  "instagram",
+  "facebook",
+  "linkedin",
+  "domain",
+]);
 export const SuppressionEntryInputSchema = z
   .object({
-    type: z.union([
-      z.literal("company"),
-      z.literal("phone"),
-      z.literal("email"),
-      z.literal("instagram"),
-      z.literal("facebook"),
-      z.literal("linkedin"),
-      z.literal("domain"),
-    ]),
+    type: SharedInput46Schema,
     value: z.string().min(1).max(500),
     reason: z.string().min(1).max(500),
-    source: z.union([z.literal("prospect_request"), z.literal("owner"), z.literal("agent")]),
+    source: z.enum(["prospect_request", "owner", "agent"]),
   })
   .strict();
 export const SuppressionsAddInputSchema = z
@@ -2930,12 +2328,7 @@ export const SuppressionsAddInputSchema = z
     dryRun: z.boolean().optional(),
     entries: z.array(SuppressionEntryInputSchema).min(1).max(100),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const SuppressionsRemoveInputSchema = z
@@ -2945,12 +2338,7 @@ export const SuppressionsRemoveInputSchema = z
     expectedUpdatedAt: ResourceVersionSchema,
     reason: z.string().min(1).max(500),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WorkspaceSandboxCreateInputSchema = z
@@ -2963,12 +2351,7 @@ export const WorkspaceSandboxCreateInputSchema = z
       .optional(),
     name: z.string().min(1).max(100),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const SandboxSeedInputSchema = z
@@ -2981,12 +2364,7 @@ export const SandboxSeedInputSchema = z
       .optional(),
     preset: z.literal("appointment_setter_v1"),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const SandboxInboundSimulateInputSchema = z
@@ -2999,24 +2377,13 @@ export const SandboxInboundSimulateInputSchema = z
       .optional(),
     conversationId: z.string().min(1).max(160).optional(),
     campaignId: z.string().min(1).max(160).optional(),
-    channel: z.union([
-      z.literal("instagram"),
-      z.literal("facebook"),
-      z.literal("linkedin"),
-      z.literal("gmail"),
-      z.literal("sms"),
-    ]),
+    channel: z.enum(["instagram", "facebook", "linkedin", "gmail", "sms"]),
     text: z.string().min(1).max(16000),
-    kind: z.union([z.literal("human"), z.literal("auto_reply"), z.literal("reaction")]),
+    kind: z.enum(["human", "auto_reply", "reaction"]),
     at: ResourceVersionSchema.optional(),
     expectedUpdatedAt: ResourceVersionSchema.optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const SandboxClockAdvanceInputSchema = z
@@ -3030,12 +2397,7 @@ export const SandboxClockAdvanceInputSchema = z
     minutes: z.number().int().min(1).max(525600),
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CallOutcomeSetInputSchema = z
@@ -3044,30 +2406,12 @@ export const CallOutcomeSetInputSchema = z
     meetingId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
-    attendance: z.union([
-      z.literal("held"),
-      z.literal("no_show"),
-      z.literal("rescheduled"),
-      z.literal("cancelled"),
-    ]),
-    result: z
-      .union([
-        z.literal("trial_started"),
-        z.literal("won"),
-        z.literal("lost"),
-        z.literal("follow_up"),
-        z.literal("not_a_fit"),
-      ])
-      .optional(),
+    attendance: z.enum(["held", "no_show", "rescheduled", "cancelled"]),
+    result: z.enum(["trial_started", "won", "lost", "follow_up", "not_a_fit"]).optional(),
     lostReason: z.string().max(2000).optional(),
     valueEur: z.number().min(0).max(999999999999.99).optional(),
     note: z.string().max(5000).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const MeetingLinkInputSchema = z
@@ -3078,12 +2422,7 @@ export const MeetingLinkInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
     conversationId: ResourceIdSchema.optional(),
     companyOutreachId: ResourceIdSchema.optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const MeetingUnlinkInputSchema = z
@@ -3092,26 +2431,19 @@ export const MeetingUnlinkInputSchema = z
     meetingId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput47Schema = z
+  .string()
+  .max(66)
+  .regex(
+    new RegExp(
+      "^(?:[Aa][Uu][Tt][Hh][Oo][Rr][Ii][Zz][Aa][Tt][Ii][Oo][Nn]|[Xx]-[A-Za-z0-9-]{1,64})$",
+    ),
+  );
 export const WebhookHeadersSchema = z
-  .record(
-    z
-      .string()
-      .max(66)
-      .regex(
-        new RegExp(
-          "^(?:[Aa][Uu][Tt][Hh][Oo][Rr][Ii][Zz][Aa][Tt][Ii][Oo][Nn]|[Xx]-[A-Za-z0-9-]{1,64})$",
-        ),
-      ),
-    z.string().max(2048).regex(new RegExp("^[^\\r\\n\\u0000]*$")),
-  )
+  .record(SharedInput47Schema, z.string().max(2048).regex(new RegExp("^[^\\r\\n\\u0000]*$")))
   .refine((value) => Object.keys(value).length <= 5, "Provide at most 5 properties");
 export const WebhookFiltersSchema = z
   .object({
@@ -3122,14 +2454,7 @@ export const WebhookFiltersSchema = z
     excludeAutomatic: z.boolean().optional(),
     excludeReactions: z.boolean().optional(),
     actorTypes: z
-      .array(
-        z.union([
-          z.literal("agent"),
-          z.literal("human"),
-          z.literal("system"),
-          z.literal("automation"),
-        ]),
-      )
+      .array(z.enum(["agent", "human", "system", "automation"]))
       .max(4)
       .optional(),
     agentIds: z.array(z.string().min(1).max(160)).max(100).optional(),
@@ -3144,27 +2469,13 @@ export const WebhooksCreateInputSchema = z
     headers: WebhookHeadersSchema.optional(),
     secret: z.string().min(32).max(100).optional(),
     filters: WebhookFiltersSchema.optional(),
-    ordering: z.union([z.literal("strict"), z.literal("per_key")]).optional(),
-    payload: z.union([z.literal("thin"), z.literal("standard"), z.literal("full")]).optional(),
+    ordering: z.enum(["strict", "per_key"]).optional(),
+    payload: z.enum(["thin", "standard", "full"]).optional(),
     dryRun: z.boolean().optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
-export const WebhooksListInputSchema = z
-  .object({
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
-  .strict();
+export const WebhooksListInputSchema = z.object({ runId: SharedInput4Schema.optional() }).strict();
 export const WebhooksUpdateInputSchema = z
   .object({
     id: ResourceIdSchema,
@@ -3177,15 +2488,10 @@ export const WebhooksUpdateInputSchema = z
     headers: WebhookHeadersSchema.optional(),
     secret: z.string().min(32).max(100).optional(),
     filters: WebhookFiltersSchema.optional(),
-    ordering: z.union([z.literal("strict"), z.literal("per_key")]).optional(),
-    payload: z.union([z.literal("thin"), z.literal("standard"), z.literal("full")]).optional(),
+    ordering: z.enum(["strict", "per_key"]).optional(),
+    payload: z.enum(["thin", "standard", "full"]).optional(),
     dryRun: z.boolean().optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WebhooksDeleteInputSchema = z
@@ -3194,12 +2500,7 @@ export const WebhooksDeleteInputSchema = z
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
     dryRun: z.boolean().optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WebhooksTestInputSchema = z
@@ -3208,12 +2509,7 @@ export const WebhooksTestInputSchema = z
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
     dryRun: z.boolean().optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WebhooksReplayInputSchema = z
@@ -3232,12 +2528,7 @@ export const WebhooksReplayInputSchema = z
       )
       .optional(),
     dryRun: z.boolean().optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const MeetingsUnlinkedListInputSchema = z
@@ -3250,12 +2541,7 @@ export const MeetingsUnlinkedListInputSchema = z
       .optional(),
     cursor: z.string().max(2000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const PipelineReconcileInputSchema = z
@@ -3263,23 +2549,11 @@ export const PipelineReconcileInputSchema = z
     campaignId: ResourceIdSchema.optional(),
     dryRun: z.boolean().optional(),
     idempotencyKey: IdempotencyKeySchema.optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WorkspaceAgentSalesGetInputSchema = z
-  .object({
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ runId: SharedInput4Schema.optional() })
   .strict();
 export const WorkspaceAgentSalesUpdateInputSchema = z
   .object({
@@ -3295,12 +2569,7 @@ export const WorkspaceAgentSalesUpdateInputSchema = z
     suppressCompany: z.boolean(),
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const SandboxProviderUpdateInputSchema = z
@@ -3311,50 +2580,25 @@ export const SandboxProviderUpdateInputSchema = z
         "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
       )
       .optional(),
-    provider: z.union([
-      z.literal("calendar"),
-      z.literal("gmail"),
-      z.literal("sms"),
-      z.literal("browser"),
-    ]),
+    provider: z.enum(["calendar", "gmail", "sms", "browser"]),
     connected: z.boolean(),
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ReplyTemplatesListInputSchema = z
   .object({
     cursor: z.string().min(1).max(1000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ReplyTemplateSchema = z
   .object({
     name: z.string().min(1).max(120),
-    language: z.union([z.literal("fi"), z.literal("en")]),
-    channels: z
-      .array(
-        z.union([
-          z.literal("instagram"),
-          z.literal("facebook"),
-          z.literal("linkedin"),
-          z.literal("gmail"),
-          z.literal("sms"),
-        ]),
-      )
-      .max(5),
+    language: z.enum(["fi", "en"]),
+    channels: z.array(z.enum(["instagram", "facebook", "linkedin", "gmail", "sms"])).max(5),
     intents: z.array(z.string().min(1).max(80)).max(30),
     body: z.string().min(1).max(10000),
     maxLength: z.number().int().min(1).max(10000),
@@ -3371,12 +2615,7 @@ export const ReplyTemplatesCreateInputSchema = z
     template: ReplyTemplateSchema,
     expectedRevision: z.literal(0),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ReplyTemplatesUpdateInputSchema = z
@@ -3391,12 +2630,7 @@ export const ReplyTemplatesUpdateInputSchema = z
     template: ReplyTemplateSchema,
     expectedRevision: z.number().int().min(0),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ReplyTemplatesDeleteInputSchema = z
@@ -3410,39 +2644,17 @@ export const ReplyTemplatesDeleteInputSchema = z
     id: ResourceIdSchema,
     expectedRevision: z.number().int().min(0),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ReplyPolicyGetInputSchema = z
-  .object({
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ runId: SharedInput4Schema.optional() })
   .strict();
 export const ReplyPolicySchema = z
   .object({
     enabled: z.boolean(),
     allowedIntents: z.array(z.string().min(1).max(80)).max(30),
-    allowedChannels: z
-      .array(
-        z.union([
-          z.literal("instagram"),
-          z.literal("facebook"),
-          z.literal("linkedin"),
-          z.literal("gmail"),
-          z.literal("sms"),
-        ]),
-      )
-      .max(5),
+    allowedChannels: z.array(z.enum(["instagram", "facebook", "linkedin", "gmail", "sms"])).max(5),
     allowedTemplateIds: z.array(ResourceIdSchema).max(100),
     freeTextAllowed: z.literal(false),
     excludeIfOptOut: z.literal(true),
@@ -3470,29 +2682,17 @@ export const ReplyPolicyUpdateInputSchema = z
     policy: ReplyPolicySchema,
     expectedRevision: z.number().int().min(0),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ReplyApprovalsListInputSchema = z
   .object({
-    view: z.union([z.literal("compact"), z.literal("standard"), z.literal("full")]).optional(),
+    view: z.enum(["compact", "standard", "full"]).optional(),
     fields: z.array(z.string().max(80)).max(30).optional(),
     cursor: z.string().min(1).max(1000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    status: z
-      .union([z.literal("pending"), z.literal("approved"), z.literal("rejected")])
-      .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    status: z.enum(["pending", "approved", "rejected"]).optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ConversationDraftSaveInputSchema = z
@@ -3510,12 +2710,7 @@ export const ConversationDraftSaveInputSchema = z
     variables: ReplyTemplateVariablesSchema.optional(),
     rationale: z.string().min(1).max(2000).optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const FollowupAutoSendSchema = z
@@ -3527,23 +2722,12 @@ export const ConversationFollowupSetInputSchema = z
     conversationId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     at: ResourceVersionSchema,
-    type: z.union([
-      z.literal("reply"),
-      z.literal("nudge"),
-      z.literal("send_info"),
-      z.literal("rebook"),
-      z.literal("call"),
-    ]),
+    type: z.enum(["reply", "nudge", "send_info", "rebook", "call"]),
     note: z.string().min(1).max(2000).optional(),
     owner: ResourceIdSchema.optional(),
     autoSend: FollowupAutoSendSchema.optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ConversationFollowupClearInputSchema = z
@@ -3552,12 +2736,7 @@ export const ConversationFollowupClearInputSchema = z
     conversationId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const FollowupsDueInputSchema = z
@@ -3566,12 +2745,7 @@ export const FollowupsDueInputSchema = z
     limit: z.number().int().min(1).max(100).optional(),
     before: ResourceVersionSchema.optional(),
     owner: ResourceIdSchema.optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ConversationsBulkUpdateInputSchema = z
@@ -3579,31 +2753,21 @@ export const ConversationsBulkUpdateInputSchema = z
     dryRun: z.boolean().optional(),
     items: z.array(ConversationUpdateInputSchema).min(1).max(50),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const PipelineBoardInputSchema = z
   .object({
     include: z
-      .array(z.union([z.literal("metrics"), z.literal("legacy")]))
+      .array(z.enum(["metrics", "legacy"]))
       .max(1)
       .optional(),
-    view: z.union([z.literal("compact"), z.literal("standard"), z.literal("full")]).optional(),
+    view: z.enum(["compact", "standard", "full"]).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     cursor: z.string().max(4000).optional(),
     campaignIds: z.array(ResourceIdSchema).max(100).optional(),
     limitPerStage: z.number().int().min(1).max(20).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CalendarBookingLinkCreateInputSchema = z
@@ -3619,32 +2783,14 @@ export const CalendarBookingLinkCreateInputSchema = z
     durations: z.array(z.number().int().min(15).max(120)).min(1).max(4),
     window: z.object({ from: ResourceVersionSchema, to: ResourceVersionSchema }).strict(),
     timezone: z.string().min(1).max(80),
-    conference: z.union([
-      z.literal("google_meet"),
-      z.literal("teams"),
-      z.literal("phone"),
-      z.literal("in_person"),
-      z.literal("custom_url"),
-    ]),
+    conference: z.enum(["google_meet", "teams", "phone", "in_person", "custom_url"]),
     customUrl: z.string().max(2000).regex(new RegExp("^https://")).optional(),
     maxUses: z.literal(1),
     expiresAt: ResourceVersionSchema,
-    language: z.union([z.literal("fi"), z.literal("en")]),
+    language: z.enum(["fi", "en"]),
     idempotencyKey: IdempotencyKeySchema,
-    calendarId: z
-      .string()
-      .min(1)
-      .max(500)
-      .describe(
-        "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
-      )
-      .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    calendarId: SharedInput43Schema.optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CalendarMeetingRescheduleInputSchema = z
@@ -3654,12 +2800,7 @@ export const CalendarMeetingRescheduleInputSchema = z
     expectedUpdatedAt: ResourceVersionSchema,
     start: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CalendarMeetingCancelInputSchema = z
@@ -3670,14 +2811,18 @@ export const CalendarMeetingCancelInputSchema = z
     reason: z.string().min(1).max(2000),
     notifyAttendees: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput48Schema = z.enum([
+  "inherit",
+  "instagram",
+  "facebook",
+  "linkedin",
+  "gmail",
+  "sms",
+]);
+const SharedInput49Schema = z.enum(["none", "instagram", "facebook", "linkedin", "gmail", "sms"]);
 export const CampaignFollowupsConfigureInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
@@ -3690,22 +2835,8 @@ export const CampaignFollowupsConfigureInputSchema = z
             z
               .object({
                 delayDays: z.number().int().min(1).max(30),
-                channel: z.union([
-                  z.literal("inherit"),
-                  z.literal("instagram"),
-                  z.literal("facebook"),
-                  z.literal("linkedin"),
-                  z.literal("gmail"),
-                  z.literal("sms"),
-                ]),
-                fallbackChannel: z.union([
-                  z.literal("none"),
-                  z.literal("instagram"),
-                  z.literal("facebook"),
-                  z.literal("linkedin"),
-                  z.literal("gmail"),
-                  z.literal("sms"),
-                ]),
+                channel: SharedInput48Schema,
+                fallbackChannel: SharedInput49Schema,
                 subject: z.string().max(500).optional(),
                 variants: z.array(z.string().min(1).max(10000)).min(1).max(4),
                 smsBody: z.string().min(1).max(1600).optional(),
@@ -3715,7 +2846,7 @@ export const CampaignFollowupsConfigureInputSchema = z
           .max(3),
       })
       .strict(),
-    applyTo: z.union([z.literal("future_only"), z.literal("contacted_no_reply")]),
+    applyTo: z.enum(["future_only", "contacted_no_reply"]),
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
     maxAgeDays: z
@@ -3727,12 +2858,7 @@ export const CampaignFollowupsConfigureInputSchema = z
         "Default 30. Older recipients are excluded from follow-up and returned as re-engagement candidates; no historical live apply.",
       )
       .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignVariantsConfigureInputSchema = z
@@ -3741,7 +2867,7 @@ export const CampaignVariantsConfigureInputSchema = z
     campaignId: ResourceIdSchema,
     expectedCampaignUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
-    channel: z.union([z.literal("social"), z.literal("gmail"), z.literal("sms")]),
+    channel: z.enum(["social", "gmail", "sms"]),
     variants: z
       .array(
         z
@@ -3758,42 +2884,27 @@ export const CampaignVariantsConfigureInputSchema = z
     minSamplePerVariant: z.number().int().min(10).max(100000),
     promote: z
       .object({
-        metric: z.union([
-          z.literal("reply_rate"),
-          z.literal("positive_reply_rate"),
-          z.literal("booking_rate"),
-        ]),
-        rule: z.union([z.literal("bayesian_95"), z.literal("manual")]),
+        metric: z.enum(["reply_rate", "positive_reply_rate", "booking_rate"]),
+        rule: z.enum(["bayesian_95", "manual"]),
       })
       .strict(),
     prospectTimezone: z.string().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const RecorderSettingsGetInputSchema = z
-  .object({
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ runId: SharedInput4Schema.optional() })
   .strict();
+const SharedInput50Schema = z.enum([
+  "all",
+  "hosted_by_me",
+  "external_attendees",
+  "dmfaster_booked_only",
+  "off",
+]);
 export const RecorderSettingsSchema = z
   .object({
-    mode: z.union([
-      z.literal("all"),
-      z.literal("hosted_by_me"),
-      z.literal("external_attendees"),
-      z.literal("dmfaster_booked_only"),
-      z.literal("off"),
-    ]),
+    mode: SharedInput50Schema,
     consent: z.boolean(),
     consentNoticeVersion: z.string().min(1).max(100),
     consentNotice: z.string().min(1).max(2000),
@@ -3803,7 +2914,7 @@ export const RecorderSettingsSchema = z
     minDurationMinutes: z.number().int().min(1).max(240),
     maxDurationMinutes: z.number().int().min(1).max(240),
     botName: z.string().min(1).max(60),
-    language: z.union([z.literal("auto"), z.literal("fi"), z.literal("en")]),
+    language: z.enum(["auto", "fi", "en"]),
     redactPii: z.boolean(),
     analyzeNewCalls: z.boolean(),
     monthlyBotMinutes: z.number().int().min(0).max(100000),
@@ -3826,38 +2937,32 @@ export const RecorderSettingsUpdateInputSchema = z
     expectedVersion: z.number().int().min(0),
     dryRun: z.boolean().optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput51Schema = z.enum([
+  "scheduled",
+  "joining",
+  "in_call",
+  "done",
+  "failed",
+  "cancelled",
+]);
 export const RecorderBotsListInputSchema = z
   .object({
     from: ResourceVersionSchema.optional(),
     to: ResourceVersionSchema.optional(),
-    status: z
-      .union([
-        z.literal("scheduled"),
-        z.literal("joining"),
-        z.literal("in_call"),
-        z.literal("done"),
-        z.literal("failed"),
-        z.literal("cancelled"),
-      ])
-      .optional(),
+    status: SharedInput51Schema.optional(),
     cursor: z.string().max(2000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput52Schema = z
+  .enum(["compact", "segments"])
+  .describe(
+    "Complete timestamped text by default (up to 512 KiB); segments selects paged structured output. Compact text preserves every word.",
+  );
 export const CallTranscriptGetInputSchema = z
   .object({
     meetingId: ResourceIdSchema,
@@ -3865,42 +2970,19 @@ export const CallTranscriptGetInputSchema = z
     fromMs: z.number().int().min(0).optional(),
     toMs: z.number().int().min(0).optional(),
     speaker: z.string().max(200).optional(),
-    format: z
-      .union([z.literal("compact"), z.literal("segments")])
-      .describe(
-        "Complete timestamped text by default (up to 512 KiB); segments selects paged structured output. Compact text preserves every word.",
-      )
-      .optional(),
-    mode: z.union([z.literal("full"), z.literal("compact")]).optional(),
+    format: SharedInput52Schema.optional(),
+    mode: z.enum(["full", "compact"]).optional(),
     limit: z.number().int().min(1).max(200).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CallRecordingGetInputSchema = z
-  .object({
-    meetingId: ResourceIdSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ meetingId: ResourceIdSchema, runId: SharedInput4Schema.optional() })
   .strict();
 export const CallTranscriptsGetInputSchema = z
   .object({
     meetingIds: z.array(ResourceIdSchema).min(1).max(10),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CallTranscriptsSearchInputSchema = z
@@ -3912,33 +2994,24 @@ export const CallTranscriptsSearchInputSchema = z
     speaker: z.string().max(200).optional(),
     limit: z.number().int().min(1).max(50).optional(),
     cursor: z.string().max(2000).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput53Schema = z.enum([
+  "reply",
+  "book",
+  "followups",
+  "send:sms",
+  "send:gmail",
+  "send:instagram",
+  "send:facebook",
+  "send:linkedin",
+  "launch",
+]);
 export const ReadinessCheckInputSchema = z
   .object({
-    for: z.union([
-      z.literal("reply"),
-      z.literal("book"),
-      z.literal("followups"),
-      z.literal("send:sms"),
-      z.literal("send:gmail"),
-      z.literal("send:instagram"),
-      z.literal("send:facebook"),
-      z.literal("send:linkedin"),
-      z.literal("launch"),
-    ]),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    for: SharedInput53Schema,
+    runId: SharedInput4Schema.optional(),
     campaignId: z.string().min(1).max(200).optional(),
   })
   .strict();
@@ -3949,12 +3022,7 @@ export const SenderRetireInputSchema = z
     expectedUpdatedAt: ResourceVersionSchema,
     dryRun: z.boolean().optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const SenderUnretireInputSchema = z
@@ -3964,12 +3032,7 @@ export const SenderUnretireInputSchema = z
     expectedUpdatedAt: ResourceVersionSchema,
     dryRun: z.boolean().optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const AttributionCheckInputSchema = z
@@ -3979,12 +3042,7 @@ export const AttributionCheckInputSchema = z
       "Window start. Defaults to seven days before to; the window is at most 92 days.",
     ).optional(),
     to: ResourceVersionSchema.describe("Exclusive window end. Defaults to now.").optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const CampaignReengagementPrepareInputSchema = z
@@ -3992,101 +3050,63 @@ export const CampaignReengagementPrepareInputSchema = z
     campaignId: ResourceIdSchema,
     expectedCampaignUpdatedAt: ResourceVersionSchema,
     name: z.string().min(1).max(120),
-    channel: z.union([
-      z.literal("instagram"),
-      z.literal("facebook"),
-      z.literal("linkedin"),
-      z.literal("gmail"),
-      z.literal("sms"),
-    ]),
+    channel: z.enum(["instagram", "facebook", "linkedin", "gmail", "sms"]),
     maxAgeDays: z.number().int().min(1).max(3650).optional(),
     expectedAudienceFingerprint: z.string().max(64).optional(),
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const AgentsListInputSchema = z
   .object({
     limit: z.number().int().min(1).max(100).optional(),
     afterId: ResourceIdSchema.optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const AgentInspectInputSchema = z
-  .object({
-    agentId: ResourceIdSchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ agentId: ResourceIdSchema, runId: SharedInput4Schema.optional() })
   .strict();
+const SharedInput54Schema = z.enum([
+  "workspace:read",
+  "campaigns:read",
+  "sending:read",
+  "inbox:read",
+  "inbox:write",
+  "pipeline:read",
+  "pipeline:write",
+  "audiences:read",
+  "campaigns:write",
+  "campaigns:launch",
+  "campaigns:control",
+  "calendar:read",
+  "calendar:write",
+  "calls:read",
+  "events:read",
+  "leads:read",
+  "leads:write",
+  "sending:test",
+  "suppressions:write",
+  "sandbox:write",
+  "calls:write",
+  "webhooks:write",
+  "policy:write",
+  "calls:transcripts:read",
+  "calls:media:read",
+  "calls:record",
+  "sending:write",
+  "calls:stats:read",
+]);
 export const AgentCreateRequestInputSchema = z
   .object({
     name: z.string().min(1).max(100),
-    kind: z.union([
-      z.literal("setter"),
-      z.literal("prospector"),
-      z.literal("analyst"),
-      z.literal("custom"),
-    ]),
+    kind: z.enum(["setter", "prospector", "analyst", "custom"]),
     runtime: z.string().max(200).optional(),
-    scopes: z
-      .array(
-        z.union([
-          z.literal("workspace:read"),
-          z.literal("campaigns:read"),
-          z.literal("sending:read"),
-          z.literal("inbox:read"),
-          z.literal("inbox:write"),
-          z.literal("pipeline:read"),
-          z.literal("pipeline:write"),
-          z.literal("audiences:read"),
-          z.literal("campaigns:write"),
-          z.literal("campaigns:launch"),
-          z.literal("campaigns:control"),
-          z.literal("calendar:read"),
-          z.literal("calendar:write"),
-          z.literal("calls:read"),
-          z.literal("events:read"),
-          z.literal("leads:read"),
-          z.literal("leads:write"),
-          z.literal("sending:test"),
-          z.literal("suppressions:write"),
-          z.literal("sandbox:write"),
-          z.literal("calls:write"),
-          z.literal("webhooks:write"),
-          z.literal("policy:write"),
-          z.literal("calls:transcripts:read"),
-          z.literal("calls:media:read"),
-          z.literal("calls:record"),
-          z.literal("sending:write"),
-          z.literal("calls:stats:read"),
-        ]),
-      )
-      .min(1)
-      .max(29),
+    scopes: z.array(SharedInput54Schema).min(1).max(29),
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const AgentPauseInputSchema = z
@@ -4095,12 +3115,7 @@ export const AgentPauseInputSchema = z
     expectedUpdatedAt: ResourceVersionSchema,
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const AgentResumeInputSchema = z
@@ -4109,12 +3124,7 @@ export const AgentResumeInputSchema = z
     expectedUpdatedAt: ResourceVersionSchema,
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const AgentCredentialRotateInputSchema = z
@@ -4125,36 +3135,19 @@ export const AgentCredentialRotateInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
     graceDays: z.number().int().min(0).max(30).optional(),
     expiresInDays: z.number().int().min(30).max(365).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const EventConsumersListInputSchema = z
-  .object({
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ runId: SharedInput4Schema.optional() })
   .strict();
 export const EventConsumersCreateInputSchema = z
   .object({
     name: z.string().min(1).max(100),
-    startAt: z.union([z.literal("head"), z.literal("retention_floor")]).optional(),
+    startAt: z.enum(["head", "retention_floor"]).optional(),
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const EventsAckInputSchema = z
@@ -4164,40 +3157,23 @@ export const EventsAckInputSchema = z
     expectedVersion: z.number().int().min(1),
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const EventsSnapshotInputSchema = z
   .object({
     after: z.string().max(1000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WebhookDeliveriesListInputSchema = z
   .object({
     webhookId: ResourceIdSchema,
-    status: z
-      .union([z.literal("pending"), z.literal("delivered"), z.literal("failed"), z.literal("dead")])
-      .optional(),
+    status: z.enum(["pending", "delivered", "failed", "dead"]).optional(),
     cursor: z.string().max(1000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WebhooksDlqReplayInputSchema = z
@@ -4208,89 +3184,67 @@ export const WebhooksDlqReplayInputSchema = z
     expectedUpdatedAt: ResourceVersionSchema,
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput55Schema = z.enum([
+  "meeting_intent",
+  "meeting_proposed_time",
+  "asks_pricing",
+  "information_requested",
+  "not_now",
+  "not_interested",
+  "wrong_person",
+  "opt_out",
+  "interested",
+  "acknowledgement",
+  "unclear",
+]);
+const SharedInput56Schema = z.enum([
+  "text",
+  "reaction",
+  "system_event",
+  "attachment",
+  "auto_reply",
+]);
 export const ClassificationFeedbackInputSchema = z
   .object({
     messageId: ResourceIdSchema.optional(),
     conversationId: ResourceIdSchema.optional(),
-    correctIntent: z.union([
-      z.literal("meeting_intent"),
-      z.literal("meeting_proposed_time"),
-      z.literal("asks_pricing"),
-      z.literal("information_requested"),
-      z.literal("not_now"),
-      z.literal("not_interested"),
-      z.literal("wrong_person"),
-      z.literal("opt_out"),
-      z.literal("interested"),
-      z.literal("acknowledgement"),
-      z.literal("unclear"),
-    ]),
-    correctMessageType: z
-      .union([
-        z.literal("text"),
-        z.literal("reaction"),
-        z.literal("system_event"),
-        z.literal("attachment"),
-        z.literal("auto_reply"),
-      ])
-      .optional(),
+    correctIntent: SharedInput55Schema,
+    correctMessageType: SharedInput56Schema.optional(),
     note: z.string().min(1).max(1000),
     expectedUpdatedAt: ResourceVersionSchema,
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ClassificationQualityInputSchema = z
-  .object({
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ runId: SharedInput4Schema.optional() })
   .strict();
 export const ClassificationBackfillPlanInputSchema = z
   .object({
     afterId: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(500).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput57Schema = z
+  .enum(["compact", "standard"])
+  .describe(
+    "Compact is the default and omits full person, company and explanation context while retaining IDs, claim and version fences. Use standard for the full work item.",
+  );
 export const WorkQueueListInputSchema = z
   .object({
     types: z.array(z.string().max(60)).max(16).optional(),
     minPriority: z.number().int().min(0).max(100).optional(),
     campaignIds: z.array(ResourceIdSchema).max(100).optional(),
-    assignee: z.union([z.literal("me"), z.literal("unassigned"), z.literal("any")]).optional(),
-    view: z.union([z.literal("compact"), z.literal("standard")]).optional(),
+    assignee: z.enum(["me", "unassigned", "any"]).optional(),
+    view: SharedInput57Schema.optional(),
     limit: z.number().int().min(1).max(100).optional(),
     cursor: z.string().max(1000).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WorkItemClaimInputSchema = z
@@ -4300,12 +3254,7 @@ export const WorkItemClaimInputSchema = z
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
     leaseSeconds: z.number().int().min(1).max(3600).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WorkItemReleaseInputSchema = z
@@ -4314,12 +3263,7 @@ export const WorkItemReleaseInputSchema = z
     expectedVersion: z.string().min(1).max(100),
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WorkItemSnoozeInputSchema = z
@@ -4330,12 +3274,7 @@ export const WorkItemSnoozeInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
     until: z.string().min(1).max(40),
     reason: z.string().min(1).max(500),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WorkItemCompleteInputSchema = z
@@ -4346,23 +3285,11 @@ export const WorkItemCompleteInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
     outcome: z.string().min(1).max(500),
     receiptIds: z.array(ResourceIdSchema).max(20).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WorkQueueConfigGetInputSchema = z
-  .object({
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ runId: SharedInput4Schema.optional() })
   .strict();
 export const WorkQueueConfigUpdateInputSchema = z
   .object({
@@ -4386,62 +3313,42 @@ export const WorkQueueConfigUpdateInputSchema = z
           .optional(),
       })
       .strict(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const MetricsReconcileInputSchema = z
   .object({
-    scope: z.union([z.literal("workspace"), z.literal("campaign"), z.literal("range")]).optional(),
+    scope: z.enum(["workspace", "campaign", "range"]).optional(),
     campaign: ResourceIdSchema.optional(),
     from: ResourceVersionSchema.optional(),
     to: ResourceVersionSchema.optional(),
     timezone: z.string().max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput58Schema = z
+  .enum(["compact", "full"])
+  .describe(
+    "Defaults to compact. Success acknowledgement is at most 300 bytes including the MCP result. Full retains the standard diagnostic envelope. Failures retain actionable errors.",
+  );
 export const AgentHeartbeatInputSchema = z
   .object({
-    responseMode: z
-      .union([z.literal("compact"), z.literal("full")])
-      .describe(
-        "Defaults to compact. Success acknowledgement is at most 300 bytes including the MCP result. Full retains the standard diagnostic envelope. Failures retain actionable errors.",
-      )
-      .optional(),
+    responseMode: SharedInput58Schema.optional(),
     agentId: ResourceIdSchema,
-    status: z.union([z.literal("idle"), z.literal("working"), z.literal("degraded")]),
+    status: z.enum(["idle", "working", "degraded"]),
     consumerLagSeq: z.number().int().min(0).max(9007199254740991).optional(),
     note: z.string().max(500).optional(),
     dryRun: z.boolean().optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const AgentRunStartInputSchema = z
   .object({
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
-    trigger: z.union([z.literal("schedule"), z.literal("webhook"), z.literal("manual")]),
+    trigger: z.enum(["schedule", "webhook", "manual"]),
     triggerRef: z.string().max(500).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const AgentRunEndInputSchema = z
@@ -4450,7 +3357,7 @@ export const AgentRunEndInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
     runId: ResourceIdSchema,
     summary: z.string().max(2000),
-    outcome: z.union([z.literal("completed"), z.literal("failed"), z.literal("cancelled")]),
+    outcome: z.enum(["completed", "failed", "cancelled"]),
   })
   .strict();
 export const AgentRunsListInputSchema = z
@@ -4458,20 +3365,13 @@ export const AgentRunsListInputSchema = z
     agentId: ResourceIdSchema.optional(),
     before: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const AgentRunInspectInputSchema = z
   .object({
     agentRunId: ResourceIdSchema.optional(),
-    view: z
-      .union([z.literal("compact"), z.literal("standard"), z.literal("full"), z.literal("summary")])
-      .optional(),
+    view: z.enum(["compact", "standard", "full", "summary"]).optional(),
     runId: ResourceIdSchema.optional(),
     afterSeq: z.number().int().min(0).max(9007199254740991).optional(),
     limit: z.number().int().min(1).max(200).optional(),
@@ -4484,12 +3384,7 @@ export const WorkspaceHaltInputSchema = z
     expectedVersion: z.number().int().min(0),
     haltEverything: z.boolean().optional(),
     reason: z.string().min(1).max(500),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WorkspaceResumeInputSchema = z
@@ -4497,12 +3392,7 @@ export const WorkspaceResumeInputSchema = z
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
     expectedVersion: z.number().int().min(0),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const ChannelHaltInputSchema = z
@@ -4510,33 +3400,73 @@ export const ChannelHaltInputSchema = z
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
     expectedVersion: z.number().int().min(0),
-    channel: z.union([
-      z.literal("instagram"),
-      z.literal("facebook"),
-      z.literal("linkedin"),
-      z.literal("gmail"),
-      z.literal("sms"),
-    ]),
+    channel: z.enum(["instagram", "facebook", "linkedin", "gmail", "sms"]),
     halted: z.boolean(),
     reason: z.string().min(1).max(500),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const WorkspaceAutomationInspectInputSchema = z
-  .object({
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
+  .object({ runId: SharedInput4Schema.optional() })
   .strict();
+const SharedInput59Schema = z.enum([
+  "bug",
+  "missing_capability",
+  "confusing_behavior",
+  "performance",
+  "improvement",
+]);
+const SharedInput60Schema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(240)
+  .regex(new RegExp(".*\\S.*"))
+  .describe("One concrete problem or improvement.");
+const SharedInput61Schema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(1000)
+  .regex(new RegExp(".*\\S.*"))
+  .describe("The task being attempted, without customer data.");
+const SharedInput62Schema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(2000)
+  .regex(new RegExp(".*\\S.*"))
+  .describe("What actually happened; omit private transcripts and raw tool payloads.");
+const SharedInput63Schema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(2000)
+  .regex(new RegExp(".*\\S.*"))
+  .describe("What should happen instead.");
+const SharedInput64Schema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(2000)
+  .regex(new RegExp(".*\\S.*"))
+  .describe("Optional proposed improvement; distinguish speculation from observed behavior.");
+const SharedInput65Schema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(120)
+  .regex(new RegExp(".*\\S.*"))
+  .describe(
+    "Affected MCP or API tool name, if known. Unknown names are allowed for missing tools.",
+  );
+const SharedInput66Schema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(128)
+  .regex(new RegExp(".*\\S.*"))
+  .describe("Optional request reference already returned by DM Faster; do not invent one.");
 export const AgentFeedbackSubmitInputSchema = z
   .object({
     dryRun: z
@@ -4545,116 +3475,48 @@ export const AgentFeedbackSubmitInputSchema = z
         "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
       )
       .optional(),
-    category: z.union([
-      z.literal("bug"),
-      z.literal("missing_capability"),
-      z.literal("confusing_behavior"),
-      z.literal("performance"),
-      z.literal("improvement"),
-    ]),
-    summary: z
-      .string()
-      .trim()
-      .min(1)
-      .max(240)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("One concrete problem or improvement."),
-    task: z
-      .string()
-      .trim()
-      .min(1)
-      .max(1000)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("The task being attempted, without customer data.")
-      .optional(),
-    observed: z
-      .string()
-      .trim()
-      .min(1)
-      .max(2000)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("What actually happened; omit private transcripts and raw tool payloads.")
-      .optional(),
-    expected: z
-      .string()
-      .trim()
-      .min(1)
-      .max(2000)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("What should happen instead.")
-      .optional(),
-    suggestion: z
-      .string()
-      .trim()
-      .min(1)
-      .max(2000)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("Optional proposed improvement; distinguish speculation from observed behavior.")
-      .optional(),
-    toolName: z
-      .string()
-      .trim()
-      .min(1)
-      .max(120)
-      .regex(new RegExp(".*\\S.*"))
-      .describe(
-        "Affected MCP or API tool name, if known. Unknown names are allowed for missing tools.",
-      )
-      .optional(),
-    requestId: z
-      .string()
-      .trim()
-      .min(1)
-      .max(128)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("Optional request reference already returned by DM Faster; do not invent one.")
-      .optional(),
-    impact: z.union([z.literal("blocked"), z.literal("workaround"), z.literal("minor")]).optional(),
+    category: SharedInput59Schema,
+    summary: SharedInput60Schema,
+    task: SharedInput61Schema.optional(),
+    observed: SharedInput62Schema.optional(),
+    expected: SharedInput63Schema.optional(),
+    suggestion: SharedInput64Schema.optional(),
+    toolName: SharedInput65Schema.optional(),
+    requestId: SharedInput66Schema.optional(),
+    impact: z.enum(["blocked", "workaround", "minor"]).optional(),
     idempotencyKey: IdempotencyKeySchema,
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput67Schema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(100)
+  .regex(new RegExp(".*\\S.*"))
+  .describe("Use nextCursor from the previous page, unchanged.");
 export const AgentFeedbackListInputSchema = z
   .object({
     limit: z.number().int().min(1).max(25).optional(),
-    before: z
-      .string()
-      .trim()
-      .min(1)
-      .max(100)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("Use nextCursor from the previous page, unchanged.")
-      .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    before: SharedInput67Schema.optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
+const SharedInput68Schema = z.enum([
+  "phone",
+  "email",
+  "instagram",
+  "facebook",
+  "linkedin",
+  "website_form",
+  "domain",
+  "business_id",
+  "company_outreach",
+]);
 export const EntityResolveInputSchema = z
   .object({
     identity: z
-      .object({
-        type: z.union([
-          z.literal("phone"),
-          z.literal("email"),
-          z.literal("instagram"),
-          z.literal("facebook"),
-          z.literal("linkedin"),
-          z.literal("website_form"),
-          z.literal("domain"),
-          z.literal("business_id"),
-          z.literal("company_outreach"),
-        ]),
-        value: z.string().min(1).max(500),
-      })
+      .object({ type: SharedInput68Schema, value: z.string().min(1).max(500) })
       .strict()
       .optional(),
     conversationId: ResourceIdSchema.optional(),
@@ -4671,41 +3533,11 @@ export const PeopleUpsertInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
     runId: ResourceIdSchema.optional(),
     matchingIdentity: z
-      .object({
-        type: z.union([
-          z.literal("phone"),
-          z.literal("email"),
-          z.literal("instagram"),
-          z.literal("facebook"),
-          z.literal("linkedin"),
-          z.literal("website_form"),
-          z.literal("domain"),
-          z.literal("business_id"),
-          z.literal("company_outreach"),
-        ]),
-        value: z.string().min(1).max(500),
-      })
+      .object({ type: SharedInput68Schema, value: z.string().min(1).max(500) })
       .strict(),
     name: z.string().min(1).max(200),
     identities: z
-      .array(
-        z
-          .object({
-            type: z.union([
-              z.literal("phone"),
-              z.literal("email"),
-              z.literal("instagram"),
-              z.literal("facebook"),
-              z.literal("linkedin"),
-              z.literal("website_form"),
-              z.literal("domain"),
-              z.literal("business_id"),
-              z.literal("company_outreach"),
-            ]),
-            value: z.string().min(1).max(500),
-          })
-          .strict(),
-      )
+      .array(z.object({ type: SharedInput68Schema, value: z.string().min(1).max(500) }).strict())
       .max(49)
       .optional(),
     companyId: ResourceIdSchema.optional(),
@@ -4723,41 +3555,11 @@ export const CompaniesUpsertInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
     runId: ResourceIdSchema.optional(),
     matchingIdentity: z
-      .object({
-        type: z.union([
-          z.literal("phone"),
-          z.literal("email"),
-          z.literal("instagram"),
-          z.literal("facebook"),
-          z.literal("linkedin"),
-          z.literal("website_form"),
-          z.literal("domain"),
-          z.literal("business_id"),
-          z.literal("company_outreach"),
-        ]),
-        value: z.string().min(1).max(500),
-      })
+      .object({ type: SharedInput68Schema, value: z.string().min(1).max(500) })
       .strict(),
     name: z.string().min(1).max(200),
     identities: z
-      .array(
-        z
-          .object({
-            type: z.union([
-              z.literal("phone"),
-              z.literal("email"),
-              z.literal("instagram"),
-              z.literal("facebook"),
-              z.literal("linkedin"),
-              z.literal("website_form"),
-              z.literal("domain"),
-              z.literal("business_id"),
-              z.literal("company_outreach"),
-            ]),
-            value: z.string().min(1).max(500),
-          })
-          .strict(),
-      )
+      .array(z.object({ type: SharedInput68Schema, value: z.string().min(1).max(500) }).strict())
       .max(49)
       .optional(),
     companyId: ResourceIdSchema.optional(),
@@ -4801,37 +3603,34 @@ export const CallStatsGetInputSchema = z
   })
   .strict();
 export const CallCoachingGetInputSchema = z.object({ meetingId: ResourceIdSchema }).strict();
+const SharedInput69Schema = z.enum([
+  "rep",
+  "agent",
+  "outcome",
+  "campaign",
+  "week",
+  "month",
+  "meetingSource",
+  "language",
+]);
+const SharedInput70Schema = z.enum([
+  "talkRatioTeam",
+  "longestMonologueTeam",
+  "questionsByTeam",
+  "questionsByExternal",
+  "interruptionsByTeam",
+  "durationMs",
+  "silenceShare",
+  "callsRecorded",
+  "callsWithStats",
+  "heldRate",
+]);
 export const CallAnalyticsQueryInputSchema = z
   .object({
     from: ResourceVersionSchema,
     to: ResourceVersionSchema,
-    groupBy: z.union([
-      z.literal("rep"),
-      z.literal("agent"),
-      z.literal("outcome"),
-      z.literal("campaign"),
-      z.literal("week"),
-      z.literal("month"),
-      z.literal("meetingSource"),
-      z.literal("language"),
-    ]),
-    metrics: z
-      .array(
-        z.union([
-          z.literal("talkRatioTeam"),
-          z.literal("longestMonologueTeam"),
-          z.literal("questionsByTeam"),
-          z.literal("questionsByExternal"),
-          z.literal("interruptionsByTeam"),
-          z.literal("durationMs"),
-          z.literal("silenceShare"),
-          z.literal("callsRecorded"),
-          z.literal("callsWithStats"),
-          z.literal("heldRate"),
-        ]),
-      )
-      .min(1)
-      .max(10),
+    groupBy: SharedInput69Schema,
+    metrics: z.array(SharedInput70Schema).min(1).max(10),
     filters: z
       .object({
         repUserId: ResourceIdSchema.optional(),
@@ -4875,17 +3674,18 @@ export const CallActivityGetInputSchema = z
 export const CallAnalysisGetInputSchema = z
   .object({ meetingId: ResourceIdSchema, runId: z.string().max(100).optional() })
   .strict();
+const SharedInput71Schema = z.enum([
+  "meeting_held",
+  "no_show",
+  "won",
+  "lost",
+  "follow_up",
+  "rescheduled",
+]);
 export const CallOutcomeConfirmInputSchema = z
   .object({
     meetingId: ResourceIdSchema,
-    outcome: z.union([
-      z.literal("meeting_held"),
-      z.literal("no_show"),
-      z.literal("won"),
-      z.literal("lost"),
-      z.literal("follow_up"),
-      z.literal("rescheduled"),
-    ]),
+    outcome: SharedInput71Schema,
     lostReason: z.string().max(500).optional(),
     notes: z.string().max(2000).optional(),
     fromAnalysisVersion: z.string().regex(new RegExp("^[a-f0-9]{64}$")),
@@ -4903,26 +3703,21 @@ export const CallAttendanceGetInputSchema = z
     runId: z.string().max(100).optional(),
   })
   .strict();
+const SharedInput72Schema = z.enum([
+  "summary",
+  "painPoints",
+  "objections",
+  "decisionProcess",
+  "commitments",
+  "nextSteps",
+  "crmNoteDraft",
+]);
 export const CallInsightReviewInputSchema = z
   .object({
     meetingId: ResourceIdSchema,
     insightId: ResourceIdSchema,
-    action: z.union([z.literal("approve"), z.literal("reject")]),
-    selectedSections: z
-      .array(
-        z.union([
-          z.literal("summary"),
-          z.literal("painPoints"),
-          z.literal("objections"),
-          z.literal("decisionProcess"),
-          z.literal("commitments"),
-          z.literal("nextSteps"),
-          z.literal("crmNoteDraft"),
-        ]),
-      )
-      .min(1)
-      .max(7)
-      .optional(),
+    action: z.enum(["approve", "reject"]),
+    selectedSections: z.array(SharedInput72Schema).min(1).max(7).optional(),
     feedback: z.string().max(2000).optional(),
     expectedVersion: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
@@ -4942,7 +3737,7 @@ export const RecorderEventOverrideUpdateInputSchema = z
     calendarId: ResourceIdSchema,
     eventId: ResourceIdSchema,
     allInstances: z.boolean().optional(),
-    record: z.union([z.literal("on"), z.literal("off")]),
+    record: z.enum(["on", "off"]),
     expectedVersion: z.number().int().min(0),
     idempotencyKey: IdempotencyKeySchema,
     dryRun: z.boolean().optional(),
@@ -4991,7 +3786,7 @@ export const CallBotJoinInputSchema = z
     title: z.string().max(500).optional(),
     joinAt: ResourceVersionSchema.optional(),
     durationMinutes: z.number().int().min(1).max(240).optional(),
-    language: z.union([z.literal("auto"), z.literal("fi"), z.literal("en")]).optional(),
+    language: z.enum(["auto", "fi", "en"]).optional(),
     idempotencyKey: IdempotencyKeySchema,
     dryRun: z.boolean().optional(),
     runId: z.string().max(100).optional(),
@@ -5017,12 +3812,7 @@ export const CallParticipantWithdrawalReportInputSchema = z
 export const CallDeleteInputSchema = z
   .object({
     meetingId: ResourceIdSchema,
-    scope: z.union([
-      z.literal("media"),
-      z.literal("transcript"),
-      z.literal("analysis"),
-      z.literal("all"),
-    ]),
+    scope: z.enum(["media", "transcript", "analysis", "all"]),
     expectedVersion: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
     dryRun: z.boolean().optional(),
@@ -5058,59 +3848,36 @@ export const ProspectingPreviewInputSchema = z
     audiencePage: ProspectingAudiencePageSchema.optional(),
     filters: CompanySearchFiltersSchema,
     channels: z
-      .array(
-        z.union([
-          z.literal("instagram"),
-          z.literal("facebook"),
-          z.literal("linkedin"),
-          z.literal("gmail"),
-          z.literal("sms"),
-        ]),
-      )
+      .array(z.enum(["instagram", "facebook", "linkedin", "gmail", "sms"]))
       .max(5)
       .optional(),
     excludePreviouslyContacted: z.boolean().optional(),
-    contactStatus: z
-      .array(
-        z.union([
-          z.literal("never"),
-          z.literal("contacted"),
-          z.literal("replied"),
-          z.literal("booked"),
-          z.literal("closed"),
-          z.literal("suppressed"),
-          z.literal("contacted_no_reply_older_than_90d"),
-        ]),
-      )
-      .max(7)
-      .optional(),
+    contactStatus: z.array(SharedInput23Schema).max(7).optional(),
     sampleSize: z.number().int().min(1).max(50).optional(),
     offset: z.number().int().min(0).max(25000).optional(),
     expectedRevision: z.string().min(1).max(1024).optional(),
     querySignature: z.string().min(1).max(200).optional(),
   })
   .strict();
+const SharedInput73Schema = z
+  .string()
+  .regex(new RegExp("^look_[a-f0-9]{32}$"))
+  .describe(
+    "Poll a job using this connection; omit seed when polling. Results recheck current contact and suppression eligibility.",
+  );
+const SharedInput74Schema = z
+  .enum(["async", "sync"])
+  .describe("Defaults to async with jobId and pollAfterMs. Sync retains the bounded legacy read.");
 export const CompaniesLookalikeInputSchema = z
   .object({
-    jobId: z
-      .string()
-      .regex(new RegExp("^look_[a-f0-9]{32}$"))
-      .describe(
-        "Poll a job using this connection; omit seed when polling. Results recheck current contact and suppression eligibility.",
-      )
-      .optional(),
-    execution: z
-      .union([z.literal("async"), z.literal("sync")])
-      .describe(
-        "Defaults to async with jobId and pollAfterMs. Sync retains the bounded legacy read.",
-      )
-      .optional(),
+    jobId: SharedInput73Schema.optional(),
+    execution: SharedInput74Schema.optional(),
     countries: z.array(SupportedCountrySchema).min(1).max(1).optional(),
     seed: z
       .object({
         companyKeys: z.array(z.string().min(1).max(240)).min(1).max(500).optional(),
         pipelineStages: z
-          .array(z.union([z.literal("call_booked"), z.literal("meeting_held"), z.literal("won")]))
+          .array(z.enum(["call_booked", "meeting_held", "won"]))
           .min(1)
           .max(3)
           .optional(),
@@ -5136,23 +3903,22 @@ export const CommitmentsProposeInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
+const SharedInput75Schema = z.enum([
+  "proposed",
+  "confirmed",
+  "due",
+  "done",
+  "cancelled",
+  "overdue",
+]);
+const SharedInput76Schema = z
+  .string()
+  .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"));
 export const CommitmentsListInputSchema = z
   .object({
-    status: z
-      .union([
-        z.literal("proposed"),
-        z.literal("confirmed"),
-        z.literal("due"),
-        z.literal("done"),
-        z.literal("cancelled"),
-        z.literal("overdue"),
-      ])
-      .optional(),
-    dueBefore: z
-      .string()
-      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"))
-      .optional(),
-    ownerSide: z.union([z.literal("us"), z.literal("prospect")]).optional(),
+    status: SharedInput75Schema.optional(),
+    dueBefore: SharedInput76Schema.optional(),
+    ownerSide: z.enum(["us", "prospect"]).optional(),
     pipelineCardId: z.string().min(1).max(240).optional(),
     cursor: z.string().min(1).max(2000).optional(),
     limit: z.number().int().min(1).max(50).optional(),
@@ -5167,14 +3933,9 @@ export const CommitmentUpdateInputSchema = z
       )
       .optional(),
     id: z.string().min(1).max(160),
-    expectedUpdatedAt: z
-      .string()
-      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
-    status: z.union([z.literal("confirmed"), z.literal("done"), z.literal("cancelled")]),
-    dueAt: z
-      .string()
-      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"))
-      .optional(),
+    expectedUpdatedAt: SharedInput76Schema,
+    status: z.enum(["confirmed", "done", "cancelled"]),
+    dueAt: SharedInput76Schema.optional(),
     idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
@@ -5191,13 +3952,8 @@ export const CommitmentConfirmBatchInputSchema = z
         z
           .object({
             id: z.string().min(1).max(160),
-            expectedUpdatedAt: z
-              .string()
-              .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
-            dueAt: z
-              .string()
-              .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"))
-              .optional(),
+            expectedUpdatedAt: SharedInput76Schema,
+            dueAt: SharedInput76Schema.optional(),
           })
           .strict(),
       )
@@ -5216,9 +3972,7 @@ export const CommitmentReminderDraftInputSchema = z
       .optional(),
     id: z.string().min(1).max(160),
     text: z.string().min(1).max(1000),
-    expectedConversationUpdatedAt: z
-      .string()
-      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
+    expectedConversationUpdatedAt: SharedInput76Schema,
     idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
@@ -5232,9 +3986,7 @@ export const ListRenameInputSchema = z
       .optional(),
     listId: z.string().min(1).max(160),
     name: z.string().min(1).max(120),
-    expectedUpdatedAt: z
-      .string()
-      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
+    expectedUpdatedAt: SharedInput76Schema,
   })
   .strict();
 export const ListArchiveInputSchema = z
@@ -5246,9 +3998,7 @@ export const ListArchiveInputSchema = z
       )
       .optional(),
     listId: z.string().min(1).max(160),
-    expectedUpdatedAt: z
-      .string()
-      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
+    expectedUpdatedAt: SharedInput76Schema,
   })
   .strict();
 export const CampaignDraftArchiveInputSchema = z
@@ -5260,9 +4010,7 @@ export const CampaignDraftArchiveInputSchema = z
       )
       .optional(),
     campaignId: z.string().min(1).max(160),
-    expectedUpdatedAt: z
-      .string()
-      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
+    expectedUpdatedAt: SharedInput76Schema,
   })
   .strict();
 export const CopyApprovalInspectInputSchema = z
@@ -5298,15 +4046,8 @@ export const ApprovalsListInputSchema = z
   .object({
     cursor: z.string().min(1).max(1000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
-    status: z
-      .union([z.literal("pending"), z.literal("approved"), z.literal("rejected")])
-      .optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
+    status: z.enum(["pending", "approved", "rejected"]).optional(),
+    runId: SharedInput4Schema.optional(),
   })
   .strict();
 export const AGENT_INPUT_SCHEMAS = {
@@ -5357,6 +4098,7 @@ export const AGENT_INPUT_SCHEMAS = {
   "campaign.pause": CampaignActionInputSchema,
   "companies.filters": CompanyFiltersInputSchema,
   "companies.suggest": CompanySuggestionsInputSchema,
+  "prospect.query": ProspectQueryInputSchema,
   "companies.search": CompanySearchInputSchema,
   "companies.evidence.search": CompanyEvidenceSearchInputSchema,
   "companies.knowledge.search": WorkspaceCompanyKnowledgeInputSchema,
