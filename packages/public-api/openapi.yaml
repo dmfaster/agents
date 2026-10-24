@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DM Faster Agent API
-  version: 2.6.1
+  version: 2.6.2
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
@@ -458,7 +458,7 @@ paths:
       description: |
         Returns saved social copy and delivery settings alongside execution and
         pipeline facts. When campaignId is omitted, the selected, active, or most
-        recent campaign is used. Read-only. Use campaign.copy.inspect for exact
+        recent campaign is used. Read-only. Use campaign_copy_inspect for exact
         LinkedIn invitation and accepted-message settings.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
@@ -921,7 +921,7 @@ paths:
       operationId: conversationReplyInspect
       summary: Inspect actual reply delivery state
       description:
-        Reads the durable action created by conversation.reply, including queued, sent, failed, or
+        Reads the durable action created by conversation_reply, including queued, sent, failed, or
         delivery unknown state.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
@@ -1588,7 +1588,7 @@ paths:
       summary: Page through confirmed sent-message history
       description:
         Reads confirmed sends for one campaign. Cursor pages can be used to build an export; failed and
-        skipped attempts are in campaign.outcomes.list.
+        skipped attempts are in campaign_outcomes_list.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
         - campaigns:read
@@ -2216,7 +2216,7 @@ paths:
       summary: Remove an Instagram target
       description:
         Ensure one exact Instagram username is absent from an owner-owned saved list after the user
-        requests removal. Echo list.inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and lists
+        requests removal. Echo list_inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and lists
         protected by active campaigns. Already absent is a verified no-op. Sends nothing.
       x-dmfaster-effect: write
       x-dmfaster-required-scopes:
@@ -2228,7 +2228,7 @@ paths:
         title: Remove an Instagram target
         description:
           Ensure one exact Instagram username is absent from an owner-owned saved list after the user
-          requests removal. Echo list.inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and
+          requests removal. Echo list_inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and
           lists protected by active campaigns. Already absent is a verified no-op. Sends nothing.
         annotations:
           readOnlyHint: false
@@ -2273,10 +2273,10 @@ paths:
       description:
         Create an idempotent disabled campaign from a reviewed saved list. Instagram lists default to
         Instagram. For company lists supply channel or channels, expectedAudienceCount, and the exact sum of
-        selected channelCounts as expectedTargetCount from companies.list.inspect. Multichannel LinkedIn
+        selected channelCounts as expectedTargetCount from companies_list_inspect. Multichannel LinkedIn
         requires a separate linkedinInviteNote of at most 300 characters. Email uses channel gmail and
         channelCounts.email; supply gmailSubject, explicitly confirmed gmailRecipientConsentConfirmed and
-        connected mailboxIds from senders.inspect. messageVariants become email body variants. SMS requires
+        connected mailboxIds from senders_inspect. messageVariants become email body variants. SMS requires
         workspace setup and a separate smsBody. Echo the list version and supply delivery settings. Never
         launches or sends messages.
       x-dmfaster-effect: draft
@@ -2291,10 +2291,10 @@ paths:
         description:
           Create an idempotent disabled campaign from a reviewed saved list. Instagram lists default to
           Instagram. For company lists supply channel or channels, expectedAudienceCount, and the exact sum of
-          selected channelCounts as expectedTargetCount from companies.list.inspect. Multichannel LinkedIn
+          selected channelCounts as expectedTargetCount from companies_list_inspect. Multichannel LinkedIn
           requires a separate linkedinInviteNote of at most 300 characters. Email uses channel gmail and
           channelCounts.email; supply gmailSubject, explicitly confirmed gmailRecipientConsentConfirmed and
-          connected mailboxIds from senders.inspect. messageVariants become email body variants. SMS requires
+          connected mailboxIds from senders_inspect. messageVariants become email body variants. SMS requires
           workspace setup and a separate smsBody. Echo the list version and supply delivery settings. Never
           launches or sends messages.
         annotations:
@@ -2339,7 +2339,7 @@ paths:
       summary: Update a saved social campaign draft
       description:
         Patch social copy, channel toggles, LinkedIn invitation and accepted-message sequence, delivery
-        cap, pacing, or sending window of an existing disabled, unstarted social draft. Echo campaign.inspect
+        cap, pacing, or sending window of an existing disabled, unstarted social draft. Echo campaign_inspect
         updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale versions and started
         campaigns are rejected; saving a window never arms it. Inspect after an uncertain response before
         retrying. Never creates another campaign, enables sending, or launches.
@@ -2355,7 +2355,7 @@ paths:
         description:
           Patch social copy, channel toggles, LinkedIn invitation and accepted-message sequence, delivery
           cap, pacing, or sending window of an existing disabled, unstarted social draft. Echo
-          campaign.inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale
+          campaign_inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale
           versions and started campaigns are rejected; saving a window never arms it. Inspect after an
           uncertain response before retrying. Never creates another campaign, enables sending, or launches.
         annotations:
@@ -2845,7 +2845,7 @@ paths:
       summary: Suggest company identities
       description:
         Bounded company suggestions for entity selection. No audience total or exhaustive result is
-        returned. Use companies.search for exact filtered totals and pagination, and company.inspect for a
+        returned. Use companies_search for exact filtered totals and pagination, and company_inspect for a
         current profile. This read never creates a list or spends credits.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
@@ -2958,8 +2958,8 @@ paths:
       operationId: companyEvidenceSearch
       summary: Preview website evidence shortlist
       description:
-        Fast bounded preview only. For every fitting company use companies.evidence.start and
-        companies.evidence.results. Search saved company website passages for arbitrary ICP criteria,
+        Fast bounded preview only. For every fitting company use companies_evidence_start and
+        companies_evidence_results. Search saved company website passages for arbitrary ICP criteria,
         preserving seller/service/buyer relationships. Agent-supplied source-language text retrieval with
         bounded JEV relationship verification. Advertised offerings, portfolio-only evidence, inference and
         unknown are distinct. Ranked shortlist has no audience total. Echo cursor, querySignature and
@@ -2974,8 +2974,8 @@ paths:
         name: companies_evidence_search
         title: Preview website evidence shortlist
         description:
-          Fast bounded preview only. For every fitting company use companies.evidence.start and
-          companies.evidence.results. Search saved company website passages for arbitrary ICP criteria,
+          Fast bounded preview only. For every fitting company use companies_evidence_start and
+          companies_evidence_results. Search saved company website passages for arbitrary ICP criteria,
           preserving seller/service/buyer relationships. Agent-supplied source-language text retrieval with
           bounded JEV relationship verification. Advertised offerings, portfolio-only evidence, inference and
           unknown are distinct. Ranked shortlist has no audience total. Echo cursor, querySignature and
@@ -3641,7 +3641,7 @@ paths:
       summary: Prepare reviewed audience refinement
       description:
         After every company is reviewed, return high-confidence poor-fit exclusions and exact counts as a
-        dry-run companies.list.refine input. The caller must preview and explicitly apply that separate
+        dry-run companies_list_refine input. The caller must preview and explicitly apply that separate
         operation.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
@@ -3696,7 +3696,7 @@ paths:
       operationId: companyListPrepare
       summary: Save company shortlist
       description:
-        Save explicitly inspected companies as a private company list. Echo each company.inspect
+        Save explicitly inspected companies as a private company list. Echo each company_inspect
         revision. No campaign is created or started. Retry using the same key.
       x-dmfaster-effect: draft
       x-dmfaster-required-scopes:
@@ -3708,7 +3708,7 @@ paths:
         name: companies_list_prepare
         title: Save company shortlist
         description:
-          Save explicitly inspected companies as a private company list. Echo each company.inspect
+          Save explicitly inspected companies as a private company list. Echo each company_inspect
           revision. No campaign is created or started. Retry using the same key.
         annotations:
           readOnlyHint: false
@@ -3751,7 +3751,7 @@ paths:
       summary: Inspect company shortlist
       description:
         Read paginated company identities and available contact routes from a saved company list. Echo
-        expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile.
+        expectedUpdatedAt on subsequent pages. Use company_inspect for the current full research profile.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
         - campaigns:read
@@ -3763,7 +3763,7 @@ paths:
         title: Inspect company shortlist
         description:
           Read paginated company identities and available contact routes from a saved company list. Echo
-          expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile.
+          expectedUpdatedAt on subsequent pages. Use company_inspect for the current full research profile.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -4355,7 +4355,7 @@ paths:
       description:
         Return the best requested number of evidenced strong/possible matches, with stable ties and exact
         guarded refinement input. Unknowns are excluded only as an explicit cohort selection, never labelled
-        poor. Preview and review the selection before applying companies.list.refine.
+        poor. Preview and review the selection before applying companies_list_refine.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
         - campaigns:read
@@ -4368,7 +4368,7 @@ paths:
         description:
           Return the best requested number of evidenced strong/possible matches, with stable ties and exact
           guarded refinement input. Unknowns are excluded only as an explicit cohort selection, never labelled
-          poor. Preview and review the selection before applying companies.list.refine.
+          poor. Preview and review the selection before applying companies_list_refine.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -4741,7 +4741,7 @@ paths:
       description:
         Read existing prepaid capacity in the signed-in owner's account wallet. When insufficient, return
         the full one-time standalone price and human checkout URL. Payment starts a separate purchase job;
-        read it through instagram.purchases.list/inspect/results using the same connection. Standalone payment
+        read it through instagram_purchases_list/inspect/results using the same connection. Standalone payment
         cannot fund or resume an account request. No provider calls or payment.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
@@ -4754,7 +4754,7 @@ paths:
         description:
           Read existing prepaid capacity in the signed-in owner's account wallet. When insufficient, return
           the full one-time standalone price and human checkout URL. Payment starts a separate purchase job;
-          read it through instagram.purchases.list/inspect/results using the same connection. Standalone
+          read it through instagram_purchases_list/inspect/results using the same connection. Standalone
           payment cannot fund or resume an account request. No provider calls or payment.
         annotations:
           readOnlyHint: true
@@ -5015,7 +5015,7 @@ paths:
       summary: Inspect my purchased Instagram extraction
       description:
         Read an owned paid purchase and a bounded page of its saved jobs. Use orderId from
-        instagram.purchases.list; follow nextCursor for more jobs. Does not advance providers or spend
+        instagram_purchases_list; follow nextCursor for more jobs. Does not advance providers or spend
         profiles.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
@@ -5027,7 +5027,7 @@ paths:
         title: Inspect my purchased Instagram extraction
         description:
           Read an owned paid purchase and a bounded page of its saved jobs. Use orderId from
-          instagram.purchases.list; follow nextCursor for more jobs. Does not advance providers or spend
+          instagram_purchases_list; follow nextCursor for more jobs. Does not advance providers or spend
           profiles.
         annotations:
           readOnlyHint: true
@@ -5070,7 +5070,7 @@ paths:
       summary: Read my purchased Instagram profiles
       description:
         Read exact saved profiles from an owned paid purchase and job. Use orderId and jobId from
-        instagram.purchases.list/inspect. Follow nextCursor. Uses the buyer's existing connection without
+        instagram_purchases_list/inspect. Follow nextCursor. Uses the buyer's existing connection without
         copying a purchase token; never reads another buyer's order.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
@@ -5082,7 +5082,7 @@ paths:
         title: Read my purchased Instagram profiles
         description:
           Read exact saved profiles from an owned paid purchase and job. Use orderId and jobId from
-          instagram.purchases.list/inspect. Follow nextCursor. Uses the buyer's existing connection without
+          instagram_purchases_list/inspect. Follow nextCursor. Uses the buyer's existing connection without
           copying a purchase token; never reads another buyer's order.
         annotations:
           readOnlyHint: true
@@ -11053,7 +11053,7 @@ paths:
       summary: Cancel a scheduled recorder bot
       description:
         Submit one durable recorder command with current control_recording access. Specify exactly one
-        botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not
+        botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not
         confirmation of provider completion. dryRun performs no writes or provider calls.
       x-dmfaster-effect: write
       x-dmfaster-required-scopes:
@@ -11065,7 +11065,7 @@ paths:
         title: Cancel a scheduled recorder bot
         description:
           Submit one durable recorder command with current control_recording access. Specify exactly one
-          botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not
+          botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not
           confirmation of provider completion. dryRun performs no writes or provider calls.
         annotations:
           readOnlyHint: false
@@ -11097,7 +11097,7 @@ paths:
       summary: Remove a recorder bot and preserve captured media
       description:
         Submit one durable recorder command with current control_recording access. Specify exactly one
-        botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not
+        botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not
         confirmation of provider completion. dryRun performs no writes or provider calls.
       x-dmfaster-effect: write
       x-dmfaster-required-scopes:
@@ -11109,7 +11109,7 @@ paths:
         title: Remove a recorder bot and preserve captured media
         description:
           Submit one durable recorder command with current control_recording access. Specify exactly one
-          botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not
+          botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not
           confirmation of provider completion. dryRun performs no writes or provider calls.
         annotations:
           readOnlyHint: false
@@ -11141,7 +11141,7 @@ paths:
       summary: Stop recording and preserve captured media
       description:
         Submit one durable recorder command with current control_recording access. Specify exactly one
-        botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not
+        botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not
         confirmation of provider completion. dryRun performs no writes or provider calls.
       x-dmfaster-effect: write
       x-dmfaster-required-scopes:
@@ -11153,7 +11153,7 @@ paths:
         title: Stop recording and preserve captured media
         description:
           Submit one durable recorder command with current control_recording access. Specify exactly one
-          botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not
+          botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not
           confirmation of provider completion. dryRun performs no writes or provider calls.
         annotations:
           readOnlyHint: false
@@ -11406,7 +11406,7 @@ paths:
         quarantined content. Media deletion removes provider recording artifacts; already stored local
         transcripts and analysis remain. dryRun makes no changes and returns current requests or planned
         deletions. Full deletion uses the existing deletion pipeline. Late ingest cannot restore deleted
-        scope. expectedVersion comes from call.inspect meeting.updatedAt.
+        scope. expectedVersion comes from call_inspect meeting.updatedAt.
       x-dmfaster-effect: write
       x-dmfaster-required-scopes:
         - calls:write
@@ -11421,7 +11421,7 @@ paths:
           quarantined content. Media deletion removes provider recording artifacts; already stored local
           transcripts and analysis remain. dryRun makes no changes and returns current requests or planned
           deletions. Full deletion uses the existing deletion pipeline. Late ingest cannot restore deleted
-          scope. expectedVersion comes from call.inspect meeting.updatedAt.
+          scope. expectedVersion comes from call_inspect meeting.updatedAt.
         annotations:
           readOnlyHint: false
           destructiveHint: true
@@ -11620,7 +11620,7 @@ paths:
       summary: Preview a compact exact prospect audience
       description:
         Filters-only exact audience, contact status, channel counts, saturation and eligible sample. Same
-        audience engine as campaign.draft.plan. Bounded to 25000 matches; narrow larger audiences.
+        audience engine as campaign_draft_plan. Bounded to 25000 matches; narrow larger audiences.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
         - audiences:read
@@ -11631,7 +11631,7 @@ paths:
         title: Preview a compact exact prospect audience
         description:
           Filters-only exact audience, contact status, channel counts, saturation and eligible sample. Same
-          audience engine as campaign.draft.plan. Bounded to 25000 matches; narrow larger audiences.
+          audience engine as campaign_draft_plan. Bounded to 25000 matches; narrow larger audiences.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -13403,7 +13403,7 @@ components:
           type: boolean
           description:
             Set false for progress-only polling without fetching company rows or quotations. Omitted or true
-            preserves the first result page. Use companies.evidence.results to inspect matches.
+            preserves the first result page. Use companies_evidence_results to inspect matches.
       required:
         - runId
         - expectedRevision
@@ -13914,7 +13914,7 @@ components:
           oneOf:
             - type: object
               additionalProperties: false
-              description: Ready input item for companies.list.prepare, using its shared current-profile revision contract.
+              description: Ready input item for companies_list_prepare, using its shared current-profile revision contract.
               properties:
                 country:
                   $ref: "#/components/schemas/SupportedCountry"
@@ -14549,7 +14549,7 @@ components:
               const: tool_execution
         contractVersion:
           type: string
-          const: 2.6.1
+          const: 2.6.2
         rateLimit:
           oneOf:
             - $ref: "#/components/schemas/AgentRateLimitEnvelope"
@@ -14868,11 +14868,10 @@ components:
     AnalyticsSummaryInput:
       type: object
       additionalProperties: false
-      required:
-        - scope
       properties:
         scope:
           type: string
+          description: Defaults to range over the last 30 days ending now when omitted.
           enum:
             - today
             - last_24_hours
@@ -15538,6 +15537,9 @@ components:
           type: string
           minLength: 1
           maxLength: 120
+        isCompanyLeadList:
+          type: boolean
+          description: Return only company lead lists (true) or only profile lists (false).
         limit:
           type: integer
           minimum: 1
@@ -15588,6 +15590,11 @@ components:
                 type: string
               isCompanyLeadList:
                 type: boolean
+              duplicateOf:
+                type:
+                  - string
+                  - "null"
+                description: Another list (lowest listId) with the same normalized name, or null when the name is unique.
         total:
           type: integer
           minimum: 0
@@ -21000,7 +21007,7 @@ components:
             exact excludedUnknownSize is reported.
       description:
         Every filter supported by the Companies app. Numeric bounds use decimal strings, dates
-        YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved
+        YYYY-MM-DD; empty values disable filters. Call companies_filters for country-specific options. Saved
         website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent
         classifications do not imply a negative. Unsupported or discarded criteria are rejected.
     CompanyFiltersInput:
@@ -21171,7 +21178,7 @@ components:
             - rich
           description:
             List returns the compact app row and flat primary contact fields. Rich preserves contact arrays
-            and is the default. Full profiles remain available through company.inspect.
+            and is the default. Full profiles remain available through company_inspect.
         page:
           type: integer
           minimum: 1
@@ -22110,7 +22117,7 @@ components:
             type: object
             additionalProperties: true
       description:
-        Save explicitly inspected companies as a private company list. Echo each company.inspect
+        Save explicitly inspected companies as a private company list. Echo each company_inspect
         revision. No campaign is created or started. Retry using the same key.
     CompanyListPrepareResult:
       allOf:
@@ -22212,7 +22219,7 @@ components:
             - "null"
       description:
         Read paginated company identities and available contact routes from a saved company list. Echo
-        expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile.
+        expectedUpdatedAt on subsequent pages. Use company_inspect for the current full research profile.
     CompanyListInspectResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -23503,7 +23510,6 @@ components:
       required:
         - from
         - to
-        - timezone
         - durationMinutes
       properties:
         from:
@@ -23514,6 +23520,7 @@ components:
           type: string
           minLength: 1
           maxLength: 80
+          description: IANA timezone. Defaults to the workspace timezone.
         durationMinutes:
           type: integer
           enum:
@@ -30291,6 +30298,14 @@ components:
       properties:
         campaignId:
           $ref: "#/components/schemas/ResourceId"
+        from:
+          allOf:
+            - $ref: "#/components/schemas/ResourceVersion"
+          description: Window start. Defaults to seven days before to; the window is at most 92 days.
+        to:
+          allOf:
+            - $ref: "#/components/schemas/ResourceVersion"
+          description: Exclusive window end. Defaults to now.
         runId:
           type: string
           minLength: 1
@@ -32857,7 +32872,7 @@ components:
           description: Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox.
         contractVersion:
           type: string
-          const: 2.6.1
+          const: 2.6.2
         data:
           type: object
           additionalProperties: false
@@ -38057,6 +38072,19 @@ components:
           format: date-time
         calendarAutojoinEnabled:
           type: boolean
+          description: Workspace rollout flag only. See autojoinActive for whether calendar meetings are admitted.
+        autojoinActive:
+          type: boolean
+          description: True only when calendarAutojoinEnabled is on, consent is recorded and mode is not off.
+        autojoinBlockedBy:
+          type: array
+          maxItems: 3
+          items:
+            type: string
+            enum:
+              - feature_disabled
+              - consent_required
+              - recording_off
         transcriptToolsEnabled:
           type: boolean
         consent:
@@ -38209,11 +38237,12 @@ components:
     RecorderJoinGetInput:
       type: object
       additionalProperties: false
+      description: Supply requestId, or meetingId for the latest request of a meeting (state none when there is no request).
       properties:
         requestId:
           $ref: "#/components/schemas/ResourceId"
-      required:
-        - requestId
+        meetingId:
+          $ref: "#/components/schemas/ResourceId"
     CallBotJoinOutput:
       type: object
       additionalProperties: false
@@ -38293,6 +38322,7 @@ components:
             - submitting
             - scheduled
             - denied
+            - none
         safeErrorCode:
           oneOf:
             - type: string

@@ -27,7 +27,7 @@ import { cachedMcpSchema } from "./cached-schema.ts";
 import { hostedConnectionSchema } from "./presentation-schemas.ts";
 import { oauthToolMetadata, oauthFailureMetadata, type HostedAuth } from "./hosted-auth.ts";
 
-export const MCP_SERVER_VERSION = "2.6.1";
+export const MCP_SERVER_VERSION = "2.6.2";
 export const MCP_SERVER_INSTRUCTIONS =
   "DM Faster prospecting and outreach. Check connection_status; use narrow tools, exact counts and returned IDs/revisions. Retain retry keys. Selections are not consent. Drafts never send. Follow granted access, explicit user instructions and tool workflows; verify outcomes before claiming success. Never expose credentials or operate approval pages. With feedback:write, use feedback_submit for observed friction: concise context, no private data, one stable key per report. Continue the main task.";
 
