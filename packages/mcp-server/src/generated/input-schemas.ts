@@ -47,7 +47,14 @@ export const AnalyticsSummaryInputSchema = z
       .optional(),
     timezone: z.string().max(100).optional(),
     include: z
-      .array(z.union([z.literal("canonical"), z.literal("legacy"), z.literal("definitions")]))
+      .array(
+        z.union([
+          z.literal("canonical"),
+          z.literal("legacy"),
+          z.literal("metrics"),
+          z.literal("definitions"),
+        ]),
+      )
       .max(3)
       .optional(),
     runId: z
@@ -60,6 +67,12 @@ export const AnalyticsSummaryInputSchema = z
   .strict();
 export const WorkspaceBriefingInputSchema = z
   .object({
+    include: z
+      .array(z.union([z.literal("metrics"), z.literal("legacy")]))
+      .max(1)
+      .optional(),
+    from: ResourceVersionSchema.optional(),
+    to: ResourceVersionSchema.optional(),
     runId: z
       .string()
       .min(1)
@@ -109,7 +122,7 @@ export const OptionalCampaignInputSchema = z
       "Omit to use the selected, active, or most recent campaign.",
     ).optional(),
     include: z
-      .array(z.union([z.literal("legacy")]))
+      .array(z.union([z.literal("legacy"), z.literal("metrics")]))
       .max(1)
       .optional(),
     runId: z
@@ -164,6 +177,27 @@ export const InboxChannelSchema = z.union([
 ]);
 export const ConversationsListInputSchema = z
   .object({
+    from: ResourceVersionSchema.optional(),
+    to: ResourceVersionSchema.optional(),
+    fields: z
+      .array(
+        z.union([
+          z.literal("id"),
+          z.literal("channel"),
+          z.literal("targetName"),
+          z.literal("needsReply"),
+          z.literal("lastMessageAt"),
+          z.literal("lastInboundAt"),
+          z.literal("interestIntent"),
+          z.literal("lastMessageText"),
+        ]),
+      )
+      .max(8)
+      .describe("Select compact conversation fields; id and channel are always retained.")
+      .optional(),
+    view: z
+      .union([z.literal("compact"), z.literal("standard"), z.literal("full"), z.literal("summary")])
+      .optional(),
     filter: z
       .union([
         z.literal("all"),
@@ -213,7 +247,7 @@ export const ConversationsListInputSchema = z
       .optional(),
     followupDue: z.boolean().optional(),
     include: z
-      .array(z.union([z.literal("legacy")]))
+      .array(z.union([z.literal("legacy"), z.literal("metrics")]))
       .max(1)
       .optional(),
     runId: z
@@ -280,8 +314,17 @@ export const ConversationUpdateInputSchema = z
       .optional(),
   })
   .strict();
+export const IdempotencyKeySchema = z
+  .string()
+  .trim()
+  .min(8)
+  .max(160)
+  .regex(new RegExp("^[A-Za-z0-9._:-]{8,160}$"));
 export const ReplyTemplateVariablesSchema = z
   .object({
+    lastName: z.string().max(500).optional(),
+    fullName: z.string().max(500).optional(),
+    name: z.string().max(500).optional(),
     firstName: z.string().max(500).optional(),
     companyName: z.string().max(500).optional(),
     slotLink: z.string().max(500).optional(),
@@ -297,7 +340,7 @@ export const ConversationReplyInputSchema = z
     expectedLastInboundAt: ResourceVersionSchema,
     expectedLastMessageAt: ResourceVersionSchema,
     text: z.string().min(1).max(10000).optional(),
-    idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9_-]+$")),
+    idempotencyKey: IdempotencyKeySchema,
     templateId: ResourceIdSchema.optional(),
     variables: ReplyTemplateVariablesSchema.optional(),
     ownerApproved: z
@@ -316,7 +359,7 @@ export const ConversationReplyInputSchema = z
   .strict();
 export const ConversationReplyInspectInputSchema = z
   .object({
-    idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9_-]+$")),
+    idempotencyKey: IdempotencyKeySchema,
     runId: z
       .string()
       .min(1)
@@ -338,14 +381,14 @@ export const CampaignMessagesDraftListInputSchema = z
       .optional(),
   })
   .strict();
-export const IdempotencyKeySchema = z
-  .string()
-  .trim()
-  .min(1)
-  .max(160)
-  .regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$"));
 export const CampaignMessagesDraftUpdateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     campaignId: ResourceIdSchema,
     expectedCampaignUpdatedAt: ResourceVersionSchema,
     expectedListUpdatedAt: ResourceVersionSchema,
@@ -392,6 +435,12 @@ export const CampaignMessagesListInputSchema = z
   .strict();
 export const CampaignMessagesUpdateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     campaignId: ResourceIdSchema,
     runId: ResourceIdSchema,
     expectedCampaignUpdatedAt: ResourceVersionSchema,
@@ -436,6 +485,7 @@ export const CampaignMessagesUpdateInputSchema = z
   .strict();
 export const CampaignFollowupsListInputSchema = z
   .object({
+    limit: z.number().int().min(1).max(100).optional(),
     campaignId: ResourceIdSchema,
     view: z.union([z.literal("upcoming"), z.literal("done")]).optional(),
     cursor: z.string().min(1).max(512).optional(),
@@ -449,10 +499,16 @@ export const CampaignFollowupsListInputSchema = z
   .strict();
 export const CampaignFollowupsCancelInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     campaignId: ResourceIdSchema,
     expectedCampaignUpdatedAt: ResourceVersionSchema,
     jobIds: z.array(ResourceIdSchema).min(1).max(50),
-    idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9._:-]+$")),
+    idempotencyKey: IdempotencyKeySchema,
     runId: z
       .string()
       .min(1)
@@ -476,11 +532,17 @@ export const CampaignOutcomesListInputSchema = z
   .strict();
 export const DeliveryTestPrepareInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     channel: z.union([z.literal("email"), z.literal("sms")]),
     to: z.string().trim().min(3).max(254),
     mailboxId: ResourceIdSchema.optional(),
     recipientConsentConfirmed: z.literal(true),
-    idempotencyKey: z.string().max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+    idempotencyKey: IdempotencyKeySchema,
     runId: z
       .string()
       .min(1)
@@ -491,6 +553,12 @@ export const DeliveryTestPrepareInputSchema = z
   .strict();
 export const DeliveryTestSendInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     testId: z.string().regex(new RegExp("^delivery_test_[a-f0-9]{64}$")),
     reviewDigest: z.string().regex(new RegExp("^[a-f0-9]{64}$")),
     runId: z
@@ -558,7 +626,7 @@ export const PipelineCardsListInputSchema = z
       .max(8)
       .optional(),
     include: z
-      .array(z.union([z.literal("legacy")]))
+      .array(z.union([z.literal("legacy"), z.literal("metrics")]))
       .max(1)
       .optional(),
     runId: z
@@ -603,10 +671,16 @@ export const PipelineNoteListInputSchema = z
   .strict();
 export const PipelineNoteAddInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     campaignId: ResourceIdSchema,
     entityKey: z.string().min(1).max(320),
     body: z.string().min(1).max(2000),
-    idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9._:-]+$")),
+    idempotencyKey: IdempotencyKeySchema,
     runId: z
       .string()
       .min(1)
@@ -661,6 +735,7 @@ export const SupportedCountrySchema = z.union([
 export const TolVersionSchema = z.union([z.literal("2008"), z.literal("2025")]);
 export const IndustryLookupInputSchema = z
   .object({
+    countries: z.array(SupportedCountrySchema).min(1).max(1).optional(),
     country: SupportedCountrySchema.optional(),
     query: z.string().min(1).max(800).regex(new RegExp(".*\\S.*")),
     version: z
@@ -921,6 +996,15 @@ export const AgentCampaignStateSchema = z
   .describe(
     "Complete stateless campaign state. Send the latest returned or user-confirmed state on every planning call.",
   );
+export const ProspectingAudiencePageSchema = z
+  .object({
+    offset: z.number().int().min(0).max(10000000).describe("Defaults to 0.").optional(),
+    limit: z.number().int().min(1).max(500).describe("Defaults to 500.").optional(),
+  })
+  .strict()
+  .describe(
+    "Bounded inventory page. Exact eligibility totals cover this page only; follow returned nextOffset for subsequent pages. Each draft page requires its own idempotencyKey.",
+  );
 export const CompanySearchFiltersSchema = z
   .object({
     country: SupportedCountrySchema.optional(),
@@ -1017,6 +1101,15 @@ export const CompanySearchFiltersSchema = z
   );
 export const ProspectingCopySchema = z
   .object({
+    variables: z
+      .object({
+        ownerName: z.string().max(500).optional(),
+        slotLink: z.string().max(500).optional(),
+        slot1: z.string().max(500).optional(),
+        slot2: z.string().max(500).optional(),
+      })
+      .strict()
+      .optional(),
     messages: z
       .array(
         z
@@ -1026,6 +1119,7 @@ export const ProspectingCopySchema = z
               z.literal("facebook"),
               z.literal("linkedin"),
               z.literal("gmail"),
+              z.literal("email"),
               z.literal("sms"),
             ]),
             subject: z.string().max(500).optional(),
@@ -1044,6 +1138,7 @@ export const ProspectingCopySchema = z
               z.literal("facebook"),
               z.literal("linkedin"),
               z.literal("gmail"),
+              z.literal("email"),
               z.literal("sms"),
             ]),
             subject: z.string().max(500).optional(),
@@ -1058,6 +1153,7 @@ export const ProspectingCopySchema = z
   .strict();
 export const ProspectingPlanSchema = z
   .object({
+    audiencePage: ProspectingAudiencePageSchema.optional(),
     name: z.string().min(1).max(120),
     listName: z.string().min(1).max(120).optional(),
     filters: CompanySearchFiltersSchema,
@@ -1160,6 +1256,12 @@ export const ListInspectInputSchema = z
   .strict();
 export const ListTargetRemoveInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     listId: ResourceIdSchema,
     username: z.string().min(1).max(64),
     expectedListUpdatedAt: ResourceVersionSchema,
@@ -1173,6 +1275,12 @@ export const ListTargetRemoveInputSchema = z
   .strict();
 export const CampaignDraftPrepareInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     channel: z
       .union([
         z.literal("instagram"),
@@ -1291,6 +1399,12 @@ export const LinkedinFollowUpSequenceInputSchema = z
   .strict();
 export const CampaignDraftUpdateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     campaignId: ResourceIdSchema,
     expectedCampaignUpdatedAt: ResourceVersionSchema,
     updates: z
@@ -1330,6 +1444,12 @@ export const CampaignDraftUpdateInputSchema = z
   .strict();
 export const ListImportInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     name: z.string().min(1).max(120),
     usernames: z
       .array(z.string().min(1).max(64))
@@ -1364,6 +1484,12 @@ export const ReviewedAudienceSchema = z
   );
 export const ListPrepareInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     state: AgentCampaignStateSchema,
     sampleSize: z.number().int().min(1).max(25).optional(),
     idempotencyKey: IdempotencyKeySchema.optional(),
@@ -1379,6 +1505,12 @@ export const ListPrepareInputSchema = z
 export const CampaignPrepareInputSchema = ListPrepareInputSchema;
 export const CampaignActionPreflightInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     campaignId: ResourceIdSchema,
     idempotencyKey: IdempotencyKeySchema,
     runId: z
@@ -1391,6 +1523,12 @@ export const CampaignActionPreflightInputSchema = z
   .strict();
 export const CampaignActionInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     campaignId: ResourceIdSchema,
     idempotencyKey: IdempotencyKeySchema,
     authorizationId: z.string().regex(new RegExp("^agent_action_[a-f0-9]{32}$")),
@@ -1404,7 +1542,25 @@ export const CampaignActionInputSchema = z
   .strict();
 export const CompanyFiltersInputSchema = z
   .object({
-    countries: z.array(SupportedCountrySchema).min(1).max(32),
+    country: SupportedCountrySchema.optional(),
+    sections: z
+      .array(
+        z.union([
+          z.literal("filterFields"),
+          z.literal("defaults"),
+          z.literal("availability"),
+          z.literal("metadata"),
+          z.literal("technologies"),
+          z.literal("fundingSources"),
+          z.literal("restrictions"),
+        ]),
+      )
+      .max(8)
+      .optional(),
+    view: z
+      .union([z.literal("compact"), z.literal("standard"), z.literal("full"), z.literal("summary")])
+      .optional(),
+    countries: z.array(SupportedCountrySchema).min(1).max(32).optional(),
     states: z.array(z.string().max(80)).max(32).optional(),
     citySearch: z.string().max(120).optional(),
     runId: z
@@ -1417,8 +1573,9 @@ export const CompanyFiltersInputSchema = z
   .strict();
 export const CompanySuggestionsInputSchema = z
   .object({
+    country: SupportedCountrySchema.optional(),
     query: z.string().min(2).max(120),
-    countries: z.array(SupportedCountrySchema).min(1).max(32),
+    countries: z.array(SupportedCountrySchema).min(1).max(32).optional(),
     limit: z.number().int().min(1).max(10).optional(),
     runId: z
       .string()
@@ -1430,6 +1587,7 @@ export const CompanySuggestionsInputSchema = z
   .strict();
 export const CompanySearchInputSchema = z
   .object({
+    limit: z.number().int().min(1).max(100).optional(),
     filters: CompanySearchFiltersSchema,
     projection: z
       .union([z.literal("list"), z.literal("rich")])
@@ -1633,7 +1791,7 @@ export const CompanyEvidenceStartInputSchema = z
       .optional(),
     filters: CompanySearchFiltersSchema.optional(),
     maxAgeDays: z.number().int().min(1).max(90).optional(),
-    idempotencyKey: z.string().min(1).max(100),
+    idempotencyKey: IdempotencyKeySchema,
     runId: z
       .string()
       .min(1)
@@ -1687,10 +1845,16 @@ export const CompanyInspectInputSchema = z
   .strict();
 export const CompanyFitStartInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     campaignId: ResourceIdSchema,
     listId: ResourceIdSchema,
-    expectedCampaignUpdatedAt: z.string().min(20).max(40),
-    expectedListUpdatedAt: z.string().min(20).max(40),
+    expectedCampaignUpdatedAt: ResourceVersionSchema,
+    expectedListUpdatedAt: ResourceVersionSchema,
     expectedTotal: z.number().int().min(1).max(25000),
     expectedTargetCount: z.number().int().min(0).max(125000),
     offer: z
@@ -1724,7 +1888,16 @@ export const CompanyFitStartInputSchema = z
   })
   .strict();
 export const CompanyFitAdvanceInputSchema = z
-  .object({ runId: ResourceIdSchema, limit: z.number().int().min(1).max(16).optional() })
+  .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
+    runId: ResourceIdSchema,
+    limit: z.number().int().min(1).max(16).optional(),
+  })
   .strict();
 export const CompanyFitResultsInputSchema = z
   .object({
@@ -1756,6 +1929,12 @@ export const CompanyFitResultsInputSchema = z
 export const CompanyFitProposalInputSchema = z.object({ runId: ResourceIdSchema }).strict();
 export const CompanyListPrepareInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     name: z.string().min(1).max(120),
     companies: z
       .array(
@@ -1783,6 +1962,8 @@ export const CompanyListPrepareInputSchema = z
   .strict();
 export const CompanyListInspectInputSchema = z
   .object({
+    view: z.union([z.literal("compact"), z.literal("standard"), z.literal("full")]).optional(),
+    fields: z.array(z.string().max(80)).max(30).optional(),
     listId: ResourceIdSchema,
     offset: z.number().int().min(0).max(1000000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
@@ -1797,10 +1978,16 @@ export const CompanyListInspectInputSchema = z
   .strict();
 export const CompanyListRefineInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     listId: ResourceIdSchema,
     campaignId: ResourceIdSchema,
-    expectedListUpdatedAt: z.string().min(20).max(40),
-    expectedCampaignUpdatedAt: z.string().min(20).max(40),
+    expectedListUpdatedAt: ResourceVersionSchema,
+    expectedCampaignUpdatedAt: ResourceVersionSchema,
     expectedTotal: z.number().int().min(1).max(25000),
     expectedTargetCount: z.number().int().min(0).max(125000),
     excludeCompanies: z
@@ -1885,9 +2072,15 @@ export const CampaignDeliveryInspectInputSchema = z
   .strict();
 export const CampaignDeliveryUpdateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     campaignId: z.string().min(1).max(160),
     expectedRevision: z.string().regex(new RegExp("^[a-f0-9]{64}$")),
-    idempotencyKey: z.string().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]+$")),
+    idempotencyKey: IdempotencyKeySchema,
     patch: z
       .object({
         dailyCap: z.number().int().min(1).max(2147483647).optional(),
@@ -1928,6 +2121,12 @@ export const InstagramPacingPolicySchema = z
   );
 export const InstagramPacingUpdateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     expectedRevision: z.union([
       z
         .string()
@@ -1938,7 +2137,7 @@ export const InstagramPacingUpdateInputSchema = z
         ),
       z.null(),
     ]),
-    idempotencyKey: z.string().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]+$")),
+    idempotencyKey: IdempotencyKeySchema,
     reason: z.string().min(3).max(500),
     policy: z
       .union([InstagramPacingPolicySchema, z.null()])
@@ -1958,7 +2157,17 @@ export const InstagramPacingUpdateInputSchema = z
   })
   .strict();
 export const CompanyFitStatusInputSchema = z.object({ runId: ResourceIdSchema }).strict();
-export const CompanyFitCancelInputSchema = z.object({ runId: ResourceIdSchema }).strict();
+export const CompanyFitCancelInputSchema = z
+  .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
+    runId: ResourceIdSchema,
+  })
+  .strict();
 export const CompanyFitRunCursorSchema = z
   .object({ createdAt: z.string().min(20).max(40), id: ResourceIdSchema })
   .strict();
@@ -1976,7 +2185,16 @@ export const CompanyFitRunsListInputSchema = z
   })
   .strict();
 export const CompanyFitRunInputSchema = z
-  .object({ runId: ResourceIdSchema, limit: z.number().int().min(1).max(8).optional() })
+  .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
+    runId: ResourceIdSchema,
+    limit: z.number().int().min(1).max(8).optional(),
+  })
   .strict();
 export const CompanyFitCohortInputSchema = z
   .object({
@@ -2005,12 +2223,12 @@ export const CopyPerformanceInputSchema = z
       .describe("Optional channel filter for template_variation only.")
       .optional(),
     campaignId: ResourceIdSchema.optional(),
-    from: z.string().min(20).max(40),
-    to: z.string().min(20).max(40),
+    from: ResourceVersionSchema,
+    to: ResourceVersionSchema,
     limit: z.number().int().min(1).max(25).optional(),
     offset: z.number().int().min(0).max(1000000).optional(),
     include: z
-      .array(z.union([z.literal("legacy")]))
+      .array(z.union([z.literal("legacy"), z.literal("metrics")]))
       .max(1)
       .optional(),
     runId: z
@@ -2033,8 +2251,8 @@ export const CalendarStatusInputSchema = z
   .strict();
 export const CalendarAvailabilityInputSchema = z
   .object({
-    from: z.string().min(20).max(40),
-    to: z.string().min(20).max(40),
+    from: ResourceVersionSchema,
+    to: ResourceVersionSchema,
     timezone: z.string().min(1).max(80),
     durationMinutes: z.union([
       z.literal(15),
@@ -2065,10 +2283,10 @@ export const CalendarMeetingBookInputSchema = z
   .object({
     dryRun: z.boolean().optional(),
     conversationId: ResourceIdSchema,
-    expectedConversationUpdatedAt: z.string().min(20).max(40),
-    idempotencyKey: z.string().min(8).max(120).regex(new RegExp("^[a-zA-Z0-9_-]{8,120}$")),
+    expectedConversationUpdatedAt: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
     title: z.string().min(1).max(200),
-    start: z.string().min(20).max(40),
+    start: ResourceVersionSchema,
     timezone: z.string().min(1).max(80),
     durationMinutes: z.union([
       z.literal(15),
@@ -2177,6 +2395,12 @@ export const InstagramExtractionQuoteInputSchema = z
   .strict();
 export const InstagramExtractionStartInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     username: z.string().trim().min(1).max(31).regex(new RegExp("^@?[A-Za-z0-9._]{1,30}$")),
     type: z.union([
       z.literal("followers"),
@@ -2187,7 +2411,7 @@ export const InstagramExtractionStartInputSchema = z
     count: z.number().int().min(1).max(2147483647),
     currency: z.union([z.literal("USD"), z.literal("EUR")]).optional(),
     postUrl: z.string().trim().min(1).max(300).optional(),
-    idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+    idempotencyKey: IdempotencyKeySchema,
     runId: z
       .string()
       .min(1)
@@ -2306,7 +2530,7 @@ export const LeadExtractionStartInputSchema = z
     postUrls: z.array(z.string().trim().min(1).max(300)).min(1).optional(),
     priority: z.union([z.literal("high"), z.literal("normal"), z.literal("low")]).optional(),
     feedType: z.union([z.literal("top"), z.literal("recent")]).optional(),
-    idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+    idempotencyKey: IdempotencyKeySchema,
     runId: z
       .string()
       .min(1)
@@ -2343,7 +2567,7 @@ export const LeadExtractionContinueInputSchema = z
     dryRun: z.boolean().optional(),
     jobId: ResourceIdSchema,
     count: z.number().int().min(1).max(2147483647).optional(),
-    idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+    idempotencyKey: IdempotencyKeySchema,
     runId: z
       .string()
       .min(1)
@@ -2368,7 +2592,7 @@ export const LeadEnrichmentStartInputSchema = z
     dryRun: z.boolean().optional(),
     listId: ResourceIdSchema,
     maxCredits: z.number().int().min(0).max(2147483647).optional(),
-    idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+    idempotencyKey: IdempotencyKeySchema,
     runId: z
       .string()
       .min(1)
@@ -2471,22 +2695,49 @@ export const InstagramProspectInputSchema = z
       .optional(),
   })
   .strict();
-export const InstagramProspectStartInputSchema = z.intersection(
-  InstagramProspectInputSchema,
-  z
-    .object({
-      idempotencyKey: z.string().min(1).max(120),
-      runId: z
-        .string()
-        .min(1)
-        .max(100)
-        .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-        .optional(),
-    })
-    .strict(),
-);
+export const InstagramProspectStartInputSchema = z
+  .object({
+    query: z.string().min(1).max(4000),
+    criteria: z.array(InstagramProspectCriterionSchema).min(1).max(12).optional(),
+    threshold: z.number().min(0.5).max(1).optional(),
+    evidenceThreshold: z.number().min(0.5).max(1).optional(),
+    sourceListIds: z.array(z.string().min(1).max(200)).max(10).optional(),
+    sources: z.array(InstagramProspectSourceSchema).max(10).optional(),
+    searchQueries: z.array(z.string().min(1).max(120)).min(1).max(5).optional(),
+    targetCount: z.number().int().min(1).max(1000).optional(),
+    maxCandidates: z.number().int().min(1).max(1000).optional(),
+    maxCredits: z.number().int().min(1).max(100000).optional(),
+    maxModelCalls: z.number().int().min(1).max(1000).optional(),
+    media: z.union([z.literal("none"), z.literal("avatar"), z.literal("recent_posts")]).optional(),
+    model: z.union([z.literal("clef"), z.literal("clef-flash")]).optional(),
+    includeReview: z.boolean().optional(),
+    excludePreviouslyContacted: z.boolean().optional(),
+    name: z.string().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
+    idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
 export const InstagramProspectRunInputSchema = z
-  .object({ runId: z.string().min(1).max(100) })
+  .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
+    runId: z.string().min(1).max(100),
+  })
   .strict();
 export const InstagramProspectResultsInputSchema = z
   .object({
@@ -2607,6 +2858,9 @@ export const EventsListInputSchema = z
   .strict();
 export const ConversationsChangesInputSchema = z
   .object({
+    since: ResourceVersionSchema.describe(
+      "Bounded bootstrap of retained conversation changes since this instant; continue with the returned cursor.",
+    ).optional(),
     cursor: z.string().min(1).max(1000).optional(),
     types: z
       .array(
@@ -2689,6 +2943,12 @@ export const SuppressionsRemoveInputSchema = z
   .strict();
 export const WorkspaceSandboxCreateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     name: z.string().min(1).max(100),
     idempotencyKey: IdempotencyKeySchema,
     runId: z
@@ -2701,6 +2961,12 @@ export const WorkspaceSandboxCreateInputSchema = z
   .strict();
 export const SandboxSeedInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     preset: z.literal("appointment_setter_v1"),
     idempotencyKey: IdempotencyKeySchema,
     runId: z
@@ -2713,6 +2979,12 @@ export const SandboxSeedInputSchema = z
   .strict();
 export const SandboxInboundSimulateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     conversationId: z.string().min(1).max(160).optional(),
     campaignId: z.string().min(1).max(160).optional(),
     channel: z.union([
@@ -2737,6 +3009,12 @@ export const SandboxInboundSimulateInputSchema = z
   .strict();
 export const SandboxClockAdvanceInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     minutes: z.number().int().min(1).max(525600),
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
@@ -2993,6 +3271,12 @@ export const WorkspaceAgentSalesGetInputSchema = z
   .strict();
 export const WorkspaceAgentSalesUpdateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     enabled: z.boolean(),
     autoClose: z.boolean(),
     autoSuppress: z.boolean(),
@@ -3009,6 +3293,12 @@ export const WorkspaceAgentSalesUpdateInputSchema = z
   .strict();
 export const SandboxProviderUpdateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     provider: z.union([
       z.literal("calendar"),
       z.literal("gmail"),
@@ -3060,6 +3350,12 @@ export const ReplyTemplateSchema = z
   .strict();
 export const ReplyTemplatesCreateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     template: ReplyTemplateSchema,
     expectedRevision: z.literal(0),
     idempotencyKey: IdempotencyKeySchema,
@@ -3073,6 +3369,12 @@ export const ReplyTemplatesCreateInputSchema = z
   .strict();
 export const ReplyTemplatesUpdateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     id: ResourceIdSchema,
     template: ReplyTemplateSchema,
     expectedRevision: z.number().int().min(0),
@@ -3087,6 +3389,12 @@ export const ReplyTemplatesUpdateInputSchema = z
   .strict();
 export const ReplyTemplatesDeleteInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     id: ResourceIdSchema,
     expectedRevision: z.number().int().min(0),
     idempotencyKey: IdempotencyKeySchema,
@@ -3141,6 +3449,12 @@ export const ReplyPolicySchema = z
   .strict();
 export const ReplyPolicyUpdateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     policy: ReplyPolicySchema,
     expectedRevision: z.number().int().min(0),
     idempotencyKey: IdempotencyKeySchema,
@@ -3154,6 +3468,8 @@ export const ReplyPolicyUpdateInputSchema = z
   .strict();
 export const ReplyApprovalsListInputSchema = z
   .object({
+    view: z.union([z.literal("compact"), z.literal("standard"), z.literal("full")]).optional(),
+    fields: z.array(z.string().max(80)).max(30).optional(),
     cursor: z.string().min(1).max(1000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     status: z
@@ -3169,6 +3485,12 @@ export const ReplyApprovalsListInputSchema = z
   .strict();
 export const ConversationDraftSaveInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     conversationId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     text: z.string().min(1).max(10000).optional(),
@@ -3255,6 +3577,13 @@ export const ConversationsBulkUpdateInputSchema = z
   .strict();
 export const PipelineBoardInputSchema = z
   .object({
+    include: z
+      .array(z.union([z.literal("metrics"), z.literal("legacy")]))
+      .max(1)
+      .optional(),
+    view: z.union([z.literal("compact"), z.literal("standard"), z.literal("full")]).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    cursor: z.string().max(4000).optional(),
     campaignIds: z.array(ResourceIdSchema).max(100).optional(),
     limitPerStage: z.number().int().min(1).max(20).optional(),
     runId: z
@@ -3267,6 +3596,12 @@ export const PipelineBoardInputSchema = z
   .strict();
 export const CalendarBookingLinkCreateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     conversationId: ResourceIdSchema,
     expectedConversationUpdatedAt: ResourceVersionSchema,
     durations: z.array(z.number().int().min(15).max(120)).min(1).max(4),
@@ -4117,7 +4452,11 @@ export const AgentRunsListInputSchema = z
   .strict();
 export const AgentRunInspectInputSchema = z
   .object({
-    runId: ResourceIdSchema,
+    agentRunId: ResourceIdSchema.optional(),
+    view: z
+      .union([z.literal("compact"), z.literal("standard"), z.literal("full"), z.literal("summary")])
+      .optional(),
+    runId: ResourceIdSchema.optional(),
     afterSeq: z.number().int().min(0).max(9007199254740991).optional(),
     limit: z.number().int().min(1).max(200).optional(),
   })
@@ -4184,6 +4523,12 @@ export const WorkspaceAutomationInspectInputSchema = z
   .strict();
 export const AgentFeedbackSubmitInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     category: z.union([
       z.literal("bug"),
       z.literal("missing_capability"),
@@ -4442,8 +4787,8 @@ export const CallStatsGetInputSchema = z
 export const CallCoachingGetInputSchema = z.object({ meetingId: ResourceIdSchema }).strict();
 export const CallAnalyticsQueryInputSchema = z
   .object({
-    from: z.string().min(20).max(40),
-    to: z.string().min(20).max(40),
+    from: ResourceVersionSchema,
+    to: ResourceVersionSchema,
     groupBy: z.union([
       z.literal("rep"),
       z.literal("agent"),
@@ -4564,7 +4909,7 @@ export const CallInsightReviewInputSchema = z
       .optional(),
     feedback: z.string().max(2000).optional(),
     expectedVersion: ResourceVersionSchema,
-    idempotencyKey: z.string().min(1).max(120),
+    idempotencyKey: IdempotencyKeySchema,
     dryRun: z.boolean().optional(),
     runId: z.string().max(100).optional(),
   })
@@ -4665,8 +5010,14 @@ export const CallDeleteInputSchema = z
   .strict();
 export const CopyApprovalRequestInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     plan: ProspectingPlanSchema.optional(),
-    idempotencyKey: z.string().min(1).max(160),
+    idempotencyKey: IdempotencyKeySchema,
     campaignId: z.string().min(1).max(160).optional(),
   })
   .strict();
@@ -4675,7 +5026,7 @@ export const CampaignDraftPlanInputSchema = z
     plan: ProspectingPlanSchema.optional(),
     approvalId: z.string().min(1).max(160).optional(),
     dryRun: z.boolean().optional(),
-    idempotencyKey: z.string().min(1).max(160).optional(),
+    idempotencyKey: IdempotencyKeySchema.optional(),
   })
   .strict();
 export const CampaignDraftReadinessInputSchema = z
@@ -4683,6 +5034,7 @@ export const CampaignDraftReadinessInputSchema = z
   .strict();
 export const ProspectingPreviewInputSchema = z
   .object({
+    audiencePage: ProspectingAudiencePageSchema.optional(),
     filters: CompanySearchFiltersSchema,
     channels: z
       .array(
@@ -4719,6 +5071,20 @@ export const ProspectingPreviewInputSchema = z
   .strict();
 export const CompaniesLookalikeInputSchema = z
   .object({
+    jobId: z
+      .string()
+      .regex(new RegExp("^look_[a-f0-9]{32}$"))
+      .describe(
+        "Poll a job using this connection; omit seed when polling. Results recheck current contact and suppression eligibility.",
+      )
+      .optional(),
+    execution: z
+      .union([z.literal("async"), z.literal("sync")])
+      .describe(
+        "Defaults to async with jobId and pollAfterMs. Sync retains the bounded legacy read.",
+      )
+      .optional(),
+    countries: z.array(SupportedCountrySchema).min(1).max(1).optional(),
     seed: z
       .object({
         companyKeys: z.array(z.string().min(1).max(240)).min(1).max(500).optional(),
@@ -4728,7 +5094,8 @@ export const CompaniesLookalikeInputSchema = z
           .max(3)
           .optional(),
       })
-      .strict(),
+      .strict()
+      .optional(),
     country: SupportedCountrySchema.optional(),
     limit: z.number().int().min(1).max(50).optional(),
     cursor: z.string().min(1).max(1000).optional(),
@@ -4736,10 +5103,16 @@ export const CompaniesLookalikeInputSchema = z
   .strict();
 export const CommitmentsProposeInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     meetingId: z.string().min(1).max(160),
     cursor: z.string().min(1).max(2000).optional(),
     timezone: z.string().min(1).max(80).optional(),
-    idempotencyKey: z.string().min(1).max(160),
+    idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
 export const CommitmentsListInputSchema = z
@@ -4766,6 +5139,12 @@ export const CommitmentsListInputSchema = z
   .strict();
 export const CommitmentUpdateInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     id: z.string().min(1).max(160),
     expectedUpdatedAt: z
       .string()
@@ -4775,11 +5154,17 @@ export const CommitmentUpdateInputSchema = z
       .string()
       .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"))
       .optional(),
-    idempotencyKey: z.string().min(1).max(160),
+    idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
 export const CommitmentConfirmBatchInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     items: z
       .array(
         z
@@ -4797,21 +5182,33 @@ export const CommitmentConfirmBatchInputSchema = z
       )
       .min(1)
       .max(50),
-    idempotencyKey: z.string().min(1).max(160),
+    idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
 export const CommitmentReminderDraftInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     id: z.string().min(1).max(160),
     text: z.string().min(1).max(1000),
     expectedConversationUpdatedAt: z
       .string()
       .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
-    idempotencyKey: z.string().min(1).max(160),
+    idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
 export const ListRenameInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     listId: z.string().min(1).max(160),
     name: z.string().min(1).max(120),
     expectedUpdatedAt: z
@@ -4821,6 +5218,12 @@ export const ListRenameInputSchema = z
   .strict();
 export const ListArchiveInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     listId: z.string().min(1).max(160),
     expectedUpdatedAt: z
       .string()
@@ -4829,6 +5232,12 @@ export const ListArchiveInputSchema = z
   .strict();
 export const CampaignDraftArchiveInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     campaignId: z.string().min(1).max(160),
     expectedUpdatedAt: z
       .string()
@@ -4839,12 +5248,27 @@ export const CopyApprovalInspectInputSchema = z
   .object({ approvalId: z.string().min(1).max(160) })
   .strict();
 export const CopyApprovalCancelInputSchema = z
-  .object({ approvalId: z.string().min(1).max(160), idempotencyKey: z.string().min(8).max(160) })
+  .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
+    approvalId: z.string().min(1).max(160),
+    idempotencyKey: IdempotencyKeySchema,
+  })
   .strict();
 export const ApprovalCancelInputSchema = z
   .object({
+    dryRun: z
+      .boolean()
+      .describe(
+        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      )
+      .optional(),
     approvalId: z.string().min(1).max(160),
-    idempotencyKey: z.string().min(8).max(160),
+    idempotencyKey: IdempotencyKeySchema,
     expectedRevision: z.number().int().min(1),
     reason: z.string().min(1).max(500),
   })

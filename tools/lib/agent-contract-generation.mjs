@@ -5,6 +5,21 @@ const json = (value) => JSON.stringify(value, null, 2);
 /** Compile only the input-schema vocabulary we explicitly support; new keywords fail closed. */
 export function compileAgentContract(document, { includeServer = false } = {}) {
   const schemas = document.components.schemas;
+  // Keep new adapters on the canonical retry/timestamp types. Compatibility aliases
+  // belong in the input adapter, never in a competing validation pattern.
+  for (const [name, schema] of Object.entries(schemas)) {
+    if (!name.endsWith("Input")) continue;
+    for (const [key, field] of Object.entries(schema.properties || {})) {
+      if (key === "idempotencyKey" && field.$ref !== "#/components/schemas/IdempotencyKey")
+        throw Error(`${name}.${key} must reference IdempotencyKey`);
+      if (
+        /(?:At|After|Before|Until|Since)$|^(?:from|to|start|end)$/.test(key) &&
+        field.type === "string" &&
+        field.minLength === 20
+      )
+        throw Error(`${name}.${key} must reference ResourceVersion for offset-aware timestamps`);
+    }
+  }
   const declarations = new Map();
   const active = new Set();
   const allowed = new Set([
@@ -189,6 +204,7 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     policies = {},
     scopes = {},
     ownerOnly = [],
+    inputOnlyPreviews = [],
     inputs = [],
     data = [],
     mcpSchemas = [],
@@ -318,6 +334,11 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     if (!cli.usage.startsWith(command.join(" "))) throw Error(`CLI command mismatch: ${name}`);
     names.push(name);
     policies[name] = { effect, approval, exposure: "public_api" };
+    if (operation["x-dmfaster-preview"] !== undefined) {
+      if (operation["x-dmfaster-preview"] !== "input_only" || effect === "read")
+        throw Error(`Invalid preview metadata: ${name}`);
+      inputOnlyPreviews.push(name);
+    }
     scopes[name] = requiredScopes;
     if (owner) ownerOnly.push(name);
     definitions[name] = { mcp, cli: { ...cli, command } };
@@ -353,7 +374,7 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
       throw Error(`Invalid error catalog entry: ${code}`);
   }
   const errorCatalog = `export const AGENT_ERROR_CATALOG = ${json(errors)} as const;\n`;
-  const common = `${header}export const AGENT_CONTRACT_VERSION = ${json(schemas.AgentToolResultBase.properties.contractVersion.const)} as const;\nexport const AGENT_TOOL_NAMES = ${json(names)} as const;\nexport const AGENT_TOOL_POLICIES = Object.freeze(${json(policies)} as const);\nexport const AGENT_TOOL_SCOPES = ${json(scopes)} as const;\nexport const AGENT_OWNER_ONLY_TOOLS = ${json(ownerOnly)} as const;\n${errorCatalog}export const AGENT_SALES_EVENT_TYPES = ${json(schemas.AgentSalesEventType?.enum || [])} as const;\n`;
+  const common = `${header}export const AGENT_CONTRACT_VERSION = ${json(schemas.AgentToolResultBase.properties.contractVersion.const)} as const;\nexport const AGENT_TOOL_NAMES = ${json(names)} as const;\nexport const AGENT_TOOL_POLICIES = Object.freeze(${json(policies)} as const);\nexport const AGENT_TOOL_SCOPES = ${json(scopes)} as const;\nexport const AGENT_OWNER_ONLY_TOOLS = ${json(ownerOnly)} as const;\nexport const AGENT_INPUT_ONLY_PREVIEW_TOOLS = ${json(inputOnlyPreviews)} as const;\n${errorCatalog}export const AGENT_SALES_EVENT_TYPES = ${json(schemas.AgentSalesEventType?.enum || [])} as const;\n`;
   const artifacts = new Map([
     [
       "packages/sdk/src/generated/tools.ts",

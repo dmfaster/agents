@@ -1,6 +1,6 @@
 {
   "name": "dmfaster-agents",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "private": true,
   "description": "Public Agent 2.0 interfaces for DM Faster.",
   "license": "Apache-2.0",
@@ -31,7 +31,8 @@
     "release:agent-packages": "node tools/publish-agent-packages.mjs",
     "typecheck:agents": "npm run typecheck --workspaces --if-present",
     "test:agents": "node --test tools/agent-contract-generation.test.mjs tools/public-api-contract.test.mjs tools/agent-package-boundaries.test.mjs tools/publish-agent-packages.test.mjs && npm run test --workspaces --if-present",
-    "check:agents": "npm run check:agent-api && npm run check:agent-skill && npm run check:agent-plugin && npm run build:agents && npm run check:agent-packages && npm run test:agent-packages:install && npm run typecheck:agents && npm run test:agents"
+    "check:agents": "npm run check:agent-api && npm run check:agent-skill && npm run check:agent-plugin && npm run build:agents && npm run check:agent-packages && npm run test:agent-packages:install && npm run typecheck:agents && npm run test:agents",
+    "check:agent-catalog": "node packages/mcp-server/tools/check-catalog.ts"
   },
   "devDependencies": {
     "@types/node": "24.19.0",

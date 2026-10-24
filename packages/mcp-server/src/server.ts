@@ -162,6 +162,7 @@ export function createDmfasterMcpServer(input: {
   instagramEvaluation?: InstagramEvaluationConfig;
 }) {
   return createDmfasterMcpCore({
+    catalogProfile: input.env?.DMFASTER_MCP_PROFILE === "full" ? "full" : "compact",
     client: input.client,
     registerLocalConnection(server) {
       registerConnectionStatus(server, input.env ?? process.env, input.auth ?? {});

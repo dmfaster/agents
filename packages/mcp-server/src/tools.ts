@@ -25,7 +25,7 @@ export const MCP_PRESENTATION_TOOL_NAMES = [
   "workspace_mentions",
   "outreach_details",
 ] as const;
-export const MCP_LOCAL_TOOL_NAMES = ["connection_status"] as const;
+export const MCP_LOCAL_TOOL_NAMES = ["connection_status", "tools_discover", "tools_call"] as const;
 
 export const MCP_TOOL_NAMES = [
   ...MCP_AGENT_TOOL_NAMES,

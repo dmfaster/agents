@@ -5144,6 +5144,8 @@ export interface components {
         AgentFeedbackSubmitInput: {
             /** @enum {string} */
             category: "bug" | "missing_capability" | "confusing_behavior" | "performance" | "improvement";
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             /** @description What should happen instead. */
             expected?: string;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
@@ -5165,7 +5167,7 @@ export interface components {
             toolName?: string;
         };
         AgentFeedbackSubmitResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["AgentFeedbackSubmitData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["AgentFeedbackSubmitData"] | null);
             /** @constant */
             tool?: "feedback.submit";
         };
@@ -5202,7 +5204,7 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.5.1";
+            contractVersion: "2.6.0";
             data: {
                 nextInSeconds: number;
             };
@@ -5394,10 +5396,14 @@ export interface components {
             occurredAt: string;
             ok: boolean;
             receiptIds: string[];
+            requestId?: string | null;
             resourceIds: string[];
             responseBytes: number;
             runId: string;
             seq: number;
+            serverTimingMs?: {
+                [key: string]: number;
+            };
             tool: string;
             workspaceUserId: string;
         };
@@ -5425,10 +5431,22 @@ export interface components {
         };
         AgentRunInspectInput: {
             afterSeq?: number;
+            agentRunId?: components["schemas"]["ResourceId"];
             limit?: number;
-            runId: components["schemas"]["ResourceId"];
+            runId?: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            view?: "compact" | "standard" | "full" | "summary";
         };
         AgentRunInspectOutput: {
+            aggregates?: {
+                bytes: number | string;
+                calls: number;
+                errors: number;
+                p50Ms: number;
+                p95Ms: number;
+                tool: string;
+            }[];
+            aggregatesHasMore?: boolean;
             calls: components["schemas"]["AgentRunCall"][];
             nextAfterSeq: number | null;
             /** @constant */
@@ -5535,6 +5553,12 @@ export interface components {
             blockedUntil?: components["schemas"]["ResourceVersion"];
             code: string;
             docsUrl?: string;
+            errors?: {
+                allowed?: string[];
+                code: string;
+                message: string;
+                path: string;
+            }[];
             haltedBy?: string;
             message: string;
             nextAction?: string;
@@ -5567,26 +5591,41 @@ export interface components {
         };
         AgentToolResultBase: {
             artifacts: unknown[];
+            build?: string;
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.5.1";
+            contractVersion?: "2.6.0";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
             evidence: components["schemas"]["AgentToolEvidence"][];
+            /** @description Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1. */
+            executionReceipt?: {
+                agentRunId: string;
+                callSeq: number;
+                /** @constant */
+                kind: "tool_execution";
+                receiptId: string;
+            };
             /** Format: date-time */
             generatedAt: string;
             ok: boolean;
             policy: components["schemas"]["AgentToolPolicy"];
             /** @description Current authenticated credential/workspace quota, negotiated by X-DMFaster-Rate-Limit: 1. Null before authentication or when authoritative quota is unavailable. */
             rateLimit?: components["schemas"]["AgentRateLimitEnvelope"] | null;
+            requestId?: string;
             /** Format: date-time */
             serverTime?: string;
+            serverTimingMs?: {
+                [key: string]: number;
+            };
+            serverVersion?: string;
             tool: components["schemas"]["AgentToolName"];
             /** @constant */
             version: 1;
         };
         AgentWorkItem: {
+            ageBusinessHours?: number;
             blockedBy: string[];
             campaignId?: string | null;
             claim: {
@@ -5643,7 +5682,7 @@ export interface components {
             campaign?: components["schemas"]["ResourceId"];
             from?: components["schemas"]["ResourceVersion"];
             groupBy?: ("day" | "week" | "channel" | "campaign" | "actor" | "variant")[];
-            include?: ("canonical" | "legacy" | "definitions")[];
+            include?: ("canonical" | "legacy" | "metrics" | "definitions")[];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
             /** @enum {string} */
@@ -5712,8 +5751,10 @@ export interface components {
         };
         ApprovalCancelInput: {
             approvalId: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedRevision: number;
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             reason: string;
         };
         ApprovalCancelResult: components["schemas"]["AgentToolResultBase"] & {
@@ -5804,6 +5845,7 @@ export interface components {
         BudgetStatusOutput: {
             agentId: components["schemas"]["ResourceId"];
             at: components["schemas"]["ResourceVersion"];
+            enforcementEnabled?: boolean;
             items: {
                 limit: number | null;
                 /** @enum {string} */
@@ -5844,12 +5886,12 @@ export interface components {
             calendarId?: string;
             /** @enum {integer} */
             durationMinutes: 15 | 30 | 45 | 60 | 90 | 120;
-            from: string;
+            from: components["schemas"]["ResourceVersion"];
             limit?: number;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
             timezone: string;
-            to: string;
+            to: components["schemas"]["ResourceVersion"];
         };
         CalendarAvailabilityResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CalendarAvailabilityData"] | null;
@@ -5861,6 +5903,8 @@ export interface components {
             conference: "google_meet" | "teams" | "phone" | "in_person" | "custom_url";
             conversationId: components["schemas"]["ResourceId"];
             customUrl?: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             durations: number[];
             expectedConversationUpdatedAt: components["schemas"]["ResourceVersion"];
             expiresAt: components["schemas"]["ResourceVersion"];
@@ -5905,11 +5949,11 @@ export interface components {
             dryRun?: boolean;
             /** @enum {integer} */
             durationMinutes: 15 | 30 | 45 | 60 | 90 | 120;
-            expectedConversationUpdatedAt: string;
-            idempotencyKey: string;
+            expectedConversationUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
-            start: string;
+            start: components["schemas"]["ResourceVersion"];
             timezone: string;
             title: string;
         };
@@ -5929,7 +5973,7 @@ export interface components {
         CalendarMeetingCancelResult: components["schemas"]["AgentToolResultBase"] & {
             data?: {
                 [key: string]: unknown;
-            };
+            } | null;
             /** @constant */
             tool?: "calendar.meeting.cancel";
         };
@@ -5945,7 +5989,7 @@ export interface components {
         CalendarMeetingRescheduleResult: components["schemas"]["AgentToolResultBase"] & {
             data?: {
                 [key: string]: unknown;
-            };
+            } | null;
             /** @constant */
             tool?: "calendar.meeting.reschedule";
         };
@@ -6242,11 +6286,11 @@ export interface components {
                 outcome?: string;
                 repUserId?: components["schemas"]["ResourceId"];
             };
-            from: string;
+            from: components["schemas"]["ResourceVersion"];
             /** @enum {string} */
             groupBy: "rep" | "agent" | "outcome" | "campaign" | "week" | "month" | "meetingSource" | "language";
             metrics: ("talkRatioTeam" | "longestMonologueTeam" | "questionsByTeam" | "questionsByExternal" | "interruptionsByTeam" | "durationMs" | "silenceShare" | "callsRecorded" | "callsWithStats" | "heldRate")[];
-            to: string;
+            to: components["schemas"]["ResourceVersion"];
         };
         CallAnalyticsQueryOutput: {
             /** @constant */
@@ -6495,7 +6539,7 @@ export interface components {
             dryRun?: boolean;
             expectedVersion: components["schemas"]["ResourceVersion"];
             feedback?: string;
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             insightId: components["schemas"]["ResourceId"];
             meetingId: components["schemas"]["ResourceId"];
             runId?: string;
@@ -6580,6 +6624,7 @@ export interface components {
             title: string;
             /** @enum {string} */
             transcriptAccess?: "allowed" | "denied";
+            transcriptAccessReason?: string | null;
             updatedAt: string;
         };
         CallOutcomeConfirmInput: {
@@ -7114,6 +7159,8 @@ export interface components {
         CampaignActionInput: {
             authorizationId: string;
             campaignId: components["schemas"]["ResourceId"];
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
@@ -7132,6 +7179,8 @@ export interface components {
         };
         CampaignActionPreflightInput: {
             campaignId: components["schemas"]["ResourceId"];
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
@@ -7248,8 +7297,10 @@ export interface components {
         };
         CampaignDeliveryUpdateInput: {
             campaignId: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedRevision: string;
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             patch: {
                 dailyCap?: number;
                 instagramSendingWindowEnabled?: boolean;
@@ -7277,12 +7328,14 @@ export interface components {
             [key: string]: unknown;
         };
         CampaignDeliveryUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CampaignDeliveryUpdateOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CampaignDeliveryUpdateOutput"] | null);
             /** @constant */
             tool?: "campaign.delivery.update";
         };
         CampaignDraftArchiveInput: {
             campaignId: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedUpdatedAt: string;
         };
         CampaignDraftArchiveResult: components["schemas"]["AgentToolResultBase"] & {
@@ -7293,7 +7346,7 @@ export interface components {
         CampaignDraftPlanInput: {
             approvalId?: string;
             dryRun?: boolean;
-            idempotencyKey?: string;
+            idempotencyKey?: components["schemas"]["IdempotencyKey"];
             plan?: components["schemas"]["ProspectingPlan"];
         };
         CampaignDraftPlanResult: components["schemas"]["AgentToolResultBase"] & {
@@ -7346,6 +7399,8 @@ export interface components {
             /** @description Channels on one campaign. Mutually exclusive with channel. */
             channels?: ("instagram" | "facebook" | "linkedin" | "gmail" | "sms")[];
             dailyCap: number;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             /** @description Required exact company count for a company list. */
             expectedAudienceCount?: number;
             expectedListUpdatedAt: components["schemas"]["ResourceVersion"];
@@ -7377,7 +7432,7 @@ export interface components {
             smsBody?: string;
         };
         CampaignDraftPrepareResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CampaignDraftPrepareData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CampaignDraftPrepareData"] | null);
             /** @constant */
             tool?: "campaign.draft.prepare";
         };
@@ -7425,6 +7480,8 @@ export interface components {
         };
         CampaignDraftUpdateInput: {
             campaignId: components["schemas"]["ResourceId"];
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
@@ -7451,14 +7508,16 @@ export interface components {
             };
         };
         CampaignDraftUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CampaignDraftUpdateData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CampaignDraftUpdateData"] | null);
             /** @constant */
             tool?: "campaign.draft.update";
         };
         CampaignFollowupsCancelInput: {
             campaignId: components["schemas"]["ResourceId"];
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             jobIds: components["schemas"]["ResourceId"][];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
@@ -7470,7 +7529,7 @@ export interface components {
             stoppedChainCount: number;
         };
         CampaignFollowupsCancelResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CampaignFollowupsCancelOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CampaignFollowupsCancelOutput"] | null);
             /** @constant */
             tool?: "campaign.followups.cancel";
         };
@@ -7502,7 +7561,7 @@ export interface components {
         CampaignFollowupsConfigureResult: components["schemas"]["AgentToolResultBase"] & {
             data?: {
                 [key: string]: unknown;
-            };
+            } | null;
             /** @constant */
             tool?: "campaign.followups.configure";
         };
@@ -7517,6 +7576,7 @@ export interface components {
         CampaignFollowupsListInput: {
             campaignId: components["schemas"]["ResourceId"];
             cursor?: string;
+            limit?: number;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
             /** @enum {string} */
@@ -7585,6 +7645,9 @@ export interface components {
         CampaignInspectOutput: {
             campaign: components["schemas"]["CampaignSummary"];
             canonicalMetrics?: components["schemas"]["SalesMetrics"];
+            definitions?: {
+                [key: string]: string;
+            };
             execution: {
                 byChannel: {
                     facebook: number;
@@ -7608,6 +7671,8 @@ export interface components {
                 [key: string]: string;
             };
             metrics?: components["schemas"]["SalesMetricsV2"];
+            /** Format: date-time */
+            metricsAsOf?: string;
             metricsVersion?: string;
             pipeline: components["schemas"]["PipelineCounts"];
             rates: {
@@ -7634,12 +7699,12 @@ export interface components {
             tool?: "campaign.inspect";
         };
         CampaignLaunchPreflightResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CampaignActionPreflightOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CampaignActionPreflightOutput"] | null);
             /** @constant */
             tool?: "campaign.launch.preflight";
         };
         CampaignLaunchResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CampaignActionOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CampaignActionOutput"] | null);
             /** @constant */
             tool?: "campaign.launch";
         };
@@ -7685,6 +7750,8 @@ export interface components {
         };
         CampaignMessagesDraftUpdateInput: {
             campaignId: components["schemas"]["ResourceId"];
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             edits: {
                 /** @enum {string} */
                 channel: "instagram" | "facebook";
@@ -7707,7 +7774,7 @@ export interface components {
             sent: false;
         };
         CampaignMessagesDraftUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CampaignMessagesDraftUpdateOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CampaignMessagesDraftUpdateOutput"] | null);
             /** @constant */
             tool?: "campaign.messages.draft.update";
         };
@@ -7755,6 +7822,8 @@ export interface components {
         };
         CampaignMessagesUpdateInput: {
             campaignId: components["schemas"]["ResourceId"];
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             edits: {
                 /** @enum {string} */
                 channel: "instagram" | "facebook" | "linkedin";
@@ -7783,7 +7852,7 @@ export interface components {
             sent: false;
         };
         CampaignMessagesUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CampaignMessagesUpdateOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CampaignMessagesUpdateOutput"] | null);
             /** @constant */
             tool?: "campaign.messages.update";
         };
@@ -7841,18 +7910,18 @@ export interface components {
             tool?: "campaign.outcomes.list";
         };
         CampaignPausePreflightResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CampaignActionApprovalRequiredOutput"] | components["schemas"]["CampaignActionReadyOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CampaignActionApprovalRequiredOutput"] | components["schemas"]["CampaignActionReadyOutput"] | null);
             /** @constant */
             tool?: "campaign.pause.preflight";
         };
         CampaignPauseResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CampaignActionOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CampaignActionOutput"] | null);
             /** @constant */
             tool?: "campaign.pause";
         };
         CampaignPrepareInput: components["schemas"]["ListPrepareInput"];
         CampaignPrepareResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["AgentHarnessResult"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["AgentHarnessResult"] | null);
             /** @constant */
             tool?: "campaign.prepare";
         };
@@ -8112,7 +8181,9 @@ export interface components {
             tool?: "classification.quality";
         };
         CommitmentConfirmBatchInput: {
-            idempotencyKey: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             items: {
                 dueAt?: string;
                 expectedUpdatedAt: string;
@@ -8125,9 +8196,11 @@ export interface components {
             tool?: "commitment.confirm.batch";
         };
         CommitmentReminderDraftInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedConversationUpdatedAt: string;
             id: string;
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             text: string;
         };
         CommitmentReminderDraftResult: components["schemas"]["AgentToolResultBase"] & {
@@ -8152,7 +8225,9 @@ export interface components {
         };
         CommitmentsProposeInput: {
             cursor?: string;
-            idempotencyKey: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             meetingId: string;
             timezone?: string;
         };
@@ -8162,10 +8237,12 @@ export interface components {
             tool?: "commitments.propose";
         };
         CommitmentUpdateInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             dueAt?: string;
             expectedUpdatedAt: string;
             id: string;
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @enum {unknown} */
             status: "confirmed" | "done" | "cancelled";
         };
@@ -8175,10 +8252,18 @@ export interface components {
             tool?: "commitment.update";
         };
         CompaniesLookalikeInput: {
+            countries?: components["schemas"]["SupportedCountry"][];
             country?: components["schemas"]["SupportedCountry"];
             cursor?: string;
+            /**
+             * @description Defaults to async with jobId and pollAfterMs. Sync retains the bounded legacy read.
+             * @enum {string}
+             */
+            execution?: "async" | "sync";
+            /** @description Poll a job using this connection; omit seed when polling. Results recheck current contact and suppression eligibility. */
+            jobId?: string;
             limit?: number;
-            seed: {
+            seed?: {
                 companyKeys?: string[];
                 pipelineStages?: ("call_booked" | "meeting_held" | "won")[];
             };
@@ -8400,7 +8485,7 @@ export interface components {
              */
             factExpansion?: "requested_only" | "general";
             filters?: components["schemas"]["CompanySearchFilters"];
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             maxAgeDays?: number;
             query: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -8424,18 +8509,18 @@ export interface components {
         };
         /** @description Read all live Companies filter fields, country-specific options and restrictions. No campaign state required. */
         CompanyFiltersData: {
-            availability: {
+            availability?: {
                 [key: string]: boolean;
             };
-            defaults: components["schemas"]["CompanySearchFilters"];
-            filterFields: string[];
-            fundingSources: ({
+            defaults?: components["schemas"]["CompanySearchFilters"];
+            filterFields?: string[];
+            fundingSources?: ({
                 label?: string;
                 value?: string;
             } & {
                 [key: string]: unknown;
             })[];
-            metadata: {
+            metadata?: {
                 technologyAvailability?: {
                     country: string;
                     options: {
@@ -8446,8 +8531,8 @@ export interface components {
             } & {
                 [key: string]: unknown;
             };
-            restrictions: string[];
-            technologies: ({
+            restrictions?: string[];
+            technologies?: ({
                 label?: string;
                 value?: string;
             } & {
@@ -8468,10 +8553,14 @@ export interface components {
         };
         CompanyFiltersInput: {
             citySearch?: string;
-            countries: components["schemas"]["SupportedCountry"][];
+            countries?: components["schemas"]["SupportedCountry"][];
+            country?: components["schemas"]["SupportedCountry"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
+            sections?: ("filterFields" | "defaults" | "availability" | "metadata" | "technologies" | "fundingSources" | "restrictions")[];
             states?: string[];
+            /** @enum {string} */
+            view?: "compact" | "standard" | "full" | "summary";
         };
         CompanyFiltersResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyFiltersData"] | null;
@@ -8483,11 +8572,13 @@ export interface components {
             progress: components["schemas"]["CompanyFitProgress"];
         };
         CompanyFitAdvanceInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             limit?: number;
             runId: components["schemas"]["ResourceId"];
         };
         CompanyFitAdvanceResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CompanyFitAdvanceData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CompanyFitAdvanceData"] | null);
             /** @constant */
             tool?: "companies.fit.advance";
         };
@@ -8495,10 +8586,12 @@ export interface components {
             progress: components["schemas"]["CompanyFitDetailedProgress"];
         };
         CompanyFitCancelInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             runId: components["schemas"]["ResourceId"];
         };
         CompanyFitCancelResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CompanyFitCancelData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CompanyFitCancelData"] | null);
         };
         CompanyFitCohortData: {
             expectedRemaining: number;
@@ -8626,11 +8719,13 @@ export interface components {
             stopReason: "complete" | "budget" | "waiting" | "cancelled";
         };
         CompanyFitRunInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             limit?: number;
             runId: components["schemas"]["ResourceId"];
         };
         CompanyFitRunResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CompanyFitRunData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CompanyFitRunData"] | null);
         };
         CompanyFitRunsListData: {
             nextBefore: components["schemas"]["CompanyFitRunCursor"] | null;
@@ -8652,8 +8747,10 @@ export interface components {
         };
         CompanyFitStartInput: {
             campaignId: components["schemas"]["ResourceId"];
-            expectedCampaignUpdatedAt: string;
-            expectedListUpdatedAt: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
+            expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
+            expectedListUpdatedAt: components["schemas"]["ResourceVersion"];
             expectedTargetCount: number;
             expectedTotal: number;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
@@ -8670,7 +8767,7 @@ export interface components {
             unknownsFromRunId?: components["schemas"]["ResourceId"];
         };
         CompanyFitStartResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CompanyFitStartData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CompanyFitStartData"] | null);
             /** @constant */
             tool?: "companies.fit.start";
         };
@@ -8867,11 +8964,14 @@ export interface components {
         };
         CompanyListInspectInput: {
             expectedUpdatedAt?: string;
+            fields?: string[];
             limit?: number;
             listId: components["schemas"]["ResourceId"];
             offset?: number;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
+            /** @enum {string} */
+            view?: "compact" | "standard" | "full";
         };
         CompanyListInspectResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyListInspectData"] | null;
@@ -8908,13 +9008,15 @@ export interface components {
                 selectedLinkedinUrl?: string;
                 selectedPhoneNumber?: string;
             }[];
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             name: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
         };
         CompanyListPrepareResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CompanyListPrepareData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CompanyListPrepareData"] | null);
             /** @constant */
             tool?: "companies.list.prepare";
         };
@@ -8940,12 +9042,14 @@ export interface components {
             /** @description False previews exact removals without a write. True applies the same reviewed selection to the disabled draft list. */
             apply: boolean;
             campaignId: components["schemas"]["ResourceId"];
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             excludeCompanies: {
                 businessId: string;
                 country: components["schemas"]["SupportedCountry"];
             }[];
-            expectedCampaignUpdatedAt: string;
-            expectedListUpdatedAt: string;
+            expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
+            expectedListUpdatedAt: components["schemas"]["ResourceVersion"];
             expectedRemaining: number;
             expectedRemainingTargetCount: number;
             expectedTargetCount: number;
@@ -8967,7 +9071,7 @@ export interface components {
             runId?: string;
         };
         CompanyListRefineResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CompanyListRefineData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["CompanyListRefineData"] | null);
             /** @constant */
             tool?: "companies.list.refine";
         };
@@ -9091,6 +9195,7 @@ export interface components {
             /** @description Echo the complete opaque revision returned by the first search page, including any website-classification identity. Never truncate it. */
             expectedRevision?: string;
             filters: components["schemas"]["CompanySearchFilters"];
+            limit?: number;
             page?: number;
             pageSize?: number;
             /**
@@ -9117,7 +9222,8 @@ export interface components {
             }[];
         };
         CompanySuggestionsInput: {
-            countries: components["schemas"]["SupportedCountry"][];
+            countries?: components["schemas"]["SupportedCountry"][];
+            country?: components["schemas"]["SupportedCountry"];
             limit?: number;
             query: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -9169,6 +9275,8 @@ export interface components {
         };
         ConversationDraftSaveInput: {
             conversationId: components["schemas"]["ResourceId"];
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             rationale?: string;
@@ -9179,7 +9287,7 @@ export interface components {
             variables?: components["schemas"]["ReplyTemplateVariables"];
         };
         ConversationDraftSaveResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["SalesReplyOperation"] | null);
             /** @constant */
             tool: "conversation.draft.save";
         };
@@ -9267,7 +9375,7 @@ export interface components {
             dryRun?: boolean;
             expectedLastInboundAt: components["schemas"]["ResourceVersion"];
             expectedLastMessageAt: components["schemas"]["ResourceVersion"];
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @description For 2.1 clients only: the owner explicitly approved this exact free text and conversation. Otherwise save a draft. */
             ownerApproved?: boolean;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -9277,7 +9385,7 @@ export interface components {
             variables?: components["schemas"]["ReplyTemplateVariables"];
         };
         ConversationReplyInspectInput: {
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
         };
@@ -9344,6 +9452,8 @@ export interface components {
             limit?: number;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
+            /** @description Bounded bootstrap of retained conversation changes since this instant; continue with the returned cursor. */
+            since?: components["schemas"]["ResourceVersion"];
             types?: ("message" | "intent" | "status" | "meeting")[];
         };
         ConversationsChangesOutput: {
@@ -9370,10 +9480,13 @@ export interface components {
             campaignId?: components["schemas"]["ResourceId"];
             channel?: components["schemas"]["InboxChannel"];
             cursor?: string;
+            /** @description Select compact conversation fields; id and channel are always retained. */
+            fields?: ("id" | "channel" | "targetName" | "needsReply" | "lastMessageAt" | "lastInboundAt" | "interestIntent" | "lastMessageText")[];
             /** @enum {string} */
             filter?: "all" | "needs_reply" | "waiting" | "unread" | "snoozed" | "closed";
             followupDue?: boolean;
-            include?: "legacy"[];
+            from?: components["schemas"]["ResourceVersion"];
+            include?: ("legacy" | "metrics")[];
             includeAutomaticResponses?: boolean;
             /**
              * @description Exact stored intent; unlike the app label filter, opt_out does not include not_interested or not_now.
@@ -9389,10 +9502,16 @@ export interface components {
             query?: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
+            to?: components["schemas"]["ResourceVersion"];
             updatedAfter?: components["schemas"]["ResourceVersion"];
+            /** @enum {string} */
+            view?: "compact" | "standard" | "full" | "summary";
         };
         ConversationsListOutput: {
-            conversations: components["schemas"]["InboxConversationSummary"][];
+            conversations: (components["schemas"]["InboxConversationSummary"] | components["schemas"]["InboxConversationCompact"])[];
+            definitions?: {
+                [key: string]: string;
+            };
             /** @description Exact count matching all filters, before the pagination cursor. */
             filteredTotal?: number;
             /** Format: date-time */
@@ -9405,6 +9524,8 @@ export interface components {
                 [key: string]: string;
             };
             metrics?: components["schemas"]["SalesMetricsV2"];
+            /** Format: date-time */
+            metricsAsOf?: string;
             metricsVersion?: string;
             nextCursor: string | null;
             scope?: {
@@ -9450,7 +9571,9 @@ export interface components {
         };
         CopyApprovalCancelInput: {
             approvalId: string;
-            idempotencyKey: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
         };
         CopyApprovalCancelResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["ProspectingOperationData"] | null;
@@ -9467,7 +9590,9 @@ export interface components {
         };
         CopyApprovalRequestInput: {
             campaignId?: string;
-            idempotencyKey: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             plan?: components["schemas"]["ProspectingPlan"];
         };
         CopyApprovalRequestResult: components["schemas"]["AgentToolResultBase"] & {
@@ -9479,6 +9604,9 @@ export interface components {
             attributionCoverage?: {
                 [key: string]: unknown;
             };
+            definitions?: {
+                [key: string]: string;
+            };
             from: string;
             items: components["schemas"]["CopyPerformanceItem"][];
             legacy?: {
@@ -9489,6 +9617,8 @@ export interface components {
                 [key: string]: string;
             };
             metrics?: components["schemas"]["SalesMetricsV2"];
+            /** Format: date-time */
+            metricsAsOf?: string;
             metricsVersion?: string;
             nextOffset: number | null;
             to: string;
@@ -9503,18 +9633,18 @@ export interface components {
              * @enum {string}
              */
             channel?: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
-            from: string;
+            from: components["schemas"]["ResourceVersion"];
             /**
              * @description Defaults to rendered_text. template_variation requires campaignId and returns variationPerformance with immutable templates and seven-day mature cohorts.
              * @enum {string}
              */
             groupBy?: "rendered_text" | "template_variation";
-            include?: "legacy"[];
+            include?: ("legacy" | "metrics")[];
             limit?: number;
             offset?: number;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
-            to: string;
+            to: components["schemas"]["ResourceVersion"];
         };
         CopyPerformanceItem: {
             /** @constant */
@@ -9571,7 +9701,9 @@ export interface components {
         DeliveryTestPrepareInput: {
             /** @enum {string} */
             channel: "email" | "sms";
-            idempotencyKey: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             mailboxId?: components["schemas"]["ResourceId"];
             /** @constant */
             recipientConsentConfirmed: true;
@@ -9580,18 +9712,20 @@ export interface components {
             to: string;
         };
         DeliveryTestPrepareResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["DeliveryTestOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["DeliveryTestOutput"] | null);
             /** @constant */
             tool?: "sending.test.prepare";
         };
         DeliveryTestSendInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             reviewDigest: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
             testId: string;
         };
         DeliveryTestSendResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["DeliveryTestOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["DeliveryTestOutput"] | null);
             /** @constant */
             tool?: "sending.test.send";
         };
@@ -9877,6 +10011,16 @@ export interface components {
         IdempotencyKey: string;
         /** @enum {string} */
         InboxChannel: "instagram" | "facebook" | "linkedin" | "gmail" | "outlook" | "email" | "sms";
+        InboxConversationCompact: {
+            channel: string;
+            id: string;
+            interestIntent?: string;
+            lastInboundAt?: string;
+            lastMessageAt?: string;
+            lastMessageText?: string;
+            needsReply?: boolean;
+            targetName?: string;
+        };
         InboxConversationMessage: {
             actor?: {
                 [key: string]: unknown;
@@ -9982,6 +10126,7 @@ export interface components {
             waiting: number;
         };
         IndustryLookupInput: {
+            countries?: components["schemas"]["SupportedCountry"][];
             country?: components["schemas"]["SupportedCountry"];
             /** @enum {string} */
             language?: "en" | "fi" | "sv";
@@ -10071,7 +10216,9 @@ export interface components {
             count: number;
             /** @enum {string} */
             currency?: "USD" | "EUR";
-            idempotencyKey: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             postUrl?: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
@@ -10080,7 +10227,7 @@ export interface components {
             username: string;
         };
         InstagramExtractionStartResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["InstagramExtractionData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["InstagramExtractionData"] | null);
         };
         InstagramPacingInspectInput: {
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -10103,8 +10250,10 @@ export interface components {
             gapMinSeconds: number;
         };
         InstagramPacingUpdateInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedRevision: string | null;
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             policy: components["schemas"]["InstagramPacingPolicy"] | null;
             reason: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -10121,15 +10270,15 @@ export interface components {
             revision: string;
         };
         InstagramPacingUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["InstagramPacingUpdateOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["InstagramPacingUpdateOutput"] | null);
             /** @constant */
             tool?: "sending.instagram.pacing.update";
         };
         InstagramProspectAdvanceResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["InstagramProspectData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["InstagramProspectData"] | null);
         };
         InstagramProspectCancelResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["InstagramProspectData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["InstagramProspectData"] | null);
         };
         InstagramProspectCounts: {
             accept: number;
@@ -10263,6 +10412,8 @@ export interface components {
             data?: components["schemas"]["InstagramProspectData"] | null;
         };
         InstagramProspectRunInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             runId: string;
         };
         InstagramProspectSource: {
@@ -10271,13 +10422,33 @@ export interface components {
             /** @enum {string} */
             type: "followers" | "following" | "likers" | "commenters";
         };
-        InstagramProspectStartInput: components["schemas"]["InstagramProspectInput"] & {
-            idempotencyKey: string;
+        InstagramProspectStartInput: {
+            criteria?: components["schemas"]["InstagramProspectCriterion"][];
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
+            evidenceThreshold?: number;
+            excludePreviouslyContacted?: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            includeReview?: boolean;
+            maxCandidates?: number;
+            maxCredits?: number;
+            maxModelCalls?: number;
+            /** @enum {string} */
+            media?: "none" | "avatar" | "recent_posts";
+            /** @enum {string} */
+            model?: "clef" | "clef-flash";
+            name?: string;
+            query: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
+            searchQueries?: string[];
+            sourceListIds?: string[];
+            sources?: components["schemas"]["InstagramProspectSource"][];
+            targetCount?: number;
+            threshold?: number;
         };
         InstagramProspectStartResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["InstagramProspectData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["InstagramProspectData"] | null);
         };
         InstagramPurchasedJob: {
             extractionId?: string;
@@ -10397,7 +10568,7 @@ export interface components {
         };
         LeadEnrichmentStartInput: {
             dryRun?: boolean;
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             listId: components["schemas"]["ResourceId"];
             maxCredits?: number;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -10409,7 +10580,7 @@ export interface components {
         LeadExtractionContinueInput: {
             count?: number;
             dryRun?: boolean;
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             jobId: components["schemas"]["ResourceId"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
@@ -10473,7 +10644,7 @@ export interface components {
             dryRun?: boolean;
             /** @enum {string} */
             feedType?: "top" | "recent";
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             identifier: string;
             postUrls?: string[];
             /** @enum {string} */
@@ -10517,6 +10688,8 @@ export interface components {
             steps: components["schemas"]["CampaignFollowUpStepInput"][];
         };
         ListArchiveInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedUpdatedAt: string;
             listId: string;
         };
@@ -10535,6 +10708,8 @@ export interface components {
             replayed: boolean;
         };
         ListImportInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             name: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -10543,7 +10718,7 @@ export interface components {
             usernames: string[];
         };
         ListImportResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["ListImportData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["ListImportData"] | null);
             /** @constant */
             tool?: "list.import";
         };
@@ -10570,6 +10745,8 @@ export interface components {
             tool?: "list.inspect";
         };
         ListPrepareInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             idempotencyKey?: components["schemas"]["IdempotencyKey"];
             reviewedAudience: components["schemas"]["ReviewedAudience"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -10578,11 +10755,13 @@ export interface components {
             state: components["schemas"]["AgentCampaignState"];
         };
         ListPrepareResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["AgentHarnessResult"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["AgentHarnessResult"] | null);
             /** @constant */
             tool?: "list.prepare";
         };
         ListRenameInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedUpdatedAt: string;
             listId: string;
             name: string;
@@ -10626,6 +10805,8 @@ export interface components {
             username: string;
         };
         ListTargetRemoveInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedListUpdatedAt: components["schemas"]["ResourceVersion"];
             listId: components["schemas"]["ResourceId"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -10633,7 +10814,7 @@ export interface components {
             username: string;
         };
         ListTargetRemoveResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["ListTargetRemoveData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["ListTargetRemoveData"] | null);
             /** @constant */
             tool?: "list.target.remove";
         };
@@ -10783,6 +10964,8 @@ export interface components {
             }[];
             coverage: string;
             from: components["schemas"]["ResourceVersion"];
+            /** Format: date-time */
+            metricsAsOf?: string;
             metricsVersion: string;
             /** @constant */
             readOnly: true;
@@ -10812,7 +10995,7 @@ export interface components {
         OptionalCampaignInput: {
             /** @description Omit to use the selected, active, or most recent campaign. */
             campaignId?: components["schemas"]["ResourceId"];
-            include?: "legacy"[];
+            include?: ("legacy" | "metrics")[];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
         };
@@ -10855,9 +11038,14 @@ export interface components {
         };
         PipelineBoardInput: {
             campaignIds?: components["schemas"]["ResourceId"][];
+            cursor?: string;
+            include?: ("metrics" | "legacy")[];
+            limit?: number;
             limitPerStage?: number;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
+            /** @enum {string} */
+            view?: "compact" | "standard" | "full";
         };
         PipelineBoardResult: components["schemas"]["AgentToolResultBase"] & {
             data?: {
@@ -10907,7 +11095,7 @@ export interface components {
             campaignId?: components["schemas"]["ResourceId"];
             cursor?: string;
             entityKey?: string;
-            include?: "legacy"[];
+            include?: ("legacy" | "metrics")[];
             limit?: number;
             query?: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -10918,6 +11106,9 @@ export interface components {
         PipelineCardsListOutput: {
             campaignId: string | null;
             cards: components["schemas"]["PipelineCard"][];
+            definitions?: {
+                [key: string]: string;
+            };
             filteredTotal?: number;
             hasMore: boolean;
             legacy?: {
@@ -10927,6 +11118,8 @@ export interface components {
                 [key: string]: string;
             };
             metrics?: components["schemas"]["SalesMetricsV2"];
+            /** Format: date-time */
+            metricsAsOf?: string;
             metricsVersion?: string;
             nextCursor: string | null;
             projection?: string;
@@ -10959,6 +11152,9 @@ export interface components {
             campaignId: string;
             campaignName: string;
             canonicalMetrics?: components["schemas"]["SalesMetrics"];
+            definitions?: {
+                [key: string]: string;
+            };
             /** Format: date-time */
             generatedAt: string;
             legacy?: {
@@ -10968,6 +11164,8 @@ export interface components {
                 [key: string]: string;
             };
             metrics?: components["schemas"]["SalesMetricsV2"];
+            /** Format: date-time */
+            metricsAsOf?: string;
             metricsVersion?: string;
             sample: components["schemas"]["AgentLead"][];
             stageCounts: components["schemas"]["PipelineCounts"];
@@ -10988,8 +11186,10 @@ export interface components {
         PipelineNoteAddInput: {
             body: string;
             campaignId: components["schemas"]["ResourceId"];
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             entityKey: string;
-            idempotencyKey: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
         };
@@ -10999,7 +11199,7 @@ export interface components {
             note: components["schemas"]["PipelineNote"];
         };
         PipelineNoteAddResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["PipelineNoteAddOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["PipelineNoteAddOutput"] | null);
             /** @constant */
             tool?: "pipeline.note.add";
         };
@@ -11080,20 +11280,33 @@ export interface components {
             /** @constant */
             tool?: "pipeline.stage.update";
         };
+        /** @description Bounded inventory page. Exact eligibility totals cover this page only; follow returned nextOffset for subsequent pages. Each draft page requires its own idempotencyKey. */
+        ProspectingAudiencePage: {
+            /** @description Defaults to 500. */
+            limit?: number;
+            /** @description Defaults to 0. */
+            offset?: number;
+        };
         ProspectingCopy: {
             followups?: {
                 body: string;
                 /** @enum {unknown} */
-                channel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
+                channel: "instagram" | "facebook" | "linkedin" | "gmail" | "email" | "sms";
                 delayDays: number;
                 subject?: string;
             }[];
             messages: {
                 body: string;
                 /** @enum {unknown} */
-                channel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
+                channel: "instagram" | "facebook" | "linkedin" | "gmail" | "email" | "sms";
                 subject?: string;
             }[];
+            variables?: {
+                ownerName?: string;
+                slot1?: string;
+                slot2?: string;
+                slotLink?: string;
+            };
         };
         /** @description Exact workspace-scoped prospecting or disabled draft result. authorizesLaunch is always false when readiness is returned. */
         ProspectingOperationData: {
@@ -11126,6 +11339,7 @@ export interface components {
             [key: string]: unknown;
         };
         ProspectingPlan: {
+            audiencePage?: components["schemas"]["ProspectingAudiencePage"];
             copy: components["schemas"]["ProspectingCopy"];
             dailyCap?: number;
             excludePreviouslyContacted?: boolean;
@@ -11143,6 +11357,7 @@ export interface components {
             };
         };
         ProspectingPreviewInput: {
+            audiencePage?: components["schemas"]["ProspectingAudiencePage"];
             channels?: ("instagram" | "facebook" | "linkedin" | "gmail" | "sms")[];
             contactStatus?: ("never" | "contacted" | "replied" | "booked" | "closed" | "suppressed" | "contacted_no_reply_older_than_90d")[];
             excludePreviouslyContacted?: boolean;
@@ -11424,11 +11639,14 @@ export interface components {
         };
         ReplyApprovalsListInput: {
             cursor?: string;
+            fields?: string[];
             limit?: number;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
             /** @enum {string} */
             status?: "pending" | "approved" | "rejected";
+            /** @enum {string} */
+            view?: "compact" | "standard" | "full";
         };
         ReplyApprovalsListResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["SalesReplyOperation"] | null;
@@ -11464,6 +11682,8 @@ export interface components {
             tool: "reply.policy.get";
         };
         ReplyPolicyUpdateInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedRevision: number;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             policy: components["schemas"]["ReplyPolicy"];
@@ -11471,7 +11691,7 @@ export interface components {
             runId?: string;
         };
         ReplyPolicyUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["SalesReplyOperation"] | null);
             /** @constant */
             tool: "reply.policy.update";
         };
@@ -11485,6 +11705,8 @@ export interface components {
             name: string;
         };
         ReplyTemplatesCreateInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             /** @constant */
             expectedRevision: 0;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
@@ -11493,11 +11715,13 @@ export interface components {
             template: components["schemas"]["ReplyTemplate"];
         };
         ReplyTemplatesCreateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["SalesReplyOperation"] | null);
             /** @constant */
             tool: "reply.templates.create";
         };
         ReplyTemplatesDeleteInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedRevision: number;
             id: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
@@ -11505,7 +11729,7 @@ export interface components {
             runId?: string;
         };
         ReplyTemplatesDeleteResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["SalesReplyOperation"] | null);
             /** @constant */
             tool: "reply.templates.delete";
         };
@@ -11521,6 +11745,8 @@ export interface components {
             tool: "reply.templates.list";
         };
         ReplyTemplatesUpdateInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedRevision: number;
             id: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
@@ -11529,13 +11755,16 @@ export interface components {
             template: components["schemas"]["ReplyTemplate"];
         };
         ReplyTemplatesUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["SalesReplyOperation"] | null);
             /** @constant */
             tool: "reply.templates.update";
         };
         ReplyTemplateVariables: {
             companyName?: string;
             firstName?: string;
+            fullName?: string;
+            lastName?: string;
+            name?: string;
             ownerName?: string;
             slot1?: string;
             slot2?: string;
@@ -11743,6 +11972,8 @@ export interface components {
             [key: string]: unknown;
         };
         SandboxClockAdvanceInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             minutes: number;
@@ -11758,7 +11989,7 @@ export interface components {
             updatedAt: components["schemas"]["ResourceVersion"];
         };
         SandboxClockAdvanceResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SandboxClockAdvanceOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["SandboxClockAdvanceOutput"] | null);
             /** @constant */
             tool?: "sandbox.clock.advance";
         };
@@ -11768,6 +11999,8 @@ export interface components {
             /** @enum {string} */
             channel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
             conversationId?: string;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedUpdatedAt?: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @enum {string} */
@@ -11784,12 +12017,14 @@ export interface components {
             receiptId: string;
         };
         SandboxInboundSimulateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SandboxInboundSimulateOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["SandboxInboundSimulateOutput"] | null);
             /** @constant */
             tool?: "sandbox.inbound.simulate";
         };
         SandboxProviderUpdateInput: {
             connected: boolean;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @enum {string} */
@@ -11807,11 +12042,13 @@ export interface components {
             updatedAt: components["schemas"]["ResourceVersion"];
         };
         SandboxProviderUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SandboxProviderUpdateOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["SandboxProviderUpdateOutput"] | null);
             /** @constant */
             tool?: "sandbox.provider.update";
         };
         SandboxSeedInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @constant */
             preset: "appointment_setter_v1";
@@ -11829,7 +12066,7 @@ export interface components {
             preset: string;
         };
         SandboxSeedResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SandboxSeedOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["SandboxSeedOutput"] | null);
             /** @constant */
             tool?: "sandbox.seed";
         };
@@ -12639,6 +12876,8 @@ export interface components {
         WorkspaceAgentSalesUpdateInput: {
             autoClose: boolean;
             autoSuppress: boolean;
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             enabled: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
@@ -12655,7 +12894,7 @@ export interface components {
             updatedAt: components["schemas"]["ResourceVersion"];
         };
         WorkspaceAgentSalesUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["WorkspaceAgentSalesUpdateOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["WorkspaceAgentSalesUpdateOutput"] | null);
             /** @constant */
             tool?: "workspace.agent_sales.update";
         };
@@ -12679,11 +12918,17 @@ export interface components {
             tool?: "workspace.automation.inspect";
         };
         WorkspaceBriefingInput: {
+            from?: components["schemas"]["ResourceVersion"];
+            include?: ("metrics" | "legacy")[];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
+            to?: components["schemas"]["ResourceVersion"];
         };
         WorkspaceBriefingOutput: {
             campaignCounts: components["schemas"]["CampaignCounts"];
+            definitions?: {
+                [key: string]: string;
+            };
             focusCampaign: components["schemas"]["CampaignSummary"] | null;
             /** Format: date-time */
             generatedAt: string;
@@ -12694,6 +12939,8 @@ export interface components {
                 [key: string]: string;
             };
             metrics?: components["schemas"]["SalesMetricsV2"];
+            /** Format: date-time */
+            metricsAsOf?: string;
             metricsVersion?: string;
             selectedCampaignId: string;
             sending: components["schemas"]["SendingSummary"];
@@ -12815,6 +13062,8 @@ export interface components {
             tool?: "workspace.resume";
         };
         WorkspaceSandboxCreateInput: {
+            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            dryRun?: boolean;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             name: string;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -12828,7 +13077,7 @@ export interface components {
             workspaceId: string;
         };
         WorkspaceSandboxCreateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["WorkspaceSandboxCreateOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["WorkspaceSandboxCreateOutput"] | null);
             /** @constant */
             tool?: "workspace.sandbox.create";
         };

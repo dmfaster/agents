@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DM Faster Agent API
-  version: 2.5.1
+  version: 2.6.0
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
@@ -1022,6 +1022,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.messages.draft.update:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignMessagesDraftUpdate
@@ -1144,6 +1145,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.messages.update:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignMessagesUpdate
@@ -1254,6 +1256,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.followups.cancel:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignFollowupsCancel
@@ -1359,6 +1362,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/sending.test.prepare:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: deliveryTestPrepare
@@ -1413,6 +1417,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/sending.test.send:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: deliveryTestSend
@@ -1836,6 +1841,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/pipeline.note.add:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: pipelineNoteAdd
@@ -2203,6 +2209,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/list.target.remove:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: listTargetRemove
@@ -2258,6 +2265,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.draft.prepare:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignDraftPrepare
@@ -2324,6 +2332,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.draft.update:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignDraftUpdate
@@ -2384,6 +2393,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/list.import:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: listImport
@@ -2439,6 +2449,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/list.prepare:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: listPrepare
@@ -2492,6 +2503,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.prepare:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignPrepare
@@ -2545,6 +2557,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.launch.preflight:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignLaunchPreflight
@@ -2604,6 +2617,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.launch:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignLaunch
@@ -2660,6 +2674,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.pause.preflight:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignPausePreflight
@@ -2716,6 +2731,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.pause:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignPause
@@ -3455,6 +3471,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/companies.fit.start:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: companyFitStart
@@ -3510,6 +3527,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/companies.fit.advance:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: companyFitAdvance
@@ -3672,6 +3690,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/companies.list.prepare:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: companyListPrepare
@@ -3780,6 +3799,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/companies.list.refine:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: companyListRefine
@@ -3941,6 +3961,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.delivery.update:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignDeliveryUpdate
@@ -4050,6 +4071,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/sending.instagram.pacing.update:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: instagramPacingUpdate
@@ -4158,6 +4180,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/companies.fit.cancel:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: companyFitCancel
@@ -4267,6 +4290,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/companies.fit.run:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: companyFitRun
@@ -4767,6 +4791,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/instagram.extract.start:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: instagramExtractionStart
@@ -5642,6 +5667,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/leads.prospect.start:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: instagramProspectStart
@@ -5814,6 +5840,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/leads.prospect.advance:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: instagramProspectAdvance
@@ -5872,6 +5899,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/leads.prospect.cancel:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: instagramProspectCancel
@@ -6133,6 +6161,7 @@ paths:
                 $ref: "#/components/schemas/SuppressionsRemoveResult"
   /api/v1/agent/tools/workspace.sandbox.create:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: workspaceSandboxCreate
@@ -6174,6 +6203,7 @@ paths:
                 $ref: "#/components/schemas/WorkspaceSandboxCreateResult"
   /api/v1/agent/tools/sandbox.seed:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: sandboxSeed
@@ -6215,6 +6245,7 @@ paths:
                 $ref: "#/components/schemas/SandboxSeedResult"
   /api/v1/agent/tools/sandbox.inbound.simulate:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: sandboxInboundSimulate
@@ -6256,6 +6287,7 @@ paths:
                 $ref: "#/components/schemas/SandboxInboundSimulateResult"
   /api/v1/agent/tools/sandbox.clock.advance:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: sandboxClockAdvance
@@ -6767,6 +6799,7 @@ paths:
                 $ref: "#/components/schemas/WorkspaceAgentSalesGetResult"
   /api/v1/agent/tools/workspace.agent_sales.update:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: workspaceAgentSalesUpdate
@@ -6813,6 +6846,7 @@ paths:
                 $ref: "#/components/schemas/WorkspaceAgentSalesUpdateResult"
   /api/v1/agent/tools/sandbox.provider.update:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: sandboxProviderUpdate
@@ -6895,6 +6929,7 @@ paths:
                 $ref: "#/components/schemas/ReplyTemplatesListResult"
   /api/v1/agent/tools/reply.templates.create:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: replyTemplatesCreate
@@ -6932,6 +6967,7 @@ paths:
                 $ref: "#/components/schemas/ReplyTemplatesCreateResult"
   /api/v1/agent/tools/reply.templates.update:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: replyTemplatesUpdate
@@ -6973,6 +7009,7 @@ paths:
                 $ref: "#/components/schemas/ReplyTemplatesUpdateResult"
   /api/v1/agent/tools/reply.templates.delete:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: replyTemplatesDelete
@@ -7047,6 +7084,7 @@ paths:
                 $ref: "#/components/schemas/ReplyPolicyGetResult"
   /api/v1/agent/tools/reply.policy.update:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: replyPolicyUpdate
@@ -7121,6 +7159,7 @@ paths:
                 $ref: "#/components/schemas/ReplyApprovalsListResult"
   /api/v1/agent/tools/conversation.draft.save:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: conversationDraftSave
@@ -7373,6 +7412,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/calendar.booking.link.create:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: calendarBookingLinkCreate
@@ -9865,6 +9905,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/feedback.submit:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: feedbackSubmit
@@ -11405,6 +11446,7 @@ paths:
       x-dmfaster-write-boundary: call_delete
   /api/v1/agent/tools/copy.approval.request:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: copyApprovalRequest
@@ -11679,6 +11721,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/commitments.propose:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: commitmentsPropose
@@ -11791,6 +11834,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/commitment.update:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: commitmentUpdate
@@ -11843,6 +11887,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/commitment.confirm.batch:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: commitmentConfirmBatch
@@ -11899,6 +11944,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/commitment.reminder.draft:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: commitmentReminderDraft
@@ -11952,6 +11998,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/list.rename:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: listRename
@@ -12002,6 +12049,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/list.archive:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: listArchive
@@ -12052,6 +12100,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/campaign.draft.archive:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: campaignDraftArchive
@@ -12155,6 +12204,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/copy.approval.cancel:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: copy.approval.cancel
@@ -12205,6 +12255,7 @@ paths:
           $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/approval.cancel:
     post:
+      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: approval.cancel
@@ -13306,9 +13357,7 @@ components:
           minimum: 1
           maximum: 90
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 100
+          $ref: "#/components/schemas/IdempotencyKey"
         runId:
           type: string
           minLength: 1
@@ -14364,6 +14413,24 @@ components:
         - message
         - retryable
       properties:
+        errors:
+          type: array
+          maxItems: 30
+          items:
+            type: object
+            additionalProperties: false
+            required: [path, code, message]
+            properties:
+              path:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+              allowed:
+                type: array
+                items:
+                  type: string
         code:
           type: string
           minLength: 1
@@ -14455,9 +14522,34 @@ components:
           oneOf:
             - $ref: "#/components/schemas/AgentToolError"
             - type: "null"
+        requestId:
+          type: string
+        serverVersion:
+          type: string
+        build:
+          type: string
+        serverTimingMs:
+          type: object
+          additionalProperties:
+            type: number
+        executionReceipt:
+          type: object
+          additionalProperties: false
+          description: Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.
+          required: [receiptId, agentRunId, callSeq, kind]
+          properties:
+            receiptId:
+              type: string
+            agentRunId:
+              type: string
+            callSeq:
+              type: integer
+              minimum: 1
+            kind:
+              const: tool_execution
         contractVersion:
           type: string
-          const: 2.5.1
+          const: 2.6.0
         rateLimit:
           oneOf:
             - $ref: "#/components/schemas/AgentRateLimitEnvelope"
@@ -14634,8 +14726,10 @@ components:
               const: pipeline.note.add
             data:
               oneOf:
-                - $ref: "#/components/schemas/PipelineNoteAddOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/PipelineNoteAddOutput"
+                    - type: "null"
     CompanyTimelineResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -14696,8 +14790,10 @@ components:
               const: list.prepare
             data:
               oneOf:
-                - $ref: "#/components/schemas/AgentHarnessResult"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/AgentHarnessResult"
+                    - type: "null"
     CampaignPrepareResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -14708,8 +14804,10 @@ components:
               const: campaign.prepare
             data:
               oneOf:
-                - $ref: "#/components/schemas/AgentHarnessResult"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/AgentHarnessResult"
+                    - type: "null"
     CampaignLaunchPreflightResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -14720,8 +14818,10 @@ components:
               const: campaign.launch.preflight
             data:
               oneOf:
-                - $ref: "#/components/schemas/CampaignActionPreflightOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CampaignActionPreflightOutput"
+                    - type: "null"
     CampaignLaunchResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -14732,8 +14832,10 @@ components:
               const: campaign.launch
             data:
               oneOf:
-                - $ref: "#/components/schemas/CampaignActionOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CampaignActionOutput"
+                    - type: "null"
     CampaignPausePreflightResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -14744,9 +14846,11 @@ components:
               const: campaign.pause.preflight
             data:
               oneOf:
-                - $ref: "#/components/schemas/CampaignActionApprovalRequiredOutput"
-                - $ref: "#/components/schemas/CampaignActionReadyOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CampaignActionApprovalRequiredOutput"
+                    - $ref: "#/components/schemas/CampaignActionReadyOutput"
+                    - type: "null"
     CampaignPauseResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -14757,8 +14861,10 @@ components:
               const: campaign.pause
             data:
               oneOf:
-                - $ref: "#/components/schemas/CampaignActionOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CampaignActionOutput"
+                    - type: "null"
     AnalyticsSummaryInput:
       type: object
       additionalProperties: false
@@ -14803,6 +14909,7 @@ components:
             enum:
               - canonical
               - legacy
+              - metrics
               - definitions
         runId:
           type: string
@@ -14813,6 +14920,16 @@ components:
       type: object
       additionalProperties: false
       properties:
+        include:
+          type: array
+          maxItems: 1
+          items:
+            type: string
+            enum: [metrics, legacy]
+        from:
+          $ref: "#/components/schemas/ResourceVersion"
+        to:
+          $ref: "#/components/schemas/ResourceVersion"
         runId:
           type: string
           minLength: 1
@@ -14891,6 +15008,30 @@ components:
       type: object
       additionalProperties: false
       properties:
+        from:
+          $ref: "#/components/schemas/ResourceVersion"
+        to:
+          $ref: "#/components/schemas/ResourceVersion"
+        fields:
+          type: array
+          maxItems: 8
+          description: Select compact conversation fields; id and channel are always retained.
+          items:
+            type: string
+            enum:
+              [
+                id,
+                channel,
+                targetName,
+                needsReply,
+                lastMessageAt,
+                lastInboundAt,
+                interestIntent,
+                lastMessageText,
+              ]
+        view:
+          type: string
+          enum: [compact, standard, full, summary]
         filter:
           type: string
           enum:
@@ -14962,6 +15103,7 @@ components:
             type: string
             enum:
               - legacy
+              - metrics
         runId:
           type: string
           minLength: 1
@@ -15037,6 +15179,7 @@ components:
             type: string
             enum:
               - legacy
+              - metrics
         runId:
           type: string
           minLength: 1
@@ -15112,6 +15255,9 @@ components:
         - body
         - idempotencyKey
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         campaignId:
           $ref: "#/components/schemas/ResourceId"
         entityKey:
@@ -15123,10 +15269,7 @@ components:
           minLength: 1
           maxLength: 2000
         idempotencyKey:
-          type: string
-          minLength: 8
-          maxLength: 160
-          pattern: ^[a-zA-Z0-9._:-]+$
+          $ref: "#/components/schemas/IdempotencyKey"
         runId:
           type: string
           minLength: 1
@@ -15139,10 +15282,7 @@ components:
         - idempotencyKey
       properties:
         idempotencyKey:
-          type: string
-          minLength: 8
-          maxLength: 160
-          pattern: ^[a-zA-Z0-9_-]+$
+          $ref: "#/components/schemas/IdempotencyKey"
         runId:
           type: string
           minLength: 1
@@ -15154,6 +15294,10 @@ components:
       required:
         - campaignId
       properties:
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
         campaignId:
           $ref: "#/components/schemas/ResourceId"
         view:
@@ -15179,6 +15323,9 @@ components:
         - jobIds
         - idempotencyKey
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         campaignId:
           $ref: "#/components/schemas/ResourceId"
         expectedCampaignUpdatedAt:
@@ -15190,10 +15337,7 @@ components:
           items:
             $ref: "#/components/schemas/ResourceId"
         idempotencyKey:
-          type: string
-          minLength: 8
-          maxLength: 160
-          pattern: ^[a-zA-Z0-9._:-]+$
+          $ref: "#/components/schemas/IdempotencyKey"
         runId:
           type: string
           minLength: 1
@@ -15267,6 +15411,12 @@ components:
       required:
         - query
       properties:
+        countries:
+          type: array
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: "#/components/schemas/SupportedCountry"
         country:
           $ref: "#/components/schemas/SupportedCountry"
         query:
@@ -15537,6 +15687,9 @@ components:
         - username
         - expectedListUpdatedAt
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         listId:
           $ref: "#/components/schemas/ResourceId"
         username:
@@ -15709,6 +15862,9 @@ components:
         - expectedCampaignUpdatedAt
         - updates
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         campaignId:
           $ref: "#/components/schemas/ResourceId"
         expectedCampaignUpdatedAt:
@@ -15914,8 +16070,10 @@ components:
               const: campaign.draft.update
             data:
               oneOf:
-                - $ref: "#/components/schemas/CampaignDraftUpdateData"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CampaignDraftUpdateData"
+                    - type: "null"
     CampaignDraftPrepareInput:
       type: object
       additionalProperties: false
@@ -15930,6 +16088,9 @@ components:
         - skipPreviouslyMessaged
         - idempotencyKey
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         channel:
           type: string
           enum:
@@ -16175,8 +16336,10 @@ components:
               const: list.target.remove
             data:
               oneOf:
-                - $ref: "#/components/schemas/ListTargetRemoveData"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/ListTargetRemoveData"
+                    - type: "null"
     CampaignDraftPrepareResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -16186,8 +16349,10 @@ components:
               const: campaign.draft.prepare
             data:
               oneOf:
-                - $ref: "#/components/schemas/CampaignDraftPrepareData"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CampaignDraftPrepareData"
+                    - type: "null"
     ListImportInput:
       type: object
       additionalProperties: false
@@ -16196,6 +16361,9 @@ components:
         - usernames
         - idempotencyKey
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         name:
           type: string
           minLength: 1
@@ -16259,8 +16427,10 @@ components:
               const: list.import
             data:
               oneOf:
-                - $ref: "#/components/schemas/ListImportData"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/ListImportData"
+                    - type: "null"
     ListPrepareInput:
       type: object
       additionalProperties: false
@@ -16268,6 +16438,9 @@ components:
         - state
         - reviewedAudience
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         state:
           $ref: "#/components/schemas/AgentCampaignState"
         sampleSize:
@@ -16292,6 +16465,9 @@ components:
         - campaignId
         - idempotencyKey
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         campaignId:
           $ref: "#/components/schemas/ResourceId"
         idempotencyKey:
@@ -16309,6 +16485,9 @@ components:
         - idempotencyKey
         - authorizationId
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         campaignId:
           $ref: "#/components/schemas/ResourceId"
         idempotencyKey:
@@ -16336,6 +16515,7 @@ components:
             type: string
             enum:
               - legacy
+              - metrics
         runId:
           type: string
           minLength: 1
@@ -16351,9 +16531,9 @@ components:
     IdempotencyKey:
       x-dmfaster-trim: true
       type: string
-      minLength: 1
+      minLength: 8
       maxLength: 160
-      pattern: ^[A-Za-z0-9._:-]{1,160}$
+      pattern: ^[A-Za-z0-9._:-]{8,160}$
     TolVersion:
       type: string
       enum:
@@ -17596,9 +17776,16 @@ components:
                 - type: "null"
         metrics:
           $ref: "#/components/schemas/SalesMetricsV2"
+        metricsAsOf:
+          type: string
+          format: date-time
         metricsVersion:
           type: string
           maxLength: 500
+        definitions:
+          type: object
+          additionalProperties:
+            type: string
         metricIds:
           type: object
           additionalProperties:
@@ -17845,9 +18032,16 @@ components:
           $ref: "#/components/schemas/SalesMetrics"
         metrics:
           $ref: "#/components/schemas/SalesMetricsV2"
+        metricsAsOf:
+          type: string
+          format: date-time
         metricsVersion:
           type: string
           maxLength: 500
+        definitions:
+          type: object
+          additionalProperties:
+            type: string
         metricIds:
           type: object
           additionalProperties:
@@ -18349,9 +18543,16 @@ components:
           $ref: "#/components/schemas/SalesMetrics"
         metrics:
           $ref: "#/components/schemas/SalesMetricsV2"
+        metricsAsOf:
+          type: string
+          format: date-time
         metricsVersion:
           type: string
           maxLength: 500
+        definitions:
+          type: object
+          additionalProperties:
+            type: string
         metricIds:
           type: object
           additionalProperties:
@@ -18500,9 +18701,16 @@ components:
           type: string
         metrics:
           $ref: "#/components/schemas/SalesMetricsV2"
+        metricsAsOf:
+          type: string
+          format: date-time
         metricsVersion:
           type: string
           maxLength: 500
+        definitions:
+          type: object
+          additionalProperties:
+            type: string
         metricIds:
           type: object
           additionalProperties:
@@ -18628,6 +18836,27 @@ components:
               enum:
                 - explicit_campaign
                 - workspace_default
+    InboxConversationCompact:
+      type: object
+      additionalProperties: false
+      required: [id, channel]
+      properties:
+        id:
+          type: string
+        channel:
+          type: string
+        targetName:
+          type: string
+        needsReply:
+          type: boolean
+        lastMessageAt:
+          type: string
+        lastInboundAt:
+          type: string
+        interestIntent:
+          type: string
+        lastMessageText:
+          type: string
     InboxConversationSummary:
       type: object
       additionalProperties: false
@@ -18892,10 +19121,7 @@ components:
           minLength: 1
           maxLength: 10000
         idempotencyKey:
-          type: string
-          minLength: 8
-          maxLength: 160
-          pattern: ^[a-zA-Z0-9_-]+$
+          $ref: "#/components/schemas/IdempotencyKey"
         templateId:
           $ref: "#/components/schemas/ResourceId"
         variables:
@@ -19095,6 +19321,9 @@ components:
         - edits
         - idempotencyKey
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         campaignId:
           $ref: "#/components/schemas/ResourceId"
         expectedCampaignUpdatedAt:
@@ -19250,8 +19479,10 @@ components:
               const: campaign.messages.draft.update
             data:
               oneOf:
-                - $ref: "#/components/schemas/CampaignMessagesDraftUpdateOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CampaignMessagesDraftUpdateOutput"
+                    - type: "null"
     CampaignMessagesListInput:
       type: object
       additionalProperties: false
@@ -19299,6 +19530,9 @@ components:
         - edits
         - idempotencyKey
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         campaignId:
           $ref: "#/components/schemas/ResourceId"
         runId:
@@ -19494,8 +19728,10 @@ components:
               const: campaign.messages.update
             data:
               oneOf:
-                - $ref: "#/components/schemas/CampaignMessagesUpdateOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CampaignMessagesUpdateOutput"
+                    - type: "null"
     CampaignFollowupsListResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -19518,8 +19754,10 @@ components:
               const: campaign.followups.cancel
             data:
               oneOf:
-                - $ref: "#/components/schemas/CampaignFollowupsCancelOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CampaignFollowupsCancelOutput"
+                    - type: "null"
     CampaignFollowupsCancelOutput:
       type: object
       additionalProperties: false
@@ -19719,6 +19957,9 @@ components:
         - recipientConsentConfirmed
         - idempotencyKey
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         channel:
           type: string
           enum:
@@ -19735,9 +19976,7 @@ components:
           type: boolean
           const: true
         idempotencyKey:
-          type: string
-          pattern: ^[A-Za-z0-9._:-]{1,160}$
-          maxLength: 160
+          $ref: "#/components/schemas/IdempotencyKey"
         runId:
           type: string
           minLength: 1
@@ -19764,6 +20003,9 @@ components:
         - testId
         - reviewDigest
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         testId:
           type: string
           pattern: ^delivery_test_[a-f0-9]{64}$
@@ -19839,8 +20081,10 @@ components:
               const: sending.test.prepare
             data:
               oneOf:
-                - $ref: "#/components/schemas/DeliveryTestOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/DeliveryTestOutput"
+                    - type: "null"
     DeliveryTestSendResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -19851,8 +20095,10 @@ components:
               const: sending.test.send
             data:
               oneOf:
-                - $ref: "#/components/schemas/DeliveryTestOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/DeliveryTestOutput"
+                    - type: "null"
     DeliveryTestInspectResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -20149,7 +20395,9 @@ components:
           type: array
           maxItems: 60
           items:
-            $ref: "#/components/schemas/InboxConversationSummary"
+            oneOf:
+              - $ref: "#/components/schemas/InboxConversationSummary"
+              - $ref: "#/components/schemas/InboxConversationCompact"
         scopeStats:
           $ref: "#/components/schemas/InboxScopeStats"
         filteredTotal:
@@ -20211,9 +20459,16 @@ components:
             - type: "null"
         metrics:
           $ref: "#/components/schemas/SalesMetricsV2"
+        metricsAsOf:
+          type: string
+          format: date-time
         metricsVersion:
           type: string
           maxLength: 500
+        definitions:
+          type: object
+          additionalProperties:
+            type: string
         metricIds:
           type: object
           additionalProperties:
@@ -20752,6 +21007,26 @@ components:
       type: object
       additionalProperties: false
       properties:
+        country:
+          $ref: "#/components/schemas/SupportedCountry"
+        sections:
+          type: array
+          maxItems: 8
+          items:
+            type: string
+            enum:
+              [
+                filterFields,
+                defaults,
+                availability,
+                metadata,
+                technologies,
+                fundingSources,
+                restrictions,
+              ]
+        view:
+          type: string
+          enum: [compact, standard, full, summary]
         countries:
           type: array
           items:
@@ -20772,19 +21047,9 @@ components:
           minLength: 1
           maxLength: 100
           description: Optional run correlation. Also accepted as X-DMFaster-Run-Id.
-      required:
-        - countries
     CompanyFiltersData:
       type: object
       additionalProperties: true
-      required:
-        - metadata
-        - filterFields
-        - defaults
-        - technologies
-        - fundingSources
-        - availability
-        - restrictions
       properties:
         metadata:
           type: object
@@ -20893,6 +21158,10 @@ components:
       type: object
       additionalProperties: false
       properties:
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
         filters:
           $ref: "#/components/schemas/CompanySearchFilters"
         projection:
@@ -20949,8 +21218,9 @@ components:
       additionalProperties: false
       required:
         - query
-        - countries
       properties:
+        country:
+          $ref: "#/components/schemas/SupportedCountry"
         query:
           type: string
           minLength: 2
@@ -21368,18 +21638,17 @@ components:
         - offer
         - idempotencyKey
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         campaignId:
           $ref: "#/components/schemas/ResourceId"
         listId:
           $ref: "#/components/schemas/ResourceId"
         expectedCampaignUpdatedAt:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         expectedListUpdatedAt:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         expectedTotal:
           type: integer
           minimum: 1
@@ -21421,6 +21690,9 @@ components:
       required:
         - runId
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         runId:
           $ref: "#/components/schemas/ResourceId"
         limit:
@@ -21687,8 +21959,10 @@ components:
               const: companies.fit.start
             data:
               oneOf:
-                - $ref: "#/components/schemas/CompanyFitStartData"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CompanyFitStartData"
+                    - type: "null"
     CompanyFitAdvanceResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -21699,8 +21973,10 @@ components:
               const: companies.fit.advance
             data:
               oneOf:
-                - $ref: "#/components/schemas/CompanyFitAdvanceData"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CompanyFitAdvanceData"
+                    - type: "null"
     CompanyFitResultsResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -21729,6 +22005,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         name:
           type: string
           maxLength: 120
@@ -21843,12 +22122,23 @@ components:
               const: companies.list.prepare
             data:
               oneOf:
-                - $ref: "#/components/schemas/CompanyListPrepareData"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CompanyListPrepareData"
+                    - type: "null"
     CompanyListInspectInput:
       type: object
       additionalProperties: false
       properties:
+        view:
+          type: string
+          enum: [compact, standard, full]
+        fields:
+          type: array
+          maxItems: 30
+          items:
+            type: string
+            maxLength: 80
         listId:
           $ref: "#/components/schemas/ResourceId"
         offset:
@@ -21951,18 +22241,17 @@ components:
         - idempotencyKey
         - apply
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         listId:
           $ref: "#/components/schemas/ResourceId"
         campaignId:
           $ref: "#/components/schemas/ResourceId"
         expectedListUpdatedAt:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         expectedCampaignUpdatedAt:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         expectedTotal:
           type: integer
           minimum: 1
@@ -22122,8 +22411,10 @@ components:
               const: companies.list.refine
             data:
               oneOf:
-                - $ref: "#/components/schemas/CompanyListRefineData"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CompanyListRefineData"
+                    - type: "null"
     CampaignOperationInspectInput:
       type: object
       additionalProperties: false
@@ -22302,6 +22593,9 @@ components:
         - idempotencyKey
         - patch
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         campaignId:
           type: string
           minLength: 1
@@ -22310,10 +22604,7 @@ components:
           type: string
           pattern: ^[a-f0-9]{64}$
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
-          pattern: ^[A-Za-z0-9._:-]+$
+          $ref: "#/components/schemas/IdempotencyKey"
         patch:
           type: object
           additionalProperties: false
@@ -22384,8 +22675,10 @@ components:
               const: campaign.delivery.update
             data:
               oneOf:
-                - $ref: "#/components/schemas/CampaignDeliveryUpdateOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CampaignDeliveryUpdateOutput"
+                    - type: "null"
     InstagramPacingPolicy:
       type: object
       additionalProperties: false
@@ -22442,16 +22735,16 @@ components:
         - policy
         - reason
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         expectedRevision:
           type:
             - string
             - "null"
           pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-8][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
-          pattern: ^[A-Za-z0-9._:-]+$
+          $ref: "#/components/schemas/IdempotencyKey"
         reason:
           type: string
           minLength: 3
@@ -22517,8 +22810,10 @@ components:
               const: sending.instagram.pacing.update
             data:
               oneOf:
-                - $ref: "#/components/schemas/InstagramPacingUpdateOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/InstagramPacingUpdateOutput"
+                    - type: "null"
     CompanyFitDetailedProgress:
       type: object
       additionalProperties: false
@@ -22629,6 +22924,9 @@ components:
       required:
         - runId
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         runId:
           $ref: "#/components/schemas/ResourceId"
     CompanyFitCancelData:
@@ -22648,8 +22946,10 @@ components:
           properties:
             data:
               oneOf:
-                - $ref: "#/components/schemas/CompanyFitCancelData"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CompanyFitCancelData"
+                    - type: "null"
     CompanyFitRunsListInput:
       type: object
       additionalProperties: false
@@ -22714,6 +23014,9 @@ components:
       required:
         - runId
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         runId:
           $ref: "#/components/schemas/ResourceId"
         limit:
@@ -22750,8 +23053,10 @@ components:
           properties:
             data:
               oneOf:
-                - $ref: "#/components/schemas/CompanyFitRunData"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/CompanyFitRunData"
+                    - type: "null"
     CompanyFitCohortInput:
       type: object
       additionalProperties: false
@@ -22845,13 +23150,9 @@ components:
         campaignId:
           $ref: "#/components/schemas/ResourceId"
         from:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         to:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         limit:
           type: integer
           minimum: 1
@@ -22867,6 +23168,7 @@ components:
             type: string
             enum:
               - legacy
+              - metrics
         runId:
           type: string
           minLength: 1
@@ -22987,9 +23289,16 @@ components:
           additionalProperties: true
         metrics:
           $ref: "#/components/schemas/SalesMetricsV2"
+        metricsAsOf:
+          type: string
+          format: date-time
         metricsVersion:
           type: string
           maxLength: 500
+        definitions:
+          type: object
+          additionalProperties:
+            type: string
         metricIds:
           type: object
           additionalProperties:
@@ -23198,13 +23507,9 @@ components:
         - durationMinutes
       properties:
         from:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         to:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         timezone:
           type: string
           minLength: 1
@@ -23336,22 +23641,15 @@ components:
         conversationId:
           $ref: "#/components/schemas/ResourceId"
         expectedConversationUpdatedAt:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         idempotencyKey:
-          type: string
-          minLength: 8
-          maxLength: 120
-          pattern: ^[a-zA-Z0-9_-]{8,120}$
+          $ref: "#/components/schemas/IdempotencyKey"
         title:
           type: string
           minLength: 1
           maxLength: 200
         start:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         timezone:
           type: string
           minLength: 1
@@ -23599,6 +23897,10 @@ components:
             - integer
             - "null"
           minimum: 0
+        transcriptAccessReason:
+          oneOf:
+            - type: string
+            - type: "null"
         transcriptAccess:
           type: string
           enum:
@@ -24370,6 +24672,9 @@ components:
         - count
         - idempotencyKey
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         username:
           type: string
           minLength: 1
@@ -24398,11 +24703,7 @@ components:
           maxLength: 300
           x-dmfaster-trim: true
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
-          pattern: ^[A-Za-z0-9._:-]{1,160}$
-          x-dmfaster-trim: true
+          $ref: "#/components/schemas/IdempotencyKey"
         runId:
           type: string
           minLength: 1
@@ -24595,9 +24896,11 @@ components:
           required: []
           properties:
             data:
-              anyOf:
-                - $ref: "#/components/schemas/InstagramExtractionData"
-                - type: "null"
+              oneOf:
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - anyOf:
+                    - $ref: "#/components/schemas/InstagramExtractionData"
+                    - type: "null"
     InstagramExtractionInspectResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -24732,11 +25035,7 @@ components:
             - top
             - recent
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
-          x-dmfaster-trim: true
-          pattern: ^[A-Za-z0-9._:-]{1,160}$
+          $ref: "#/components/schemas/IdempotencyKey"
         runId:
           type: string
           minLength: 1
@@ -24786,11 +25085,7 @@ components:
           minimum: 1
           maximum: 2147483647
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
-          x-dmfaster-trim: true
-          pattern: ^[A-Za-z0-9._:-]{1,160}$
+          $ref: "#/components/schemas/IdempotencyKey"
         runId:
           type: string
           minLength: 1
@@ -24825,11 +25120,7 @@ components:
           minimum: 0
           maximum: 2147483647
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
-          x-dmfaster-trim: true
-          pattern: ^[A-Za-z0-9._:-]{1,160}$
+          $ref: "#/components/schemas/IdempotencyKey"
         runId:
           type: string
           minLength: 1
@@ -25121,28 +25412,104 @@ components:
           maxLength: 100
           description: Optional run correlation. Also accepted as X-DMFaster-Run-Id.
     InstagramProspectStartInput:
-      allOf:
-        - $ref: "#/components/schemas/InstagramProspectInput"
-        - type: object
-          additionalProperties: false
-          required:
-            - idempotencyKey
-          properties:
-            idempotencyKey:
-              type: string
-              minLength: 1
-              maxLength: 120
-            runId:
-              type: string
-              minLength: 1
-              maxLength: 100
-              description: Optional run correlation. Also accepted as X-DMFaster-Run-Id.
+      type: object
+      additionalProperties: false
+      properties:
+        query:
+          type: string
+          minLength: 1
+          maxLength: 4000
+        criteria:
+          type: array
+          minItems: 1
+          maxItems: 12
+          items:
+            $ref: "#/components/schemas/InstagramProspectCriterion"
+        threshold:
+          type: number
+          minimum: 0.5
+          maximum: 1
+        evidenceThreshold:
+          type: number
+          minimum: 0.5
+          maximum: 1
+        sourceListIds:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            minLength: 1
+            maxLength: 200
+        sources:
+          type: array
+          maxItems: 10
+          items:
+            $ref: "#/components/schemas/InstagramProspectSource"
+        searchQueries:
+          type: array
+          minItems: 1
+          maxItems: 5
+          items:
+            type: string
+            minLength: 1
+            maxLength: 120
+        targetCount:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        maxCandidates:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        maxCredits:
+          type: integer
+          minimum: 1
+          maximum: 100000
+        maxModelCalls:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        media:
+          type: string
+          enum:
+            - none
+            - avatar
+            - recent_posts
+        model:
+          type: string
+          enum:
+            - clef
+            - clef-flash
+        includeReview:
+          type: boolean
+        excludePreviouslyContacted:
+          type: boolean
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        runId:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Optional run correlation. Also accepted as X-DMFaster-Run-Id.
+        dryRun:
+          type: boolean
+          description: True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.
+        idempotencyKey:
+          $ref: "#/components/schemas/IdempotencyKey"
+      required:
+        - query
+        - idempotencyKey
     InstagramProspectRunInput:
       type: object
       additionalProperties: false
       required:
         - runId
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         runId:
           type: string
           minLength: 1
@@ -25460,9 +25827,11 @@ components:
           additionalProperties: false
           properties:
             data:
-              anyOf:
-                - $ref: "#/components/schemas/InstagramProspectData"
-                - type: "null"
+              oneOf:
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - anyOf:
+                    - $ref: "#/components/schemas/InstagramProspectData"
+                    - type: "null"
     InstagramProspectInspectResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -25490,9 +25859,11 @@ components:
           additionalProperties: false
           properties:
             data:
-              anyOf:
-                - $ref: "#/components/schemas/InstagramProspectData"
-                - type: "null"
+              oneOf:
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - anyOf:
+                    - $ref: "#/components/schemas/InstagramProspectData"
+                    - type: "null"
     InstagramProspectCancelResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -25500,9 +25871,11 @@ components:
           additionalProperties: false
           properties:
             data:
-              anyOf:
-                - $ref: "#/components/schemas/InstagramProspectData"
-                - type: "null"
+              oneOf:
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - anyOf:
+                    - $ref: "#/components/schemas/InstagramProspectData"
+                    - type: "null"
     AgentSalesEventType:
       type: string
       enum:
@@ -25696,6 +26069,9 @@ components:
       additionalProperties: false
       required: []
       properties:
+        since:
+          $ref: "#/components/schemas/ResourceVersion"
+          description: Bounded bootstrap of retained conversation changes since this instant; continue with the returned cursor.
         cursor:
           type: string
           minLength: 1
@@ -26112,6 +26488,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         name:
           type: string
           minLength: 1
@@ -26158,12 +26537,17 @@ components:
               const: workspace.sandbox.create
             data:
               oneOf:
-                - $ref: "#/components/schemas/WorkspaceSandboxCreateOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/WorkspaceSandboxCreateOutput"
+                    - type: "null"
     SandboxSeedInput:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         preset:
           type: string
           const: appointment_setter_v1
@@ -26227,12 +26611,17 @@ components:
               const: sandbox.seed
             data:
               oneOf:
-                - $ref: "#/components/schemas/SandboxSeedOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/SandboxSeedOutput"
+                    - type: "null"
     SandboxInboundSimulateInput:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         conversationId:
           type: string
           minLength: 1
@@ -26307,12 +26696,17 @@ components:
               const: sandbox.inbound.simulate
             data:
               oneOf:
-                - $ref: "#/components/schemas/SandboxInboundSimulateOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/SandboxInboundSimulateOutput"
+                    - type: "null"
     SandboxClockAdvanceInput:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         minutes:
           type: integer
           minimum: 1
@@ -26364,8 +26758,10 @@ components:
               const: sandbox.clock.advance
             data:
               oneOf:
-                - $ref: "#/components/schemas/SandboxClockAdvanceOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/SandboxClockAdvanceOutput"
+                    - type: "null"
     CallOutcomeSetInput:
       type: object
       additionalProperties: false
@@ -27373,6 +27769,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         enabled:
           type: boolean
         autoClose:
@@ -27430,12 +27829,17 @@ components:
               const: workspace.agent_sales.update
             data:
               oneOf:
-                - $ref: "#/components/schemas/WorkspaceAgentSalesUpdateOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/WorkspaceAgentSalesUpdateOutput"
+                    - type: "null"
     SandboxProviderUpdateInput:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         provider:
           type: string
           enum:
@@ -27495,12 +27899,23 @@ components:
               const: sandbox.provider.update
             data:
               oneOf:
-                - $ref: "#/components/schemas/SandboxProviderUpdateOutput"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/SandboxProviderUpdateOutput"
+                    - type: "null"
     ReplyTemplateVariables:
       type: object
       additionalProperties: false
       properties:
+        lastName:
+          type: string
+          maxLength: 500
+        fullName:
+          type: string
+          maxLength: 500
+        name:
+          type: string
+          maxLength: 500
         firstName:
           type: string
           maxLength: 500
@@ -27767,6 +28182,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         template:
           $ref: "#/components/schemas/ReplyTemplate"
         expectedRevision:
@@ -27794,14 +28212,19 @@ components:
               const: reply.templates.create
             data:
               oneOf:
-                - $ref: "#/components/schemas/SalesReplyOperation"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/SalesReplyOperation"
+                    - type: "null"
           required:
             - tool
     ReplyTemplatesUpdateInput:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         id:
           $ref: "#/components/schemas/ResourceId"
         template:
@@ -27832,14 +28255,19 @@ components:
               const: reply.templates.update
             data:
               oneOf:
-                - $ref: "#/components/schemas/SalesReplyOperation"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/SalesReplyOperation"
+                    - type: "null"
           required:
             - tool
     ReplyTemplatesDeleteInput:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         id:
           $ref: "#/components/schemas/ResourceId"
         expectedRevision:
@@ -27867,8 +28295,10 @@ components:
               const: reply.templates.delete
             data:
               oneOf:
-                - $ref: "#/components/schemas/SalesReplyOperation"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/SalesReplyOperation"
+                    - type: "null"
           required:
             - tool
     ReplyPolicyGetInput:
@@ -27900,6 +28330,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         policy:
           $ref: "#/components/schemas/ReplyPolicy"
         expectedRevision:
@@ -27927,14 +28360,25 @@ components:
               const: reply.policy.update
             data:
               oneOf:
-                - $ref: "#/components/schemas/SalesReplyOperation"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/SalesReplyOperation"
+                    - type: "null"
           required:
             - tool
     ReplyApprovalsListInput:
       type: object
       additionalProperties: false
       properties:
+        view:
+          type: string
+          enum: [compact, standard, full]
+        fields:
+          type: array
+          maxItems: 30
+          items:
+            type: string
+            maxLength: 80
         cursor:
           type: string
           minLength: 1
@@ -27974,6 +28418,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         conversationId:
           $ref: "#/components/schemas/ResourceId"
         expectedUpdatedAt:
@@ -28012,8 +28459,10 @@ components:
               const: conversation.draft.save
             data:
               oneOf:
-                - $ref: "#/components/schemas/SalesReplyOperation"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/SalesReplyOperation"
+                    - type: "null"
           required:
             - tool
     FollowupAutoSend:
@@ -28213,6 +28662,22 @@ components:
       type: object
       additionalProperties: false
       properties:
+        include:
+          type: array
+          maxItems: 1
+          items:
+            type: string
+            enum: [metrics, legacy]
+        view:
+          type: string
+          enum: [compact, standard, full]
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        cursor:
+          type: string
+          maxLength: 4000
         campaignIds:
           type: array
           maxItems: 100
@@ -28242,6 +28707,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         conversationId:
           $ref: "#/components/schemas/ResourceId"
         expectedConversationUpdatedAt:
@@ -28360,8 +28828,10 @@ components:
               type: string
               const: calendar.meeting.reschedule
             data:
-              type: object
-              additionalProperties: true
+              oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: "null"
     CalendarMeetingCancelInput:
       type: object
       additionalProperties: false
@@ -28400,8 +28870,10 @@ components:
               type: string
               const: calendar.meeting.cancel
             data:
-              type: object
-              additionalProperties: true
+              oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: "null"
     CampaignFollowupsConfigureInput:
       type: object
       additionalProperties: false
@@ -28505,8 +28977,10 @@ components:
               type: string
               const: campaign.followups.configure
             data:
-              type: object
-              additionalProperties: true
+              oneOf:
+                - type: object
+                  additionalProperties: true
+                - type: "null"
     SalesMetricCounts:
       type: object
       additionalProperties: false
@@ -31325,6 +31799,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        ageBusinessHours:
+          type: integer
+          minimum: 0
         id:
           type: string
           maxLength: 200
@@ -32185,6 +32662,9 @@ components:
         - readOnly
         - coverage
       properties:
+        metricsAsOf:
+          type: string
+          format: date-time
         metricsVersion:
           type: string
           maxLength: 500
@@ -32377,7 +32857,7 @@ components:
           description: Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox.
         contractVersion:
           type: string
-          const: 2.5.1
+          const: 2.6.0
         data:
           type: object
           additionalProperties: false
@@ -32583,6 +33063,11 @@ components:
       type: object
       additionalProperties: false
       properties:
+        agentRunId:
+          $ref: "#/components/schemas/ResourceId"
+        view:
+          type: string
+          enum: [compact, standard, full, summary]
         runId:
           $ref: "#/components/schemas/ResourceId"
         afterSeq:
@@ -32593,12 +33078,34 @@ components:
           type: integer
           minimum: 1
           maximum: 200
-      required:
-        - runId
     AgentRunInspectOutput:
       type: object
       additionalProperties: false
       properties:
+        aggregates:
+          type: array
+          maxItems: 10
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              tool:
+                type: string
+              calls:
+                type: integer
+              errors:
+                type: integer
+              bytes:
+                oneOf:
+                  - type: integer
+                  - type: string
+              p50Ms:
+                type: integer
+              p95Ms:
+                type: integer
+            required: [tool, calls, errors, bytes, p50Ms, p95Ms]
+        aggregatesHasMore:
+          type: boolean
         run:
           $ref: "#/components/schemas/AgentRunRecord"
         calls:
@@ -32988,6 +33495,14 @@ components:
       type: object
       additionalProperties: false
       properties:
+        requestId:
+          oneOf:
+            - type: string
+            - type: "null"
+        serverTimingMs:
+          type: object
+          additionalProperties:
+            type: number
         seq:
           type: integer
           minimum: 0
@@ -33115,6 +33630,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         category:
           type: string
           enum:
@@ -33278,8 +33796,10 @@ components:
               const: feedback.submit
             data:
               oneOf:
-                - $ref: "#/components/schemas/AgentFeedbackSubmitData"
-                - type: "null"
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/AgentFeedbackSubmitData"
+                    - type: "null"
     AgentFeedbackListResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -34107,6 +34627,8 @@ components:
       type: object
       additionalProperties: false
       properties:
+        enforcementEnabled:
+          type: boolean
         agentId:
           $ref: "#/components/schemas/ResourceId"
         timezone:
@@ -35078,13 +35600,9 @@ components:
       additionalProperties: false
       properties:
         from:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         to:
-          type: string
-          minLength: 20
-          maxLength: 40
+          $ref: "#/components/schemas/ResourceVersion"
         groupBy:
           type: string
           enum:
@@ -37066,9 +37584,7 @@ components:
         expectedVersion:
           $ref: "#/components/schemas/ResourceVersion"
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 120
+          $ref: "#/components/schemas/IdempotencyKey"
         dryRun:
           type: boolean
         runId:
@@ -38100,6 +38616,22 @@ components:
       type: object
       additionalProperties: false
       properties:
+        variables:
+          type: object
+          additionalProperties: false
+          properties:
+            ownerName:
+              type: string
+              maxLength: 500
+            slotLink:
+              type: string
+              maxLength: 500
+            slot1:
+              type: string
+              maxLength: 500
+            slot2:
+              type: string
+              maxLength: 500
         messages:
           type: array
           items:
@@ -38112,6 +38644,7 @@ components:
                   - facebook
                   - linkedin
                   - gmail
+                  - email
                   - sms
               subject:
                 type: string
@@ -38137,6 +38670,7 @@ components:
                   - facebook
                   - linkedin
                   - gmail
+                  - email
                   - sms
               subject:
                 type: string
@@ -38156,10 +38690,27 @@ components:
           maxItems: 15
       required:
         - messages
+    ProspectingAudiencePage:
+      type: object
+      additionalProperties: false
+      description: Bounded inventory page. Exact eligibility totals cover this page only; follow returned nextOffset for subsequent pages. Each draft page requires its own idempotencyKey.
+      properties:
+        offset:
+          type: integer
+          minimum: 0
+          maximum: 10000000
+          description: Defaults to 0.
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 500
+          description: Defaults to 500.
     ProspectingPlan:
       type: object
       additionalProperties: false
       properties:
+        audiencePage:
+          $ref: "#/components/schemas/ProspectingAudiencePage"
         name:
           type: string
           minLength: 1
@@ -38226,12 +38777,13 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         plan:
           $ref: "#/components/schemas/ProspectingPlan"
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
+          $ref: "#/components/schemas/IdempotencyKey"
         campaignId:
           type: string
           minLength: 1
@@ -38251,9 +38803,7 @@ components:
         dryRun:
           type: boolean
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
+          $ref: "#/components/schemas/IdempotencyKey"
     CampaignDraftReadinessInput:
       type: object
       additionalProperties: false
@@ -38268,6 +38818,8 @@ components:
       type: object
       additionalProperties: false
       properties:
+        audiencePage:
+          $ref: "#/components/schemas/ProspectingAudiencePage"
         filters:
           $ref: "#/components/schemas/CompanySearchFilters"
         channels:
@@ -38429,6 +38981,20 @@ components:
       type: object
       additionalProperties: false
       properties:
+        jobId:
+          type: string
+          pattern: ^look_[a-f0-9]{32}$
+          description: Poll a job using this connection; omit seed when polling. Results recheck current contact and suppression eligibility.
+        execution:
+          type: string
+          enum: [async, sync]
+          description: Defaults to async with jobId and pollAfterMs. Sync retains the bounded legacy read.
+        countries:
+          type: array
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: "#/components/schemas/SupportedCountry"
         seed:
           type: object
           additionalProperties: false
@@ -38460,12 +39026,13 @@ components:
           type: string
           minLength: 1
           maxLength: 1000
-      required:
-        - seed
     CommitmentsProposeInput:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         meetingId:
           type: string
           minLength: 1
@@ -38479,9 +39046,7 @@ components:
           minLength: 1
           maxLength: 80
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
+          $ref: "#/components/schemas/IdempotencyKey"
       required:
         - meetingId
         - idempotencyKey
@@ -38520,6 +39085,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         id:
           type: string
           minLength: 1
@@ -38536,9 +39104,7 @@ components:
           type: string
           pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
+          $ref: "#/components/schemas/IdempotencyKey"
       required:
         - id
         - expectedUpdatedAt
@@ -38548,6 +39114,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         items:
           type: array
           minItems: 1
@@ -38570,9 +39139,7 @@ components:
               - id
               - expectedUpdatedAt
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
+          $ref: "#/components/schemas/IdempotencyKey"
       required:
         - items
         - idempotencyKey
@@ -38580,6 +39147,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         id:
           type: string
           minLength: 1
@@ -38592,9 +39162,7 @@ components:
           type: string
           pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$
         idempotencyKey:
-          type: string
-          minLength: 1
-          maxLength: 160
+          $ref: "#/components/schemas/IdempotencyKey"
       required:
         - id
         - text
@@ -38604,6 +39172,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         listId:
           type: string
           minLength: 1
@@ -38623,6 +39194,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         listId:
           type: string
           minLength: 1
@@ -38637,6 +39211,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         campaignId:
           type: string
           minLength: 1
@@ -38771,14 +39348,15 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         approvalId:
           type: string
           minLength: 1
           maxLength: 160
         idempotencyKey:
-          type: string
-          minLength: 8
-          maxLength: 160
+          $ref: "#/components/schemas/IdempotencyKey"
       required:
         - approvalId
         - idempotencyKey
@@ -38797,14 +39375,15 @@ components:
       type: object
       additionalProperties: false
       properties:
+        dryRun:
+          type: boolean
+          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
         approvalId:
           type: string
           minLength: 1
           maxLength: 160
         idempotencyKey:
-          type: string
-          minLength: 8
-          maxLength: 160
+          $ref: "#/components/schemas/IdempotencyKey"
         expectedRevision:
           type: integer
           minimum: 1

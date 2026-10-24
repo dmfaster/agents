@@ -124,7 +124,13 @@ export async function runCompanyFitReview(
           result.error?.code || "review_failed",
         );
       }
-      const next = (result.data as AgentToolDataMap["companies.fit.run"]).progress;
+      const data = result.data as AgentToolDataMap["companies.fit.run"];
+      if (!("progress" in data))
+        throw new DmfasterSdkError(
+          "Review execution returned a preview instead of progress.",
+          "review_preview_only",
+        );
+      const next = data.progress;
       validateFitProgress(next);
       if (
         next.runId !== runId ||
