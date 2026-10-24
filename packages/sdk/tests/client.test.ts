@@ -395,3 +395,15 @@ test("per-call cancellation leaves another concurrent SDK call running", async (
   }
   assert.equal((await second).ok, true);
 });
+
+test("heartbeat compact wire acknowledgements restore the SDK envelope and reject malformed clocks", async () => {
+  const { AGENT_CONTRACT_VERSION } = await import("../src/index.ts");
+  const ack = {ok:true,serverTime:"2026-10-23T20:00:00.000Z",contractVersion:AGENT_CONTRACT_VERSION,data:{nextInSeconds:900}};
+  const client=createDmfasterClient({baseUrl:"https://example.test",token:"fake",fetch:async()=>Response.json(ack)});
+  const result=await client.invoke("agent.heartbeat",{agentId:"agt_fake",status:"working"});
+  assert.equal(result.tool,"agent.heartbeat");assert.equal(result.data && "at" in result.data ? result.data.at : null,ack.serverTime);
+  assert.equal(result.data && "agentId" in result.data ? result.data.agentId : null,"agt_fake");
+  assert.ok(Buffer.byteLength(JSON.stringify(ack))<=300);
+  ack.serverTime="not-a-date";
+  await assert.rejects(client.invoke("agent.heartbeat",{agentId:"agt_fake",status:"working"}),DmfasterProtocolError);
+});

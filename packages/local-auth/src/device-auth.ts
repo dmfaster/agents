@@ -23,6 +23,7 @@ export type AgentCredentialSummary = {
 };
 
 export type AgentIdentity = {
+  agent?: { id: string; name: string; status: string };
   credential: AgentCredentialSummary;
   workspace: { id: string; name: string; email?: string; isSandbox?: boolean };
   user: { id: string; name: string; email?: string };
@@ -279,6 +280,15 @@ function parseIdentity(body: unknown): AgentIdentity {
     );
   }
   return {
+    ...(isRecord(body.agent)
+      ? {
+          agent: {
+            id: requiredString(body.agent, "id", "agent ID", 160),
+            name: requiredString(body.agent, "name", "agent name", 100),
+            status: requiredString(body.agent, "status", "agent status", 20),
+          },
+        }
+      : {}),
     credential: parseCredential(body.credential),
     workspace: parseParty(body.workspace, "workspace"),
     user: parseParty(body.user, "user"),

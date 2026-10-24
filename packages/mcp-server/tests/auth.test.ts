@@ -168,9 +168,12 @@ test("connection status distinguishes scope eligibility from final authorization
           user: { id: "user_one", name: "Owner" },
         }),
     },
+    "full",
   );
   assert.equal(status.status, "authenticated");
   if (status.status !== "authenticated") return;
+  assert.ok(Array.isArray(status.scopeEligibleTools));
+  assert.ok(Array.isArray(status.scopeBlockedTools));
   assert.ok(status.scopeEligibleTools.some((entry) => entry.tool === "conversations.list"));
   assert.ok(
     status.scopeBlockedTools.some(
@@ -178,6 +181,6 @@ test("connection status distinguishes scope eligibility from final authorization
         entry.tool === "campaign.launch" && entry.missingScopes.includes("campaigns:launch"),
     ),
   );
-  assert.match(status.authorizationNote, /plan/);
+  assert.match(String(status.authorizationNote), /plan/);
   assert.equal(JSON.stringify(status).includes(token), false);
 });

@@ -1,3 +1,4 @@
+import { projectConnectionStatus, type ConnectionToolsView } from "./connection-view.ts";
 import {
   createDmfasterClient,
   inspectAgentReadiness,
@@ -36,7 +37,11 @@ type McpAuthInput = {
   fetch?: typeof globalThis.fetch;
 };
 
-export async function inspectMcpConnection(env: NodeJS.ProcessEnv, input: McpAuthInput = {}) {
+export async function inspectMcpConnection(
+  env: NodeJS.ProcessEnv,
+  input: McpAuthInput = {},
+  toolsView: ConnectionToolsView = "summary",
+) {
   const config = await resolveLocalAuthConfig({
     env,
     ...(input.homeDirectory ? { homeDirectory: input.homeDirectory } : {}),
@@ -76,18 +81,22 @@ export async function inspectMcpConnection(env: NodeJS.ProcessEnv, input: McpAut
       const missingScopes = AGENT_TOOL_SCOPES[tool].filter((scope) => !grantedScopes.has(scope));
       return missingScopes.length ? [{ tool, missingScopes }] : [];
     });
-    return {
-      ...common,
-      status: "authenticated",
-      workspace: identity.workspace,
-      user: identity.user,
-      credential: identity.credential,
-      ...readiness,
-      scopeEligibleTools,
-      scopeBlockedTools,
-      authorizationNote:
-        "Scope eligibility is advisory. Workspace role, plan and action preconditions are checked by each tool.",
-    };
+    return projectConnectionStatus(
+      {
+        ...common,
+        ...(identity.agent ? { agent: identity.agent } : {}),
+        status: "authenticated",
+        workspace: identity.workspace,
+        user: identity.user,
+        credential: identity.credential,
+        ...readiness,
+        scopeEligibleTools,
+        scopeBlockedTools,
+        authorizationNote:
+          "Scope eligibility is advisory. Workspace role, plan and action preconditions are checked by each tool.",
+      },
+      toolsView,
+    );
   } catch (error) {
     const invalid =
       error instanceof AgentAuthError &&
@@ -115,7 +124,9 @@ function registerConnectionStatus(server: McpServer, env: NodeJS.ProcessEnv, inp
         "connection_status",
         "Check local authentication and the selected workspace without exposing the credential. Use when setup or permissions are unclear.",
       ),
-      inputSchema: z.object({}).strict(),
+      inputSchema: z
+        .object({ toolsView: z.enum(["summary", "names", "full"]).optional() })
+        .strict(),
       outputSchema: localConnectionSchema,
       _meta: { "openai/widgetAccessible": true },
       annotations: {
@@ -125,17 +136,14 @@ function registerConnectionStatus(server: McpServer, env: NodeJS.ProcessEnv, inp
         openWorldHint: false,
       },
     },
-    async () => {
+    async ({ toolsView }) => {
       try {
-        const status = await inspectMcpConnection(env, input);
+        const status = await inspectMcpConnection(env, input, toolsView);
         return {
           content: [
             {
               type: "text" as const,
-              text:
-                "workspace" in status
-                  ? `Connected to ${status.workspace.name}. ${status.scopeEligibleTools.length} tools match this credential's scopes; ${status.scopeBlockedTools.length} need additional scopes. Role and plan checks still apply.`
-                  : status.actionRequired,
+              text: JSON.stringify(status),
             },
           ],
           structuredContent: status,

@@ -48,6 +48,12 @@ export class DmfasterHttpError extends DmfasterSdkError {
   readonly details: Record<string, unknown> | null;
   readonly nextAction: string | null;
   readonly docsUrl: string | null;
+  readonly requiredScope: string | null;
+  readonly reason: string | null;
+  readonly setupUrl: string | null;
+  readonly requiredConnection: string | null;
+  readonly blockedUntil: string | null;
+  readonly retryAfterMs: number | null;
 
   constructor(input: {
     message: string;
@@ -60,6 +66,12 @@ export class DmfasterHttpError extends DmfasterSdkError {
     details?: Record<string, unknown> | null;
     nextAction?: string | null;
     docsUrl?: string | null;
+    requiredScope?: string | null;
+    reason?: string | null;
+    setupUrl?: string | null;
+    requiredConnection?: string | null;
+    blockedUntil?: string | null;
+    retryAfterMs?: number | null;
   }) {
     super(input.message, input.code || "http_error");
     this.name = "DmfasterHttpError";
@@ -71,6 +83,12 @@ export class DmfasterHttpError extends DmfasterSdkError {
     this.details = input.details ?? null;
     this.nextAction = input.nextAction ?? null;
     this.docsUrl = input.docsUrl ?? null;
+    this.requiredScope = input.requiredScope ?? null;
+    this.reason = input.reason ?? null;
+    this.setupUrl = input.setupUrl ?? null;
+    this.requiredConnection = input.requiredConnection ?? null;
+    this.blockedUntil = input.blockedUntil ?? null;
+    this.retryAfterMs = input.retryAfterMs ?? null;
   }
 }
 

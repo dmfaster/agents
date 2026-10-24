@@ -1,8 +1,6 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
 import type { operations } from "./api.ts";
 export type AgentToolInputMap = {
-  "feedback.submit": operations["feedbackSubmit"]["requestBody"]["content"]["application/json"];
-  "feedback.list": operations["feedbackList"]["requestBody"]["content"]["application/json"];
   "analytics.summary": operations["analyticsSummary"]["requestBody"]["content"]["application/json"];
   "workspace.briefing": operations["workspaceBriefing"]["requestBody"]["content"]["application/json"];
   "campaigns.list": operations["campaignsList"]["requestBody"]["content"]["application/json"];
@@ -146,14 +144,82 @@ export type AgentToolInputMap = {
   "calendar.meeting.cancel": operations["calendarMeetingCancel"]["requestBody"]["content"]["application/json"];
   "campaign.followups.configure": operations["campaignFollowupsConfigure"]["requestBody"]["content"]["application/json"];
   "campaign.variants.configure": operations["campaignVariantsConfigure"]["requestBody"]["content"]["application/json"];
+  "recorder.settings.get": operations["recorderSettingsGet"]["requestBody"]["content"]["application/json"];
+  "recorder.settings.update": operations["recorderSettingsUpdate"]["requestBody"]["content"]["application/json"];
+  "recorder.bots.list": operations["recorderBotsList"]["requestBody"]["content"]["application/json"];
+  "call.transcript.get": operations["callTranscriptGet"]["requestBody"]["content"]["application/json"];
+  "call.recording.get": operations["callRecordingGet"]["requestBody"]["content"]["application/json"];
+  "call.transcripts.get": operations["callTranscriptsGet"]["requestBody"]["content"]["application/json"];
+  "call.transcripts.search": operations["callTranscriptsSearch"]["requestBody"]["content"]["application/json"];
+  "readiness.check": operations["readinessCheck"]["requestBody"]["content"]["application/json"];
+  "sender.retire": operations["senderRetire"]["requestBody"]["content"]["application/json"];
+  "sender.unretire": operations["senderUnretire"]["requestBody"]["content"]["application/json"];
+  "attribution.check": operations["attributionCheck"]["requestBody"]["content"]["application/json"];
+  "campaign.reengagement.prepare": operations["campaignReengagementPrepare"]["requestBody"]["content"]["application/json"];
+  "agents.list": operations["agentsList"]["requestBody"]["content"]["application/json"];
+  "agent.inspect": operations["agentInspect"]["requestBody"]["content"]["application/json"];
+  "agent.create.request": operations["agentCreateRequest"]["requestBody"]["content"]["application/json"];
+  "agent.pause": operations["agentPause"]["requestBody"]["content"]["application/json"];
+  "agent.resume": operations["agentResume"]["requestBody"]["content"]["application/json"];
+  "agent.credential.rotate": operations["agentCredentialRotate"]["requestBody"]["content"]["application/json"];
+  "event_consumers.list": operations["eventConsumersList"]["requestBody"]["content"]["application/json"];
+  "event_consumers.create": operations["eventConsumersCreate"]["requestBody"]["content"]["application/json"];
+  "events.ack": operations["eventsAck"]["requestBody"]["content"]["application/json"];
+  "events.snapshot": operations["eventsSnapshot"]["requestBody"]["content"]["application/json"];
+  "webhook.deliveries.list": operations["webhookDeliveriesList"]["requestBody"]["content"]["application/json"];
+  "webhooks.dlq.replay": operations["webhooksDlqReplay"]["requestBody"]["content"]["application/json"];
+  "classification.feedback": operations["classificationFeedback"]["requestBody"]["content"]["application/json"];
+  "classification.quality": operations["classificationQuality"]["requestBody"]["content"]["application/json"];
+  "classification.backfill.plan": operations["classificationBackfillPlan"]["requestBody"]["content"]["application/json"];
+  "work_queue.list": operations["workQueueList"]["requestBody"]["content"]["application/json"];
+  "work_item.claim": operations["workItemClaim"]["requestBody"]["content"]["application/json"];
+  "work_item.release": operations["workItemRelease"]["requestBody"]["content"]["application/json"];
+  "work_item.snooze": operations["workItemSnooze"]["requestBody"]["content"]["application/json"];
+  "work_item.complete": operations["workItemComplete"]["requestBody"]["content"]["application/json"];
+  "work_queue.config.get": operations["workQueueConfigGet"]["requestBody"]["content"]["application/json"];
+  "work_queue.config.update": operations["workQueueConfigUpdate"]["requestBody"]["content"]["application/json"];
+  "metrics.reconcile": operations["metricsReconcile"]["requestBody"]["content"]["application/json"];
+  "agent.heartbeat": operations["agentHeartbeat"]["requestBody"]["content"]["application/json"];
+  "agent.run.start": operations["agentRunStart"]["requestBody"]["content"]["application/json"];
+  "agent.run.end": operations["agentRunEnd"]["requestBody"]["content"]["application/json"];
+  "agent.runs.list": operations["agentRunsList"]["requestBody"]["content"]["application/json"];
+  "agent.run.inspect": operations["agentRunInspect"]["requestBody"]["content"]["application/json"];
+  "workspace.halt": operations["workspaceHalt"]["requestBody"]["content"]["application/json"];
+  "workspace.resume": operations["workspaceResume"]["requestBody"]["content"]["application/json"];
+  "channel.halt": operations["channelHalt"]["requestBody"]["content"]["application/json"];
+  "workspace.automation.inspect": operations["workspaceAutomationInspect"]["requestBody"]["content"]["application/json"];
+  "feedback.submit": operations["feedbackSubmit"]["requestBody"]["content"]["application/json"];
+  "feedback.list": operations["feedbackList"]["requestBody"]["content"]["application/json"];
+  "entity.resolve": operations["entityResolve"]["requestBody"]["content"]["application/json"];
+  "entities.get": operations["entitiesGet"]["requestBody"]["content"]["application/json"];
+  "people.upsert": operations["peopleUpsert"]["requestBody"]["content"]["application/json"];
+  "companies.upsert": operations["companiesUpsert"]["requestBody"]["content"]["application/json"];
+  "entity.merge": operations["entityMerge"]["requestBody"]["content"]["application/json"];
+  "entity.split": operations["entitySplit"]["requestBody"]["content"]["application/json"];
+  "budget.status": operations["budgetStatus"]["requestBody"]["content"]["application/json"];
+  "call.stats.get": operations["callStatsGet"]["requestBody"]["content"]["application/json"];
+  "call.coaching.get": operations["callCoachingGet"]["requestBody"]["content"]["application/json"];
+  "call.analytics.query": operations["callAnalyticsQuery"]["requestBody"]["content"]["application/json"];
+  "call.insight.get": operations["callInsightGet"]["requestBody"]["content"]["application/json"];
+  "call.access.list": operations["callAccessList"]["requestBody"]["content"]["application/json"];
+  "call.audit.list": operations["callAuditList"]["requestBody"]["content"]["application/json"];
+  "call.activity.get": operations["callActivityGet"]["requestBody"]["content"]["application/json"];
+  "call.analysis.get": operations["callAnalysisGet"]["requestBody"]["content"]["application/json"];
+  "call.outcome.confirm": operations["callOutcomeConfirm"]["requestBody"]["content"]["application/json"];
+  "call.attendance.get": operations["callAttendanceGet"]["requestBody"]["content"]["application/json"];
+  "call.insight.review": operations["callInsightReview"]["requestBody"]["content"]["application/json"];
+  "recorder.event.override.get": operations["recorderEventOverrideGet"]["requestBody"]["content"]["application/json"];
+  "recorder.event.override.update": operations["recorderEventOverrideUpdate"]["requestBody"]["content"]["application/json"];
+  "call.bot.cancel": operations["callBotCancel"]["requestBody"]["content"]["application/json"];
+  "call.bot.remove": operations["callBotRemove"]["requestBody"]["content"]["application/json"];
+  "call.recording.stop": operations["callRecordingStop"]["requestBody"]["content"]["application/json"];
+  "recorder.status": operations["recorderStatus"]["requestBody"]["content"]["application/json"];
+  "call.bot.join": operations["callBotJoin"]["requestBody"]["content"]["application/json"];
+  "recorder.join.get": operations["recorderJoinGet"]["requestBody"]["content"]["application/json"];
+  "call.participant.withdrawal.report": operations["callParticipantWithdrawalReport"]["requestBody"]["content"]["application/json"];
+  "call.delete": operations["callDelete"]["requestBody"]["content"]["application/json"];
 };
 export type AgentToolDataMap = {
-  "feedback.submit": NonNullable<
-    operations["feedbackSubmit"]["responses"][200]["content"]["application/json"]["data"]
-  >;
-  "feedback.list": NonNullable<
-    operations["feedbackList"]["responses"][200]["content"]["application/json"]["data"]
-  >;
   "analytics.summary": NonNullable<
     operations["analyticsSummary"]["responses"][200]["content"]["application/json"]["data"]
   >;
@@ -582,5 +648,227 @@ export type AgentToolDataMap = {
   >;
   "campaign.variants.configure": NonNullable<
     operations["campaignVariantsConfigure"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "recorder.settings.get": NonNullable<
+    operations["recorderSettingsGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "recorder.settings.update": NonNullable<
+    operations["recorderSettingsUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "recorder.bots.list": NonNullable<
+    operations["recorderBotsList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.transcript.get": NonNullable<
+    operations["callTranscriptGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.recording.get": NonNullable<
+    operations["callRecordingGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.transcripts.get": NonNullable<
+    operations["callTranscriptsGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.transcripts.search": NonNullable<
+    operations["callTranscriptsSearch"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "readiness.check": NonNullable<
+    operations["readinessCheck"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "sender.retire": NonNullable<
+    operations["senderRetire"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "sender.unretire": NonNullable<
+    operations["senderUnretire"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "attribution.check": NonNullable<
+    operations["attributionCheck"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.reengagement.prepare": NonNullable<
+    operations["campaignReengagementPrepare"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "agents.list": NonNullable<
+    operations["agentsList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "agent.inspect": NonNullable<
+    operations["agentInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "agent.create.request": NonNullable<
+    operations["agentCreateRequest"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "agent.pause": NonNullable<
+    operations["agentPause"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "agent.resume": NonNullable<
+    operations["agentResume"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "agent.credential.rotate": NonNullable<
+    operations["agentCredentialRotate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "event_consumers.list": NonNullable<
+    operations["eventConsumersList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "event_consumers.create": NonNullable<
+    operations["eventConsumersCreate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "events.ack": NonNullable<
+    operations["eventsAck"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "events.snapshot": NonNullable<
+    operations["eventsSnapshot"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "webhook.deliveries.list": NonNullable<
+    operations["webhookDeliveriesList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "webhooks.dlq.replay": NonNullable<
+    operations["webhooksDlqReplay"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "classification.feedback": NonNullable<
+    operations["classificationFeedback"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "classification.quality": NonNullable<
+    operations["classificationQuality"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "classification.backfill.plan": NonNullable<
+    operations["classificationBackfillPlan"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "work_queue.list": NonNullable<
+    operations["workQueueList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "work_item.claim": NonNullable<
+    operations["workItemClaim"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "work_item.release": NonNullable<
+    operations["workItemRelease"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "work_item.snooze": NonNullable<
+    operations["workItemSnooze"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "work_item.complete": NonNullable<
+    operations["workItemComplete"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "work_queue.config.get": NonNullable<
+    operations["workQueueConfigGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "work_queue.config.update": NonNullable<
+    operations["workQueueConfigUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "metrics.reconcile": NonNullable<
+    operations["metricsReconcile"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "agent.heartbeat": NonNullable<
+    operations["agentHeartbeat"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "agent.run.start": NonNullable<
+    operations["agentRunStart"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "agent.run.end": NonNullable<
+    operations["agentRunEnd"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "agent.runs.list": NonNullable<
+    operations["agentRunsList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "agent.run.inspect": NonNullable<
+    operations["agentRunInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "workspace.halt": NonNullable<
+    operations["workspaceHalt"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "workspace.resume": NonNullable<
+    operations["workspaceResume"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "channel.halt": NonNullable<
+    operations["channelHalt"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "workspace.automation.inspect": NonNullable<
+    operations["workspaceAutomationInspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "feedback.submit": NonNullable<
+    operations["feedbackSubmit"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "feedback.list": NonNullable<
+    operations["feedbackList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "entity.resolve": NonNullable<
+    operations["entityResolve"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "entities.get": NonNullable<
+    operations["entitiesGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "people.upsert": NonNullable<
+    operations["peopleUpsert"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.upsert": NonNullable<
+    operations["companiesUpsert"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "entity.merge": NonNullable<
+    operations["entityMerge"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "entity.split": NonNullable<
+    operations["entitySplit"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "budget.status": NonNullable<
+    operations["budgetStatus"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.stats.get": NonNullable<
+    operations["callStatsGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.coaching.get": NonNullable<
+    operations["callCoachingGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.analytics.query": NonNullable<
+    operations["callAnalyticsQuery"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.insight.get": NonNullable<
+    operations["callInsightGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.access.list": NonNullable<
+    operations["callAccessList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.audit.list": NonNullable<
+    operations["callAuditList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.activity.get": NonNullable<
+    operations["callActivityGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.analysis.get": NonNullable<
+    operations["callAnalysisGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.outcome.confirm": NonNullable<
+    operations["callOutcomeConfirm"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.attendance.get": NonNullable<
+    operations["callAttendanceGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.insight.review": NonNullable<
+    operations["callInsightReview"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "recorder.event.override.get": NonNullable<
+    operations["recorderEventOverrideGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "recorder.event.override.update": NonNullable<
+    operations["recorderEventOverrideUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.bot.cancel": NonNullable<
+    operations["callBotCancel"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.bot.remove": NonNullable<
+    operations["callBotRemove"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.recording.stop": NonNullable<
+    operations["callRecordingStop"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "recorder.status": NonNullable<
+    operations["recorderStatus"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.bot.join": NonNullable<
+    operations["callBotJoin"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "recorder.join.get": NonNullable<
+    operations["recorderJoinGet"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.participant.withdrawal.report": NonNullable<
+    operations["callParticipantWithdrawalReport"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "call.delete": NonNullable<
+    operations["callDelete"]["responses"][200]["content"]["application/json"]["data"]
   >;
 };

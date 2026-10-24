@@ -81,6 +81,226 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/agent.create.request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * agent create request
+         * @description Request browser-owner approval for a named agent. Never grants its own credential.
+         */
+        post: operations["agentCreateRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/agent.credential.rotate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * agent credential rotate
+         * @description Rotate an approved agent credential with bounded overlap. Secret returned once; idempotent retries return metadata without the secret.
+         */
+        post: operations["agentCredentialRotate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/agent.heartbeat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * agent.heartbeat
+         * @description Record a heartbeat or inspect/change owner-controlled automation halts. Writes support dryRun and version checks where applicable.
+         */
+        post: operations["agentHeartbeat"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/agent.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * agent inspect
+         * @description Inspect or manage a named workspace agent. An agent can only pause, resume or rotate itself; owner-paused agents need owner resume.
+         */
+        post: operations["agentInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/agent.pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * agent pause
+         * @description Inspect or manage a named workspace agent. An agent can only pause, resume or rotate itself; owner-paused agents need owner resume.
+         */
+        post: operations["agentPause"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/agent.resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * agent resume
+         * @description Inspect or manage a named workspace agent. An agent can only pause, resume or rotate itself; owner-paused agents need owner resume.
+         */
+        post: operations["agentResume"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/agent.run.end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * agent.run.end
+         * @description Inspect and record bounded run metadata, argument hashes and receipt IDs; no message bodies. Retention 90 days.
+         */
+        post: operations["agentRunEnd"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/agent.run.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * agent.run.inspect
+         * @description Inspect and record bounded run metadata, argument hashes and receipt IDs; no message bodies. Retention 90 days.
+         */
+        post: operations["agentRunInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/agent.run.start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * agent.run.start
+         * @description Inspect and record bounded run metadata, argument hashes and receipt IDs; no message bodies. Retention 90 days.
+         */
+        post: operations["agentRunStart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/agent.runs.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * agent.runs.list
+         * @description Inspect and record bounded run metadata, argument hashes and receipt IDs; no message bodies. Retention 90 days.
+         */
+        post: operations["agentRunsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/agents.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * agents list
+         * @description Inspect or manage a named workspace agent. An agent can only pause, resume or rotate itself; owner-paused agents need owner resume.
+         */
+        post: operations["agentsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/analytics.summary": {
         parameters: {
             query?: never;
@@ -101,6 +321,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/attribution.check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check campaign copy attribution coverage
+         * @description Read exact confirmed-send coverage over seven days. Existing history is never repaired or relabeled.
+         */
+        post: operations["attributionCheck"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/audience.preview": {
         parameters: {
             query?: never;
@@ -115,6 +355,26 @@ export interface paths {
          * @description Returns bounded company samples and an exact total without changing workspace data.
          */
         post: operations["audiencePreview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/budget.status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * budget.status
+         * @description Read owner-set agent caps and current confirmed/reserved usage, remaining capacity and reset times. Agents cannot raise limits or inspect another named agent.
+         */
+        post: operations["budgetStatus"];
         delete?: never;
         options?: never;
         head?: never;
@@ -241,6 +501,266 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/call.access.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * List call grants and share-link metadata
+         * @description List call grants and share-link metadata. Requires current per-call capability; never returns share tokens or triggers historical processing.
+         */
+        post: operations["callAccessList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.activity.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read unified call and outreach activity
+         * @description Read unified call and outreach activity. Requires current per-call capability; never returns share tokens or triggers historical processing.
+         */
+        post: operations["callActivityGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.analysis.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read evidence-backed call analysis
+         * @description Read retained call analysis and sales insights with current call access. Proposals are unconfirmed. Never generates or reprocesses historical content.
+         */
+        post: operations["callAnalysisGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.analytics.query": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Query authorized numeric call aggregates
+         * @description Read precomputed call metrics within 90 days. Current per-call access applies; groups with fewer than three calls are suppressed. Members only see their own named rep rows. No transcript text or historical computation.
+         */
+        post: operations["callAnalyticsQuery"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.attendance.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read retained participant attendance
+         * @description Read observed join/leave intervals with current call access. Missing artifacts are unknown; does not infer a no-show or return names, emails, hashes or chat.
+         */
+        post: operations["callAttendanceGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.audit.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * List call access audit metadata
+         * @description List call access audit metadata. Requires current per-call capability; never returns share tokens or triggers historical processing.
+         */
+        post: operations["callAuditList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.bot.cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel a scheduled recorder bot
+         * @description Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.
+         */
+        post: operations["callBotCancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.bot.join": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request an ad-hoc recorder bot
+         * @description Explicit own-user recorder request, requiring saved consent. Reuses active same-workspace meetings only with current call access, shares quota reservations and never blindly retries an uncertain provider create. Inspect request state; queued does not mean joined. No calendar connection is created.
+         */
+        post: operations["callBotJoin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.bot.remove": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Remove a recorder bot and preserve captured media
+         * @description Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.
+         */
+        post: operations["callBotRemove"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.coaching.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * call.coaching.get
+         * @description Read authorized precomputed numeric call analytics. No transcript text, provider requests, or historical computation. Uncomputed calls remain explicitly unavailable.
+         */
+        post: operations["callCoachingGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Delete selected call artifacts
+         * @description Permanently delete media, transcript and dependent analysis, analysis alone, or all artifacts for this meeting through durable deletion jobs. Requires delete_call access. Legal holds preserve quarantined content. Media deletion removes provider recording artifacts; already stored local transcripts and analysis remain. dryRun makes no changes and returns current requests or planned deletions. Full deletion uses the existing deletion pipeline. Late ingest cannot restore deleted scope. expectedVersion comes from call.inspect meeting.updatedAt.
+         */
+        post: operations["callDelete"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.insight.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read retained sales insight
+         * @description Read retained sales insight. Requires current per-call capability; never returns share tokens or triggers historical processing.
+         */
+        post: operations["callInsightGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.insight.review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Review a retained call insight
+         * @description Approve selected insight sections into a CRM note or reject with feedback using the existing approve_insight capability. Requires current insight version. dryRun validates without writes.
+         */
+        post: operations["callInsightReview"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/call.inspect": {
         parameters: {
             query?: never;
@@ -261,6 +781,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/call.outcome.confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm or correct a proposed call outcome
+         * @description Explicitly confirm an outcome from a retained analysis version through the shared outcome service. Requires current call access and version. dryRun makes no changes.
+         */
+        post: operations["callOutcomeConfirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/call.outcome.set": {
         parameters: {
             query?: never;
@@ -275,6 +815,146 @@ export interface paths {
          * @description Record an authorized meeting outcome and update its linked pipeline card.
          */
         post: operations["callOutcomeSet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.participant.withdrawal.report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Report a participant recording withdrawal
+         * @description Explicitly report withdrawal for an observed transcript speaker. Requires current call control and transcript scope. Immediately quarantines media and transcript access; durable worker stops capture and removes that speaker’s content, respecting legal holds. No provider call inline. expectedVersion is the transcript updatedAt timestamp. A queued receipt is not cleanup completion.
+         */
+        post: operations["callParticipantWithdrawalReport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.recording.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read authorized recording metadata and optional private media
+         * @description Read authorized recording metadata and optional private media. Scope and current call access are both required; no historical processing.
+         */
+        post: operations["callRecordingGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.recording.stop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Stop recording and preserve captured media
+         * @description Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.
+         */
+        post: operations["callRecordingStop"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.stats.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * call.stats.get
+         * @description Read authorized precomputed numeric call analytics. No transcript text, provider requests, or historical computation. Uncomputed calls remain explicitly unavailable.
+         */
+        post: operations["callStatsGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.transcript.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read an authorized versioned transcript
+         * @description Read an authorized versioned transcript. Scope and current call access are both required; no historical processing.
+         */
+        post: operations["callTranscriptGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.transcripts.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read up to ten authorized transcripts with a shared 1 MiB cap
+         * @description Read up to ten authorized transcripts with a shared 1 MiB cap. Current workspace, scope, retention and call access are checked for every result.
+         */
+        post: operations["callTranscriptsGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/call.transcripts.search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Search authorized transcripts with Finnish and English stemming
+         * @description Search authorized transcripts with Finnish and English stemming. Current workspace, scope, retention and call access are checked for every result.
+         */
+        post: operations["callTranscriptsSearch"];
         delete?: never;
         options?: never;
         head?: never;
@@ -709,6 +1389,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/campaign.reengagement.prepare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Prepare a disabled re-engagement draft
+         * @description Preview stale, unreplied, unsuppressed recipients, then create a disabled draft with empty fresh-copy slots. Requires the reviewed audience fingerprint. Never sends or changes historical jobs.
+         */
+        post: operations["campaignReengagementPrepare"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/campaign.validate": {
         parameters: {
             query?: never;
@@ -763,6 +1463,86 @@ export interface paths {
          * @description Lists campaigns with exact filtered totals and a continuation cursor. A changed collection rejects the cursor so callers can restart without silently skipping a campaign. Read-only.
          */
         post: operations["campaignsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/channel.halt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * channel.halt
+         * @description Record a heartbeat or inspect/change owner-controlled automation halts. Writes support dryRun and version checks where applicable.
+         */
+        post: operations["channelHalt"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/classification.backfill.plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * classification backfill plan
+         * @description Review classification evidence and bounded feedback. Historical plans return counts and IDs only; no historical apply is performed. Quality metrics describe the feedback sample, not the whole inbox.
+         */
+        post: operations["classificationBackfillPlan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/classification.feedback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * classification feedback
+         * @description Review classification evidence and bounded feedback. Historical plans return counts and IDs only; no historical apply is performed. Quality metrics describe the feedback sample, not the whole inbox.
+         */
+        post: operations["classificationFeedback"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/classification.quality": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * classification quality
+         * @description Review classification evidence and bounded feedback. Historical plans return counts and IDs only; no historical apply is performed. Quality metrics describe the feedback sample, not the whole inbox.
+         */
+        post: operations["classificationQuality"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1229,6 +2009,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/companies.upsert": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * companies.upsert
+         * @description Workspace-scoped exact identity graph. Historical data stays a read-only projection. Writes are version-fenced, previewable and audited; merge/split never rewrite historical inbox data.
+         */
+        post: operations["companiesUpsert"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/company.inspect": {
         parameters: {
             query?: never;
@@ -1489,6 +2289,146 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/entities.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * entities.get
+         * @description Workspace-scoped exact identity graph. Historical data stays a read-only projection. Writes are version-fenced, previewable and audited; merge/split never rewrite historical inbox data.
+         */
+        post: operations["entitiesGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/entity.merge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * entity.merge
+         * @description Workspace-scoped exact identity graph. Historical data stays a read-only projection. Writes are version-fenced, previewable and audited; merge/split never rewrite historical inbox data.
+         */
+        post: operations["entityMerge"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/entity.resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * entity.resolve
+         * @description Workspace-scoped exact identity graph. Historical data stays a read-only projection. Writes are version-fenced, previewable and audited; merge/split never rewrite historical inbox data.
+         */
+        post: operations["entityResolve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/entity.split": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * entity.split
+         * @description Workspace-scoped exact identity graph. Historical data stays a read-only projection. Writes are version-fenced, previewable and audited; merge/split never rewrite historical inbox data.
+         */
+        post: operations["entitySplit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/event_consumers.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * event_consumers create
+         * @description Durable agent-owned event cursor. Reconnect resumes the acknowledged position; reads always recheck current workspace and grants. Snapshot observations are explicit and excluded from live feeds.
+         */
+        post: operations["eventConsumersCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/event_consumers.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * event_consumers list
+         * @description Durable agent-owned event cursor. Reconnect resumes the acknowledged position; reads always recheck current workspace and grants. Snapshot observations are explicit and excluded from live feeds.
+         */
+        post: operations["eventConsumersList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/events.ack": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * events ack
+         * @description Durable agent-owned event cursor. Reconnect resumes the acknowledged position; reads always recheck current workspace and grants. Snapshot observations are explicit and excluded from live feeds.
+         */
+        post: operations["eventsAck"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/events.list": {
         parameters: {
             query?: never;
@@ -1503,6 +2443,26 @@ export interface paths {
          * @description Read the ordered workspace event stream retained for 30 days. Payload details require the corresponding domain read scope. Reuse nextCursor for lossless polling; replay returns stable event IDs. No subscription, message or workspace change.
          */
         post: operations["eventsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/events.snapshot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * events snapshot
+         * @description Durable agent-owned event cursor. Reconnect resumes the acknowledged position; reads always recheck current workspace and grants. Snapshot observations are explicit and excluded from live feeds.
+         */
+        post: operations["eventsSnapshot"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2209,6 +3169,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/metrics.reconcile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reconcile canonical sales metrics
+         * @description Read-only exact discrepancy counts and bounded IDs; no historical repair. Provider booking anchors never use import time.
+         */
+        post: operations["metricsReconcile"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/people.upsert": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * people.upsert
+         * @description Workspace-scoped exact identity graph. Historical data stays a read-only projection. Writes are version-fenced, previewable and audited; merge/split never rewrite historical inbox data.
+         */
+        post: operations["peopleUpsert"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/pipeline.board": {
         parameters: {
             query?: never;
@@ -2338,6 +3338,166 @@ export interface paths {
          * @description Changes one existing card only when its stage still matches the inspected stage. Marking a meeting booked requires recorded evidence or the user's explicit instruction.
          */
         post: operations["pipelineStageUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/readiness.check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect readiness for an agent action
+         * @description Read current connection scope and provider readiness. Per-action approval, policy, budgets and launch preflights still apply.
+         */
+        post: operations["readinessCheck"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/recorder.bots.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * List authorized recorder bots
+         * @description List authorized recorder bots. Scope and current call access are both required; no historical processing.
+         */
+        post: operations["recorderBotsList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/recorder.event.override.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read own calendar event recording override
+         * @description Uses only the caller’s own connected calendar. Single-event overrides survive time/link changes; series overrides apply to the iCal UID. Rules, workspace floors, consent and caps still apply. Updates queue evaluation; they do not assert a bot has joined.
+         */
+        post: operations["recorderEventOverrideGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/recorder.event.override.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update own calendar event recording override
+         * @description Uses only the caller’s own connected calendar. Single-event overrides survive time/link changes; series overrides apply to the iCal UID. Rules, workspace floors, consent and caps still apply. Updates queue evaluation; they do not assert a bot has joined.
+         */
+        post: operations["recorderEventOverrideUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/recorder.join.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect your ad-hoc recorder request
+         * @description Explicit own-user recorder request, requiring saved consent. Reuses active same-workspace meetings only with current call access, shares quota reservations and never blindly retries an uncertain provider create. Inspect request state; queued does not mean joined. No calendar connection is created.
+         */
+        post: operations["recorderJoinGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/recorder.settings.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Read own recorder settings
+         * @description Read own recorder settings. Scope and current call access are both required; no historical processing.
+         */
+        post: operations["recorderSettingsGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/recorder.settings.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Update own recorder settings
+         * @description Update own recorder settings. Scope and current call access are both required; no historical processing.
+         */
+        post: operations["recorderSettingsUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/recorder.status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inspect recorder connection and scheduling health
+         * @description Read only your calendar connection metadata and bot counts intersected with current call access. Today uses the requested timezone (UTC default); failures use the last seven days. No calendar or provider calls are made.
+         */
+        post: operations["recorderStatus"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2584,6 +3744,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/sender.retire": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Retire a stale duplicate sender in agent health
+         * @description Retire a stale duplicate sender in agent health. Reversible, owner-only, dry-run and version fenced. Does not remove device credentials, Ops access or browser connections.
+         */
+        post: operations["senderRetire"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/sender.unretire": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Unretire a stale duplicate sender in agent health
+         * @description Unretire a stale duplicate sender in agent health. Reversible, owner-only, dry-run and version fenced. Does not remove device credentials, Ops access or browser connections.
+         */
+        post: operations["senderUnretire"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/senders.inspect": {
         parameters: {
             query?: never;
@@ -2788,6 +3988,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/webhook.deliveries.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * webhook deliveries list
+         * @description Inspect delivery attempts or replay up to 100 dead letters with their original event IDs. Header values and callback query strings are never exposed.
+         */
+        post: operations["webhookDeliveriesList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/webhooks.create": {
         parameters: {
             query?: never;
@@ -2822,6 +4042,26 @@ export interface paths {
          * @description Disable and soft-delete a webhook and cancel pending deliveries.
          */
         post: operations["webhooksDelete"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/webhooks.dlq.replay": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * webhooks dlq replay
+         * @description Inspect delivery attempts or replay up to 100 dead letters with their original event IDs. Header values and callback query strings are never exposed.
+         */
+        post: operations["webhooksDlqReplay"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2908,6 +4148,146 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/work_item.claim": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * work_item claim
+         * @description Derived prioritized work with prospect-local business hours. Compact items are bounded to 400 bytes; advisory leases never block human app actions. No historical source data is changed.
+         */
+        post: operations["workItemClaim"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/work_item.complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * work_item complete
+         * @description Derived prioritized work with prospect-local business hours. Compact items are bounded to 400 bytes; advisory leases never block human app actions. No historical source data is changed.
+         */
+        post: operations["workItemComplete"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/work_item.release": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * work_item release
+         * @description Derived prioritized work with prospect-local business hours. Compact items are bounded to 400 bytes; advisory leases never block human app actions. No historical source data is changed.
+         */
+        post: operations["workItemRelease"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/work_item.snooze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * work_item snooze
+         * @description Derived prioritized work with prospect-local business hours. Compact items are bounded to 400 bytes; advisory leases never block human app actions. No historical source data is changed.
+         */
+        post: operations["workItemSnooze"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/work_queue.config.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * work_queue config get
+         * @description Derived prioritized work with prospect-local business hours. Compact items are bounded to 400 bytes; advisory leases never block human app actions. No historical source data is changed.
+         */
+        post: operations["workQueueConfigGet"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/work_queue.config.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * work_queue config update
+         * @description Derived prioritized work with prospect-local business hours. Compact items are bounded to 400 bytes; advisory leases never block human app actions. No historical source data is changed.
+         */
+        post: operations["workQueueConfigUpdate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/work_queue.list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * work_queue list
+         * @description Derived prioritized work with prospect-local business hours. Compact items are bounded to 400 bytes; advisory leases never block human app actions. No historical source data is changed.
+         */
+        post: operations["workQueueList"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/workspace.agent_sales.get": {
         parameters: {
             query?: never;
@@ -2948,6 +4328,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/workspace.automation.inspect": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * workspace.automation.inspect
+         * @description Record a heartbeat or inspect/change owner-controlled automation halts. Writes support dryRun and version checks where applicable.
+         */
+        post: operations["workspaceAutomationInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/workspace.briefing": {
         parameters: {
             query?: never;
@@ -2962,6 +4362,46 @@ export interface paths {
          * @description Returns an authoritative workspace, campaign, and sending summary. Read-only.
          */
         post: operations["workspaceBriefing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/workspace.halt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * workspace.halt
+         * @description Record a heartbeat or inspect/change owner-controlled automation halts. Writes support dryRun and version checks where applicable.
+         */
+        post: operations["workspaceHalt"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/workspace.resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * workspace.resume
+         * @description Request browser-owner approval to resume automation. The agent cannot approve its own request.
+         */
+        post: operations["workspaceResume"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3023,7 +4463,7 @@ export interface components {
             targetListId: string;
         };
         /** @enum {string} */
-        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "inbox:write" | "pipeline:write" | "calendar:read" | "calendar:write" | "calls:read" | "events:read" | "suppressions:write" | "sandbox:write" | "calls:write" | "webhooks:write" | "leads:read" | "leads:write" | "sending:test" | "policy:write" | "feedback:write";
+        AgentApiScope: "workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "pipeline:read" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "inbox:write" | "pipeline:write" | "calendar:read" | "calendar:write" | "calls:read" | "events:read" | "suppressions:write" | "sandbox:write" | "calls:write" | "webhooks:write" | "leads:read" | "leads:write" | "sending:test" | "policy:write" | "calls:transcripts:read" | "calls:media:read" | "calls:record" | "sending:write" | "feedback:write" | "calls:stats:read";
         AgentAuthenticatedParty: {
             /** Format: email */
             email: string;
@@ -3048,6 +4488,20 @@ export interface components {
                 message: string;
             };
         };
+        AgentBudgetLimits: {
+            autoRepliesPerDay?: number;
+            bookingsPerDay?: number;
+            creditsPerDay?: number;
+            sendsPerDay?: {
+                facebook?: number;
+                gmail?: number;
+                instagram?: number;
+                linkedin?: number;
+                sms?: number;
+            };
+            smsSpendPerMonthEur?: number;
+            writesPerHour?: number;
+        };
         AgentBusinessProfile: {
             businessDescription: string;
             businessName: string;
@@ -3062,6 +4516,27 @@ export interface components {
             /** @constant */
             version: 1;
             websiteUrl: string;
+        };
+        AgentCallRecordingDetail: {
+            captureEndedAt: string | null;
+            captureStartedAt: string | null;
+            failureCode: string;
+            id: components["schemas"]["ResourceId"];
+            language: string | null;
+            legalHold: boolean;
+            noticeVersion: string;
+            policy: {
+                downloadEnabled: boolean;
+                externalSharingEnabled: boolean;
+                recorderUserConsent: boolean;
+            };
+            recorderLifecycle: string;
+            retentionDeadline: string | null;
+            usageSeconds: {
+                bot: number;
+                captured: number;
+                transcribed: number;
+            };
         };
         /** @enum {string} */
         AgentCampaignAction: "campaign.launch" | "campaign.pause";
@@ -3111,6 +4586,36 @@ export interface components {
             revenueMaxEur: number | null;
             revenueMinEur: number | null;
         };
+        AgentCreateRequestInput: {
+            dryRun: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @enum {string} */
+            kind: "setter" | "prospector" | "analyst" | "custom";
+            name: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            runtime?: string;
+            scopes: ("workspace:read" | "campaigns:read" | "sending:read" | "inbox:read" | "inbox:write" | "pipeline:read" | "pipeline:write" | "audiences:read" | "campaigns:write" | "campaigns:launch" | "campaigns:control" | "calendar:read" | "calendar:write" | "calls:read" | "events:read" | "leads:read" | "leads:write" | "sending:test" | "suppressions:write" | "sandbox:write" | "calls:write" | "webhooks:write" | "policy:write" | "calls:transcripts:read" | "calls:media:read" | "calls:record" | "sending:write" | "calls:stats:read")[];
+        };
+        AgentCreateRequestOutput: {
+            approvalUrl: string | null;
+            dryRun: boolean;
+            expiresAt: string | null;
+            ownerApprovalRequired: boolean;
+            receiptId?: string;
+            requestId: components["schemas"]["ResourceId"] | null;
+            wouldChange: {
+                kind: string;
+                name: string;
+                runtime: string;
+                scopes: string[];
+            };
+        };
+        AgentCreateRequestResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentCreateRequestOutput"] | null;
+            /** @constant */
+            tool?: "agent.create.request";
+        };
         AgentCredential: {
             client: string;
             /** Format: date-time */
@@ -3121,6 +4626,31 @@ export interface components {
             name: string;
             scopes: components["schemas"]["AgentApiScope"][];
             workspaceUserId: string;
+        };
+        AgentCredentialRotateInput: {
+            agentId: components["schemas"]["ResourceId"];
+            dryRun: boolean;
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            expiresInDays?: number;
+            graceDays?: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        AgentCredentialRotateOutput: {
+            agentId: components["schemas"]["ResourceId"];
+            credentialId: components["schemas"]["ResourceId"] | null;
+            dryRun: boolean;
+            oldCredentialsExpireBy: string | null;
+            receiptId?: string;
+            secret: string | null;
+            secretShownOnce: boolean;
+            updatedAt: string;
+        };
+        AgentCredentialRotateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentCredentialRotateOutput"] | null;
+            /** @constant */
+            tool?: "agent.credential.rotate";
         };
         AgentDeviceAuthorizationInput: {
             client: string;
@@ -3159,7 +4689,35 @@ export interface components {
             user: components["schemas"]["AgentAuthenticatedParty"];
             workspace: components["schemas"]["AgentAuthenticatedParty"];
         };
+        AgentEntity: {
+            companyId: components["schemas"]["ResourceId"] | null;
+            country: string;
+            createdAt: string;
+            derived: boolean;
+            id: components["schemas"]["ResourceId"];
+            identities: {
+                firstSeenAt: string;
+                source: string;
+                /** @enum {string} */
+                type: "phone" | "email" | "instagram" | "facebook" | "linkedin" | "website_form" | "domain" | "business_id" | "company_outreach";
+                value: string;
+                verified: boolean;
+            }[];
+            /** @enum {string} */
+            kind: "person" | "company";
+            name: string;
+            nameVariants: string[];
+            role: string;
+            source: string;
+            timezone: string;
+            updatedAt: string;
+            version: number;
+        };
         AgentEvent: {
+            actor?: {
+                [key: string]: unknown;
+            } | null;
+            agentId?: string;
             /** @constant */
             apiVersion: "2.0";
             /** Format: date-time */
@@ -3168,7 +4726,20 @@ export interface components {
                 [key: string]: unknown;
             };
             id: string;
+            /** @enum {string} */
+            kind?: "change" | "snapshot";
+            links?: {
+                campaignId?: string;
+                companyId?: string;
+                conversationId?: string;
+                meetingId?: string;
+                personId?: string;
+            };
+            /** Format: date-time */
+            occurredAt?: string;
+            orderingKey?: string;
             sequence: number;
+            summary?: string;
             type: components["schemas"]["AgentSalesEventType"];
             workspaceId: string;
         };
@@ -3187,6 +4758,8 @@ export interface components {
             /** @description Use nextCursor from the previous page, unchanged. */
             before?: string;
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         AgentFeedbackListItem: {
             receipt: components["schemas"]["AgentFeedbackReceipt"];
@@ -3240,6 +4813,8 @@ export interface components {
             observed?: string;
             /** @description Optional request reference already returned by DM Faster; do not invent one. */
             requestId?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @description Optional proposed improvement; distinguish speculation from observed behavior. */
             suggestion?: string;
             /** @description One concrete problem or improvement. */
@@ -3285,6 +4860,45 @@ export interface components {
             /** @constant */
             version: 1;
         };
+        AgentHeartbeatCompactResult: {
+            /** @constant */
+            contractVersion: "2.1.0";
+            data: {
+                nextInSeconds: number;
+            };
+            /** @constant */
+            ok: true;
+            /** @description Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox. */
+            serverTime: components["schemas"]["ResourceVersion"];
+        };
+        AgentHeartbeatFullResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentHeartbeatOutput"] | null;
+            /** @constant */
+            tool?: "agent.heartbeat";
+        };
+        AgentHeartbeatInput: {
+            agentId: components["schemas"]["ResourceId"];
+            consumerLagSeq?: number;
+            dryRun?: boolean;
+            note?: string;
+            /**
+             * @description Defaults to compact. Success acknowledgement is at most 300 bytes including the MCP result. Full retains the standard diagnostic envelope. Failures retain actionable errors.
+             * @enum {string}
+             */
+            responseMode?: "compact" | "full";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            /** @enum {string} */
+            status: "idle" | "working" | "degraded";
+        };
+        AgentHeartbeatOutput: {
+            agentId: components["schemas"]["ResourceId"];
+            at: components["schemas"]["ResourceVersion"];
+            dryRun: boolean;
+            nextInSeconds: number;
+            status: string;
+        };
+        AgentHeartbeatResult: components["schemas"]["AgentHeartbeatFullResult"] | components["schemas"]["AgentHeartbeatCompactResult"];
         AgentIndustryClarificationOption: {
             id: string;
             label: string;
@@ -3306,6 +4920,33 @@ export interface components {
             sourceText: string;
             /** @enum {string} */
             status: "resolved" | "needs_clarification" | "unsupported";
+        };
+        AgentInspectInput: {
+            agentId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        AgentInspectOutput: {
+            createdAt: string;
+            createdBy: components["schemas"]["ResourceId"];
+            id: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            kind: "setter" | "prospector" | "analyst" | "custom";
+            lastSeenAt: string | null;
+            limits: components["schemas"]["AgentBudgetLimits"];
+            name: string;
+            pausedBy: string;
+            runtime: string;
+            scopes: string[];
+            /** @enum {string} */
+            status: "active" | "paused" | "disabled";
+            updatedAt: string;
+            workspaceUserId: components["schemas"]["ResourceId"];
+        };
+        AgentInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentInspectOutput"] | null;
+            /** @constant */
+            tool?: "agent.inspect";
         };
         AgentLead: {
             avatarUrl: string;
@@ -3333,13 +4974,215 @@ export interface components {
             origin: "user" | "user_requested_generation" | "agent_draft" | "user_approved_generation";
             subject: string;
         };
+        AgentPauseInput: {
+            agentId: components["schemas"]["ResourceId"];
+            dryRun: boolean;
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        AgentPauseOutput: {
+            dryRun: boolean;
+            id: components["schemas"]["ResourceId"];
+            receiptId?: string;
+            status: string;
+            updatedAt: string;
+        };
+        AgentPauseResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentPauseOutput"] | null;
+            /** @constant */
+            tool?: "agent.pause";
+        };
+        AgentRateLimitBucket: {
+            limit: number;
+            remaining: number;
+            /** Format: date-time */
+            resetAt: string;
+        };
+        AgentRateLimitEnvelope: {
+            credential: components["schemas"]["AgentRateLimitBucket"];
+            limit: number;
+            remaining: number;
+            /** Format: date-time */
+            resetAt: string;
+            workspace: components["schemas"]["AgentRateLimitBucket"];
+        };
+        AgentResumeInput: {
+            agentId: components["schemas"]["ResourceId"];
+            dryRun: boolean;
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        AgentResumeOutput: {
+            dryRun: boolean;
+            id: components["schemas"]["ResourceId"];
+            receiptId?: string;
+            status: string;
+            updatedAt: string;
+        };
+        AgentResumeResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentResumeOutput"] | null;
+            /** @constant */
+            tool?: "agent.resume";
+        };
+        /** @description Exact retained metadata for the entire run, independent of call pagination. Sends are confirmed campaign jobs plus sent reply actions; queued/uncertain actions do not count. Bookings require the saved provider-booking timestamp. Attribution requires the original actor runId; missing historical actors are never inferred. Approval references count distinct referenced approvals, not pending approvals. */
+        AgentRunActivity: {
+            approvalReferences: number;
+            bookings: number;
+            confirmedCampaignSends: number;
+            confirmedReplies: number;
+            confirmedSends: number;
+            durationMs: number;
+            failedCalls: number;
+            policyRefusals: number;
+            responseBytes: number;
+            toolCalls: number;
+            writeReceipts: number;
+        };
+        AgentRunCall: {
+            approvalIds: string[];
+            argumentHash: string;
+            durationMs: number;
+            effect: string;
+            errorCode: string;
+            /** Format: date-time */
+            occurredAt: string;
+            ok: boolean;
+            receiptIds: string[];
+            resourceIds: string[];
+            responseBytes: number;
+            runId: string;
+            seq: number;
+            tool: string;
+            workspaceUserId: string;
+        };
+        AgentRunEndInput: {
+            dryRun: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @enum {string} */
+            outcome: "completed" | "failed" | "cancelled";
+            runId: components["schemas"]["ResourceId"];
+            summary: string;
+        };
+        AgentRunEndOutput: {
+            dryRun: boolean;
+            receiptId?: string;
+            wouldChange: {
+                /** @enum {string} */
+                outcome: "completed" | "failed" | "cancelled";
+                runId: string;
+            };
+        };
+        AgentRunEndResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentRunEndOutput"] | null;
+            /** @constant */
+            tool?: "agent.run.end";
+        };
+        AgentRunInspectInput: {
+            afterSeq?: number;
+            limit?: number;
+            runId: components["schemas"]["ResourceId"];
+        };
+        AgentRunInspectOutput: {
+            calls: components["schemas"]["AgentRunCall"][];
+            nextAfterSeq: number | null;
+            /** @constant */
+            retentionDays: 90;
+            run: components["schemas"]["AgentRunRecord"];
+        };
+        AgentRunInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentRunInspectOutput"] | null;
+            /** @constant */
+            tool?: "agent.run.inspect";
+        };
+        AgentRunRecord: {
+            activity: components["schemas"]["AgentRunActivity"];
+            actorUserId: string;
+            agentId: string | null;
+            credentialId: string;
+            endedAt: string | null;
+            id: string;
+            /** Format: date-time */
+            lastActivityAt: string;
+            outcome: string;
+            /** Format: date-time */
+            startedAt: string;
+            /** @enum {string} */
+            status: "running" | "completed" | "failed" | "cancelled";
+            summary: string;
+            /** @enum {string} */
+            trigger: "schedule" | "webhook" | "manual" | "implicit";
+            triggerRefHash: string;
+            workspaceUserId: string;
+        };
+        AgentRunsListInput: {
+            agentId?: components["schemas"]["ResourceId"];
+            before?: components["schemas"]["ResourceId"];
+            limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        AgentRunsListOutput: {
+            items: components["schemas"]["AgentRunRecord"][];
+            nextBefore: string | null;
+            /** @constant */
+            retentionDays: 90;
+        };
+        AgentRunsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentRunsListOutput"] | null;
+            /** @constant */
+            tool?: "agent.runs.list";
+        };
+        AgentRunStartInput: {
+            dryRun: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            /** @enum {string} */
+            trigger: "schedule" | "webhook" | "manual";
+            triggerRef?: string;
+        };
+        AgentRunStartOutput: {
+            dryRun: boolean;
+            receiptId?: string;
+            runId: string | null;
+            wouldChange: {
+                agentId: string | null;
+                /** @enum {string} */
+                trigger: "schedule" | "webhook" | "manual";
+                triggerRefHash: string;
+            };
+        };
+        AgentRunStartResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentRunStartOutput"] | null;
+            /** @constant */
+            tool?: "agent.run.start";
+        };
         /** @enum {string} */
-        AgentSalesEventType: "inbox.message.received" | "inbox.auto_reply.received" | "conversation.intent.changed" | "conversation.changed" | "conversation.followup.due" | "followup.cancelled_by_reply" | "meeting.booked" | "meeting.rescheduled" | "meeting.cancelled" | "meeting.no_show" | "meeting.outcome.recorded" | "contact.opted_out" | "campaign.state.changed" | "sender.unhealthy" | "reply.approval.requested" | "reply.approval.decided" | "credential.expiring" | "webhook.test";
+        AgentSalesEventType: "call.stats.ready" | "call.stats.updated" | "call.coaching.flagged" | "call.attendance.detected" | "call.insight.failed" | "call.bot.scheduled" | "call.bot.cancelled" | "call.bot.joined" | "call.bot.failed" | "call.recording.ready" | "call.recording.stopped" | "call.transcript.ready" | "call.analysis.ready" | "call.deleted" | "recorder.cap.reached" | "recorder.health.degraded" | "inbox.message.received" | "inbox.auto_reply.received" | "conversation.intent.changed" | "conversation.changed" | "conversation.followup.due" | "followup.cancelled_by_reply" | "meeting.booked" | "meeting.rescheduled" | "meeting.cancelled" | "meeting.no_show" | "meeting.outcome.recorded" | "contact.opted_out" | "campaign.state.changed" | "sender.unhealthy" | "reply.approval.requested" | "reply.approval.decided" | "credential.expiring" | "webhook.test" | "sender.recovered" | "calendar.connected" | "calendar.disconnected" | "agent.paused" | "agent.resumed" | "credential.rotated" | "message.sent" | "message.delivery.failed" | "message.bounced" | "reaction.received" | "system_event.received" | "conversation.assigned" | "conversation.takeover.started" | "conversation.takeover.ended" | "work_item.created" | "work_item.updated" | "work_queue.rebuilt" | "meeting.reminder.due" | "meeting.ended" | "booking_link.opened" | "booking_link.used" | "booking_link.expired" | "suppression.added" | "suppression.removed" | "agent.lagging" | "agent.stale" | "budget.threshold_reached" | "kill_switch.changed" | "webhook.delivery.failed" | "metrics.recomputed";
         AgentSignalCriterion: {
             description: string;
             /** @enum {string} */
             key: "recent_funding" | "active_hiring" | "leadership_change" | "technology_usage" | "content_activity" | "purchase_intent";
             required: boolean;
+        };
+        AgentsListInput: {
+            afterId?: components["schemas"]["ResourceId"];
+            limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        AgentsListOutput: {
+            items: components["schemas"]["SalesAgent"][];
+            nextAfterId: components["schemas"]["ResourceId"] | null;
+        };
+        AgentsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentsListOutput"] | null;
+            /** @constant */
+            tool?: "agents.list";
         };
         AgentToolConsistency: {
             checks: string[];
@@ -3347,11 +5190,20 @@ export interface components {
             status: "verified" | "unavailable" | "conflict";
         };
         AgentToolError: {
+            blockedUntil?: components["schemas"]["ResourceVersion"];
             code: string;
             docsUrl?: string;
+            haltedBy?: string;
             message: string;
             nextAction?: string;
+            reason?: string;
+            requiredConnection?: string;
+            requiredScope?: string;
             retryable: boolean;
+            retryAfterMs?: number;
+            /** @enum {string} */
+            scope?: "workspace" | "channel" | "agent";
+            setupUrl?: string;
         };
         AgentToolEvidence: {
             /** Format: date-time */
@@ -3362,7 +5214,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "feedback.submit" | "feedback.list" | "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel" | "events.list" | "conversations.changes" | "suppressions.list" | "suppressions.add" | "suppressions.remove" | "workspace.sandbox.create" | "sandbox.seed" | "sandbox.inbound.simulate" | "sandbox.clock.advance" | "call.outcome.set" | "meeting.link" | "meeting.unlink" | "webhooks.create" | "webhooks.list" | "webhooks.update" | "webhooks.delete" | "webhooks.test" | "webhooks.replay" | "meetings.unlinked.list" | "pipeline.reconcile" | "workspace.agent_sales.get" | "workspace.agent_sales.update" | "sandbox.provider.update" | "reply.templates.list" | "reply.templates.create" | "reply.templates.update" | "reply.templates.delete" | "reply.policy.get" | "reply.policy.update" | "reply.approvals.list" | "conversation.draft.save" | "conversation.followup.set" | "conversation.followup.clear" | "followups.due" | "conversations.bulk.update" | "pipeline.board" | "calendar.booking.link.create" | "calendar.meeting.reschedule" | "calendar.meeting.cancel" | "campaign.followups.configure" | "campaign.variants.configure";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel" | "events.list" | "conversations.changes" | "suppressions.list" | "suppressions.add" | "suppressions.remove" | "workspace.sandbox.create" | "sandbox.seed" | "sandbox.inbound.simulate" | "sandbox.clock.advance" | "call.outcome.set" | "meeting.link" | "meeting.unlink" | "webhooks.create" | "webhooks.list" | "webhooks.update" | "webhooks.delete" | "webhooks.test" | "webhooks.replay" | "meetings.unlinked.list" | "pipeline.reconcile" | "workspace.agent_sales.get" | "workspace.agent_sales.update" | "sandbox.provider.update" | "reply.templates.list" | "reply.templates.create" | "reply.templates.update" | "reply.templates.delete" | "reply.policy.get" | "reply.policy.update" | "reply.approvals.list" | "conversation.draft.save" | "conversation.followup.set" | "conversation.followup.clear" | "followups.due" | "conversations.bulk.update" | "pipeline.board" | "calendar.booking.link.create" | "calendar.meeting.reschedule" | "calendar.meeting.cancel" | "campaign.followups.configure" | "campaign.variants.configure" | "recorder.settings.get" | "recorder.settings.update" | "recorder.bots.list" | "call.transcript.get" | "call.recording.get" | "call.transcripts.get" | "call.transcripts.search" | "readiness.check" | "sender.retire" | "sender.unretire" | "attribution.check" | "campaign.reengagement.prepare" | "agents.list" | "agent.inspect" | "agent.create.request" | "agent.pause" | "agent.resume" | "agent.credential.rotate" | "event_consumers.list" | "event_consumers.create" | "events.ack" | "events.snapshot" | "webhook.deliveries.list" | "webhooks.dlq.replay" | "classification.feedback" | "classification.quality" | "classification.backfill.plan" | "work_queue.list" | "work_item.claim" | "work_item.release" | "work_item.snooze" | "work_item.complete" | "work_queue.config.get" | "work_queue.config.update" | "metrics.reconcile" | "agent.heartbeat" | "agent.run.start" | "agent.run.end" | "agent.runs.list" | "agent.run.inspect" | "workspace.halt" | "workspace.resume" | "channel.halt" | "workspace.automation.inspect" | "feedback.submit" | "feedback.list" | "entity.resolve" | "entities.get" | "people.upsert" | "companies.upsert" | "entity.merge" | "entity.split" | "budget.status" | "call.stats.get" | "call.coaching.get" | "call.analytics.query" | "call.insight.get" | "call.access.list" | "call.audit.list" | "call.activity.get" | "call.analysis.get" | "call.outcome.confirm" | "call.attendance.get" | "call.insight.review" | "recorder.event.override.get" | "recorder.event.override.update" | "call.bot.cancel" | "call.bot.remove" | "call.recording.stop" | "recorder.status" | "call.bot.join" | "recorder.join.get" | "call.participant.withdrawal.report" | "call.delete";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -3384,19 +5236,77 @@ export interface components {
             generatedAt: string;
             ok: boolean;
             policy: components["schemas"]["AgentToolPolicy"];
+            /** @description Current authenticated credential/workspace quota, negotiated by X-DMFaster-Rate-Limit: 1. Null before authentication or when authoritative quota is unavailable. */
+            rateLimit?: components["schemas"]["AgentRateLimitEnvelope"] | null;
             /** Format: date-time */
             serverTime?: string;
             tool: components["schemas"]["AgentToolName"];
             /** @constant */
             version: 1;
         };
+        AgentWorkItem: {
+            blockedBy: string[];
+            campaignId?: string | null;
+            claim: {
+                actorId: string;
+                until: string;
+            } | null;
+            company?: {
+                [key: string]: unknown;
+            } | null;
+            dueAt?: string;
+            id: string;
+            lastInbound?: {
+                [key: string]: unknown;
+            } | null;
+            person?: {
+                [key: string]: unknown;
+            };
+            priority: number;
+            priorityReasons: string[];
+            recommendedAction?: {
+                [key: string]: unknown;
+            };
+            siblings?: {
+                channel: string;
+                id: components["schemas"]["ResourceId"];
+                intent: string;
+                lastMessageAt: string | null;
+                status: string;
+            }[];
+            slaState?: string;
+            subject: {
+                [key: string]: unknown;
+            };
+            type: string;
+            version: string;
+        };
+        AgentWritePreviewData: {
+            budgetImpact: {
+                [key: string]: number;
+            };
+            /** @constant */
+            dryRun: true;
+            policyDecision: {
+                allowed: boolean;
+                reasons: string[];
+                ruleId: string;
+            };
+            wouldChange: {
+                [key: string]: unknown;
+            };
+        };
         AnalyticsSummaryInput: {
             /** @description Optional campaign identifier or exact campaign name. */
             campaign?: components["schemas"]["ResourceId"];
             from?: components["schemas"]["ResourceVersion"];
             groupBy?: ("day" | "week" | "channel" | "campaign" | "actor" | "variant")[];
+            include?: ("canonical" | "legacy" | "definitions")[];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @enum {string} */
             scope: "today" | "last_24_hours" | "campaign_to_date" | "range";
+            timezone?: string;
             to?: components["schemas"]["ResourceVersion"];
         };
         AnalyticsSummaryOutput: {
@@ -3454,9 +5364,31 @@ export interface components {
             };
         };
         AnalyticsSummaryResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["AnalyticsSummaryOutput"] | components["schemas"]["SalesRangeAnalytics"] | null;
+            data?: components["schemas"]["AnalyticsSummaryOutput"] | components["schemas"]["SalesRangeAnalytics"] | null | components["schemas"]["SalesAnalyticsV2"];
             /** @constant */
             tool?: "analytics.summary";
+        };
+        AttributionCheckInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        AttributionCheckOutput: {
+            attributed: number;
+            campaignId: components["schemas"]["ResourceId"];
+            coverage: number | null;
+            definition: string;
+            from: string;
+            gap: boolean;
+            historicalRepairPerformed: boolean;
+            sends: number;
+            to: string;
+            unattributed: number;
+        };
+        AttributionCheckResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AttributionCheckOutput"] | null;
+            /** @constant */
+            tool?: "attribution.check";
         };
         /** @description Exact preview data plus the opaque audience identity required by preparation calls. */
         AudiencePreviewHarnessData: {
@@ -3468,6 +5400,8 @@ export interface components {
             data?: components["schemas"]["AudiencePreviewHarnessData"] | null;
         };
         AudiencePreviewInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             sampleSize?: number;
             state: components["schemas"]["AgentCampaignState"];
         };
@@ -3493,6 +5427,32 @@ export interface components {
             /** @constant */
             tool: "campaign.launch.preflight";
         };
+        BudgetStatusInput: {
+            agentId?: components["schemas"]["ResourceId"];
+            runId?: components["schemas"]["ResourceId"];
+        };
+        BudgetStatusOutput: {
+            agentId: components["schemas"]["ResourceId"];
+            at: components["schemas"]["ResourceVersion"];
+            items: {
+                limit: number | null;
+                /** @enum {string} */
+                metric: "send:instagram" | "send:facebook" | "send:linkedin" | "send:gmail" | "send:sms" | "autoReplies" | "bookings" | "credits" | "smsCents" | "writes";
+                periodStart: components["schemas"]["ResourceVersion"];
+                remaining: number | null;
+                reserved: number;
+                resetAt: components["schemas"]["ResourceVersion"];
+                /** @enum {string} */
+                unit: "EUR_cents" | "count";
+                used: number;
+            }[];
+            timezone: string;
+        };
+        BudgetStatusResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["BudgetStatusOutput"] | null;
+            /** @constant */
+            tool?: "budget.status";
+        };
         CalendarAvailabilityData: {
             from: string;
             hasMore: boolean;
@@ -3516,6 +5476,8 @@ export interface components {
             durationMinutes: 15 | 30 | 45 | 60 | 90 | 120;
             from: string;
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             timezone: string;
             to: string;
         };
@@ -3537,6 +5499,8 @@ export interface components {
             language: "fi" | "en";
             /** @constant */
             maxUses: 1;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             timezone: string;
             window: {
                 from: components["schemas"]["ResourceVersion"];
@@ -3568,23 +5532,29 @@ export interface components {
             conference?: "google_meet" | "teams" | "phone" | "in_person" | "custom_url";
             conversationId: components["schemas"]["ResourceId"];
             customUrl?: string;
+            dryRun?: boolean;
             /** @enum {integer} */
             durationMinutes: 15 | 30 | 45 | 60 | 90 | 120;
             expectedConversationUpdatedAt: string;
             idempotencyKey: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             start: string;
             timezone: string;
             title: string;
         };
         CalendarMeetingBookResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CalendarMeetingBookData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["CalendarMeetingBookData"] | null;
         };
         CalendarMeetingCancelInput: {
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             meetingId: components["schemas"]["ResourceId"];
             notifyAttendees: boolean;
             reason: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CalendarMeetingCancelResult: components["schemas"]["AgentToolResultBase"] & {
             data?: {
@@ -3594,9 +5564,12 @@ export interface components {
             tool?: "calendar.meeting.cancel";
         };
         CalendarMeetingRescheduleInput: {
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             meetingId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             start: components["schemas"]["ResourceVersion"];
         };
         CalendarMeetingRescheduleResult: components["schemas"]["AgentToolResultBase"] & {
@@ -3622,9 +5595,558 @@ export interface components {
             setupUrl: string;
             tokenError: string;
         };
-        CalendarStatusInput: Record<string, never>;
+        CalendarStatusInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
         CalendarStatusResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CalendarStatusData"] | null;
+        };
+        CallAccessListInput: {
+            cursor?: string;
+            limit?: number;
+            meetingId: components["schemas"]["ResourceId"];
+            runId?: string;
+        };
+        CallAccessListOutput: {
+            items: {
+                createdAt: string;
+                expiresAt: string | null;
+                id: string;
+                /** @enum {string} */
+                kind: "grant" | "share_link";
+                revokedAt: string | null;
+                role: string | null;
+                source: string;
+                userId: string | null;
+            }[];
+            meetingId: components["schemas"]["ResourceId"];
+            nextCursor: string | null;
+        };
+        CallAccessListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallAccessListOutput"] | null;
+            /** @constant */
+            tool?: "call.access.list";
+        };
+        CallActivityGetInput: {
+            cursor?: string;
+            limit?: number;
+            meetingId: components["schemas"]["ResourceId"];
+            runId?: string;
+        };
+        CallActivityGetOutput: {
+            items: {
+                actorUserId: string | null;
+                campaignId: string | null;
+                companyId: string | null;
+                companyOutreachId: string | null;
+                id: string;
+                occurredAt: string;
+                /** @enum {string} */
+                source: "call_context" | "outreach";
+                stage: string | null;
+                type: string;
+            }[];
+            meetingId: components["schemas"]["ResourceId"];
+            nextCursor: string | null;
+        };
+        CallActivityGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallActivityGetOutput"] | null;
+            /** @constant */
+            tool?: "call.activity.get";
+        };
+        CallAnalysisGetInput: {
+            meetingId: components["schemas"]["ResourceId"];
+            runId?: string;
+        };
+        CallAnalysisGetOutput: {
+            analysis: {
+                analysisVersion: string;
+                generatedAt: string;
+                id: string;
+                language: string;
+                model: string;
+                questionsAsked: number | null;
+                redacted: boolean;
+                result: components["schemas"]["CallAnalysisV1"];
+                talkRatioTeamBps: number | null;
+                transcriptVersion: number;
+            } | null;
+            insight: {
+                generatedAt: string | null;
+                id: string;
+                model: string;
+                redacted: boolean;
+                result: components["schemas"]["CallSalesInsightV1"] | null;
+                reviewedAt: string | null;
+                reviewFeedback: string;
+                reviewState: string;
+                transcriptVersion: number;
+                version: string;
+            } | null;
+            meetingId: components["schemas"]["ResourceId"];
+            state: string;
+        };
+        CallAnalysisGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallAnalysisGetOutput"] | null;
+            /** @constant */
+            tool?: "call.analysis.get";
+        };
+        CallAnalysisV1: {
+            buyingSignals: {
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                text: string;
+            }[];
+            chapters: {
+                endMs: number;
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                startMs: number;
+                summary: string;
+                title: string;
+            }[];
+            competitors: {
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                name: string;
+            }[];
+            decisionMaker: {
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                name: string | null;
+                present: boolean;
+                role: string | null;
+            } | null;
+            keyMoments: {
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                text: string;
+                /** @enum {string} */
+                type: "pricing" | "objection" | "next_step" | "competitor" | "buying_signal";
+            }[];
+            nextSteps: {
+                dueAt: string | null;
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                owner: string | null;
+                text: string;
+            }[];
+            objections: {
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                handled: boolean | null;
+                text: string;
+                type: string;
+            }[];
+            pricingDiscussed: {
+                amounts: string[];
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                mentioned: boolean;
+                reaction: string | null;
+            } | null;
+            proposedOutcome: {
+                confidence: number;
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                reason: string;
+                /** @enum {string} */
+                value: "meeting_held" | "no_show" | "won" | "lost" | "follow_up" | "rescheduled";
+            } | null;
+            questionsByProspect: {
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                text: string;
+            }[];
+            /** @constant */
+            schemaVersion: "call_analysis_v1";
+            sentiment: {
+                external: {
+                    evidence: {
+                        endMs: number;
+                        quote: string;
+                        seq: number;
+                        startMs: number;
+                    }[];
+                    /** @enum {string} */
+                    value: "positive" | "neutral" | "negative";
+                } | null;
+                team: {
+                    evidence: {
+                        endMs: number;
+                        quote: string;
+                        seq: number;
+                        startMs: number;
+                    }[];
+                    /** @enum {string} */
+                    value: "positive" | "neutral" | "negative";
+                } | null;
+                trajectory: {
+                    evidence: {
+                        endMs: number;
+                        quote: string;
+                        seq: number;
+                        startMs: number;
+                    }[];
+                    /** @enum {string} */
+                    value: "improving" | "flat" | "declining";
+                } | null;
+            } | null;
+            summary: {
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                text: string;
+            } | null;
+            timeline: {
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                text: string;
+            } | null;
+            topics: {
+                endMs: number;
+                evidence: {
+                    endMs: number;
+                    quote: string;
+                    seq: number;
+                    startMs: number;
+                }[];
+                label: string;
+                startMs: number;
+            }[];
+        };
+        CallAnalyticsQueryInput: {
+            cursor?: string;
+            filters?: {
+                agentId?: components["schemas"]["ResourceId"];
+                campaignId?: components["schemas"]["ResourceId"];
+                minCoverageBps?: number;
+                outcome?: string;
+                repUserId?: components["schemas"]["ResourceId"];
+            };
+            from: string;
+            /** @enum {string} */
+            groupBy: "rep" | "agent" | "outcome" | "campaign" | "week" | "month" | "meetingSource" | "language";
+            metrics: ("talkRatioTeam" | "longestMonologueTeam" | "questionsByTeam" | "questionsByExternal" | "interruptionsByTeam" | "durationMs" | "silenceShare" | "callsRecorded" | "callsWithStats" | "heldRate")[];
+            to: string;
+        };
+        CallAnalyticsQueryOutput: {
+            /** @constant */
+            benchmarkScope: "authorized_calls";
+            excluded: {
+                lowCoverage: number;
+                noAccess: number;
+                notPrecomputed: number;
+                noTranscript: number;
+                privacy: number;
+            };
+            nextCursor: string | null;
+            rows: {
+                group: string;
+                mean: {
+                    [key: string]: number | null;
+                };
+                n: number;
+                p50: {
+                    [key: string]: number | null;
+                };
+                p90: {
+                    [key: string]: number | null;
+                };
+            }[];
+            suppressedGroups: number;
+            timezone: string;
+            totalGroups: number;
+        };
+        CallAnalyticsQueryResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallAnalyticsQueryOutput"] | null;
+            /** @constant */
+            tool?: "call.analytics.query";
+        };
+        CallAttendanceGetInput: {
+            cursor?: string;
+            limit?: number;
+            meetingId: components["schemas"]["ResourceId"];
+            runId?: string;
+        };
+        CallAttendanceGetOutput: {
+            complete: boolean | null;
+            items: {
+                id: string;
+                isHost: boolean | null;
+                joinedAtMs: number;
+                leftAtMs: number | null;
+                participantId: string | null;
+                speakerId: string | null;
+            }[];
+            meetingId: components["schemas"]["ResourceId"];
+            nextCursor: string | null;
+            /** @enum {string} */
+            state: "available" | "unavailable";
+            transcriptVersion: number | null;
+        };
+        CallAttendanceGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallAttendanceGetOutput"] | null;
+            /** @constant */
+            tool?: "call.attendance.get";
+        };
+        CallAuditListInput: {
+            cursor?: string;
+            limit?: number;
+            meetingId: components["schemas"]["ResourceId"];
+            runId?: string;
+        };
+        CallAuditListOutput: {
+            items: {
+                /** @enum {string} */
+                actorType: "agent" | "user" | "system";
+                actorUserId: string | null;
+                agentId: string | null;
+                eventType: string;
+                id: string;
+                occurredAt: string;
+                subjectId: string;
+                subjectType: string;
+            }[];
+            meetingId: components["schemas"]["ResourceId"];
+            nextCursor: string | null;
+        };
+        CallAuditListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallAuditListOutput"] | null;
+            /** @constant */
+            tool?: "call.audit.list";
+        };
+        CallBotCancelInput: {
+            botId?: components["schemas"]["ResourceId"];
+            dryRun?: boolean;
+            expectedVersion: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            meetingId?: components["schemas"]["ResourceId"];
+            runId?: string;
+        };
+        CallBotCancelOutput: {
+            /** @enum {string} */
+            action: "cancel" | "stop" | "remove";
+            botId: components["schemas"]["ResourceId"];
+            commandId: components["schemas"]["ResourceId"] | null;
+            dryRun: boolean;
+            meetingId: components["schemas"]["ResourceId"];
+            receiptId: components["schemas"]["ResourceId"] | null;
+            /** @enum {string} */
+            state: "preview" | "queued" | "completed" | "denied";
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CallBotCancelResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallBotCancelOutput"] | null;
+            /** @constant */
+            tool?: "call.bot.cancel";
+        };
+        CallBotJoinInput: {
+            dryRun?: boolean;
+            durationMinutes?: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            joinAt?: components["schemas"]["ResourceVersion"];
+            /** @enum {string} */
+            language?: "auto" | "fi" | "en";
+            meetingUrl: string;
+            runId?: string;
+            title?: string;
+        };
+        CallBotJoinOutput: {
+            botId: components["schemas"]["ResourceId"] | null;
+            dryRun: boolean;
+            meetingId: components["schemas"]["ResourceId"] | null;
+            receiptId: components["schemas"]["ResourceId"] | null;
+            requestId: components["schemas"]["ResourceId"] | null;
+            safeErrorCode: string | null;
+            /** @enum {string} */
+            state: "preview" | "queued" | "submitting" | "scheduled" | "denied";
+        };
+        CallBotJoinResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallBotJoinOutput"] | null;
+            /** @constant */
+            tool?: "call.bot.join";
+        };
+        CallBotRemoveInput: {
+            botId?: components["schemas"]["ResourceId"];
+            dryRun?: boolean;
+            expectedVersion: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            meetingId?: components["schemas"]["ResourceId"];
+            runId?: string;
+        };
+        CallBotRemoveOutput: {
+            /** @enum {string} */
+            action: "cancel" | "stop" | "remove";
+            botId: components["schemas"]["ResourceId"];
+            commandId: components["schemas"]["ResourceId"] | null;
+            dryRun: boolean;
+            meetingId: components["schemas"]["ResourceId"];
+            receiptId: components["schemas"]["ResourceId"] | null;
+            /** @enum {string} */
+            state: "preview" | "queued" | "completed" | "denied";
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CallBotRemoveResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallBotRemoveOutput"] | null;
+            /** @constant */
+            tool?: "call.bot.remove";
+        };
+        CallCoachingGetInput: {
+            meetingId: components["schemas"]["ResourceId"];
+        };
+        CallCoachingGetOutput: {
+            assumptionVersion: string;
+            flags: {
+                code: string;
+                evidence?: {
+                    seq: number;
+                    startMs: number;
+                }[];
+                /** @constant */
+                severity: "advisory";
+                threshold: number;
+                value: number;
+            }[];
+            meetingId: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            state: "ready" | "not_precomputed" | "legacy_cached";
+        };
+        CallCoachingGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallCoachingGetOutput"] | null;
+            /** @constant */
+            tool?: "call.coaching.get";
+        };
+        CallDeleteInput: {
+            dryRun?: boolean;
+            expectedVersion: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            meetingId: components["schemas"]["ResourceId"];
+            runId?: string;
+            /** @enum {string} */
+            scope: "media" | "transcript" | "analysis" | "all";
+        };
+        CallDeleteOutput: {
+            dryRun: boolean;
+            meetingId: components["schemas"]["ResourceId"];
+            receiptId: components["schemas"]["ResourceId"] | null;
+            requests: {
+                id: components["schemas"]["ResourceId"] | null;
+                recordingId: components["schemas"]["ResourceId"];
+                /** @enum {string} */
+                state: "preview" | "queued" | "leased" | "requested" | "deleting" | "deleted" | "failed" | "legal_hold";
+            }[];
+            /** @enum {string} */
+            scope: "media" | "transcript" | "analysis" | "all";
+        };
+        CallDeleteResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallDeleteOutput"] | null;
+            /** @constant */
+            tool?: "call.delete";
+        };
+        CallInsightGetInput: {
+            meetingId: components["schemas"]["ResourceId"];
+            runId?: string;
+        };
+        CallInsightGetOutput: {
+            insight: {
+                generatedAt: string | null;
+                id: string;
+                model: string;
+                redacted: boolean;
+                result: components["schemas"]["CallSalesInsightV1"] | null;
+                reviewedAt: string | null;
+                reviewFeedback: string;
+                reviewState: string;
+                transcriptVersion: number;
+                version: string;
+            } | null;
+            meetingId: components["schemas"]["ResourceId"];
+            state: string;
+        };
+        CallInsightGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallInsightGetOutput"] | null;
+            /** @constant */
+            tool?: "call.insight.get";
+        };
+        CallInsightReviewInput: {
+            /** @enum {string} */
+            action: "approve" | "reject";
+            dryRun?: boolean;
+            expectedVersion: components["schemas"]["ResourceVersion"];
+            feedback?: string;
+            idempotencyKey: string;
+            insightId: components["schemas"]["ResourceId"];
+            meetingId: components["schemas"]["ResourceId"];
+            runId?: string;
+            selectedSections?: ("summary" | "painPoints" | "objections" | "decisionProcess" | "commitments" | "nextSteps" | "crmNoteDraft")[];
+        };
+        CallInsightReviewOutput: {
+            dryRun: boolean;
+            insightId: components["schemas"]["ResourceId"];
+            meetingId: components["schemas"]["ResourceId"];
+            noteId: components["schemas"]["ResourceId"] | null;
+            /** @enum {string} */
+            reviewState: "pending" | "approved" | "rejected";
+            /** @enum {string} */
+            status: "preview" | "updated" | "duplicate";
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CallInsightReviewResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallInsightReviewOutput"] | null;
+            /** @constant */
+            tool?: "call.insight.review";
         };
         CallInspectData: {
             meeting: components["schemas"]["CallListItemPublic"];
@@ -3635,15 +6157,30 @@ export interface components {
                 displayName: string;
                 id: string;
                 identity: string;
+                isOrganizer?: boolean;
+                participantId?: string | null;
+                participantKind?: string;
+                /** @enum {string} */
+                role?: "team" | "external" | "unknown";
+                roleConfidenceBps?: number;
+                roleSource?: string;
+                rsvpState?: string;
             }[];
+            recording?: components["schemas"]["AgentCallRecordingDetail"] | null;
+            stats?: components["schemas"]["CallStatsV2"] | components["schemas"]["CallStatsLegacy"] | null;
         };
         CallInspectInput: {
+            include?: "speakers"[];
             meetingId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CallInspectResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CallInspectData"] | null;
         };
         CallListItemPublic: {
+            analysisState?: string;
+            attributionStatus?: string | null;
             bookingSource: string;
             calendarManaged: boolean;
             campaignId?: components["schemas"]["ResourceId"] | null;
@@ -3651,17 +6188,58 @@ export interface components {
             conferenceConfigured: boolean;
             conversationId?: components["schemas"]["ResourceId"] | null;
             createdAt: string;
+            durationMs?: number | null;
+            hasRecording?: boolean;
+            hasTranscript?: boolean;
             id: string;
             lifecycle: string;
             linkConfidence?: number | null;
             linkMethod?: string;
             /** @enum {string} */
+            linkState?: "linked" | "unlinked";
+            outcomeProposed?: boolean;
+            /** @enum {string} */
             recordingMode: "off" | "on";
+            recordingState?: string;
             scheduledEndAt: string;
             scheduledStartAt: string;
+            source?: string;
+            talkBalance?: string | null;
+            talkRatioTeamBps?: number | null;
             timezone: string;
             title: string;
+            /** @enum {string} */
+            transcriptAccess?: "allowed" | "denied";
             updatedAt: string;
+        };
+        CallOutcomeConfirmInput: {
+            dryRun?: boolean;
+            expectedVersion: components["schemas"]["ResourceVersion"];
+            fromAnalysisVersion: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            lostReason?: string;
+            meetingId: components["schemas"]["ResourceId"];
+            notes?: string;
+            /** @enum {string} */
+            outcome: "meeting_held" | "no_show" | "won" | "lost" | "follow_up" | "rescheduled";
+            runId?: string;
+        };
+        CallOutcomeConfirmOutput: {
+            dryRun: boolean;
+            fromAnalysisVersion: string;
+            lifecycle: string | null;
+            meetingId: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            outcome: "meeting_held" | "no_show" | "won" | "lost" | "follow_up" | "rescheduled";
+            outcomeId: string | null;
+            receiptId: string | null;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CallOutcomeConfirmResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallOutcomeConfirmOutput"] | null;
+            /** @constant */
+            tool?: "call.outcome.confirm";
         };
         CallOutcomePublic: {
             actor?: {
@@ -3671,10 +6249,13 @@ export interface components {
             };
             attendanceResult: string;
             followUpAt: string;
+            fromAnalysisVersion?: string | null;
             id: string;
             lostReason?: string;
             nextStep: string;
             occurredAt: string;
+            /** @enum {string} */
+            outcomeSource?: "manual" | "analysis_confirmed";
             reason: string;
             recordedAt: string;
             result?: string;
@@ -3684,6 +6265,7 @@ export interface components {
         CallOutcomeSetInput: {
             /** @enum {string} */
             attendance: "held" | "no_show" | "rescheduled" | "cancelled";
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             lostReason?: string;
@@ -3691,6 +6273,8 @@ export interface components {
             note?: string;
             /** @enum {string} */
             result?: "trial_started" | "won" | "lost" | "follow_up" | "not_a_fit";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             valueEur?: number;
         };
         CallOutcomeSetOutput: {
@@ -3702,9 +6286,140 @@ export interface components {
             updatedAt: components["schemas"]["ResourceVersion"];
         };
         CallOutcomeSetResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["CallOutcomeSetOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["CallOutcomeSetOutput"] | null;
             /** @constant */
             tool?: "call.outcome.set";
+        };
+        CallParticipantWithdrawalReportInput: {
+            dryRun?: boolean;
+            expectedVersion: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            meetingId: components["schemas"]["ResourceId"];
+            runId?: string;
+            speakerId: components["schemas"]["ResourceId"];
+            transcriptVersion: number;
+        };
+        CallParticipantWithdrawalReportOutput: {
+            dryRun: boolean;
+            meetingId: components["schemas"]["ResourceId"];
+            receiptId: components["schemas"]["ResourceId"] | null;
+            /** @enum {string} */
+            state: "preview" | "queued";
+            withdrawalId: components["schemas"]["ResourceId"] | null;
+        };
+        CallParticipantWithdrawalReportResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallParticipantWithdrawalReportOutput"] | null;
+            /** @constant */
+            tool?: "call.participant.withdrawal.report";
+        };
+        CallRecordingGetInput: {
+            meetingId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        CallRecordingGetOutput: {
+            consentNoticeVersion: string;
+            durationMs: number | null;
+            media: {
+                expiresAt: components["schemas"]["ResourceVersion"];
+                url: string;
+            } | null;
+            meetingId: string;
+            recordingState: string;
+            /** @enum {string} */
+            redactionState: "enabled" | "disabled";
+            retentionDeadline: components["schemas"]["ResourceVersion"] | null;
+        };
+        CallRecordingGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallRecordingGetOutput"] | null;
+            /** @constant */
+            tool?: "call.recording.get";
+        };
+        CallRecordingStopInput: {
+            botId?: components["schemas"]["ResourceId"];
+            dryRun?: boolean;
+            expectedVersion: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            meetingId?: components["schemas"]["ResourceId"];
+            runId?: string;
+        };
+        CallRecordingStopOutput: {
+            /** @enum {string} */
+            action: "cancel" | "stop" | "remove";
+            botId: components["schemas"]["ResourceId"];
+            commandId: components["schemas"]["ResourceId"] | null;
+            dryRun: boolean;
+            meetingId: components["schemas"]["ResourceId"];
+            receiptId: components["schemas"]["ResourceId"] | null;
+            /** @enum {string} */
+            state: "preview" | "queued" | "completed" | "denied";
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CallRecordingStopResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallRecordingStopOutput"] | null;
+            /** @constant */
+            tool?: "call.recording.stop";
+        };
+        CallSalesInsightV1: {
+            commitments: {
+                evidence: {
+                    endMs: number;
+                    startMs: number;
+                    utteranceSourceIds: string[];
+                }[];
+                text: string;
+            }[];
+            crmNoteDraft: {
+                evidence: {
+                    endMs: number;
+                    startMs: number;
+                    utteranceSourceIds: string[];
+                }[];
+                text: string;
+            };
+            decisionProcess: {
+                evidence: {
+                    endMs: number;
+                    startMs: number;
+                    utteranceSourceIds: string[];
+                }[];
+                text: string;
+            }[];
+            nextSteps: {
+                evidence: {
+                    endMs: number;
+                    startMs: number;
+                    utteranceSourceIds: string[];
+                }[];
+                text: string;
+            }[];
+            objections: {
+                evidence: {
+                    endMs: number;
+                    startMs: number;
+                    utteranceSourceIds: string[];
+                }[];
+                text: string;
+            }[];
+            painPoints: {
+                evidence: {
+                    endMs: number;
+                    startMs: number;
+                    utteranceSourceIds: string[];
+                }[];
+                text: string;
+            }[];
+            /** @constant */
+            schemaVersion: "sales_insight_v1";
+            summary: {
+                evidence: {
+                    endMs: number;
+                    startMs: number;
+                    utteranceSourceIds: string[];
+                }[];
+                text: string;
+            };
         };
         CallsListData: {
             filteredTotal?: number;
@@ -3721,14 +6436,301 @@ export interface components {
             awaitingOutcome?: boolean;
             cursor?: string;
             from?: components["schemas"]["ResourceVersion"];
+            hasTranscript?: boolean;
             /** @enum {string} */
             lifecycle?: "scheduled" | "awaiting_outcome" | "completed" | "no_show" | "cancelled" | "rescheduled";
             limit?: number;
+            /** @enum {string} */
+            linkState?: "linked" | "unlinked";
             offset?: number;
+            outcomeProposed?: boolean;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            source?: string;
             to?: components["schemas"]["ResourceVersion"];
         };
         CallsListResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CallsListData"] | null;
+        };
+        CallStatsGetInput: {
+            includeSpeakers?: boolean;
+            meetingId?: components["schemas"]["ResourceId"];
+            meetingIds?: components["schemas"]["ResourceId"][];
+        };
+        CallStatsGetOutput: {
+            items: {
+                meetingId: components["schemas"]["ResourceId"];
+                /** @enum {string} */
+                state: "ready" | "not_precomputed" | "legacy_cached";
+                stats: components["schemas"]["CallStatsV2"] | components["schemas"]["CallStatsLegacy"] | null;
+            }[];
+        };
+        CallStatsGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallStatsGetOutput"] | null;
+            /** @constant */
+            tool?: "call.stats.get";
+        };
+        CallStatsLegacy: {
+            activeSpeakingMs: number;
+            attribution: {
+                coverageBps: number;
+                /** @enum {string} */
+                status: "complete" | "partial" | "unavailable";
+                unattributedMs: number;
+            };
+            beforeFirstExternal30sBps: null;
+            /** Format: date-time */
+            computedAt: string;
+            durationMs: number;
+            lexiconVersion: null;
+            longestSilenceMs: null;
+            overlapMs: number;
+            patienceMs: null;
+            /** @constant */
+            schemaVersion: "conversation_analytics_v1";
+            sides: {
+                external: {
+                    interruptionsMade: null;
+                    interruptionsReceived: null;
+                    longestMonologueMs: number;
+                    questionCount: null;
+                    speakingMs: number;
+                    talkRatioBps: number | null;
+                    turns: number;
+                    wpm: null;
+                };
+                team: {
+                    interruptionsMade: null;
+                    interruptionsReceived: null;
+                    longestMonologueMs: number;
+                    questionCount: null;
+                    speakingMs: number;
+                    talkRatioBps: number | null;
+                    turns: number;
+                    wpm: null;
+                };
+            };
+            silenceMs: number;
+            silencesOver5s: null;
+            speakers?: components["schemas"]["CallStatsLegacySpeaker"][];
+            statsVersion: string;
+            /** @enum {string} */
+            talkBalance: "team_led" | "external_led" | "balanced" | "unavailable";
+            totalTurns: number;
+            transcriptVersion: number;
+        };
+        CallStatsLegacySpeaker: {
+            displayLabel: string;
+            fillerRate: null;
+            interruptionsMade: null;
+            interruptionsReceived: null;
+            isOrganizer: null;
+            longestMonologueMs: number;
+            participantId: null;
+            questions: null;
+            /** @enum {string} */
+            role: "team" | "external" | "unknown";
+            roleConfidenceBps: null;
+            /** @constant */
+            roleSource: "legacy_cached";
+            speakerId: components["schemas"]["ResourceId"];
+            speakingMs: number;
+            talkRatioBps: number | null;
+            turns: number;
+            wpm: null;
+        };
+        CallStatsSpeaker: {
+            displayLabel: string;
+            fillerRate: number | null;
+            interruptionsMade: number;
+            interruptionsReceived: number;
+            isOrganizer: boolean;
+            longestMonologueMs: number;
+            participantId: components["schemas"]["ResourceId"] | null;
+            questions: number;
+            /** @enum {string} */
+            role: "team" | "external" | "unknown";
+            roleConfidenceBps: number;
+            /** @enum {string} */
+            roleSource: "workspace_member" | "own_domain" | "calendar_organizer" | "calendar_attendee" | "human_confirmed" | "unattributed";
+            speakerId: components["schemas"]["ResourceId"];
+            speakingMs: number;
+            talkRatioBps: number | null;
+            turns: number;
+            wpm: number | null;
+        };
+        CallStatsV2: {
+            activeSpeakingMs: number;
+            attribution: {
+                coverageBps: number;
+                /** @enum {string} */
+                status: "complete" | "partial" | "unavailable";
+                unattributedMs: number;
+            };
+            beforeFirstExternal30sBps: number | null;
+            /** Format: date-time */
+            computedAt: string;
+            durationMs: number;
+            lexiconVersion: string;
+            longestSilenceMs: number;
+            overlapMs: number;
+            patienceMs: number | null;
+            /** @constant */
+            schemaVersion: "conversation_analytics_v2";
+            sides: {
+                external: {
+                    interruptionsMade: number;
+                    interruptionsReceived: number;
+                    longestMonologueMs: number;
+                    questionCount: number;
+                    speakingMs: number;
+                    talkRatioBps: number | null;
+                    turns: number;
+                    wpm: number | null;
+                };
+                team: {
+                    interruptionsMade: number;
+                    interruptionsReceived: number;
+                    longestMonologueMs: number;
+                    questionCount: number;
+                    speakingMs: number;
+                    talkRatioBps: number | null;
+                    turns: number;
+                    wpm: number | null;
+                };
+            };
+            silenceMs: number;
+            silencesOver5s: number;
+            speakers?: components["schemas"]["CallStatsSpeaker"][];
+            statsVersion: string;
+            /** @enum {string} */
+            talkBalance: "team_led" | "external_led" | "balanced" | "unavailable";
+            totalTurns: number;
+            transcriptVersion: number;
+        };
+        CallTranscriptGetInput: {
+            cursor?: string;
+            /**
+             * @description Complete timestamped text by default (up to 512 KiB); segments selects paged structured output. Compact text preserves every word.
+             * @enum {string}
+             */
+            format?: "compact" | "segments";
+            fromMs?: number;
+            limit?: number;
+            meetingId: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            mode?: "full" | "compact";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            speaker?: string;
+            toMs?: number;
+        };
+        CallTranscriptGetOutput: {
+            checksum: string;
+            complete?: boolean;
+            etag?: string;
+            /** @enum {string} */
+            format?: "compact" | "segments";
+            language: string;
+            meetingId: string;
+            metadata?: {
+                attendees: {
+                    id: string;
+                    isOrganizer: boolean;
+                    label: string;
+                }[];
+                campaignId: string | null;
+                companyOutreachId: string | null;
+                conversationId: string | null;
+                linkConfidence: number | null;
+                linkMethod: string;
+                pipelineCardId: string | null;
+                scheduledEndAt: string;
+                scheduledStartAt: string;
+                title: string;
+            } | null;
+            /** @enum {string} */
+            mode: "full" | "compact";
+            nextCursor: string | null;
+            precomputed?: boolean;
+            segmentCount?: number;
+            segments: {
+                confidence: number;
+                endMs: number;
+                isOrganizer?: boolean;
+                matchMethod: string;
+                participantId: string | null;
+                redacted: boolean;
+                /** @enum {string} */
+                role: "team" | "external" | "unknown";
+                roleConfidenceBps?: number;
+                /** @enum {string} */
+                roleSource?: "workspace_member" | "own_domain" | "calendar_organizer" | "calendar_attendee" | "human_confirmed" | "unattributed";
+                seq: number;
+                speakerId: string;
+                speakerLabel: string;
+                startMs: number;
+                text: string;
+                throughSeq: number;
+                truncated: boolean;
+            }[];
+            text?: string | null;
+            transcriptVersion: number;
+            updatedAt?: string | null;
+        };
+        CallTranscriptGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallTranscriptGetOutput"] | null;
+            /** @constant */
+            tool?: "call.transcript.get";
+        };
+        CallTranscriptsGetInput: {
+            meetingIds: components["schemas"]["ResourceId"][];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        CallTranscriptsGetOutput: {
+            items: {
+                error: {
+                    code: string;
+                    status: number;
+                } | null;
+                meetingId: string;
+                transcript: components["schemas"]["CallTranscriptGetOutput"] | null;
+            }[];
+            totalBytes: number;
+        };
+        CallTranscriptsGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallTranscriptsGetOutput"] | null;
+            /** @constant */
+            tool?: "call.transcripts.get";
+        };
+        CallTranscriptsSearchInput: {
+            companyId?: components["schemas"]["ResourceId"];
+            cursor?: string;
+            from?: components["schemas"]["ResourceVersion"];
+            limit?: number;
+            query: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            speaker?: string;
+            to?: components["schemas"]["ResourceVersion"];
+        };
+        CallTranscriptsSearchOutput: {
+            items: {
+                endMs: number;
+                meetingId: string;
+                redacted: boolean;
+                seq: number;
+                snippet: string;
+                startMs: number;
+                transcriptVersion: number;
+            }[];
+            nextCursor: string | null;
+        };
+        CallTranscriptsSearchResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CallTranscriptsSearchOutput"] | null;
+            /** @constant */
+            tool?: "call.transcripts.search";
         };
         CampaignActionApprovalRequiredOutput: {
             approvalUrl: string;
@@ -3743,6 +6745,8 @@ export interface components {
             authorizationId: string;
             campaignId: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CampaignActionOutput: {
             action: components["schemas"]["AgentCampaignAction"];
@@ -3759,6 +6763,8 @@ export interface components {
         CampaignActionPreflightInput: {
             campaignId: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CampaignActionPreflightOutput: components["schemas"]["CampaignActionReadyOutput"] | components["schemas"]["CampaignActionApprovalRequiredOutput"] | components["schemas"]["CampaignLaunchSetupRequiredOutput"];
         CampaignActionReadyOutput: {
@@ -3769,8 +6775,36 @@ export interface components {
              */
             status: "ready";
         };
+        CampaignContactPolicyImpact: {
+            currentFlags: {
+                [key: string]: boolean;
+            };
+            /** @constant */
+            dryRun: true;
+            evaluated: number;
+            filteredTotal: number;
+            hypotheticalFlags: {
+                [key: string]: boolean;
+            };
+            items: {
+                allowed: boolean;
+                channel: string;
+                jobId: string;
+                nextAllowedAt: string | null;
+                reasons: string[];
+                timezone: string;
+            }[];
+            nextAfterJobId: string | null;
+            observedAt: components["schemas"]["ResourceVersion"];
+            /** @constant */
+            pageOnly: true;
+            policyVersion: number;
+            wouldSkipOnPage: number;
+        };
         CampaignCopyInspectInput: {
             campaignId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CampaignCopyInspectOutput: {
             campaignId: components["schemas"]["ResourceId"];
@@ -3807,17 +6841,33 @@ export interface components {
             Running: number;
         };
         CampaignDeliveryInspectInput: {
+            afterJobId?: string;
             campaignId: string;
+            /** @description Read-only pre-enable impact report for the current page of unsent jobs. No flags or jobs change. */
+            contactPolicyReport?: boolean;
+            limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CampaignDeliveryInspectOutput: {
             campaignId: string;
+            contactPolicyReport?: components["schemas"]["CampaignContactPolicyImpact"];
             eligibility?: {
                 [key: string]: unknown;
             };
+            prospectTimezone?: components["schemas"]["CampaignProspectTimezoneSummary"];
             revision: string;
             settings: {
                 [key: string]: unknown;
             };
+            warnings?: {
+                /** @constant */
+                basis: "company_country";
+                campaignTimezone: string;
+                /** @constant */
+                code: "prospect_timezone_mismatch";
+                dominantProspectTimezone: string | null;
+            }[];
         } & {
             [key: string]: unknown;
         };
@@ -3838,6 +6888,8 @@ export interface components {
                 instagramSendingWindowWeekdays?: number;
                 pacingSeconds?: number;
             };
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CampaignDeliveryUpdateOutput: {
             campaignId: string;
@@ -3927,6 +6979,8 @@ export interface components {
             /** @constant */
             onlyNewChats: true;
             pacingSeconds: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @constant */
             skipPreviouslyMessaged: true;
             /** @description Separate SMS message, required when SMS is selected. */
@@ -3974,6 +7028,8 @@ export interface components {
         CampaignDraftUpdateInput: {
             campaignId: components["schemas"]["ResourceId"];
             expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             updates: {
                 dailyCap?: number;
                 description?: string;
@@ -4006,6 +7062,8 @@ export interface components {
             expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: string;
             jobIds: components["schemas"]["ResourceId"][];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CampaignFollowupsCancelOutput: {
             campaignId: string;
@@ -4025,6 +7083,10 @@ export interface components {
             dryRun: boolean;
             expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Default 30. Older recipients are excluded from follow-up and returned as re-engagement candidates; no historical live apply. */
+            maxAgeDays?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             sequence: {
                 enabled: boolean;
                 steps: {
@@ -4057,6 +7119,8 @@ export interface components {
         CampaignFollowupsListInput: {
             campaignId: components["schemas"]["ResourceId"];
             cursor?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @enum {string} */
             view?: "upcoming" | "done";
         };
@@ -4132,6 +7196,14 @@ export interface components {
             };
             /** Format: date-time */
             generatedAt: string;
+            legacy?: {
+                [key: string]: unknown;
+            };
+            metricIds?: {
+                [key: string]: string;
+            };
+            metrics?: components["schemas"]["SalesMetricsV2"];
+            metricsVersion?: string;
             pipeline: components["schemas"]["PipelineCounts"];
             rates: {
                 bookedCallPercent: number | null;
@@ -4178,6 +7250,8 @@ export interface components {
             afterId?: components["schemas"]["ResourceId"];
             campaignId: components["schemas"]["ResourceId"];
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CampaignMessagesDraftListOutput: {
             campaignId: string;
@@ -4215,6 +7289,8 @@ export interface components {
             expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
             expectedListUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CampaignMessagesDraftUpdateOutput: {
             campaignId: string;
@@ -4237,6 +7313,8 @@ export interface components {
             expectedRunId?: components["schemas"]["ResourceId"];
             jobIds?: components["schemas"]["ResourceId"][];
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CampaignMessagesListOutput: {
             campaignId: string;
@@ -4307,6 +7385,8 @@ export interface components {
         CampaignOperationInspectInput: {
             campaignId: string;
             commandId: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CampaignOperationInspectOutput: {
             /** @enum {string} */
@@ -4331,6 +7411,8 @@ export interface components {
             campaignId: components["schemas"]["ResourceId"];
             cursor?: string;
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CampaignOutcomesListOutput: {
             campaignId: string;
@@ -4369,6 +7451,50 @@ export interface components {
             /** @constant */
             tool?: "campaign.prepare";
         };
+        CampaignProspectTimezoneSummary: {
+            /** @constant */
+            basis: "company_country";
+            campaignTimezone: string;
+            dominantTimezone: string | null;
+            inferred: boolean;
+            known: number;
+            mismatch: boolean;
+            total: number;
+            unknown: number;
+        };
+        CampaignReengagementPrepareInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            channel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
+            dryRun: boolean;
+            expectedAudienceFingerprint?: string;
+            expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            maxAgeDays?: number;
+            name: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        CampaignReengagementPrepareOutput: {
+            audienceFingerprint: string;
+            campaignId: components["schemas"]["ResourceId"] | null;
+            disabled: boolean;
+            dryRun: boolean;
+            freshCopyRequired: boolean;
+            listId: components["schemas"]["ResourceId"] | null;
+            maxAgeDays: number;
+            receiptId: string | null;
+            recipientCount: number;
+            sent: boolean;
+            sourceCampaignId: components["schemas"]["ResourceId"];
+            /** @constant */
+            status: "Draft";
+        };
+        CampaignReengagementPrepareResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CampaignReengagementPrepareOutput"] | null;
+            /** @constant */
+            tool?: "campaign.reengagement.prepare";
+        };
         CampaignSendingObservation: {
             browsers: {
                 active: boolean;
@@ -4401,6 +7527,8 @@ export interface components {
             limit?: number;
             /** @description Case-insensitive campaign name search. */
             query?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             status?: components["schemas"]["CampaignStatus"];
         };
         CampaignsListOutput: {
@@ -4431,6 +7559,8 @@ export interface components {
             updatedAt: string;
         };
         CampaignValidateInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             state: components["schemas"]["AgentCampaignState"];
         };
         CampaignValidateResult: components["schemas"]["AgentToolResultBase"] & {
@@ -4442,6 +7572,7 @@ export interface components {
             campaignId: components["schemas"]["ResourceId"];
             /** @enum {string} */
             channel: "social" | "gmail" | "sms";
+            dryRun?: boolean;
             expectedCampaignUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             minSamplePerVariant: number;
@@ -4452,6 +7583,8 @@ export interface components {
                 rule: "bayesian_95" | "manual";
             };
             prospectTimezone?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             variants: {
                 body: string;
                 id: components["schemas"]["ResourceId"];
@@ -4465,6 +7598,148 @@ export interface components {
             };
             /** @constant */
             tool?: "campaign.variants.configure";
+        };
+        ChannelHaltInput: {
+            /** @enum {string} */
+            channel: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
+            dryRun: boolean;
+            expectedVersion: number;
+            halted: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            reason: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        ChannelHaltOutput: {
+            dryRun: boolean;
+            receiptId?: string;
+            wouldChange: {
+                halted: boolean;
+                haltedBy: string;
+                haltedChannels: string[];
+                haltEverything: boolean;
+                reason: string;
+                version: number;
+                workspaceUserId: string;
+            };
+        };
+        ChannelHaltResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ChannelHaltOutput"] | null;
+            /** @constant */
+            tool?: "channel.halt";
+        };
+        ClassificationBackfillPlanInput: {
+            afterId?: components["schemas"]["ResourceId"];
+            limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        ClassificationBackfillPlanOutput: {
+            applied: boolean;
+            complete: boolean;
+            counts: {
+                [key: string]: number;
+            };
+            dryRun: boolean;
+            nextAfterId: string | null;
+            ownerApprovalRequired: boolean;
+            planId: string;
+            remainingCount: number;
+            sampleIds: string[];
+            scannedCount: number;
+        };
+        ClassificationBackfillPlanResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ClassificationBackfillPlanOutput"] | null;
+            /** @constant */
+            tool?: "classification.backfill.plan";
+        };
+        ClassificationFeedbackInput: {
+            conversationId?: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            correctIntent: "meeting_intent" | "meeting_proposed_time" | "asks_pricing" | "information_requested" | "not_now" | "not_interested" | "wrong_person" | "opt_out" | "interested" | "acknowledgement" | "unclear";
+            /** @enum {string} */
+            correctMessageType?: "text" | "reaction" | "system_event" | "attachment" | "auto_reply";
+            dryRun: boolean;
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            messageId?: components["schemas"]["ResourceId"];
+            note: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        ClassificationFeedbackOutput: {
+            dryRun: boolean;
+            receiptId?: string;
+            updatedAt: string;
+            wouldChange: {
+                conversationId: string;
+                correctIntent: string;
+                correctMessageType: string;
+                messageId: string;
+            };
+        };
+        ClassificationFeedbackResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ClassificationFeedbackOutput"] | null;
+            /** @constant */
+            tool?: "classification.feedback";
+        };
+        ClassificationQualityInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        ClassificationQualityOutput: {
+            items: {
+                falseNegative: number;
+                falsePositive: number;
+                intent: string;
+                language: string;
+                precision: number | null;
+                recall: number | null;
+                truePositive: number;
+            }[];
+            population: string;
+        };
+        ClassificationQualityResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ClassificationQualityOutput"] | null;
+            /** @constant */
+            tool?: "classification.quality";
+        };
+        CompaniesUpsertInput: {
+            companyId?: components["schemas"]["ResourceId"];
+            country?: string;
+            dryRun: boolean;
+            expectedVersion: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            identities?: {
+                /** @enum {string} */
+                type: "phone" | "email" | "instagram" | "facebook" | "linkedin" | "website_form" | "domain" | "business_id" | "company_outreach";
+                value: string;
+            }[];
+            matchingIdentity: {
+                /** @enum {string} */
+                type: "phone" | "email" | "instagram" | "facebook" | "linkedin" | "website_form" | "domain" | "business_id" | "company_outreach";
+                value: string;
+            };
+            name: string;
+            nameVariants?: string[];
+            role?: string;
+            runId?: components["schemas"]["ResourceId"];
+            source: string;
+            timezone?: string;
+        };
+        CompaniesUpsertOutput: {
+            dryRun: boolean;
+            entity: components["schemas"]["AgentEntity"] | null;
+            receiptId?: components["schemas"]["ResourceId"];
+            wouldChange: {
+                id: components["schemas"]["ResourceId"];
+                version: number;
+            };
+        };
+        CompaniesUpsertResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["CompaniesUpsertOutput"] | null;
+            /** @constant */
+            tool?: "companies.upsert";
         };
         CompanyEvidenceAdvanceInput: {
             batchSize?: number;
@@ -4618,6 +7893,8 @@ export interface components {
             pageSize?: number;
             query: string;
             querySignature?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CompanyEvidenceSearchResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyEvidenceSearchData"] | null;
@@ -4642,6 +7919,8 @@ export interface components {
             idempotencyKey: string;
             maxAgeDays?: number;
             query: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CompanyEvidenceStartResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyEvidenceRunData"] | null;
@@ -4706,6 +7985,8 @@ export interface components {
         CompanyFiltersInput: {
             citySearch?: string;
             countries: components["schemas"]["SupportedCountry"][];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             states?: string[];
         };
         CompanyFiltersResult: components["schemas"]["AgentToolResultBase"] & {
@@ -4875,6 +8156,8 @@ export interface components {
             before?: components["schemas"]["CompanyFitRunCursor"];
             campaignId?: components["schemas"]["ResourceId"];
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CompanyFitRunsListResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyFitRunsListData"] | null;
@@ -4897,6 +8180,8 @@ export interface components {
             offer: string;
             /** @description Ignore recent evidence from the same workspace and fetch websites anew. */
             refreshEvidence?: boolean;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @description Review only unknowns from this completed, recent run; carry forward its other assessments only for the same offer, website and exact audience. */
             unknownsFromRunId?: components["schemas"]["ResourceId"];
         };
@@ -4988,6 +8273,8 @@ export interface components {
         CompanyInspectInput: {
             businessId: string;
             country: components["schemas"]["SupportedCountry"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CompanyInspectResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyInspectData"] | null;
@@ -5053,6 +8340,8 @@ export interface components {
             /** @description Pin subsequent source pages to the knowledgeRevision returned by the first read. */
             expectedKnowledgeRevision?: string;
             maxAgeDays?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @description Page of original saved website passages; defaults to 1. */
             sourcePage?: number;
             /** @description Original passages per page; defaults to 10. */
@@ -5097,6 +8386,8 @@ export interface components {
             limit?: number;
             listId: components["schemas"]["ResourceId"];
             offset?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CompanyListInspectResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyListInspectData"] | null;
@@ -5135,6 +8426,8 @@ export interface components {
             }[];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             name: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CompanyListPrepareResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyListPrepareData"] | null;
@@ -5186,6 +8479,8 @@ export interface components {
             listId: components["schemas"]["ResourceId"];
             /** @description Echo selectionDigest from the matching dry run when apply is true. */
             reviewedSelectionDigest?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CompanyListRefineResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyListRefineData"] | null;
@@ -5316,6 +8611,8 @@ export interface components {
              */
             projection?: "list" | "rich";
             querySignature?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CompanySearchResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanySearchData"] | null;
@@ -5335,6 +8632,8 @@ export interface components {
             countries: components["schemas"]["SupportedCountry"][];
             limit?: number;
             query: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CompanySuggestionsResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanySuggestionsData"] | null;
@@ -5353,6 +8652,8 @@ export interface components {
         CompanyTimelineInput: {
             campaignId: components["schemas"]["ResourceId"];
             companyOutreachId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         CompanyTimelineOutput: {
             campaignId: string;
@@ -5383,22 +8684,27 @@ export interface components {
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             rationale?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             templateId?: components["schemas"]["ResourceId"];
             text?: string;
             variables?: components["schemas"]["ReplyTemplateVariables"];
         };
         ConversationDraftSaveResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"];
+            data?: components["schemas"]["SalesReplyOperation"] | null;
             /** @constant */
             tool: "conversation.draft.save";
         };
         ConversationFollowupClearInput: {
             conversationId: components["schemas"]["ResourceId"];
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         ConversationFollowupClearResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"];
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["SalesReplyOperation"] | null;
             /** @constant */
             tool: "conversation.followup.clear";
         };
@@ -5406,15 +8712,18 @@ export interface components {
             at: components["schemas"]["ResourceVersion"];
             autoSend?: components["schemas"]["FollowupAutoSend"];
             conversationId: components["schemas"]["ResourceId"];
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             note?: string;
             owner?: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @enum {string} */
             type: "reply" | "nudge" | "send_info" | "rebook" | "call";
         };
         ConversationFollowupSetResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"];
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["SalesReplyOperation"] | null;
             /** @constant */
             tool: "conversation.followup.set";
         };
@@ -5422,14 +8731,25 @@ export interface components {
             conversationId: components["schemas"]["ResourceId"];
             cursor?: string;
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         ConversationInspectOutput: {
+            companyId?: components["schemas"]["ResourceId"] | null;
             conversation: components["schemas"]["InboxConversationSummary"];
             /** Format: date-time */
             generatedAt: string;
             hasMore: boolean;
             messages: components["schemas"]["InboxConversationMessage"][];
             nextCursor: string | null;
+            personId?: components["schemas"]["ResourceId"] | null;
+            siblings?: {
+                channel: string;
+                id: components["schemas"]["ResourceId"];
+                intent: string;
+                lastMessageAt: string | null;
+                status: string;
+            }[];
         };
         ConversationInspectResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["ConversationInspectOutput"] | null;
@@ -5456,17 +8776,22 @@ export interface components {
         };
         ConversationReplyInput: {
             conversationId: components["schemas"]["ResourceId"];
+            dryRun?: boolean;
             expectedLastInboundAt: components["schemas"]["ResourceVersion"];
             expectedLastMessageAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: string;
             /** @description For 2.1 clients only: the owner explicitly approved this exact free text and conversation. Otherwise save a draft. */
             ownerApproved?: boolean;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             templateId?: components["schemas"]["ResourceId"];
             text?: string;
             variables?: components["schemas"]["ReplyTemplateVariables"];
         };
         ConversationReplyInspectInput: {
             idempotencyKey: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         ConversationReplyInspectOutput: components["schemas"]["ConversationReplyData"] & {
             lastErrorCode?: string;
@@ -5477,17 +8802,42 @@ export interface components {
             /** @constant */
             tool?: "conversation.reply.inspect";
         };
+        ConversationReplyPreviewData: {
+            budgetImpact: {
+                [key: string]: number;
+            };
+            conversationId: string;
+            /** @constant */
+            dryRun: true;
+            /** Format: date-time */
+            nextAllowedAt: string | null;
+            policyDecision: {
+                allowed: boolean;
+                reasons: string[];
+                ruleId: string;
+            };
+            wouldChange: {
+                channel: string;
+                mailboxId: string | null;
+                senderHandle: string;
+                senderId: string;
+                text: string;
+            };
+        };
         ConversationReplyResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["ConversationReplyData"] | null;
+            data?: components["schemas"]["ConversationReplyData"] | components["schemas"]["ConversationReplyPreviewData"] | null;
             /** @constant */
             tool?: "conversation.reply";
         };
         ConversationsBulkUpdateInput: {
+            dryRun?: boolean;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             items: components["schemas"]["ConversationUpdateInput"][];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         ConversationsBulkUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: {
+            data?: components["schemas"]["AgentWritePreviewData"] | {
                 failed: number;
                 items: {
                     [key: string]: unknown;
@@ -5501,8 +8851,11 @@ export interface components {
             tool?: "conversations.bulk.update";
         };
         ConversationsChangesInput: {
+            after?: string;
             cursor?: string;
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             types?: ("message" | "intent" | "status" | "meeting")[];
         };
         ConversationsChangesOutput: {
@@ -5514,6 +8867,7 @@ export interface components {
                 /** Format: date-time */
                 updatedAt: string;
             }[];
+            cursorSemantics?: string;
             filteredTotal: number;
             hasMore: boolean;
             nextCursor: string;
@@ -5531,6 +8885,7 @@ export interface components {
             /** @enum {string} */
             filter?: "all" | "needs_reply" | "waiting" | "unread" | "snoozed" | "closed";
             followupDue?: boolean;
+            include?: "legacy"[];
             includeAutomaticResponses?: boolean;
             /**
              * @description Exact stored intent; unlike the app label filter, opt_out does not include not_interested or not_now.
@@ -5544,6 +8899,8 @@ export interface components {
             /** @enum {string} */
             meetingStatus?: "none" | "booked" | "held" | "no_show";
             query?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             updatedAfter?: components["schemas"]["ResourceVersion"];
         };
         ConversationsListOutput: {
@@ -5553,6 +8910,14 @@ export interface components {
             /** Format: date-time */
             generatedAt: string;
             hasMore: boolean;
+            legacy?: {
+                [key: string]: unknown;
+            };
+            metricIds?: {
+                [key: string]: string;
+            };
+            metrics?: components["schemas"]["SalesMetricsV2"];
+            metricsVersion?: string;
             nextCursor: string | null;
             scope?: {
                 campaignId: string | null;
@@ -5580,15 +8945,18 @@ export interface components {
             /** @enum {string} */
             action: "mark_read" | "mark_unread" | "close" | "reopen" | "snooze" | "unsnooze" | "assign_to_me" | "unassign" | "set_interest";
             conversationId: components["schemas"]["ResourceId"];
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             /** @enum {string} */
             interestIntent?: "interested" | "information_requested" | "meeting_intent" | "meeting_proposed_time" | "asks_pricing" | "not_now" | "wrong_person" | "not_interested" | "opt_out" | "acknowledgement" | "unclear";
             /** @enum {string} */
             interestLevel?: "positive" | "neutral" | "negative";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             snoozedUntil?: components["schemas"]["ResourceVersion"];
         };
         ConversationUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["ConversationUpdateData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["ConversationUpdateData"] | null;
             /** @constant */
             tool?: "conversation.update";
         };
@@ -5598,7 +8966,15 @@ export interface components {
             };
             from: string;
             items: components["schemas"]["CopyPerformanceItem"][];
+            legacy?: {
+                [key: string]: unknown;
+            };
             limitations: string[];
+            metricIds?: {
+                [key: string]: string;
+            };
+            metrics?: components["schemas"]["SalesMetricsV2"];
+            metricsVersion?: string;
             nextOffset: number | null;
             to: string;
             totalMatching: number;
@@ -5618,8 +8994,11 @@ export interface components {
              * @enum {string}
              */
             groupBy?: "rendered_text" | "template_variation";
+            include?: "legacy"[];
             limit?: number;
             offset?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             to: string;
         };
         CopyPerformanceItem: {
@@ -5648,6 +9027,8 @@ export interface components {
             method?: string;
         };
         DeliveryTestInspectInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             testId: string;
         };
         DeliveryTestInspectResult: components["schemas"]["AgentToolResultBase"] & {
@@ -5679,6 +9060,8 @@ export interface components {
             mailboxId?: components["schemas"]["ResourceId"];
             /** @constant */
             recipientConsentConfirmed: true;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             to: string;
         };
         DeliveryTestPrepareResult: components["schemas"]["AgentToolResultBase"] & {
@@ -5688,12 +9071,133 @@ export interface components {
         };
         DeliveryTestSendInput: {
             reviewDigest: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             testId: string;
         };
         DeliveryTestSendResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["DeliveryTestOutput"] | null;
             /** @constant */
             tool?: "sending.test.send";
+        };
+        EntitiesGetInput: {
+            ids: components["schemas"]["ResourceId"][];
+            runId?: components["schemas"]["ResourceId"];
+        };
+        EntitiesGetOutput: {
+            items: components["schemas"]["AgentEntity"][];
+            missingIds: components["schemas"]["ResourceId"][];
+        };
+        EntitiesGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["EntitiesGetOutput"] | null;
+            /** @constant */
+            tool?: "entities.get";
+        };
+        EntityIdentity: {
+            /** @enum {string} */
+            type: "phone" | "email" | "instagram" | "facebook" | "linkedin" | "website_form" | "domain" | "business_id" | "company_outreach";
+            value: string;
+        };
+        EntityMergeInput: {
+            dryRun: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            runId?: components["schemas"]["ResourceId"];
+            sourceId: components["schemas"]["ResourceId"];
+            sourceVersion: number;
+            targetId: components["schemas"]["ResourceId"];
+            targetVersion: number;
+        };
+        EntityMergeOutput: {
+            changeId: components["schemas"]["ResourceId"] | null;
+            dryRun: boolean;
+            receiptId?: components["schemas"]["ResourceId"];
+            wouldChange: {
+                sourceId: components["schemas"]["ResourceId"];
+                sourceVersion?: number;
+                targetId: components["schemas"]["ResourceId"];
+                targetVersion?: number;
+            };
+        };
+        EntityMergeResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["EntityMergeOutput"] | null;
+            /** @constant */
+            tool?: "entity.merge";
+        };
+        EntityResolveInput: {
+            conversationId?: components["schemas"]["ResourceId"];
+            identity?: {
+                /** @enum {string} */
+                type: "phone" | "email" | "instagram" | "facebook" | "linkedin" | "website_form" | "domain" | "business_id" | "company_outreach";
+                value: string;
+            };
+            meetingId?: components["schemas"]["ResourceId"];
+            runId?: components["schemas"]["ResourceId"];
+        };
+        EntityResolveOutput: {
+            company: components["schemas"]["AgentEntity"] | null;
+            conversations: {
+                campaignId: components["schemas"]["ResourceId"] | null;
+                channel: string;
+                id: components["schemas"]["ResourceId"];
+                intent: string;
+                lastMessageAt: string | null;
+                status: string;
+            }[];
+            lastTouchPerChannel: {
+                at: string | null;
+                channel: string;
+            }[];
+            meetings: {
+                id: components["schemas"]["ResourceId"];
+                linkMethod: string;
+                startsAt: string;
+                status: string;
+            }[];
+            openWorkItems: components["schemas"]["AgentWorkItem"][];
+            person: components["schemas"]["AgentEntity"] | null;
+            pipelineCards: {
+                campaignId: components["schemas"]["ResourceId"];
+                companyId: components["schemas"]["ResourceId"] | null;
+                entityKey: string;
+                id: components["schemas"]["ResourceId"];
+                stage: string;
+            }[];
+            /** @constant */
+            projection: "read_only";
+            suppressions: {
+                id: components["schemas"]["ResourceId"];
+                type: string;
+                value: string;
+            }[];
+        };
+        EntityResolveResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["EntityResolveOutput"] | null;
+            /** @constant */
+            tool?: "entity.resolve";
+        };
+        EntitySplitInput: {
+            changeId: components["schemas"]["ResourceId"];
+            dryRun: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            runId?: components["schemas"]["ResourceId"];
+            sourceVersion: number;
+            targetVersion: number;
+        };
+        EntitySplitOutput: {
+            changeId: components["schemas"]["ResourceId"] | null;
+            dryRun: boolean;
+            receiptId?: components["schemas"]["ResourceId"];
+            wouldChange: {
+                sourceId: components["schemas"]["ResourceId"];
+                sourceVersion?: number;
+                targetId: components["schemas"]["ResourceId"];
+                targetVersion?: number;
+            };
+        };
+        EntitySplitResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["EntitySplitOutput"] | null;
+            /** @constant */
+            tool?: "entity.split";
         };
         Error: {
             /** @enum {string} */
@@ -5707,13 +9211,79 @@ export interface components {
         };
         ErrorResponse: {
             error: components["schemas"]["Error"];
+            /** @description Current authenticated credential/workspace quota, negotiated by X-DMFaster-Rate-Limit: 1. Null before authentication or when authoritative quota is unavailable. */
+            rateLimit?: components["schemas"]["AgentRateLimitEnvelope"] | null;
+        };
+        EventConsumer: {
+            ackedSequence: number;
+            agentId: string;
+            createdAt: string;
+            dryRun?: boolean;
+            headSequence?: number;
+            id: string;
+            lag?: number;
+            name: string;
+            oldestUnackedAgeMs?: number;
+            receiptId?: string;
+            updatedAt: string;
+            version: number;
+            workspaceUserId: string;
+        };
+        EventConsumersCreateInput: {
+            dryRun: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            name: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            /** @enum {string} */
+            startAt?: "head" | "retention_floor";
+        };
+        EventConsumersCreateOutput: components["schemas"]["EventConsumer"];
+        EventConsumersCreateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["EventConsumersCreateOutput"] | null;
+            /** @constant */
+            tool?: "event_consumers.create";
+        };
+        EventConsumersListInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        EventConsumersListOutput: {
+            filteredTotal: number;
+            items: components["schemas"]["EventConsumer"][];
+        };
+        EventConsumersListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["EventConsumersListOutput"] | null;
+            /** @constant */
+            tool?: "event_consumers.list";
+        };
+        EventsAckInput: {
+            consumerId: components["schemas"]["ResourceId"];
+            dryRun: boolean;
+            expectedVersion: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            throughSequence: number;
+        };
+        EventsAckOutput: components["schemas"]["EventConsumer"];
+        EventsAckResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["EventsAckOutput"] | null;
+            /** @constant */
+            tool?: "events.ack";
         };
         EventsListInput: {
             after?: string | number;
+            consumerId?: components["schemas"]["ResourceId"];
+            expand?: ("message" | "conversation" | "campaign")[];
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             types?: components["schemas"]["AgentSalesEventType"][];
+            waitSeconds?: number;
         };
         EventsListOutput: {
+            cursorSemantics?: string;
             events: components["schemas"]["AgentEvent"][];
             filteredTotal: number;
             hasMore: boolean;
@@ -5726,6 +9296,18 @@ export interface components {
             /** @constant */
             tool?: "events.list";
         };
+        EventsSnapshotInput: {
+            after?: string;
+            limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        EventsSnapshotOutput: components["schemas"]["EventsListOutput"];
+        EventsSnapshotResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["EventsSnapshotOutput"] | null;
+            /** @constant */
+            tool?: "events.snapshot";
+        };
         FollowupAutoSend: {
             templateId: components["schemas"]["ResourceId"];
             variables?: components["schemas"]["ReplyTemplateVariables"];
@@ -5735,9 +9317,11 @@ export interface components {
             cursor?: string;
             limit?: number;
             owner?: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         FollowupsDueResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"];
+            data?: components["schemas"]["SalesReplyOperation"] | null;
             /** @constant */
             tool: "followups.due";
         };
@@ -5745,6 +9329,8 @@ export interface components {
             campaignId: components["schemas"]["ResourceId"];
             cursor?: string;
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             search?: string;
         };
         HistoryListOutput: {
@@ -5781,6 +9367,7 @@ export interface components {
                 [key: string]: unknown;
             } | null;
             channel: components["schemas"]["InboxChannel"];
+            classification?: components["schemas"]["MessageClassificationV2"] | null;
             deleted?: boolean;
             deliveryStatus: string;
             /** @enum {string} */
@@ -5818,6 +9405,12 @@ export interface components {
             duplicateOf?: string | null;
             id: string;
             intentConfidence?: number | null;
+            intentEvidence?: {
+                [key: string]: unknown;
+            } | null;
+            intentHistory?: {
+                [key: string]: unknown;
+            }[];
             intentReason?: string | null;
             /** @enum {string|null} */
             intentSource?: "model" | "rule" | "human" | "agent" | null;
@@ -5877,6 +9470,8 @@ export interface components {
             /** @enum {string} */
             language?: "en" | "fi";
             query: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             version?: components["schemas"]["TolVersion"] | null;
         };
         IndustryLookupOutput: {
@@ -5910,6 +9505,8 @@ export interface components {
         };
         InstagramExtractionInspectInput: {
             jobId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         InstagramExtractionInspectResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["InstagramExtractionData"] | null;
@@ -5935,6 +9532,8 @@ export interface components {
             /** @enum {string} */
             currency?: "USD" | "EUR";
             postUrl?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @enum {string} */
             type: "followers" | "following" | "likers" | "commenters";
             username: string;
@@ -5946,6 +9545,8 @@ export interface components {
             cursor?: string;
             jobId: components["schemas"]["ResourceId"];
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         InstagramExtractionResultsResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["InstagramExtractionData"] | null;
@@ -5956,6 +9557,8 @@ export interface components {
             currency?: "USD" | "EUR";
             idempotencyKey: string;
             postUrl?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @enum {string} */
             type: "followers" | "following" | "likers" | "commenters";
             username: string;
@@ -5963,7 +9566,10 @@ export interface components {
         InstagramExtractionStartResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["InstagramExtractionData"] | null;
         };
-        InstagramPacingInspectInput: Record<string, never>;
+        InstagramPacingInspectInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
         InstagramPacingInspectOutput: {
             override: components["schemas"]["InstagramPacingPolicy"] | null;
             revision: string | null;
@@ -5985,6 +9591,8 @@ export interface components {
             idempotencyKey: string;
             policy: components["schemas"]["InstagramPacingPolicy"] | null;
             reason: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         InstagramPacingUpdateOutput: {
             /** @constant */
@@ -6088,6 +9696,8 @@ export interface components {
             model?: "clef" | "clef-flash";
             name?: string;
             query: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             searchQueries?: string[];
             sourceListIds?: string[];
             sources?: components["schemas"]["InstagramProspectSource"][];
@@ -6147,6 +9757,8 @@ export interface components {
         };
         InstagramProspectStartInput: components["schemas"]["InstagramProspectInput"] & {
             idempotencyKey: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         InstagramProspectStartResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["InstagramProspectData"] | null;
@@ -6184,6 +9796,8 @@ export interface components {
             cursor?: components["schemas"]["ResourceId"];
             limit?: number;
             orderId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         InstagramPurchasesInspectResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["InstagramPurchasesInspectData"] | null;
@@ -6195,6 +9809,8 @@ export interface components {
         InstagramPurchasesListInput: {
             cursor?: components["schemas"]["ResourceId"];
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         InstagramPurchasesListResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["InstagramPurchasesListData"] | null;
@@ -6208,6 +9824,8 @@ export interface components {
             jobId: components["schemas"]["ResourceId"];
             limit?: number;
             orderId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         InstagramPurchasesResultsResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["InstagramPurchasesResultsData"] | null;
@@ -6232,12 +9850,16 @@ export interface components {
         };
         LeadEnrichmentInspectInput: {
             jobId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         LeadEnrichmentInspectResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["LeadProspectingData"] | null;
         };
         LeadEnrichmentPreviewInput: {
             listId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         LeadEnrichmentPreviewResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["LeadProspectingData"] | null;
@@ -6258,23 +9880,31 @@ export interface components {
             updatedAt: string;
         };
         LeadEnrichmentStartInput: {
+            dryRun?: boolean;
             idempotencyKey: string;
             listId: components["schemas"]["ResourceId"];
             maxCredits?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         LeadEnrichmentStartResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["LeadProspectingData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["LeadProspectingData"] | null;
         };
         LeadExtractionContinueInput: {
             count?: number;
+            dryRun?: boolean;
             idempotencyKey: string;
             jobId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         LeadExtractionContinueResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["LeadProspectingData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["LeadProspectingData"] | null;
         };
         LeadExtractionInspectInput: {
             jobId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         LeadExtractionInspectResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["LeadProspectingData"] | null;
@@ -6305,6 +9935,8 @@ export interface components {
             postUrls?: string[];
             /** @enum {string} */
             priority?: "high" | "normal" | "low";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @enum {string} */
             type: "followers" | "following" | "likers" | "commenters";
         };
@@ -6312,13 +9944,17 @@ export interface components {
             data?: components["schemas"]["LeadProspectingData"] | null;
         };
         LeadExtractionRefreshInput: {
+            dryRun?: boolean;
             jobId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         LeadExtractionRefreshResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["LeadProspectingData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["LeadProspectingData"] | null;
         };
         LeadExtractionStartInput: {
             count?: number;
+            dryRun?: boolean;
             /** @enum {string} */
             feedType?: "top" | "recent";
             idempotencyKey: string;
@@ -6326,11 +9962,13 @@ export interface components {
             postUrls?: string[];
             /** @enum {string} */
             priority?: "high" | "normal" | "low";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @enum {string} */
             type: "followers" | "following" | "likers" | "commenters";
         };
         LeadExtractionStartResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["LeadProspectingData"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["LeadProspectingData"] | null;
         };
         LeadProspectingData: {
             credits: components["schemas"]["LeadCreditBalance"] | null;
@@ -6352,6 +9990,8 @@ export interface components {
         LeadsStatusInput: {
             cursor?: string;
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         LeadsStatusResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["LeadProspectingData"] | null;
@@ -6372,6 +10012,8 @@ export interface components {
         ListImportInput: {
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             name: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @description Instagram handles; whitespace and a leading @ are removed and case is normalized. Invalid handles reject the whole import. */
             usernames: string[];
         };
@@ -6393,6 +10035,8 @@ export interface components {
             limit?: number;
             listId: components["schemas"]["ResourceId"];
             offset?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             username?: string;
         };
         ListInspectResult: components["schemas"]["AgentToolResultBase"] & {
@@ -6403,6 +10047,8 @@ export interface components {
         ListPrepareInput: {
             idempotencyKey?: components["schemas"]["IdempotencyKey"];
             reviewedAudience: components["schemas"]["ReviewedAudience"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             sampleSize?: number;
             state: components["schemas"]["AgentCampaignState"];
         };
@@ -6424,6 +10070,8 @@ export interface components {
             limit?: number;
             offset?: number;
             query?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         ListsListResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["ListsListData"] | null;
@@ -6440,6 +10088,8 @@ export interface components {
         ListTargetRemoveInput: {
             expectedListUpdatedAt: components["schemas"]["ResourceVersion"];
             listId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             username: string;
         };
         ListTargetRemoveResult: components["schemas"]["AgentToolResultBase"] & {
@@ -6447,12 +10097,31 @@ export interface components {
             /** @constant */
             tool?: "list.target.remove";
         };
+        MeetingIdentityPlan: {
+            autoLinkEligible: boolean;
+            candidates: {
+                campaignId: string | null;
+                companyId: string | null;
+                companyOutreachId: string;
+                confidence: number;
+                conversationId: components["schemas"]["ResourceId"];
+                expectedConversationUpdatedAt: components["schemas"]["ResourceVersion"];
+                /** @enum {string} */
+                linkMethod: "attendee_email" | "attendee_domain";
+                personId: string | null;
+            }[];
+            /** @enum {string} */
+            state: "internal" | "unmatched" | "ambiguous" | "proposed" | "bounded";
+        };
         MeetingLinkInput: {
             companyOutreachId?: components["schemas"]["ResourceId"];
             conversationId?: components["schemas"]["ResourceId"];
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             meetingId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         MeetingLinkOutput: {
             campaignId: components["schemas"]["ResourceId"] | null;
@@ -6466,17 +10135,22 @@ export interface components {
             updatedAt: components["schemas"]["ResourceVersion"];
         };
         MeetingLinkResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["MeetingLinkOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["MeetingLinkOutput"] | null;
             /** @constant */
             tool?: "meeting.link";
         };
         MeetingsUnlinkedListInput: {
             cursor?: string;
+            /** @description Read-only current identity matches, including historical calls. Never applies links. */
+            includeIdentitySuggestions?: boolean;
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         MeetingsUnlinkedListOutput: {
             filteredTotal: number;
             items: {
+                identityPlan?: components["schemas"]["MeetingIdentityPlan"] | null;
                 linkConfidence: number | null;
                 linkMethod: string;
                 meetingId: components["schemas"]["ResourceId"];
@@ -6495,9 +10169,12 @@ export interface components {
             tool?: "meetings.unlinked.list";
         };
         MeetingUnlinkInput: {
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             meetingId: components["schemas"]["ResourceId"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         MeetingUnlinkOutput: {
             campaignId: components["schemas"]["ResourceId"] | null;
@@ -6511,17 +10188,136 @@ export interface components {
             updatedAt: components["schemas"]["ResourceVersion"];
         };
         MeetingUnlinkResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["MeetingUnlinkOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["MeetingUnlinkOutput"] | null;
             /** @constant */
             tool?: "meeting.unlink";
+        };
+        MessageClassificationV2: {
+            classifierVersion: string;
+            extractedContacts: {
+                emails: string[];
+                phones: string[];
+            };
+            intents: {
+                confidence: number;
+                evidence: {
+                    end: number;
+                    quote: string;
+                    start: number;
+                };
+                intent: string;
+            }[];
+            language: string;
+            messageType: string;
+            optOutReview: boolean;
+            primaryIntent: string;
+            proposedTimes: {
+                confidence: number;
+                startLocal: string;
+                text: string;
+                tz: string;
+            }[];
+            stopEvidence: {
+                end: number;
+                quote: string;
+                start: number;
+            } | null;
+            stopRequest: boolean;
+        };
+        MetricsReconcileInput: {
+            campaign?: components["schemas"]["ResourceId"];
+            from?: components["schemas"]["ResourceVersion"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            /** @enum {string} */
+            scope?: "workspace" | "campaign" | "range";
+            timezone?: string;
+            to?: components["schemas"]["ResourceVersion"];
+        };
+        MetricsReconcileOutput: {
+            changes: {
+                current: number;
+                metric: string;
+                metricId: string;
+                old: number;
+            }[];
+            coverage: string;
+            from: components["schemas"]["ResourceVersion"];
+            metricsVersion: string;
+            /** @constant */
+            readOnly: true;
+            reasons: {
+                code: string;
+                ids: string[];
+                total: number;
+            }[];
+            scope: {
+                [key: string]: unknown;
+            };
+            timezone: string;
+            to: components["schemas"]["ResourceVersion"];
+            unknown: {
+                meetingsWithoutCompany?: number;
+                repliesWithoutCompany?: number;
+                sendsWithoutCompany?: number;
+                unanchoredMeetings: number;
+                unlinkedMeetings: number;
+            };
+        };
+        MetricsReconcileResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["MetricsReconcileOutput"] | null;
+            /** @constant */
+            tool?: "metrics.reconcile";
         };
         OptionalCampaignInput: {
             /** @description Omit to use the selected, active, or most recent campaign. */
             campaignId?: components["schemas"]["ResourceId"];
+            include?: "legacy"[];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        PeopleUpsertInput: {
+            companyId?: components["schemas"]["ResourceId"];
+            country?: string;
+            dryRun: boolean;
+            expectedVersion: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            identities?: {
+                /** @enum {string} */
+                type: "phone" | "email" | "instagram" | "facebook" | "linkedin" | "website_form" | "domain" | "business_id" | "company_outreach";
+                value: string;
+            }[];
+            matchingIdentity: {
+                /** @enum {string} */
+                type: "phone" | "email" | "instagram" | "facebook" | "linkedin" | "website_form" | "domain" | "business_id" | "company_outreach";
+                value: string;
+            };
+            name: string;
+            nameVariants?: string[];
+            role?: string;
+            runId?: components["schemas"]["ResourceId"];
+            source: string;
+            timezone?: string;
+        };
+        PeopleUpsertOutput: {
+            dryRun: boolean;
+            entity: components["schemas"]["AgentEntity"] | null;
+            receiptId?: components["schemas"]["ResourceId"];
+            wouldChange: {
+                id: components["schemas"]["ResourceId"];
+                version: number;
+            };
+        };
+        PeopleUpsertResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["PeopleUpsertOutput"] | null;
+            /** @constant */
+            tool?: "people.upsert";
         };
         PipelineBoardInput: {
             campaignIds?: components["schemas"]["ResourceId"][];
             limitPerStage?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         PipelineBoardResult: components["schemas"]["AgentToolResultBase"] & {
             data?: {
@@ -6535,12 +10331,14 @@ export interface components {
             channel?: string;
             /** @enum {string} */
             closedOutcome?: "" | "won" | "lost";
+            companyId?: components["schemas"]["ResourceId"] | null;
             companyOutreachId?: string;
             decisionMakerLinkedinName?: string;
             decisionMakerLinkedinRole?: string;
             decisionMakerName?: string;
             decisionMakerRole?: string;
             displayStage?: string;
+            entityId?: components["schemas"]["ResourceId"];
             facebookHref?: string;
             gmailHref?: string;
             handle: string;
@@ -6568,8 +10366,11 @@ export interface components {
             campaignId?: components["schemas"]["ResourceId"];
             cursor?: string;
             entityKey?: string;
+            include?: "legacy"[];
             limit?: number;
             query?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             stage?: components["schemas"]["PipelineStage"];
             stages?: ("contacted" | "replied" | "call_booked" | "meeting_held" | "no_show" | "closed" | "won" | "lost")[];
         };
@@ -6578,6 +10379,14 @@ export interface components {
             cards: components["schemas"]["PipelineCard"][];
             filteredTotal?: number;
             hasMore: boolean;
+            legacy?: {
+                [key: string]: unknown;
+            };
+            metricIds?: {
+                [key: string]: string;
+            };
+            metrics?: components["schemas"]["SalesMetricsV2"];
+            metricsVersion?: string;
             nextCursor: string | null;
             projection?: string;
             scope?: {
@@ -6596,8 +10405,13 @@ export interface components {
         PipelineCounts: {
             call_booked: number;
             closed: number;
+            closed_unknown?: number;
             contacted: number;
+            lost?: number;
+            meeting_held?: number;
+            no_show?: number;
             replied: number;
+            won?: number;
         };
         PipelineInspectInput: components["schemas"]["OptionalCampaignInput"];
         PipelineInspectOutput: {
@@ -6606,6 +10420,14 @@ export interface components {
             canonicalMetrics?: components["schemas"]["SalesMetrics"];
             /** Format: date-time */
             generatedAt: string;
+            legacy?: {
+                [key: string]: unknown;
+            };
+            metricIds?: {
+                [key: string]: string;
+            };
+            metrics?: components["schemas"]["SalesMetricsV2"];
+            metricsVersion?: string;
             sample: components["schemas"]["AgentLead"][];
             stageCounts: components["schemas"]["PipelineCounts"];
         };
@@ -6627,6 +10449,8 @@ export interface components {
             campaignId: components["schemas"]["ResourceId"];
             entityKey: string;
             idempotencyKey: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         PipelineNoteAddOutput: {
             campaignId: string;
@@ -6641,6 +10465,8 @@ export interface components {
         PipelineNoteListInput: {
             campaignId: components["schemas"]["ResourceId"];
             entityKey: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         PipelineNoteListOutput: {
             campaignId: string;
@@ -6656,6 +10482,8 @@ export interface components {
             campaignId?: components["schemas"]["ResourceId"];
             dryRun?: boolean;
             idempotencyKey?: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         PipelineReconcileOutput: {
             applied: string[];
@@ -6690,11 +10518,14 @@ export interface components {
             campaignId: components["schemas"]["ResourceId"];
             /** @enum {string} */
             closedOutcome?: "won" | "lost";
+            dryRun?: boolean;
             entityKey: string;
             expectedStage: components["schemas"]["PipelineStage"];
             expectedUpdatedAt?: components["schemas"]["ResourceVersion"];
             idempotencyKey?: components["schemas"]["IdempotencyKey"];
             lostReason?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             stage: components["schemas"]["PipelineStage"];
             stageKey: string;
         };
@@ -6704,9 +10535,243 @@ export interface components {
             receiptId?: string;
         };
         PipelineStageUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["PipelineStageUpdateOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["PipelineStageUpdateOutput"] | null;
             /** @constant */
             tool?: "pipeline.stage.update";
+        };
+        ReadinessCheckInput: {
+            /** @enum {string} */
+            for: "reply" | "book" | "followups" | "send:sms" | "send:gmail" | "send:instagram" | "send:facebook" | "send:linkedin";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        ReadinessCheckOutput: {
+            blockers: {
+                code: string;
+                nextAction: string;
+                requiredConnection: string | null;
+                requiredScope: string | null;
+                setupUrl: string | null;
+            }[];
+            checkedAt: string;
+            /** @enum {string} */
+            for: "reply" | "book" | "followups" | "send:sms" | "send:gmail" | "send:instagram" | "send:facebook" | "send:linkedin";
+            ready: boolean;
+            requiresActionPreflight: boolean;
+        };
+        ReadinessCheckResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["ReadinessCheckOutput"] | null;
+            /** @constant */
+            tool?: "readiness.check";
+        };
+        RecorderBotsListInput: {
+            cursor?: string;
+            from?: components["schemas"]["ResourceVersion"];
+            limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            /** @enum {string} */
+            status?: "scheduled" | "joining" | "in_call" | "done" | "failed" | "cancelled";
+            to?: components["schemas"]["ResourceVersion"];
+        };
+        RecorderBotsListOutput: {
+            items: {
+                controlAction: ("cancel" | "stop" | "remove") | null;
+                controlError: string | null;
+                controlState: ("queued" | "completed" | "denied") | null;
+                deduplicationKey: string;
+                id: string;
+                matchedRule: string;
+                meetingId: string;
+                scheduledEndAt: components["schemas"]["ResourceVersion"];
+                scheduledStartAt: components["schemas"]["ResourceVersion"];
+                status: string;
+                /** Format: date-time */
+                updatedAt: string;
+            }[];
+            nextCursor: string | null;
+        };
+        RecorderBotsListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["RecorderBotsListOutput"] | null;
+            /** @constant */
+            tool?: "recorder.bots.list";
+        };
+        RecorderEventOverrideGetInput: {
+            allInstances?: boolean;
+            calendarId: components["schemas"]["ResourceId"];
+            eventId: components["schemas"]["ResourceId"];
+        };
+        RecorderEventOverrideGetOutput: {
+            calendarId: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            dispatch: "unchanged" | "preview" | "pending_rules";
+            dryRun: boolean;
+            eventId: components["schemas"]["ResourceId"];
+            icalUid: string;
+            instanceKey: string | null;
+            receiptId: components["schemas"]["ResourceId"] | null;
+            /** @enum {string} */
+            record: "on" | "off" | "inherit";
+            version: number;
+        };
+        RecorderEventOverrideGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["RecorderEventOverrideGetOutput"] | null;
+            /** @constant */
+            tool?: "recorder.event.override.get";
+        };
+        RecorderEventOverrideUpdateInput: {
+            allInstances?: boolean;
+            calendarId: components["schemas"]["ResourceId"];
+            dryRun?: boolean;
+            eventId: components["schemas"]["ResourceId"];
+            expectedVersion: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @enum {string} */
+            record: "on" | "off";
+            runId?: string;
+        };
+        RecorderEventOverrideUpdateOutput: {
+            calendarId: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            dispatch: "unchanged" | "preview" | "pending_rules";
+            dryRun: boolean;
+            eventId: components["schemas"]["ResourceId"];
+            icalUid: string;
+            instanceKey: string | null;
+            receiptId: components["schemas"]["ResourceId"] | null;
+            /** @enum {string} */
+            record: "on" | "off" | "inherit";
+            version: number;
+        };
+        RecorderEventOverrideUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["RecorderEventOverrideUpdateOutput"] | null;
+            /** @constant */
+            tool?: "recorder.event.override.update";
+        };
+        RecorderJoinGetInput: {
+            requestId: components["schemas"]["ResourceId"];
+        };
+        RecorderJoinGetOutput: {
+            botId: components["schemas"]["ResourceId"] | null;
+            dryRun: boolean;
+            meetingId: components["schemas"]["ResourceId"] | null;
+            receiptId: components["schemas"]["ResourceId"] | null;
+            requestId: components["schemas"]["ResourceId"] | null;
+            safeErrorCode: string | null;
+            /** @enum {string} */
+            state: "preview" | "queued" | "submitting" | "scheduled" | "denied";
+        };
+        RecorderJoinGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["RecorderJoinGetOutput"] | null;
+            /** @constant */
+            tool?: "recorder.join.get";
+        };
+        RecorderSettings: {
+            analyzeNewCalls: boolean;
+            botName: string;
+            coachingThresholds?: {
+                interruptionMultiple: number;
+                monologueMs: number;
+                questionsPer30m: number;
+                talkRatioBps: number;
+            };
+            consent: boolean;
+            consentNotice: string;
+            consentNoticeVersion: string;
+            excludeDomains: string[];
+            excludeEmails: string[];
+            excludeTitleKeywords: string[];
+            /** @enum {string} */
+            language: "auto" | "fi" | "en";
+            maxDurationMinutes: number;
+            minDurationMinutes: number;
+            /** @enum {string} */
+            mode: "all" | "hosted_by_me" | "external_attendees" | "dmfaster_booked_only" | "off";
+            monthlyBotMinutes: number;
+            monthlyTranscriptionMinutes: number;
+            ownDomains?: string[];
+            redactPii: boolean;
+        };
+        RecorderSettingsGetInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        RecorderSettingsGetOutput: {
+            calendarAutojoinEnabled: boolean;
+            calendarConnected: boolean;
+            settings: components["schemas"]["RecorderSettings"];
+            transcriptToolsEnabled: boolean;
+            version: number;
+        };
+        RecorderSettingsGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["RecorderSettingsGetOutput"] | null;
+            /** @constant */
+            tool?: "recorder.settings.get";
+        };
+        RecorderSettingsUpdateInput: {
+            dryRun?: boolean;
+            expectedVersion: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            settings: components["schemas"]["RecorderSettings"];
+        };
+        RecorderSettingsUpdateOutput: {
+            dryRun: boolean;
+            receiptId?: string;
+            settings: components["schemas"]["RecorderSettings"];
+            version: number;
+            wouldChange?: {
+                [key: string]: unknown;
+            };
+        };
+        RecorderSettingsUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["RecorderSettingsUpdateOutput"] | null;
+            /** @constant */
+            tool?: "recorder.settings.update";
+        };
+        RecorderStatusInput: {
+            timezone?: string;
+            upcomingLimit?: number;
+        };
+        RecorderStatusOutput: {
+            /** Format: date-time */
+            asOf: string;
+            botsStartingToday: number;
+            calendarAutojoinEnabled: boolean;
+            calendars: {
+                id: components["schemas"]["ResourceId"];
+                lastSyncAt: string | null;
+                provider: string;
+                /** @enum {string} */
+                status: "connected" | "connecting" | "disconnected";
+            }[];
+            consent: boolean;
+            failuresLast7Days: number;
+            limits: {
+                monthlyBotMinutes: number;
+                monthlyTranscriptionMinutes: number;
+            };
+            /** @enum {string} */
+            mode: "all" | "hosted_by_me" | "external_attendees" | "dmfaster_booked_only" | "off";
+            moreUpcoming: boolean;
+            pendingControls: number;
+            timezone: string;
+            transcriptToolsEnabled: boolean;
+            upcoming: {
+                botId: components["schemas"]["ResourceId"];
+                meetingId: components["schemas"]["ResourceId"];
+                /** Format: date-time */
+                scheduledEndAt: string;
+                /** Format: date-time */
+                scheduledStartAt: string;
+                status: string;
+            }[];
+        };
+        RecorderStatusResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["RecorderStatusOutput"] | null;
+            /** @constant */
+            tool?: "recorder.status";
         };
         RepliesListInput: {
             campaignId?: components["schemas"]["ResourceId"];
@@ -6714,6 +10779,8 @@ export interface components {
             limit?: number;
             /** @description Optional case-insensitive reply search text. */
             query?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         RepliesListOutput: {
             campaignId: string;
@@ -6739,11 +10806,13 @@ export interface components {
         ReplyApprovalsListInput: {
             cursor?: string;
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             /** @enum {string} */
             status?: "pending" | "approved" | "rejected";
         };
         ReplyApprovalsListResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"];
+            data?: components["schemas"]["SalesReplyOperation"] | null;
             /** @constant */
             tool: "reply.approvals.list";
         };
@@ -6766,9 +10835,12 @@ export interface components {
             maxPerConversationPerDay: number;
             requireApprovalIfConfidenceBelow: number;
         };
-        ReplyPolicyGetInput: Record<string, never>;
+        ReplyPolicyGetInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
         ReplyPolicyGetResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"];
+            data?: components["schemas"]["SalesReplyOperation"] | null;
             /** @constant */
             tool: "reply.policy.get";
         };
@@ -6776,9 +10848,11 @@ export interface components {
             expectedRevision: number;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             policy: components["schemas"]["ReplyPolicy"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         ReplyPolicyUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"];
+            data?: components["schemas"]["SalesReplyOperation"] | null;
             /** @constant */
             tool: "reply.policy.update";
         };
@@ -6795,10 +10869,12 @@ export interface components {
             /** @constant */
             expectedRevision: 0;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             template: components["schemas"]["ReplyTemplate"];
         };
         ReplyTemplatesCreateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"];
+            data?: components["schemas"]["SalesReplyOperation"] | null;
             /** @constant */
             tool: "reply.templates.create";
         };
@@ -6806,18 +10882,22 @@ export interface components {
             expectedRevision: number;
             id: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         ReplyTemplatesDeleteResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"];
+            data?: components["schemas"]["SalesReplyOperation"] | null;
             /** @constant */
             tool: "reply.templates.delete";
         };
         ReplyTemplatesListInput: {
             cursor?: string;
             limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         ReplyTemplatesListResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"];
+            data?: components["schemas"]["SalesReplyOperation"] | null;
             /** @constant */
             tool: "reply.templates.list";
         };
@@ -6825,10 +10905,12 @@ export interface components {
             expectedRevision: number;
             id: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             template: components["schemas"]["ReplyTemplate"];
         };
         ReplyTemplatesUpdateResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SalesReplyOperation"];
+            data?: components["schemas"]["SalesReplyOperation"] | null;
             /** @constant */
             tool: "reply.templates.update";
         };
@@ -6854,6 +10936,59 @@ export interface components {
             excludePreviouslyContacted?: boolean;
             querySignature: string;
         };
+        SalesAgent: {
+            createdAt: string;
+            createdBy: components["schemas"]["ResourceId"];
+            id: components["schemas"]["ResourceId"];
+            /** @enum {string} */
+            kind: "setter" | "prospector" | "analyst" | "custom";
+            lastSeenAt: string | null;
+            limits: components["schemas"]["AgentBudgetLimits"];
+            name: string;
+            pausedBy: string;
+            runtime: string;
+            scopes: string[];
+            /** @enum {string} */
+            status: "active" | "paused" | "disabled";
+            updatedAt: string;
+            workspaceUserId: components["schemas"]["ResourceId"];
+        };
+        SalesAnalyticsV2: {
+            asOf?: components["schemas"]["ResourceVersion"];
+            campaign?: {
+                id: string;
+                name: string;
+            } | null;
+            canonicalMetrics?: components["schemas"]["SalesMetricsV2"];
+            definitions?: {
+                [key: string]: string;
+            };
+            from: components["schemas"]["ResourceVersion"];
+            generatedAt?: components["schemas"]["ResourceVersion"];
+            groupBy?: ("day" | "week" | "channel" | "campaign" | "actor" | "variant")[];
+            groups: components["schemas"]["SalesMetricCountsV2"][];
+            identityCoverage?: string;
+            legacy?: components["schemas"]["SalesMetrics"];
+            medianFirstResponseMinutes?: number | null;
+            metricIds: {
+                [key: string]: string;
+            };
+            /** @constant */
+            metricsVersion: "3.0.0";
+            /** @enum {string} */
+            scope?: "today" | "last_24_hours" | "campaign_to_date" | "range";
+            timeSemantics?: string;
+            timezone: string;
+            to: components["schemas"]["ResourceVersion"];
+            totals: components["schemas"]["SalesMetricCountsV2"];
+            unknown: {
+                meetingsWithoutCompany?: number;
+                repliesWithoutCompany?: number;
+                sendsWithoutCompany?: number;
+                unanchoredMeetings: number;
+                unlinkedMeetings: number;
+            };
+        };
         SalesMetricCounts: {
             dimensions?: {
                 [key: string]: unknown;
@@ -6865,6 +11000,38 @@ export interface components {
             noShows?: number;
             positiveReplies?: number;
             reachedCompanies?: number;
+            sent?: number;
+            won?: number;
+        };
+        SalesMetricCountsV2: {
+            companiesBooked?: number;
+            companiesHeld?: number;
+            companiesLost?: number;
+            companiesNoShow?: number;
+            companiesNotInterested?: number;
+            companiesOptedOut?: number;
+            companiesWon?: number;
+            contactedPeople?: number;
+            dimensions?: {
+                [key: string]: unknown;
+            } | null;
+            humanReplies?: number;
+            lost?: number;
+            meetingsBooked?: number;
+            meetingsHeld?: number;
+            meetingsScheduled?: number;
+            noShows?: number;
+            peopleBooked?: number;
+            peopleHeld?: number;
+            peopleLost?: number;
+            peopleNoShow?: number;
+            peopleNotInterested?: number;
+            peopleOptedOut?: number;
+            peopleWon?: number;
+            positiveCompanies?: number;
+            positiveReplies?: number;
+            reachedCompanies?: number;
+            replyingCompanies?: number;
             sent?: number;
             won?: number;
         };
@@ -6881,6 +11048,35 @@ export interface components {
             };
             to?: components["schemas"]["ResourceVersion"];
             totals?: components["schemas"]["SalesMetricCounts"];
+        };
+        SalesMetricsV2: {
+            definitions?: {
+                [key: string]: string;
+            };
+            from: components["schemas"]["ResourceVersion"];
+            groupBy?: ("day" | "week" | "channel" | "campaign" | "actor" | "variant")[];
+            groups: components["schemas"]["SalesMetricCountsV2"][];
+            identityCoverage?: string;
+            medianFirstResponseMinutes?: number | null;
+            metricIds: {
+                [key: string]: string;
+            };
+            /** @constant */
+            metricsVersion: "3.0.0";
+            scope?: {
+                [key: string]: unknown;
+            };
+            timeSemantics?: string;
+            timezone: string;
+            to: components["schemas"]["ResourceVersion"];
+            totals: components["schemas"]["SalesMetricCountsV2"];
+            unknown: {
+                meetingsWithoutCompany?: number;
+                repliesWithoutCompany?: number;
+                sendsWithoutCompany?: number;
+                unanchoredMeetings: number;
+                unlinkedMeetings: number;
+            };
         };
         SalesRangeAnalytics: {
             asOf?: components["schemas"]["ResourceVersion"];
@@ -6931,6 +11127,8 @@ export interface components {
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             minutes: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         SandboxClockAdvanceOutput: {
             /** @constant */
@@ -6955,6 +11153,8 @@ export interface components {
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @enum {string} */
             kind: "human" | "auto_reply" | "reaction";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             text: string;
         };
         SandboxInboundSimulateOutput: {
@@ -6975,6 +11175,8 @@ export interface components {
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @enum {string} */
             provider: "calendar" | "gmail" | "sms" | "browser";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         SandboxProviderUpdateOutput: {
             connected: boolean;
@@ -6994,6 +11196,8 @@ export interface components {
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             /** @constant */
             preset: "appointment_setter_v1";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         SandboxSeedOutput: {
             campaignId: string;
@@ -7016,6 +11220,32 @@ export interface components {
             total: number;
             updatedAt: string;
         };
+        SenderRetireInput: {
+            dryRun?: boolean;
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            reason: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            workerId: components["schemas"]["ResourceId"];
+        };
+        SenderRetireOutput: {
+            dryRun: boolean;
+            receiptId?: string;
+            /** @enum {string} */
+            status: "retired" | "healthy" | "disconnected";
+            updatedAt: string;
+            workerId: string;
+            wouldChange: {
+                retiredAfter: boolean;
+                retiredBefore: boolean;
+            };
+        };
+        SenderRetireResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["SenderRetireOutput"] | null;
+            /** @constant */
+            tool?: "sender.retire";
+        };
         SendersInspectOutput: {
             browserProfiles: {
                 browserLabel: string;
@@ -7027,6 +11257,7 @@ export interface components {
                 lastSeenAt: string;
                 online: boolean;
                 status: string;
+                updatedAt?: string;
             }[];
             browserSetupUrl: string;
             emailAvailable?: boolean;
@@ -7059,6 +11290,32 @@ export interface components {
             data?: components["schemas"]["SendersInspectOutput"] | null;
             /** @constant */
             tool?: "senders.inspect";
+        };
+        SenderUnretireInput: {
+            dryRun?: boolean;
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            reason: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            workerId: components["schemas"]["ResourceId"];
+        };
+        SenderUnretireOutput: {
+            dryRun: boolean;
+            receiptId?: string;
+            /** @enum {string} */
+            status: "retired" | "healthy" | "disconnected";
+            updatedAt: string;
+            workerId: string;
+            wouldChange: {
+                retiredAfter: boolean;
+                retiredBefore: boolean;
+            };
+        };
+        SenderUnretireResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["SenderUnretireOutput"] | null;
+            /** @constant */
+            tool?: "sender.unretire";
         };
         SendingActivity: {
             attemptId: string;
@@ -7206,15 +11463,18 @@ export interface components {
             value: string;
         };
         SuppressionsAddInput: {
+            dryRun?: boolean;
             entries: components["schemas"]["SuppressionEntryInput"][];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         SuppressionsAddOutput: {
             entries: components["schemas"]["SuppressionRecord"][];
             receiptId: components["schemas"]["ResourceId"];
         };
         SuppressionsAddResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SuppressionsAddOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["SuppressionsAddOutput"] | null;
             /** @constant */
             tool?: "suppressions.add";
         };
@@ -7222,6 +11482,8 @@ export interface components {
             cursor?: string;
             limit?: number;
             query?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         SuppressionsListOutput: {
             entries: components["schemas"]["SuppressionRecord"][];
@@ -7241,17 +11503,20 @@ export interface components {
             tool?: "suppressions.list";
         };
         SuppressionsRemoveInput: {
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             id: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             reason: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         SuppressionsRemoveOutput: {
             entry: components["schemas"]["SuppressionRecord"];
             receiptId: components["schemas"]["ResourceId"];
         };
         SuppressionsRemoveResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["SuppressionsRemoveOutput"] | null;
+            data?: components["schemas"]["AgentWritePreviewData"] | components["schemas"]["SuppressionsRemoveOutput"] | null;
             /** @constant */
             tool?: "suppressions.remove";
         };
@@ -7289,19 +11554,78 @@ export interface components {
             subject: string;
             variantIndex: number;
         };
+        WebhookDeliveriesListInput: {
+            cursor?: string;
+            limit?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            /** @enum {string} */
+            status?: "pending" | "delivered" | "failed" | "dead";
+            webhookId: components["schemas"]["ResourceId"];
+        };
+        WebhookDeliveriesListOutput: {
+            items: {
+                attempts: number;
+                createdAt: string;
+                deliveredAt: string | null;
+                eventId: string;
+                id: string;
+                lastError: string | null;
+                lastHttpStatus: number | null;
+                latencyMs: number | null;
+                nextAttemptAt: string | null;
+                orderingKey: string;
+                sequence: number;
+                status: string;
+            }[];
+            nextCursor: string | null;
+        };
+        WebhookDeliveriesListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WebhookDeliveriesListOutput"] | null;
+            /** @constant */
+            tool?: "webhook.deliveries.list";
+        };
+        WebhookFilters: {
+            actorTypes?: ("agent" | "human" | "system" | "automation")[];
+            agentIds?: string[];
+            campaignIds?: string[];
+            channels?: string[];
+            excludeAutomatic?: boolean;
+            excludeReactions?: boolean;
+            intents?: string[];
+            minIntentConfidence?: number;
+        };
+        WebhookHeaders: {
+            [key: string]: string;
+        };
         WebhooksCreateInput: {
             description?: string;
+            dryRun?: boolean;
             events: components["schemas"]["AgentSalesEventType"][];
+            filters?: components["schemas"]["WebhookFilters"];
+            headers?: components["schemas"]["WebhookHeaders"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @enum {string} */
+            ordering?: "strict" | "per_key";
+            /** @enum {string} */
+            payload?: "thin" | "standard" | "full";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            secret?: string;
             url: string;
         };
         WebhooksCreateOutput: {
             createdAt: components["schemas"]["ResourceVersion"];
             description: string;
+            dryRun?: boolean;
             enabled: boolean;
             events: components["schemas"]["AgentSalesEventType"][];
+            headerNames?: string[];
+            health?: string;
             id: components["schemas"]["ResourceId"];
-            receiptId: components["schemas"]["ResourceId"];
+            ordering?: string;
+            payload?: string;
+            receiptId?: components["schemas"]["ResourceId"];
             secret: string;
             updatedAt: components["schemas"]["ResourceVersion"];
             url: string;
@@ -7312,15 +11636,19 @@ export interface components {
             tool?: "webhooks.create";
         };
         WebhooksDeleteInput: {
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             id: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         WebhooksDeleteOutput: {
+            dryRun?: boolean;
             id: components["schemas"]["ResourceId"];
             nextCursor: string | null;
             queued: number;
-            receiptId: components["schemas"]["ResourceId"];
+            receiptId?: components["schemas"]["ResourceId"];
             updatedAt: components["schemas"]["ResourceVersion"];
         };
         WebhooksDeleteResult: components["schemas"]["AgentToolResultBase"] & {
@@ -7328,17 +11656,54 @@ export interface components {
             /** @constant */
             tool?: "webhooks.delete";
         };
-        WebhooksListInput: Record<string, never>;
+        WebhooksDlqReplayInput: {
+            deliveryIds?: components["schemas"]["ResourceId"][];
+            dryRun: boolean;
+            expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            since?: string;
+            webhookId: components["schemas"]["ResourceId"];
+        };
+        WebhooksDlqReplayOutput: {
+            dryRun: boolean;
+            queued: number;
+            receiptId?: string;
+            wouldQueue: number;
+        };
+        WebhooksDlqReplayResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WebhooksDlqReplayOutput"] | null;
+            /** @constant */
+            tool?: "webhooks.dlq.replay";
+        };
+        WebhooksListInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
         WebhooksListOutput: {
             filteredTotal: number;
             items: {
                 createdAt: components["schemas"]["ResourceVersion"];
                 description: string;
+                dryRun?: boolean;
                 enabled: boolean;
                 events: components["schemas"]["AgentSalesEventType"][];
+                headerNames?: string[];
+                health?: string;
                 id: components["schemas"]["ResourceId"];
+                ordering?: string;
+                payload?: string;
                 updatedAt: components["schemas"]["ResourceVersion"];
                 url: string;
+                webhookHealth?: {
+                    attempts24h: number;
+                    delivered24h: number;
+                    oldestPendingAgeMs: number;
+                    p50LatencyMs: number | null;
+                    p95LatencyMs: number | null;
+                    successRate24h: number | null;
+                };
             }[];
             nextCursor: null;
             scope: {
@@ -7352,15 +11717,19 @@ export interface components {
         };
         WebhooksReplayInput: {
             after?: string | number;
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             id: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         WebhooksReplayOutput: {
+            dryRun?: boolean;
             id: components["schemas"]["ResourceId"];
             nextCursor: string | null;
             queued: number;
-            receiptId: components["schemas"]["ResourceId"];
+            receiptId?: components["schemas"]["ResourceId"];
             updatedAt: components["schemas"]["ResourceVersion"];
         };
         WebhooksReplayResult: components["schemas"]["AgentToolResultBase"] & {
@@ -7369,15 +11738,19 @@ export interface components {
             tool?: "webhooks.replay";
         };
         WebhooksTestInput: {
+            dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             id: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         WebhooksTestOutput: {
+            dryRun?: boolean;
             id: components["schemas"]["ResourceId"];
             nextCursor: string | null;
             queued: number;
-            receiptId: components["schemas"]["ResourceId"];
+            receiptId?: components["schemas"]["ResourceId"];
             updatedAt: components["schemas"]["ResourceVersion"];
         };
         WebhooksTestResult: components["schemas"]["AgentToolResultBase"] & {
@@ -7387,18 +11760,29 @@ export interface components {
         };
         WebhooksUpdateInput: {
             description?: string;
+            dryRun?: boolean;
             enabled?: boolean;
             events?: components["schemas"]["AgentSalesEventType"][];
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
+            filters?: components["schemas"]["WebhookFilters"];
+            headers?: components["schemas"]["WebhookHeaders"];
             id: components["schemas"]["ResourceId"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @enum {string} */
+            ordering?: "strict" | "per_key";
+            /** @enum {string} */
+            payload?: "thin" | "standard" | "full";
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            secret?: string;
             url?: string;
         };
         WebhooksUpdateOutput: {
+            dryRun?: boolean;
             id: components["schemas"]["ResourceId"];
             nextCursor: string | null;
             queued: number;
-            receiptId: components["schemas"]["ResourceId"];
+            receiptId?: components["schemas"]["ResourceId"];
             updatedAt: components["schemas"]["ResourceVersion"];
         };
         WebhooksUpdateResult: components["schemas"]["AgentToolResultBase"] & {
@@ -7460,7 +11844,162 @@ export interface components {
             text: string;
             url: string;
         };
-        WorkspaceAgentSalesGetInput: Record<string, never>;
+        WorkItemClaimInput: {
+            dryRun: boolean;
+            expectedVersion: string;
+            id: components["schemas"]["ResourceId"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            leaseSeconds?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        WorkItemClaimOutput: {
+            dryRun: boolean;
+            item: components["schemas"]["AgentWorkItem"];
+            receiptId?: string;
+        };
+        WorkItemClaimResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkItemClaimOutput"] | null;
+            /** @constant */
+            tool?: "work_item.claim";
+        };
+        WorkItemCompleteInput: {
+            dryRun: boolean;
+            expectedVersion: string;
+            id: components["schemas"]["ResourceId"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            outcome: string;
+            receiptIds?: components["schemas"]["ResourceId"][];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        WorkItemCompleteOutput: {
+            dryRun: boolean;
+            item: components["schemas"]["AgentWorkItem"];
+            receiptId?: string;
+        };
+        WorkItemCompleteResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkItemCompleteOutput"] | null;
+            /** @constant */
+            tool?: "work_item.complete";
+        };
+        WorkItemReleaseInput: {
+            dryRun: boolean;
+            expectedVersion: string;
+            id: components["schemas"]["ResourceId"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        WorkItemReleaseOutput: {
+            dryRun: boolean;
+            item: components["schemas"]["AgentWorkItem"];
+            receiptId?: string;
+        };
+        WorkItemReleaseResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkItemReleaseOutput"] | null;
+            /** @constant */
+            tool?: "work_item.release";
+        };
+        WorkItemSnoozeInput: {
+            dryRun: boolean;
+            expectedVersion: string;
+            id: components["schemas"]["ResourceId"];
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            reason: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            until: string;
+        };
+        WorkItemSnoozeOutput: {
+            dryRun: boolean;
+            item: components["schemas"]["AgentWorkItem"];
+            receiptId?: string;
+        };
+        WorkItemSnoozeResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkItemSnoozeOutput"] | null;
+            /** @constant */
+            tool?: "work_item.snooze";
+        };
+        WorkQueueConfigGetInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        WorkQueueConfigGetOutput: {
+            businessHours?: string;
+            config: {
+                [key: string]: unknown;
+            };
+            dryRun?: boolean;
+            formula?: string;
+            receiptId?: string;
+            version: number;
+        };
+        WorkQueueConfigGetResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkQueueConfigGetOutput"] | null;
+            /** @constant */
+            tool?: "work_queue.config.get";
+        };
+        WorkQueueConfigUpdateInput: {
+            dryRun: boolean;
+            expectedVersion: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            settings: {
+                ageWeight?: number;
+                businessEndHour?: number;
+                businessStartHour?: number;
+                campaignWeights?: {
+                    campaignId: components["schemas"]["ResourceId"];
+                    weight: number;
+                }[];
+                slaBusinessHours?: number;
+                stalePositiveDays?: number;
+            };
+        };
+        WorkQueueConfigUpdateOutput: {
+            businessHours?: string;
+            config: {
+                [key: string]: unknown;
+            };
+            dryRun?: boolean;
+            formula?: string;
+            receiptId?: string;
+            version: number;
+        };
+        WorkQueueConfigUpdateResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkQueueConfigUpdateOutput"] | null;
+            /** @constant */
+            tool?: "work_queue.config.update";
+        };
+        WorkQueueListInput: {
+            /** @enum {string} */
+            assignee?: "me" | "unassigned" | "any";
+            campaignIds?: components["schemas"]["ResourceId"][];
+            cursor?: string;
+            limit?: number;
+            minPriority?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            types?: string[];
+            /** @enum {string} */
+            view?: "compact" | "standard";
+        };
+        WorkQueueListOutput: {
+            filteredTotal: number;
+            items: components["schemas"]["AgentWorkItem"][];
+            nextCursor: string | null;
+        };
+        WorkQueueListResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkQueueListOutput"] | null;
+            /** @constant */
+            tool?: "work_queue.list";
+        };
+        WorkspaceAgentSalesGetInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
         WorkspaceAgentSalesGetOutput: {
             autoClose: boolean;
             autoSuppress: boolean;
@@ -7479,6 +12018,8 @@ export interface components {
             enabled: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
             suppressCompany: boolean;
         };
         WorkspaceAgentSalesUpdateOutput: {
@@ -7494,18 +12035,55 @@ export interface components {
             /** @constant */
             tool?: "workspace.agent_sales.update";
         };
-        WorkspaceBriefingInput: Record<string, never>;
+        WorkspaceAutomationInspectInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        WorkspaceAutomationInspectOutput: {
+            halted: boolean;
+            haltedBy: string;
+            haltedChannels: string[];
+            haltEverything: boolean;
+            reason: string;
+            updatedAt: string | null;
+            version: number;
+            workspaceUserId: string;
+        };
+        WorkspaceAutomationInspectResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkspaceAutomationInspectOutput"] | null;
+            /** @constant */
+            tool?: "workspace.automation.inspect";
+        };
+        WorkspaceBriefingInput: {
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
         WorkspaceBriefingOutput: {
             campaignCounts: components["schemas"]["CampaignCounts"];
             focusCampaign: components["schemas"]["CampaignSummary"] | null;
             /** Format: date-time */
             generatedAt: string;
+            legacy?: {
+                [key: string]: unknown;
+            };
+            metricIds?: {
+                [key: string]: string;
+            };
+            metrics?: components["schemas"]["SalesMetricsV2"];
+            metricsVersion?: string;
             selectedCampaignId: string;
             sending: components["schemas"]["SendingSummary"];
             totals: {
                 campaigns: number;
                 sent: number;
                 targetLists: number;
+            };
+            workQueue?: {
+                byType: {
+                    [key: string]: number;
+                };
+                oldestBreachedAt: string | null;
+                top: components["schemas"]["AgentWorkItem"][];
             };
         };
         WorkspaceBriefingResult: components["schemas"]["AgentToolResultBase"] & {
@@ -7558,15 +12136,65 @@ export interface components {
             page?: number;
             pageSize?: number;
             query?: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         WorkspaceCompanyKnowledgeResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["WorkspaceCompanyKnowledgeData"] | null;
             /** @constant */
             tool?: "companies.knowledge.search";
         };
+        WorkspaceHaltInput: {
+            dryRun: boolean;
+            expectedVersion: number;
+            haltEverything?: boolean;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            reason: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        WorkspaceHaltOutput: {
+            dryRun: boolean;
+            receiptId?: string;
+            wouldChange: {
+                halted: boolean;
+                haltedBy: string;
+                haltedChannels: string[];
+                haltEverything: boolean;
+                reason: string;
+                version: number;
+                workspaceUserId: string;
+            };
+        };
+        WorkspaceHaltResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkspaceHaltOutput"] | null;
+            /** @constant */
+            tool?: "workspace.halt";
+        };
+        WorkspaceResumeInput: {
+            dryRun: boolean;
+            expectedVersion: number;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+        };
+        WorkspaceResumeOutput: {
+            approvalUrl: string | null;
+            dryRun: boolean;
+            ownerApprovalRequired: boolean;
+            receiptId?: string;
+            requestId: string | null;
+        };
+        WorkspaceResumeResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["WorkspaceResumeOutput"] | null;
+            /** @constant */
+            tool?: "workspace.resume";
+        };
         WorkspaceSandboxCreateInput: {
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             name: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
         };
         WorkspaceSandboxCreateOutput: {
             /** @constant */
@@ -7910,6 +12538,336 @@ export interface operations {
             503: components["responses"]["AuthServiceUnavailable"];
         };
     };
+    agentCreateRequest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentCreateRequestInput"];
+            };
+        };
+        responses: {
+            /** @description Agent identity result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentCreateRequestResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    agentCredentialRotate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentCredentialRotateInput"];
+            };
+        };
+        responses: {
+            /** @description Agent identity result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentCredentialRotateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    agentHeartbeat: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentHeartbeatInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentHeartbeatResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    agentInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Agent identity result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    agentPause: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentPauseInput"];
+            };
+        };
+        responses: {
+            /** @description Agent identity result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentPauseResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    agentResume: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentResumeInput"];
+            };
+        };
+        responses: {
+            /** @description Agent identity result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentResumeResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    agentRunEnd: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentRunEndInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentRunEndResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    agentRunInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentRunInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentRunInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    agentRunStart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentRunStartInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentRunStartResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    agentRunsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentRunsListInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentRunsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    agentsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgentsListInput"];
+            };
+        };
+        responses: {
+            /** @description Agent identity result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     analyticsSummary: {
         parameters: {
             query?: never;
@@ -7943,6 +12901,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    attributionCheck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AttributionCheckInput"];
+            };
+        };
+        responses: {
+            /** @description Read an authorized versioned transcript */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AttributionCheckResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     audiencePreview: {
         parameters: {
             query?: never;
@@ -7963,6 +12951,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AudiencePreviewResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    budgetStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BudgetStatusInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BudgetStatusResult"];
                 };
             };
             400: components["responses"]["BadRequest"];
@@ -8153,6 +13171,372 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    callAccessList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallAccessListInput"];
+            };
+        };
+        responses: {
+            /** @description List call grants and share-link metadata */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallAccessListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callActivityGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallActivityGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read unified call and outreach activity */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallActivityGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callAnalysisGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallAnalysisGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read evidence-backed call analysis */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallAnalysisGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callAnalyticsQuery: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallAnalyticsQueryInput"];
+            };
+        };
+        responses: {
+            /** @description Read an authorized versioned transcript */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallAnalyticsQueryResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callAttendanceGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallAttendanceGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read retained participant attendance */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallAttendanceGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callAuditList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallAuditListInput"];
+            };
+        };
+        responses: {
+            /** @description List call access audit metadata */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallAuditListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callBotCancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallBotCancelInput"];
+            };
+        };
+        responses: {
+            /** @description Cancel a scheduled recorder bot */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallBotCancelResult"];
+                };
+            };
+        };
+    };
+    callBotJoin: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallBotJoinInput"];
+            };
+        };
+        responses: {
+            /** @description Request an ad-hoc recorder bot */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallBotJoinResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callBotRemove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallBotRemoveInput"];
+            };
+        };
+        responses: {
+            /** @description Remove a recorder bot and preserve captured media */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallBotRemoveResult"];
+                };
+            };
+        };
+    };
+    callCoachingGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallCoachingGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read an authorized versioned transcript */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallCoachingGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callDelete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallDeleteInput"];
+            };
+        };
+        responses: {
+            /** @description Delete selected call artifacts */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallDeleteResult"];
+                };
+            };
+        };
+    };
+    callInsightGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallInsightGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read retained sales insight */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallInsightGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callInsightReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallInsightReviewInput"];
+            };
+        };
+        responses: {
+            /** @description Review a retained call insight */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallInsightReviewResult"];
+                };
+            };
+        };
+    };
     callInspect: {
         parameters: {
             query?: never;
@@ -8183,6 +13567,30 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    callOutcomeConfirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallOutcomeConfirmInput"];
+            };
+        };
+        responses: {
+            /** @description Confirm or correct a proposed call outcome */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallOutcomeConfirmResult"];
+                };
+            };
+        };
+    };
     callOutcomeSet: {
         parameters: {
             query?: never;
@@ -8205,6 +13613,204 @@ export interface operations {
                     "application/json": components["schemas"]["CallOutcomeSetResult"];
                 };
             };
+        };
+    };
+    callParticipantWithdrawalReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallParticipantWithdrawalReportInput"];
+            };
+        };
+        responses: {
+            /** @description Report a participant recording withdrawal */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallParticipantWithdrawalReportResult"];
+                };
+            };
+        };
+    };
+    callRecordingGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallRecordingGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read authorized recording metadata and optional private media */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallRecordingGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callRecordingStop: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallRecordingStopInput"];
+            };
+        };
+        responses: {
+            /** @description Stop recording and preserve captured media */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallRecordingStopResult"];
+                };
+            };
+        };
+    };
+    callStatsGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallStatsGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read an authorized versioned transcript */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallStatsGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callTranscriptGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallTranscriptGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read an authorized versioned transcript */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallTranscriptGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callTranscriptsGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallTranscriptsGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read an authorized versioned transcript */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallTranscriptsGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    callTranscriptsSearch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallTranscriptsSearchInput"];
+            };
+        };
+        responses: {
+            /** @description Read an authorized versioned transcript */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CallTranscriptsSearchResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
         };
     };
     callsList: {
@@ -8845,6 +14451,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    campaignReengagementPrepare: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignReengagementPrepareInput"];
+            };
+        };
+        responses: {
+            /** @description Disabled re-engagement draft result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CampaignReengagementPrepareResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     campaignValidate: {
         parameters: {
             query?: never;
@@ -8933,6 +14569,120 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    channelHalt: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChannelHaltInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChannelHaltResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    classificationBackfillPlan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClassificationBackfillPlanInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassificationBackfillPlanResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    classificationFeedback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClassificationFeedbackInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassificationFeedbackResult"];
+                };
+            };
+        };
+    };
+    classificationQuality: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClassificationQualityInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClassificationQualityResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];
@@ -9626,6 +15376,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    companiesUpsert: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CompaniesUpsertInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CompaniesUpsertResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     companyInspect: {
         parameters: {
             query?: never;
@@ -9990,6 +15770,216 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    entitiesGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EntitiesGetInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntitiesGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    entityMerge: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EntityMergeInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityMergeResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    entityResolve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EntityResolveInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntityResolveResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    entitySplit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EntitySplitInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntitySplitResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    eventConsumersCreate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventConsumersCreateInput"];
+            };
+        };
+        responses: {
+            /** @description Event consumer result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventConsumersCreateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    eventConsumersList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventConsumersListInput"];
+            };
+        };
+        responses: {
+            /** @description Event consumer result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventConsumersListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    eventsAck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventsAckInput"];
+            };
+        };
+        responses: {
+            /** @description Event consumer result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventsAckResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     eventsList: {
         parameters: {
             query?: never;
@@ -10012,6 +16002,36 @@ export interface operations {
                     "application/json": components["schemas"]["EventsListResult"];
                 };
             };
+        };
+    };
+    eventsSnapshot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EventsSnapshotInput"];
+            };
+        };
+        responses: {
+            /** @description Event consumer result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventsSnapshotResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
         };
     };
     feedbackList: {
@@ -11028,6 +17048,66 @@ export interface operations {
             };
         };
     };
+    metricsReconcile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MetricsReconcileInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MetricsReconcileResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    peopleUpsert: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PeopleUpsertInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PeopleUpsertResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     pipelineBoard: {
         parameters: {
             query?: never;
@@ -11225,6 +17305,246 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PipelineStageUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    readinessCheck: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReadinessCheckInput"];
+            };
+        };
+        responses: {
+            /** @description Read an authorized versioned transcript */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReadinessCheckResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    recorderBotsList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecorderBotsListInput"];
+            };
+        };
+        responses: {
+            /** @description List authorized recorder bots */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecorderBotsListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    recorderEventOverrideGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecorderEventOverrideGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read own calendar event recording override */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecorderEventOverrideGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    recorderEventOverrideUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecorderEventOverrideUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Update own calendar event recording override */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecorderEventOverrideUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    recorderJoinGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecorderJoinGetInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect your ad-hoc recorder request */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecorderJoinGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    recorderSettingsGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecorderSettingsGetInput"];
+            };
+        };
+        responses: {
+            /** @description Read own recorder settings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecorderSettingsGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    recorderSettingsUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecorderSettingsUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Update own recorder settings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecorderSettingsUpdateResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    recorderStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecorderStatusInput"];
+            };
+        };
+        responses: {
+            /** @description Inspect recorder connection and scheduling health */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecorderStatusResult"];
                 };
             };
             400: components["responses"]["BadRequest"];
@@ -11532,6 +17852,66 @@ export interface operations {
             };
         };
     };
+    senderRetire: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SenderRetireInput"];
+            };
+        };
+        responses: {
+            /** @description Update own recorder settings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SenderRetireResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    senderUnretire: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SenderUnretireInput"];
+            };
+        };
+        responses: {
+            /** @description Update own recorder settings */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SenderUnretireResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     sendersInspect: {
         parameters: {
             query?: never;
@@ -11817,6 +18197,30 @@ export interface operations {
             };
         };
     };
+    webhookDeliveriesList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhookDeliveriesListInput"];
+            };
+        };
+        responses: {
+            /** @description Webhook delivery result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookDeliveriesListResult"];
+                };
+            };
+        };
+    };
     webhooksCreate: {
         parameters: {
             query?: never;
@@ -11861,6 +18265,30 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WebhooksDeleteResult"];
+                };
+            };
+        };
+    };
+    webhooksDlqReplay: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhooksDlqReplayInput"];
+            };
+        };
+        responses: {
+            /** @description Webhook delivery result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhooksDlqReplayResult"];
                 };
             };
         };
@@ -11961,6 +18389,186 @@ export interface operations {
             };
         };
     };
+    workItemClaim: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkItemClaimInput"];
+            };
+        };
+        responses: {
+            /** @description Work queue result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkItemClaimResult"];
+                };
+            };
+        };
+    };
+    workItemComplete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkItemCompleteInput"];
+            };
+        };
+        responses: {
+            /** @description Work queue result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkItemCompleteResult"];
+                };
+            };
+        };
+    };
+    workItemRelease: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkItemReleaseInput"];
+            };
+        };
+        responses: {
+            /** @description Work queue result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkItemReleaseResult"];
+                };
+            };
+        };
+    };
+    workItemSnooze: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkItemSnoozeInput"];
+            };
+        };
+        responses: {
+            /** @description Work queue result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkItemSnoozeResult"];
+                };
+            };
+        };
+    };
+    workQueueConfigGet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkQueueConfigGetInput"];
+            };
+        };
+        responses: {
+            /** @description Work queue result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkQueueConfigGetResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    workQueueConfigUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkQueueConfigUpdateInput"];
+            };
+        };
+        responses: {
+            /** @description Work queue result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkQueueConfigUpdateResult"];
+                };
+            };
+        };
+    };
+    workQueueList: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkQueueListInput"];
+            };
+        };
+        responses: {
+            /** @description Work queue result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkQueueListResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     workspaceAgentSalesGet: {
         parameters: {
             query?: never;
@@ -12009,6 +18617,36 @@ export interface operations {
             };
         };
     };
+    workspaceAutomationInspect: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceAutomationInspectInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceAutomationInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     workspaceBriefing: {
         parameters: {
             query?: never;
@@ -12037,6 +18675,66 @@ export interface operations {
             401: components["responses"]["Unauthorized"];
             403: components["responses"]["Forbidden"];
             404: components["responses"]["NotFound"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    workspaceHalt: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceHaltInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceHaltResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    workspaceResume: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceResumeInput"];
+            };
+        };
+        responses: {
+            /** @description Classification result */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceResumeResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
             429: components["responses"]["TooManyRequests"];
             500: components["responses"]["InternalServerError"];
             503: components["responses"]["ServiceUnavailable"];

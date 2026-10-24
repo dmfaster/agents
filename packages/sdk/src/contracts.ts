@@ -2,6 +2,7 @@ import type { components } from "./generated/api.ts";
 
 import { AGENT_TOOL_NAMES } from "./generated/tools.ts";
 export {
+  AGENT_CONTRACT_VERSION,
   AGENT_TOOL_NAMES,
   AGENT_TOOL_POLICIES,
   AGENT_TOOL_SCOPES,
