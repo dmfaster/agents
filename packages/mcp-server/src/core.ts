@@ -13,7 +13,7 @@ import {
 import { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
 import {
-  registerAgentToolDefinitions,
+  createAgentToolDefinitions,
   type AgentInvoker,
   type AgentToolDefinition,
 } from "./tools.ts";
@@ -27,7 +27,7 @@ import { cachedMcpSchema } from "./cached-schema.ts";
 import { hostedConnectionSchema } from "./presentation-schemas.ts";
 import { oauthToolMetadata, oauthFailureMetadata, type HostedAuth } from "./hosted-auth.ts";
 
-export const MCP_SERVER_VERSION = "2.5.1";
+export const MCP_SERVER_VERSION = "2.6.0";
 export const MCP_SERVER_INSTRUCTIONS =
   "DM Faster prospecting and outreach. Check connection_status; use narrow tools, exact counts and returned IDs/revisions. Retain retry keys. Selections are not consent. Drafts never send. Follow granted access, explicit user instructions and tool workflows; verify outcomes before claiming success. Never expose credentials or operate approval pages. With feedback:write, use feedback_submit for observed friction: concise context, no private data, one stable key per report. Continue the main task.";
 
@@ -131,11 +131,14 @@ function registerWithMcpServer(
   )!;
   const scopes = AGENT_TOOL_SCOPES[domainName];
   if (auth && !scopes.every((scope) => auth.grantedScopes.includes(scope))) return;
-  server.registerTool(
+  return server.registerTool(
     definition.name,
     {
       title: definition.title,
-      description: `${definition.title}. ${definition.description}`.slice(0, 300),
+      description: `${definition.name}: ${definition.title}. ${definition.description}`.slice(
+        0,
+        300,
+      ),
       inputSchema: cachedMcpSchema(definition.inputSchema),
       outputSchema: cachedMcpSchema(definition.outputSchema),
       annotations: definition.annotations,
@@ -172,6 +175,7 @@ export function createDmfasterMcpCore(input: {
   registerHostedEvents?: (server: McpServer) => void;
   resultMetadata?: () => Record<string, unknown>;
   uiTools?: boolean;
+  catalogProfile?: "compact" | "full";
 }) {
   const client = mcpCommerceClient(input.client);
   const server = new McpServer(
@@ -186,14 +190,147 @@ export function createDmfasterMcpCore(input: {
       ...(input.hostedAuth ? { maxToolInputElements: 10_000 } : {}),
     },
   );
+  server.registerResource(
+    "agent-guide",
+    "dmfaster://docs/agents",
+    { title: "Agent tools and compact profiles", mimeType: "text/markdown" },
+    async (uri) => ({
+      contents: [
+        {
+          uri: uri.href,
+          mimeType: "text/markdown",
+          text: "Use tools_discover(query, includeSchema:true) to find any scoped tool; tools_call({tool:MCP_name,input:{...}}) invokes it with the same validation, authorization and receipts as the named tool. The compact catalog keeps the ICP-to-draft workflow directly available. Explicit dryRun is required for sends; disabled drafts never send. Use workspace_sandbox_create for rehearsal. Request view:full for expanded responses; include:[metrics] for canonical counts and definitions. commitments_list requires calls:transcripts:read as well as its listed scope. All timestamps accept offsets. Preserve opaque IDs, versions and retry keys. Connection grants never expand automatically.",
+        },
+      ],
+    }),
+  );
   input.registerHostedEvents?.(server);
-  registerAgentToolDefinitions(
+  const allDefinitions = createAgentToolDefinitions(client);
+  let activeAuth = input.hostedAuth;
+  const permitted = () =>
+    allDefinitions.filter((definition) => {
+      const domain = AGENT_TOOL_NAMES.find(
+        (name) => AGENT_TOOL_DEFINITIONS[name].mcp.name === definition.name,
+      )!;
+      return (
+        !activeAuth ||
+        AGENT_TOOL_SCOPES[domain].every((scope) => activeAuth!.grantedScopes.includes(scope))
+      );
+    });
+  let definitions = permitted();
+  const coreNames = new Set([
+    "industry_lookup",
+    "campaign_draft_plan",
+    "copy_approval_request",
+    "campaign_draft_readiness",
+    "work_queue_list",
+  ]);
+  const registered = new Map<string, NonNullable<ReturnType<typeof registerWithMcpServer>>>();
+  const synchronizeCatalog = () => {
+    definitions = permitted();
+    const visible = definitions.filter(
+      (d) => input.catalogProfile === "full" || coreNames.has(d.name),
+    );
+    for (const [name, tool] of registered)
+      if (!visible.some((d) => d.name === name)) {
+        tool.remove();
+        registered.delete(name);
+      }
+    for (const definition of visible)
+      if (!registered.has(definition.name)) {
+        const tool = registerWithMcpServer(server, definition, activeAuth, input.resultMetadata);
+        if (tool) registered.set(definition.name, tool);
+      }
+  };
+  synchronizeCatalog();
+  server.registerTool(
+    "tools_discover",
     {
-      register(definition) {
-        registerWithMcpServer(server, definition, input.hostedAuth, input.resultMetadata);
+      title: "Discover scoped DM Faster tools",
+      description:
+        "Find available tools by name or task. Returns compact names; includeSchema adds exact input schemas for up to 3 tools. Call any returned name with tools_call. Missing permissions appear in connection_status.",
+      inputSchema: z
+        .object({
+          query: z.string().max(200).optional(),
+          limit: z.number().int().min(1).max(30).optional(),
+          includeSchema: z.boolean().optional(),
+        })
+        .strict(),
+      outputSchema: z
+        .object({
+          items: z.array(z.record(z.string(), z.unknown())),
+          total: z.number().int(),
+          hasMore: z.boolean(),
+        })
+        .strict(),
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
       },
     },
-    client,
+    async ({ query, limit, includeSchema }) => {
+      const terms = (query || "").toLowerCase().split(/\s+/).filter(Boolean);
+      const matches = definitions.filter((d) =>
+        terms.every((term) => `${d.name} ${d.title} ${d.description}`.toLowerCase().includes(term)),
+      );
+      const items = matches.slice(0, Math.min(limit || 10, includeSchema ? 3 : 30)).map((d) => ({
+        name: d.name,
+        description: `${d.title}. ${d.description}`.slice(0, 300),
+        annotations: d.annotations,
+        ...(includeSchema
+          ? {
+              inputSchema: d.inputSchema["~standard"].jsonSchema.input({
+                target: "draft-2020-12",
+              }),
+            }
+          : {}),
+      }));
+      const result = { items, total: matches.length, hasMore: matches.length > items.length };
+      return {
+        content: [{ type: "text", text: JSON.stringify(result) }],
+        structuredContent: result,
+      };
+    },
+  );
+  server.registerTool(
+    "tools_call",
+    {
+      title: "Call a scoped DM Faster tool",
+      description:
+        "Call a tool by the MCP name from tools_discover or connection_status. Same input/output validation, permissions, explicit send approval and idempotency requirements as the named tool. Discover the exact input when unsure; do not guess resource IDs.",
+      inputSchema: z
+        .object({ tool: z.string().min(1).max(120), input: z.record(z.string(), z.unknown()) })
+        .strict(),
+      outputSchema: z.record(z.string(), z.unknown()),
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: false,
+        openWorldHint: true,
+      },
+    },
+    async ({ tool, input: value }, context) => {
+      const definition = definitions.find((d) => d.name === tool);
+      if (!definition)
+        return toolFailure(
+          new Error(
+            "Tool unavailable for this connection. Inspect connection_status for missing scopes.",
+          ),
+        );
+      try {
+        const result = await definition.call(value, { signal: context.mcpReq.signal });
+        // Compact discovery never relaxes the canonical tool's response validation.
+        definition.outputSchema.parse(result);
+        const domain = AGENT_TOOL_NAMES.find(
+          (name) => AGENT_TOOL_DEFINITIONS[name].mcp.name === tool,
+        )!;
+        return toolResult(result, domain, value);
+      } catch (error) {
+        return toolFailure(error);
+      }
+    },
   );
   if (input.hostedConnection) {
     const inspect = input.hostedConnection;
@@ -219,7 +356,19 @@ export function createDmfasterMcpCore(input: {
         },
       },
       async ({ toolsView }) => {
-        const status = projectConnectionStatus(await inspect(), toolsView);
+        const identity = await inspect();
+        const scopes = (identity.credential as { scopes?: unknown } | undefined)?.scopes;
+        if (
+          activeAuth &&
+          Array.isArray(scopes) &&
+          scopes.every((s) => typeof s === "string") &&
+          [...scopes].sort().join(" ") !== [...activeAuth.grantedScopes].sort().join(" ")
+        ) {
+          activeAuth = { ...activeAuth, grantedScopes: scopes };
+          synchronizeCatalog();
+          server.sendToolListChanged();
+        }
+        const status = projectConnectionStatus(identity, toolsView);
         return {
           content: [{ type: "text" as const, text: JSON.stringify(status) }],
           structuredContent: status,

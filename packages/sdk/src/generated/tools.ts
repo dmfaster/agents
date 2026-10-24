@@ -1,5 +1,5 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
-export const AGENT_CONTRACT_VERSION = "2.5.1" as const;
+export const AGENT_CONTRACT_VERSION = "2.6.0" as const;
 export const AGENT_TOOL_NAMES = [
   "analytics.summary",
   "workspace.briefing",
@@ -1819,6 +1819,59 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "copy.approval.cancel",
   "approval.cancel",
   "approvals.list",
+] as const;
+export const AGENT_INPUT_ONLY_PREVIEW_TOOLS = [
+  "campaign.messages.draft.update",
+  "campaign.messages.update",
+  "campaign.followups.cancel",
+  "sending.test.prepare",
+  "sending.test.send",
+  "pipeline.note.add",
+  "list.target.remove",
+  "campaign.draft.prepare",
+  "campaign.draft.update",
+  "list.import",
+  "list.prepare",
+  "campaign.prepare",
+  "campaign.launch.preflight",
+  "campaign.launch",
+  "campaign.pause.preflight",
+  "campaign.pause",
+  "companies.fit.start",
+  "companies.fit.advance",
+  "companies.list.prepare",
+  "companies.list.refine",
+  "campaign.delivery.update",
+  "sending.instagram.pacing.update",
+  "companies.fit.cancel",
+  "companies.fit.run",
+  "instagram.extract.start",
+  "leads.prospect.start",
+  "leads.prospect.advance",
+  "leads.prospect.cancel",
+  "workspace.sandbox.create",
+  "sandbox.seed",
+  "sandbox.inbound.simulate",
+  "sandbox.clock.advance",
+  "workspace.agent_sales.update",
+  "sandbox.provider.update",
+  "reply.templates.create",
+  "reply.templates.update",
+  "reply.templates.delete",
+  "reply.policy.update",
+  "conversation.draft.save",
+  "calendar.booking.link.create",
+  "feedback.submit",
+  "copy.approval.request",
+  "commitments.propose",
+  "commitment.update",
+  "commitment.confirm.batch",
+  "commitment.reminder.draft",
+  "list.rename",
+  "list.archive",
+  "campaign.draft.archive",
+  "copy.approval.cancel",
+  "approval.cancel",
 ] as const;
 export const AGENT_ERROR_CATALOG = {
   authorization_pending: {
@@ -7205,7 +7258,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxItems: 3,
         items: {
           type: "string",
-          enum: ["canonical", "legacy", "definitions"],
+          enum: ["canonical", "legacy", "metrics", "definitions"],
         },
       },
       runId: {
@@ -7238,6 +7291,20 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      include: {
+        type: "array",
+        maxItems: 1,
+        items: {
+          type: "string",
+          enum: ["metrics", "legacy"],
+        },
+      },
+      from: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      to: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
       runId: {
         type: "string",
         minLength: 1,
@@ -7309,7 +7376,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxItems: 1,
         items: {
           type: "string",
-          enum: ["legacy"],
+          enum: ["legacy", "metrics"],
         },
       },
       runId: {
@@ -7375,6 +7442,34 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      from: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      to: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      fields: {
+        type: "array",
+        maxItems: 8,
+        description: "Select compact conversation fields; id and channel are always retained.",
+        items: {
+          type: "string",
+          enum: [
+            "id",
+            "channel",
+            "targetName",
+            "needsReply",
+            "lastMessageAt",
+            "lastInboundAt",
+            "interestIntent",
+            "lastMessageText",
+          ],
+        },
+      },
+      view: {
+        type: "string",
+        enum: ["compact", "standard", "full", "summary"],
+      },
       filter: {
         type: "string",
         enum: ["all", "needs_reply", "waiting", "unread", "snoozed", "closed"],
@@ -7443,7 +7538,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxItems: 1,
         items: {
           type: "string",
-          enum: ["legacy"],
+          enum: ["legacy", "metrics"],
         },
       },
       runId: {
@@ -7571,10 +7666,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxLength: 10000,
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 8,
-        maxLength: 160,
-        pattern: "^[a-zA-Z0-9_-]+$",
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       templateId: {
         $ref: "#/components/schemas/ResourceId",
@@ -7595,10 +7687,29 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
   },
+  IdempotencyKey: {
+    "x-dmfaster-trim": true,
+    type: "string",
+    minLength: 8,
+    maxLength: 160,
+    pattern: "^[A-Za-z0-9._:-]{8,160}$",
+  },
   ReplyTemplateVariables: {
     type: "object",
     additionalProperties: false,
     properties: {
+      lastName: {
+        type: "string",
+        maxLength: 500,
+      },
+      fullName: {
+        type: "string",
+        maxLength: 500,
+      },
+      name: {
+        type: "string",
+        maxLength: 500,
+      },
       firstName: {
         type: "string",
         maxLength: 500,
@@ -7632,10 +7743,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     required: ["idempotencyKey"],
     properties: {
       idempotencyKey: {
-        type: "string",
-        minLength: 8,
-        maxLength: 160,
-        pattern: "^[a-zA-Z0-9_-]+$",
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       runId: {
         type: "string",
@@ -7680,6 +7788,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       "idempotencyKey",
     ],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -7726,13 +7839,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
       },
     },
-  },
-  IdempotencyKey: {
-    "x-dmfaster-trim": true,
-    type: "string",
-    minLength: 1,
-    maxLength: 160,
-    pattern: "^[A-Za-z0-9._:-]{1,160}$",
   },
   CampaignMessagesListInput: {
     type: "object",
@@ -7783,6 +7889,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["campaignId", "runId", "expectedCampaignUpdatedAt", "edits", "idempotencyKey"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -7837,6 +7948,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["campaignId"],
     properties: {
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -7862,6 +7978,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["campaignId", "expectedCampaignUpdatedAt", "jobIds", "idempotencyKey"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -7877,10 +7998,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         },
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 8,
-        maxLength: 160,
-        pattern: "^[a-zA-Z0-9._:-]+$",
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       runId: {
         type: "string",
@@ -7921,6 +8039,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["channel", "to", "recipientConsentConfirmed", "idempotencyKey"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       channel: {
         type: "string",
         enum: ["email", "sms"],
@@ -7939,9 +8062,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         const: true,
       },
       idempotencyKey: {
-        type: "string",
-        pattern: "^[A-Za-z0-9._:-]{1,160}$",
-        maxLength: 160,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       runId: {
         type: "string",
@@ -7956,6 +8077,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["testId", "reviewDigest"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       testId: {
         type: "string",
         pattern: "^delivery_test_[a-f0-9]{64}$",
@@ -8077,7 +8203,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxItems: 1,
         items: {
           type: "string",
-          enum: ["legacy"],
+          enum: ["legacy", "metrics"],
         },
       },
       runId: {
@@ -8167,6 +8293,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["campaignId", "entityKey", "body", "idempotencyKey"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -8181,10 +8312,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxLength: 2000,
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 8,
-        maxLength: 160,
-        pattern: "^[a-zA-Z0-9._:-]+$",
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       runId: {
         type: "string",
@@ -8218,6 +8346,14 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["query"],
     properties: {
+      countries: {
+        type: "array",
+        minItems: 1,
+        maxItems: 1,
+        items: {
+          $ref: "#/components/schemas/SupportedCountry",
+        },
+      },
       country: {
         $ref: "#/components/schemas/SupportedCountry",
       },
@@ -8844,6 +8980,9 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      audiencePage: {
+        $ref: "#/components/schemas/ProspectingAudiencePage",
+      },
       name: {
         type: "string",
         minLength: 1,
@@ -8918,6 +9057,26 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
     required: ["name", "filters", "copy"],
+  },
+  ProspectingAudiencePage: {
+    type: "object",
+    additionalProperties: false,
+    description:
+      "Bounded inventory page. Exact eligibility totals cover this page only; follow returned nextOffset for subsequent pages. Each draft page requires its own idempotencyKey.",
+    properties: {
+      offset: {
+        type: "integer",
+        minimum: 0,
+        maximum: 10000000,
+        description: "Defaults to 0.",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 500,
+        description: "Defaults to 500.",
+      },
+    },
   },
   CompanySearchFilters: {
     type: "object",
@@ -9146,6 +9305,28 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      variables: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          ownerName: {
+            type: "string",
+            maxLength: 500,
+          },
+          slotLink: {
+            type: "string",
+            maxLength: 500,
+          },
+          slot1: {
+            type: "string",
+            maxLength: 500,
+          },
+          slot2: {
+            type: "string",
+            maxLength: 500,
+          },
+        },
+      },
       messages: {
         type: "array",
         items: {
@@ -9153,7 +9334,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           additionalProperties: false,
           properties: {
             channel: {
-              enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+              enum: ["instagram", "facebook", "linkedin", "gmail", "email", "sms"],
             },
             subject: {
               type: "string",
@@ -9177,7 +9358,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           additionalProperties: false,
           properties: {
             channel: {
-              enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+              enum: ["instagram", "facebook", "linkedin", "gmail", "email", "sms"],
             },
             subject: {
               type: "string",
@@ -9313,6 +9494,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["listId", "username", "expectedListUpdatedAt"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       listId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -9347,6 +9533,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       "idempotencyKey",
     ],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       channel: {
         type: "string",
         enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
@@ -9459,6 +9650,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["campaignId", "expectedCampaignUpdatedAt", "updates"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -9627,6 +9823,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["name", "usernames", "idempotencyKey"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       name: {
         type: "string",
         minLength: 1,
@@ -9660,6 +9861,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["state", "reviewedAudience"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       state: {
         $ref: "#/components/schemas/AgentCampaignState",
       },
@@ -9725,6 +9931,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["campaignId", "idempotencyKey"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -9744,6 +9955,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["campaignId", "idempotencyKey", "authorizationId"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -9766,6 +9982,29 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      country: {
+        $ref: "#/components/schemas/SupportedCountry",
+      },
+      sections: {
+        type: "array",
+        maxItems: 8,
+        items: {
+          type: "string",
+          enum: [
+            "filterFields",
+            "defaults",
+            "availability",
+            "metadata",
+            "technologies",
+            "fundingSources",
+            "restrictions",
+          ],
+        },
+      },
+      view: {
+        type: "string",
+        enum: ["compact", "standard", "full", "summary"],
+      },
       countries: {
         type: "array",
         items: {
@@ -9793,13 +10032,15 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
       },
     },
-    required: ["countries"],
   },
   CompanySuggestionsInput: {
     type: "object",
     additionalProperties: false,
-    required: ["query", "countries"],
+    required: ["query"],
     properties: {
+      country: {
+        $ref: "#/components/schemas/SupportedCountry",
+      },
       query: {
         type: "string",
         minLength: 2,
@@ -9830,6 +10071,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
       filters: {
         $ref: "#/components/schemas/CompanySearchFilters",
       },
@@ -10177,9 +10423,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maximum: 90,
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 100,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       runId: {
         type: "string",
@@ -10317,6 +10561,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       "idempotencyKey",
     ],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -10324,14 +10573,10 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         $ref: "#/components/schemas/ResourceId",
       },
       expectedCampaignUpdatedAt: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       expectedListUpdatedAt: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       expectedTotal: {
         type: "integer",
@@ -10381,6 +10626,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["runId"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       runId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -10450,6 +10700,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       name: {
         type: "string",
         maxLength: 120,
@@ -10511,6 +10766,18 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      view: {
+        type: "string",
+        enum: ["compact", "standard", "full"],
+      },
+      fields: {
+        type: "array",
+        maxItems: 30,
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+      },
       listId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -10554,6 +10821,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       "apply",
     ],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       listId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -10561,14 +10833,10 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         $ref: "#/components/schemas/ResourceId",
       },
       expectedListUpdatedAt: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       expectedCampaignUpdatedAt: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       expectedTotal: {
         type: "integer",
@@ -10735,6 +11003,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["campaignId", "expectedRevision", "idempotencyKey", "patch"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       campaignId: {
         type: "string",
         minLength: 1,
@@ -10745,10 +11018,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         pattern: "^[a-f0-9]{64}$",
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
-        pattern: "^[A-Za-z0-9._:-]+$",
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       patch: {
         type: "object",
@@ -10810,16 +11080,18 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["expectedRevision", "idempotencyKey", "policy", "reason"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       expectedRevision: {
         type: ["string", "null"],
         pattern:
           "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[1-8][a-fA-F0-9]{3}-[89abAB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$",
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
-        pattern: "^[A-Za-z0-9._:-]+$",
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       reason: {
         type: "string",
@@ -10878,6 +11150,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["runId"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       runId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -10927,6 +11204,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["runId"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       runId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -10982,14 +11264,10 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         $ref: "#/components/schemas/ResourceId",
       },
       from: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       to: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       limit: {
         type: "integer",
@@ -11006,7 +11284,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxItems: 1,
         items: {
           type: "string",
-          enum: ["legacy"],
+          enum: ["legacy", "metrics"],
         },
       },
       runId: {
@@ -11036,14 +11314,10 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     required: ["from", "to", "timezone", "durationMinutes"],
     properties: {
       from: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       to: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       timezone: {
         type: "string",
@@ -11094,15 +11368,10 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         $ref: "#/components/schemas/ResourceId",
       },
       expectedConversationUpdatedAt: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 8,
-        maxLength: 120,
-        pattern: "^[a-zA-Z0-9_-]{8,120}$",
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       title: {
         type: "string",
@@ -11110,9 +11379,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxLength: 200,
       },
       start: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       timezone: {
         type: "string",
@@ -11285,6 +11552,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["username", "type", "count", "idempotencyKey"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       username: {
         type: "string",
         minLength: 1,
@@ -11312,11 +11584,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         "x-dmfaster-trim": true,
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
-        pattern: "^[A-Za-z0-9._:-]{1,160}$",
-        "x-dmfaster-trim": true,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       runId: {
         type: "string",
@@ -11555,11 +11823,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         enum: ["top", "recent"],
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
-        "x-dmfaster-trim": true,
-        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       runId: {
         type: "string",
@@ -11621,11 +11885,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maximum: 2147483647,
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
-        "x-dmfaster-trim": true,
-        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       runId: {
         type: "string",
@@ -11668,11 +11928,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maximum: 2147483647,
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
-        "x-dmfaster-trim": true,
-        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       runId: {
         type: "string",
@@ -11888,35 +12144,124 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     },
   },
   InstagramProspectStartInput: {
-    allOf: [
-      {
-        $ref: "#/components/schemas/InstagramProspectInput",
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      query: {
+        type: "string",
+        minLength: 1,
+        maxLength: 4000,
       },
-      {
-        type: "object",
-        additionalProperties: false,
-        required: ["idempotencyKey"],
-        properties: {
-          idempotencyKey: {
-            type: "string",
-            minLength: 1,
-            maxLength: 120,
-          },
-          runId: {
-            type: "string",
-            minLength: 1,
-            maxLength: 100,
-            description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
-          },
+      criteria: {
+        type: "array",
+        minItems: 1,
+        maxItems: 12,
+        items: {
+          $ref: "#/components/schemas/InstagramProspectCriterion",
         },
       },
-    ],
+      threshold: {
+        type: "number",
+        minimum: 0.5,
+        maximum: 1,
+      },
+      evidenceThreshold: {
+        type: "number",
+        minimum: 0.5,
+        maximum: 1,
+      },
+      sourceListIds: {
+        type: "array",
+        maxItems: 10,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 200,
+        },
+      },
+      sources: {
+        type: "array",
+        maxItems: 10,
+        items: {
+          $ref: "#/components/schemas/InstagramProspectSource",
+        },
+      },
+      searchQueries: {
+        type: "array",
+        minItems: 1,
+        maxItems: 5,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 120,
+        },
+      },
+      targetCount: {
+        type: "integer",
+        minimum: 1,
+        maximum: 1000,
+      },
+      maxCandidates: {
+        type: "integer",
+        minimum: 1,
+        maximum: 1000,
+      },
+      maxCredits: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100000,
+      },
+      maxModelCalls: {
+        type: "integer",
+        minimum: 1,
+        maximum: 1000,
+      },
+      media: {
+        type: "string",
+        enum: ["none", "avatar", "recent_posts"],
+      },
+      model: {
+        type: "string",
+        enum: ["clef", "clef-flash"],
+      },
+      includeReview: {
+        type: "boolean",
+      },
+      excludePreviouslyContacted: {
+        type: "boolean",
+      },
+      name: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+      },
+      runId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+        description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
+      },
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+    },
+    required: ["query", "idempotencyKey"],
   },
   InstagramProspectRunInput: {
     type: "object",
     additionalProperties: false,
     required: ["runId"],
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       runId: {
         type: "string",
         minLength: 1,
@@ -12085,6 +12430,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: [],
     properties: {
+      since: {
+        $ref: "#/components/schemas/ResourceVersion",
+        description:
+          "Bounded bootstrap of retained conversation changes since this instant; continue with the returned cursor.",
+      },
       cursor: {
         type: "string",
         minLength: 1,
@@ -12230,6 +12580,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       name: {
         type: "string",
         minLength: 1,
@@ -12251,6 +12606,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       preset: {
         type: "string",
         const: "appointment_setter_v1",
@@ -12271,6 +12631,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       conversationId: {
         type: "string",
         minLength: 1,
@@ -12316,6 +12681,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       minutes: {
         type: "integer",
         minimum: 1,
@@ -12797,6 +13167,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       enabled: {
         type: "boolean",
       },
@@ -12835,6 +13210,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       provider: {
         type: "string",
         enum: ["calendar", "gmail", "sms", "browser"],
@@ -12884,6 +13264,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       template: {
         $ref: "#/components/schemas/ReplyTemplate",
       },
@@ -12950,6 +13335,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       id: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -12976,6 +13366,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       id: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -13012,6 +13407,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       policy: {
         $ref: "#/components/schemas/ReplyPolicy",
       },
@@ -13132,6 +13532,18 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      view: {
+        type: "string",
+        enum: ["compact", "standard", "full"],
+      },
+      fields: {
+        type: "array",
+        maxItems: 30,
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+      },
       cursor: {
         type: "string",
         minLength: 1,
@@ -13159,6 +13571,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       conversationId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -13334,6 +13751,27 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      include: {
+        type: "array",
+        maxItems: 1,
+        items: {
+          type: "string",
+          enum: ["metrics", "legacy"],
+        },
+      },
+      view: {
+        type: "string",
+        enum: ["compact", "standard", "full"],
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+      },
+      cursor: {
+        type: "string",
+        maxLength: 4000,
+      },
       campaignIds: {
         type: "array",
         maxItems: 100,
@@ -13358,6 +13796,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       conversationId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -15035,6 +15478,13 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      agentRunId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      view: {
+        type: "string",
+        enum: ["compact", "standard", "full", "summary"],
+      },
       runId: {
         $ref: "#/components/schemas/ResourceId",
       },
@@ -15049,7 +15499,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maximum: 200,
       },
     },
-    required: ["runId"],
   },
   WorkspaceHaltInput: {
     type: "object",
@@ -15157,6 +15606,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       category: {
         type: "string",
         enum: ["bug", "missing_capability", "confusing_behavior", "performance", "improvement"],
@@ -15654,14 +16108,10 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     properties: {
       from: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       to: {
-        type: "string",
-        minLength: 20,
-        maxLength: 40,
+        $ref: "#/components/schemas/ResourceVersion",
       },
       groupBy: {
         type: "string",
@@ -15917,9 +16367,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         $ref: "#/components/schemas/ResourceVersion",
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 120,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       dryRun: {
         type: "boolean",
@@ -16185,13 +16633,16 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       plan: {
         $ref: "#/components/schemas/ProspectingPlan",
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       campaignId: {
         type: "string",
@@ -16217,9 +16668,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "boolean",
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
     },
   },
@@ -16239,6 +16688,9 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      audiencePage: {
+        $ref: "#/components/schemas/ProspectingAudiencePage",
+      },
       filters: {
         $ref: "#/components/schemas/CompanySearchFilters",
       },
@@ -16294,6 +16746,26 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      jobId: {
+        type: "string",
+        pattern: "^look_[a-f0-9]{32}$",
+        description:
+          "Poll a job using this connection; omit seed when polling. Results recheck current contact and suppression eligibility.",
+      },
+      execution: {
+        type: "string",
+        enum: ["async", "sync"],
+        description:
+          "Defaults to async with jobId and pollAfterMs. Sync retains the bounded legacy read.",
+      },
+      countries: {
+        type: "array",
+        minItems: 1,
+        maxItems: 1,
+        items: {
+          $ref: "#/components/schemas/SupportedCountry",
+        },
+      },
       seed: {
         type: "object",
         additionalProperties: false,
@@ -16332,12 +16804,16 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxLength: 1000,
       },
     },
-    required: ["seed"],
   },
   CommitmentsProposeInput: {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       meetingId: {
         type: "string",
         minLength: 1,
@@ -16354,9 +16830,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxLength: 80,
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
     },
     required: ["meetingId", "idempotencyKey"],
@@ -16396,6 +16870,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       id: {
         type: "string",
         minLength: 1,
@@ -16413,9 +16892,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
     },
     required: ["id", "expectedUpdatedAt", "status", "idempotencyKey"],
@@ -16424,6 +16901,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       items: {
         type: "array",
         minItems: 1,
@@ -16450,9 +16932,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         },
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
     },
     required: ["items", "idempotencyKey"],
@@ -16461,6 +16941,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       id: {
         type: "string",
         minLength: 1,
@@ -16476,9 +16961,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 1,
-        maxLength: 160,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
     },
     required: ["id", "text", "expectedConversationUpdatedAt", "idempotencyKey"],
@@ -16487,6 +16970,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       listId: {
         type: "string",
         minLength: 1,
@@ -16508,6 +16996,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       listId: {
         type: "string",
         minLength: 1,
@@ -16524,6 +17017,11 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       campaignId: {
         type: "string",
         minLength: 1,
@@ -16552,15 +17050,18 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       approvalId: {
         type: "string",
         minLength: 1,
         maxLength: 160,
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 8,
-        maxLength: 160,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
     },
     required: ["approvalId", "idempotencyKey"],
@@ -16569,15 +17070,18 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     properties: {
+      dryRun: {
+        type: "boolean",
+        description:
+          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+      },
       approvalId: {
         type: "string",
         minLength: 1,
         maxLength: 160,
       },
       idempotencyKey: {
-        type: "string",
-        minLength: 8,
-        maxLength: 160,
+        $ref: "#/components/schemas/IdempotencyKey",
       },
       expectedRevision: {
         type: "integer",

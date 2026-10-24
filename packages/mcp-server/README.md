@@ -117,8 +117,8 @@ tools satisfy the credential's scopes, with missing scopes for the others.
 Workspace role, plan, and action preconditions still apply when a tool runs.
 
 ```bash
-npx --yes @dmfaster/cli@2.5.1 auth login --json
-npx --yes @dmfaster/mcp-server@2.5.1
+npx --yes @dmfaster/cli@2.6.0 auth login --json
+npx --yes @dmfaster/mcp-server@2.6.0
 ```
 
 Login defaults to the complete Agent 2.0 capability set. Use `auth login
@@ -253,7 +253,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@2.5.1"]
+      "args": ["--yes", "@dmfaster/mcp-server@2.6.0"]
     }
   }
 }
@@ -561,3 +561,7 @@ bytes for CLI/HTTP compatibility.
 
 Prepared copy may also be removed (with null) while a used campaign is stopped,
 so a changed audience can return to the campaign template before a new launch.
+
+### Compact catalog
+
+The default MCP catalog exposes the five prospecting workflow tools and `tools_discover` / `tools_call`. Discovery returns only granted tools and can include their exact input schema. `tools_call` accepts the MCP tool name and validates the response against the same generated contract. Read `dmfaster://docs/agents` for guidance. Local clients may set `DMFASTER_MCP_PROFILE=full`; UI-only tools remain hidden unless explicitly enabled by the host. `npm run check:agent-catalog` prints bytes and estimated tokens for both profiles and enforces the 100 KB compact budget.

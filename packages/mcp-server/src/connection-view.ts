@@ -11,7 +11,16 @@ export function projectConnectionStatus(
   const eligible = AGENT_TOOL_NAMES.filter((name) =>
     AGENT_TOOL_SCOPES[name].every((scope) => granted.has(scope)),
   );
-  if (view === "full") return { ...status, toolsView: view };
+  const blockedTools = AGENT_TOOL_NAMES.filter((name) => !eligible.includes(name)).map((name) => ({
+    name: AGENT_TOOL_DEFINITIONS[name].mcp.name,
+    requiredScope: AGENT_TOOL_SCOPES[name].filter((scope) => !granted.has(scope)).join(" "),
+  }));
+  const grantUrl = new URL(
+    "/settings",
+    String(status.baseUrl || "https://app.dmfaster.com"),
+  ).toString();
+  const access = { blockedTools, grantUrl };
+  if (view === "full") return { ...status, ...access, toolsView: view };
   const {
     scopeEligibleTools: _eligible,
     scopeEligibleMcpTools: _names,
@@ -22,6 +31,7 @@ export function projectConnectionStatus(
   if (view === "names")
     return {
       ...base,
+      ...access,
       toolsView: view,
       scopeEligibleMcpTools: eligible.map((name) => AGENT_TOOL_DEFINITIONS[name].mcp.name),
     };
@@ -36,6 +46,7 @@ export function projectConnectionStatus(
     | undefined;
   return {
     ...base,
+    ...access,
     toolsView: view,
     tools: {
       available: eligible.length,

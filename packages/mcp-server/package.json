@@ -1,6 +1,6 @@
 {
   "name": "@dmfaster/mcp-server",
-  "version": "2.5.1",
+  "version": "2.6.0",
   "description": "DM Faster prospecting and sales tools with company and saved-list mentions and an interactive workspace.",
   "license": "Apache-2.0",
   "author": "DM Faster",
@@ -32,11 +32,14 @@
     "typecheck": "npm run generate:ui && node ../../tools/typecheck-release.mjs --project ui/tsconfig.json && node ../../tools/typecheck-release.mjs --project tsconfig.json",
     "test": "npm run generate:ui && node --test tests/*.test.ts",
     "check": "npm run typecheck && npm test && npm run build",
-    "typecheck:local": "npm run generate:ui && node ../../tools/typecheck-local.mjs --project ui/tsconfig.json && node ../../tools/typecheck-local.mjs --project tsconfig.json"
+    "typecheck:local": "npm run generate:ui && node ../../tools/typecheck-local.mjs --project ui/tsconfig.json && node ../../tools/typecheck-local.mjs --project tsconfig.json",
+    "test:built": "node --test tests/*.test.ts",
+    "typecheck:ui": "node ../../tools/typecheck-release.mjs --project ui/tsconfig.json",
+    "typecheck:ui:local": "node ../../tools/typecheck-local.mjs --project ui/tsconfig.json"
   },
   "dependencies": {
-    "@dmfaster/local-auth": "2.5.1",
-    "@dmfaster/sdk": "2.5.1",
+    "@dmfaster/local-auth": "2.6.0",
+    "@dmfaster/sdk": "2.6.0",
     "@modelcontextprotocol/server": "2.3.0",
     "zod": "4.6.7"
   },

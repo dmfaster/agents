@@ -103,9 +103,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -430,6 +467,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -1365,9 +1428,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -1692,6 +1792,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -1886,9 +2012,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           metrics: {
             $ref: "#/$defs/SalesMetricsV2",
           },
+          metricsAsOf: {
+            type: "string",
+            format: "date-time",
+          },
           metricsVersion: {
             type: "string",
             maxLength: 500,
+          },
+          definitions: {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
           },
           metricIds: {
             type: "object",
@@ -2035,6 +2171,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
         type: "object",
         additionalProperties: false,
         properties: {
+          ageBusinessHours: {
+            type: "integer",
+            minimum: 0,
+          },
           id: {
             type: "string",
             maxLength: 200,
@@ -2516,9 +2656,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -2843,6 +3020,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -3142,9 +3345,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -3469,6 +3709,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -3750,9 +4016,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           metrics: {
             $ref: "#/$defs/SalesMetricsV2",
           },
+          metricsAsOf: {
+            type: "string",
+            format: "date-time",
+          },
           metricsVersion: {
             type: "string",
             maxLength: 500,
+          },
+          definitions: {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
           },
           metricIds: {
             type: "object",
@@ -4279,9 +4555,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -4606,6 +4919,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -4975,9 +5314,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -5302,6 +5678,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -6076,9 +6478,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -6403,6 +6842,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -6719,9 +7184,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -7046,6 +7548,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -7166,7 +7694,14 @@ export const AGENT_OUTPUT_SCHEMAS = {
             type: "array",
             maxItems: 60,
             items: {
-              $ref: "#/$defs/InboxConversationSummary",
+              oneOf: [
+                {
+                  $ref: "#/$defs/InboxConversationSummary",
+                },
+                {
+                  $ref: "#/$defs/InboxConversationCompact",
+                },
+              ],
             },
           },
           scopeStats: {
@@ -7238,9 +7773,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           metrics: {
             $ref: "#/$defs/SalesMetricsV2",
           },
+          metricsAsOf: {
+            type: "string",
+            format: "date-time",
+          },
           metricsVersion: {
             type: "string",
             maxLength: 500,
+          },
+          definitions: {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
           },
           metricIds: {
             type: "object",
@@ -7493,6 +8038,37 @@ export const AGENT_OUTPUT_SCHEMAS = {
       InboxChannel: {
         type: "string",
         enum: ["instagram", "facebook", "linkedin", "gmail", "outlook", "email", "sms"],
+      },
+      InboxConversationCompact: {
+        type: "object",
+        additionalProperties: false,
+        required: ["id", "channel"],
+        properties: {
+          id: {
+            type: "string",
+          },
+          channel: {
+            type: "string",
+          },
+          targetName: {
+            type: "string",
+          },
+          needsReply: {
+            type: "boolean",
+          },
+          lastMessageAt: {
+            type: "string",
+          },
+          lastInboundAt: {
+            type: "string",
+          },
+          interestIntent: {
+            type: "string",
+          },
+          lastMessageText: {
+            type: "string",
+          },
+        },
       },
       InboxScopeStats: {
         type: "object",
@@ -7876,9 +8452,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -8203,6 +8816,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -9093,9 +9732,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -9420,6 +10096,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -9919,9 +10621,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -10246,6 +10985,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -10776,9 +11541,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -11103,6 +11905,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -11578,9 +12406,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -11905,6 +12770,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -12115,10 +13006,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CampaignMessagesDraftUpdateOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CampaignMessagesDraftUpdateOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -12193,9 +13091,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -12520,6 +13455,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -12624,6 +13585,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -12761,9 +13763,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -13088,6 +14127,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -13318,10 +14383,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CampaignMessagesUpdateOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CampaignMessagesUpdateOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -13396,9 +14468,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -13723,6 +14832,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -13827,6 +14962,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -13975,9 +15151,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -14302,6 +15515,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -14574,10 +15813,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CampaignFollowupsCancelOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CampaignFollowupsCancelOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -14652,9 +15898,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -14979,6 +16262,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -15083,6 +16392,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -15207,9 +16557,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -15534,6 +16921,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -15729,10 +17142,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/DeliveryTestOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/DeliveryTestOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -15807,9 +17227,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -16134,6 +17591,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -16238,6 +17721,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -16323,10 +17847,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/DeliveryTestOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/DeliveryTestOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -16401,9 +17932,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -16728,6 +18296,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -16832,6 +18426,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -16995,9 +18630,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -17322,6 +18994,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -17589,9 +19287,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -17916,6 +19651,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -18283,9 +20044,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -18610,6 +20408,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -18888,9 +20712,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -19215,6 +21076,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -19353,9 +21240,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           metrics: {
             $ref: "#/$defs/SalesMetricsV2",
           },
+          metricsAsOf: {
+            type: "string",
+            format: "date-time",
+          },
           metricsVersion: {
             type: "string",
             maxLength: 500,
+          },
+          definitions: {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
           },
           metricIds: {
             type: "object",
@@ -19886,9 +21783,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -20213,6 +22147,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -20385,9 +22345,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           metrics: {
             $ref: "#/$defs/SalesMetricsV2",
           },
+          metricsAsOf: {
+            type: "string",
+            format: "date-time",
+          },
           metricsVersion: {
             type: "string",
             maxLength: 500,
+          },
+          definitions: {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
           },
           metricIds: {
             type: "object",
@@ -20868,9 +22838,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -21195,6 +23202,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -21600,9 +23633,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -21927,6 +23997,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -22099,10 +24195,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/PipelineNoteAddOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/PipelineNoteAddOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -22177,9 +24280,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -22504,6 +24644,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -22608,6 +24774,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -22750,9 +24957,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -23077,6 +25321,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -23356,9 +25626,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -23683,6 +25990,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -24047,9 +26380,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -24374,6 +26744,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -24769,9 +27165,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -25096,6 +27529,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -25563,9 +28022,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -25890,6 +28386,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -26144,9 +28666,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -26471,6 +29030,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -26665,10 +29250,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/ListTargetRemoveData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/ListTargetRemoveData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -26743,9 +29335,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -27070,6 +29699,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -27174,6 +29829,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -27241,10 +29937,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CampaignDraftPrepareData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CampaignDraftPrepareData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -27319,9 +30022,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -27646,6 +30386,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -27750,6 +30516,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -27925,10 +30732,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CampaignDraftUpdateData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CampaignDraftUpdateData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -28003,9 +30817,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -28330,6 +31181,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -28434,6 +31311,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -28589,10 +31507,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/ListImportData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/ListImportData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -28667,9 +31592,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -28994,6 +31956,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -29098,6 +32086,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -29163,10 +32192,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/AgentHarnessResult",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/AgentHarnessResult",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -29241,9 +32277,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -29568,6 +32641,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -29672,6 +32771,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -29804,10 +32944,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/AgentHarnessResult",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/AgentHarnessResult",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -29882,9 +33029,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -30209,6 +33393,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -30313,6 +33523,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -30445,10 +33696,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CampaignActionPreflightOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CampaignActionPreflightOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -30523,9 +33781,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -30850,6 +34145,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -30954,6 +34275,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -31212,6 +34574,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["campaignId", "idempotencyKey"],
         properties: {
+          dryRun: {
+            type: "boolean",
+            description:
+              "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+          },
           campaignId: {
             $ref: "#/$defs/ResourceId",
           },
@@ -31238,9 +34605,9 @@ export const AGENT_OUTPUT_SCHEMAS = {
       IdempotencyKey: {
         "x-dmfaster-trim": true,
         type: "string",
-        minLength: 1,
+        minLength: 8,
         maxLength: 160,
-        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+        pattern: "^[A-Za-z0-9._:-]{8,160}$",
       },
     },
   }),
@@ -31262,10 +34629,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CampaignActionOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CampaignActionOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -31340,9 +34714,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -31667,6 +35078,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -31771,6 +35208,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -31878,9 +35356,9 @@ export const AGENT_OUTPUT_SCHEMAS = {
       IdempotencyKey: {
         "x-dmfaster-trim": true,
         type: "string",
-        minLength: 1,
+        minLength: 8,
         maxLength: 160,
-        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+        pattern: "^[A-Za-z0-9._:-]{8,160}$",
       },
       CampaignOperationInspectInput: {
         type: "object",
@@ -31926,13 +35404,20 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CampaignActionApprovalRequiredOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    $ref: "#/$defs/CampaignActionReadyOutput",
-                  },
-                  {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CampaignActionApprovalRequiredOutput",
+                      },
+                      {
+                        $ref: "#/$defs/CampaignActionReadyOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -32007,9 +35492,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -32334,6 +35856,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -32438,6 +35986,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -32617,10 +36206,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CampaignActionOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CampaignActionOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -32695,9 +36291,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -33022,6 +36655,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -33129,6 +36788,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
         },
       },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
+          },
+        },
+      },
       CampaignActionOutput: {
         type: "object",
         additionalProperties: false,
@@ -33233,9 +36933,9 @@ export const AGENT_OUTPUT_SCHEMAS = {
       IdempotencyKey: {
         "x-dmfaster-trim": true,
         type: "string",
-        minLength: 1,
+        minLength: 8,
         maxLength: 160,
-        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+        pattern: "^[A-Za-z0-9._:-]{8,160}$",
       },
       CampaignOperationInspectInput: {
         type: "object",
@@ -33359,9 +37059,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -33686,6 +37423,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -33796,15 +37559,6 @@ export const AGENT_OUTPUT_SCHEMAS = {
       CompanyFiltersData: {
         type: "object",
         additionalProperties: true,
-        required: [
-          "metadata",
-          "filterFields",
-          "defaults",
-          "technologies",
-          "fundingSources",
-          "availability",
-          "restrictions",
-        ],
         properties: {
           metadata: {
             type: "object",
@@ -34286,9 +38040,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -34613,6 +38404,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -34886,9 +38703,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -35213,6 +39067,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -35802,9 +39682,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -36129,6 +40046,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -37008,9 +40951,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -37335,6 +41315,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -37693,9 +41699,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -38020,6 +42063,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -38701,9 +42770,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -39028,6 +43134,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -40000,9 +44132,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -40327,6 +44496,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -41299,9 +45494,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -41626,6 +45858,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -42598,9 +46856,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -42925,6 +47220,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -43897,9 +48218,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -44224,6 +48582,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -45196,9 +49580,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -45523,6 +49944,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -45936,10 +50383,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CompanyFitStartData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CompanyFitStartData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -46014,9 +50468,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -46341,6 +50832,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -46445,6 +50962,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -46550,10 +51108,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CompanyFitAdvanceData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CompanyFitAdvanceData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -46628,9 +51193,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -46955,6 +51557,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -47059,6 +51687,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -47244,9 +51913,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -47571,6 +52277,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -47948,9 +52680,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -48275,6 +53044,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -48506,6 +53301,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "apply",
         ],
         properties: {
+          dryRun: {
+            type: "boolean",
+            description:
+              "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+          },
           listId: {
             $ref: "#/$defs/ResourceId",
           },
@@ -48513,14 +53313,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
             $ref: "#/$defs/ResourceId",
           },
           expectedListUpdatedAt: {
-            type: "string",
-            minLength: 20,
-            maxLength: 40,
+            $ref: "#/$defs/ResourceVersion",
           },
           expectedCampaignUpdatedAt: {
-            type: "string",
-            minLength: 20,
-            maxLength: 40,
+            $ref: "#/$defs/ResourceVersion",
           },
           expectedTotal: {
             type: "integer",
@@ -48672,9 +53468,9 @@ export const AGENT_OUTPUT_SCHEMAS = {
       IdempotencyKey: {
         "x-dmfaster-trim": true,
         type: "string",
-        minLength: 1,
+        minLength: 8,
         maxLength: 160,
-        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+        pattern: "^[A-Za-z0-9._:-]{8,160}$",
       },
     },
   }),
@@ -48696,10 +53492,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CompanyListPrepareData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CompanyListPrepareData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -48774,9 +53577,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -49101,6 +53941,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -49205,6 +54071,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -49368,9 +54275,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -49695,6 +54639,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -49881,10 +54851,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CompanyListRefineData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CompanyListRefineData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -49959,9 +54936,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -50286,6 +55300,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -50390,6 +55430,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -50570,9 +55651,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -50897,6 +56015,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -51164,9 +56308,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -51491,6 +56672,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -51808,10 +57015,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CampaignDeliveryUpdateOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CampaignDeliveryUpdateOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -51886,9 +57100,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -52213,6 +57464,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -52317,6 +57594,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -52448,9 +57766,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -52775,6 +58130,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -52947,10 +58328,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/InstagramPacingUpdateOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/InstagramPacingUpdateOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -53025,9 +58413,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -53352,6 +58777,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -53456,6 +58907,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -53624,9 +59116,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -53951,6 +59480,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -54179,10 +59734,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CompanyFitCancelData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CompanyFitCancelData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -54257,9 +59819,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -54584,6 +60183,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -54688,6 +60313,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -54890,9 +60556,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -55217,6 +60920,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -55483,10 +61212,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/CompanyFitRunData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/CompanyFitRunData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -55561,9 +61297,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -55888,6 +61661,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -55992,6 +61791,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -56203,9 +62043,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -56530,6 +62407,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -56869,6 +62772,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "apply",
         ],
         properties: {
+          dryRun: {
+            type: "boolean",
+            description:
+              "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+          },
           listId: {
             $ref: "#/$defs/ResourceId",
           },
@@ -56876,14 +62784,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
             $ref: "#/$defs/ResourceId",
           },
           expectedListUpdatedAt: {
-            type: "string",
-            minLength: 20,
-            maxLength: 40,
+            $ref: "#/$defs/ResourceVersion",
           },
           expectedCampaignUpdatedAt: {
-            type: "string",
-            minLength: 20,
-            maxLength: 40,
+            $ref: "#/$defs/ResourceVersion",
           },
           expectedTotal: {
             type: "integer",
@@ -57035,9 +62939,9 @@ export const AGENT_OUTPUT_SCHEMAS = {
       IdempotencyKey: {
         "x-dmfaster-trim": true,
         type: "string",
-        minLength: 1,
+        minLength: 8,
         maxLength: 160,
-        pattern: "^[A-Za-z0-9._:-]{1,160}$",
+        pattern: "^[A-Za-z0-9._:-]{8,160}$",
       },
     },
   }),
@@ -57135,9 +63039,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -57462,6 +63403,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -57631,9 +63598,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
           metrics: {
             $ref: "#/$defs/SalesMetricsV2",
           },
+          metricsAsOf: {
+            type: "string",
+            format: "date-time",
+          },
           metricsVersion: {
             type: "string",
             maxLength: 500,
+          },
+          definitions: {
+            type: "object",
+            additionalProperties: {
+              type: "string",
+            },
           },
           metricIds: {
             type: "object",
@@ -58228,9 +64205,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -58555,6 +64569,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -58799,9 +64839,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -59126,6 +65203,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -59415,9 +65518,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -59742,6 +65882,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -60027,9 +66193,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -60354,6 +66557,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -60647,6 +66876,16 @@ export const AGENT_OUTPUT_SCHEMAS = {
             type: ["integer", "null"],
             minimum: 0,
           },
+          transcriptAccessReason: {
+            oneOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
           transcriptAccess: {
             type: "string",
             enum: ["allowed", "denied"],
@@ -60790,9 +67029,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -61117,6 +67393,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -61463,6 +67765,16 @@ export const AGENT_OUTPUT_SCHEMAS = {
           durationMs: {
             type: ["integer", "null"],
             minimum: 0,
+          },
+          transcriptAccessReason: {
+            oneOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
           },
           transcriptAccess: {
             type: "string",
@@ -62473,9 +68785,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -62800,6 +69149,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -62986,12 +69361,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
             required: [],
             properties: {
               data: {
-                anyOf: [
+                oneOf: [
                   {
-                    $ref: "#/$defs/InstagramExtractionData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    anyOf: [
+                      {
+                        $ref: "#/$defs/InstagramExtractionData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -63066,9 +69448,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -63393,6 +69812,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -63497,6 +69942,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -63710,9 +70196,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -64037,6 +70560,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -64354,9 +70903,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -64681,6 +71267,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -64998,9 +71610,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -65325,6 +71974,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -65579,9 +72254,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -65906,6 +72618,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -66233,9 +72971,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -66560,6 +73335,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -66842,9 +73643,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -67169,6 +74007,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -67697,9 +74561,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -68024,6 +74925,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -68555,9 +75482,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -68882,6 +75846,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -69451,9 +76441,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -69778,6 +76805,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -70309,9 +77362,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -70636,6 +77726,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -71208,9 +78324,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -71535,6 +78688,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -72104,9 +79283,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -72431,6 +79647,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -72962,9 +80204,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -73289,6 +80568,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -73858,9 +81163,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -74185,6 +81527,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -74712,9 +82080,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -75039,6 +82444,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -75471,12 +82902,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
             additionalProperties: false,
             properties: {
               data: {
-                anyOf: [
+                oneOf: [
                   {
-                    $ref: "#/$defs/InstagramProspectData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    anyOf: [
+                      {
+                        $ref: "#/$defs/InstagramProspectData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -75551,9 +82989,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -75878,6 +83353,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -75982,6 +83483,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -76390,9 +83932,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -76717,6 +84296,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -77229,9 +84834,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -77556,6 +85198,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -77988,12 +85656,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
             additionalProperties: false,
             properties: {
               data: {
-                anyOf: [
+                oneOf: [
                   {
-                    $ref: "#/$defs/InstagramProspectData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    anyOf: [
+                      {
+                        $ref: "#/$defs/InstagramProspectData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -78068,9 +85743,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -78395,6 +86107,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -78499,6 +86237,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -78827,12 +86606,19 @@ export const AGENT_OUTPUT_SCHEMAS = {
             additionalProperties: false,
             properties: {
               data: {
-                anyOf: [
+                oneOf: [
                   {
-                    $ref: "#/$defs/InstagramProspectData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    anyOf: [
+                      {
+                        $ref: "#/$defs/InstagramProspectData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -78907,9 +86693,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -79234,6 +87057,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -79338,6 +87187,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -79749,9 +87639,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -80076,6 +88003,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -80510,9 +88463,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -80837,6 +88827,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -81120,9 +89136,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -81447,6 +89500,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -81745,9 +89824,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -82072,6 +90188,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -82387,9 +90529,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -82714,6 +90893,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -82944,10 +91149,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/WorkspaceSandboxCreateOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/WorkspaceSandboxCreateOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -83022,9 +91234,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -83349,6 +91598,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -83453,6 +91728,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -83500,10 +91816,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/SandboxSeedOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/SandboxSeedOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -83578,9 +91901,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -83905,6 +92265,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -84009,6 +92395,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -84077,10 +92504,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/SandboxInboundSimulateOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/SandboxInboundSimulateOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -84155,9 +92589,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -84482,6 +92953,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -84586,6 +93083,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -84633,10 +93171,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/SandboxClockAdvanceOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/SandboxClockAdvanceOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -84711,9 +93256,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -85038,6 +93620,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -85142,6 +93750,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -85272,9 +93921,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -85599,6 +94285,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -85890,9 +94602,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -86217,6 +94966,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -86545,9 +95320,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -86872,6 +95684,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -87197,9 +96035,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -87524,6 +96399,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -87886,9 +96787,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -88213,6 +97151,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -88642,9 +97606,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -88969,6 +97970,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -89217,9 +98244,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -89544,6 +98608,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -89792,9 +98882,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -90119,6 +99246,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -90367,9 +99520,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -90694,6 +99884,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -90942,9 +100158,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -91269,6 +100522,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -91631,9 +100910,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -91958,6 +101274,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -92305,9 +101647,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -92632,6 +102011,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -92781,10 +102186,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/WorkspaceAgentSalesUpdateOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/WorkspaceAgentSalesUpdateOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -92859,9 +102271,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -93186,6 +102635,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -93290,6 +102765,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -93354,10 +102870,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/SandboxProviderUpdateOutput",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/SandboxProviderUpdateOutput",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -93432,9 +102955,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -93759,6 +103319,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -93863,6 +103449,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -93999,9 +103626,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -94326,6 +103990,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -94695,10 +104385,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/SalesReplyOperation",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/SalesReplyOperation",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -94774,9 +104471,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -95101,6 +104835,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -95205,6 +104965,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -95470,10 +105271,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/SalesReplyOperation",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/SalesReplyOperation",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -95549,9 +105357,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -95876,6 +105721,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -95980,6 +105851,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -96245,10 +106157,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/SalesReplyOperation",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/SalesReplyOperation",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -96324,9 +106243,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -96651,6 +106607,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -96755,6 +106737,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -97099,9 +107122,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -97426,6 +107486,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -97795,10 +107881,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/SalesReplyOperation",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/SalesReplyOperation",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -97874,9 +107967,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -98201,6 +108331,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -98305,6 +108461,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -98649,9 +108846,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -98976,6 +109210,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -99345,10 +109605,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/SalesReplyOperation",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/SalesReplyOperation",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -99424,9 +109691,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -99751,6 +110055,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -99855,6 +110185,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -100202,9 +110573,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -100529,6 +110937,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -101021,9 +111455,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -101348,6 +111819,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -101837,9 +112334,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -102164,6 +112698,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -102630,9 +113190,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -102957,6 +113554,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -103197,9 +113820,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -103524,6 +114184,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -103723,9 +114409,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -104050,6 +114773,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -104175,8 +114924,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
                 const: "calendar.meeting.reschedule",
               },
               data: {
-                type: "object",
-                additionalProperties: true,
+                oneOf: [
+                  {
+                    type: "object",
+                    additionalProperties: true,
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
               },
             },
           },
@@ -104249,9 +115005,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -104576,6 +115369,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -104701,8 +115520,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
                 const: "calendar.meeting.cancel",
               },
               data: {
-                type: "object",
-                additionalProperties: true,
+                oneOf: [
+                  {
+                    type: "object",
+                    additionalProperties: true,
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
               },
             },
           },
@@ -104775,9 +115601,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -105102,6 +115965,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -105227,8 +116116,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
                 const: "campaign.followups.configure",
               },
               data: {
-                type: "object",
-                additionalProperties: true,
+                oneOf: [
+                  {
+                    type: "object",
+                    additionalProperties: true,
+                  },
+                  {
+                    type: "null",
+                  },
+                ],
               },
             },
           },
@@ -105301,9 +116197,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -105628,6 +116561,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -105827,9 +116786,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -106154,6 +117150,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -106359,9 +117381,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -106686,6 +117745,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -107055,9 +118140,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -107382,6 +118504,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -107747,9 +118895,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -108074,6 +119259,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -108383,9 +119594,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -108710,6 +119958,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -109220,9 +120494,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -109547,6 +120858,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -109825,9 +121162,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -110152,6 +121526,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -110722,9 +122122,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -111049,6 +122486,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -111318,9 +122781,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -111645,6 +123145,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -111933,9 +123459,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -112260,6 +123823,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -112504,9 +124093,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -112831,6 +124457,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -113075,9 +124727,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -113402,6 +125091,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -113676,9 +125391,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -114003,6 +125755,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -114296,9 +126074,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -114623,6 +126438,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -114994,9 +126835,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -115321,6 +127199,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -115669,9 +127573,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -115996,6 +127937,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -116293,9 +128260,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -116620,6 +128624,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -116859,9 +128889,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -117186,6 +129253,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -117425,9 +129518,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -117752,6 +129882,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -118030,9 +130186,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -118357,6 +130550,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -118653,9 +130872,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -118980,6 +131236,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -119260,9 +131542,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -119587,6 +131906,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -119867,9 +132212,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -120194,6 +132576,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -120631,9 +133039,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -120958,6 +133403,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -121288,9 +133759,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -121615,6 +134123,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -121842,9 +134376,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -122169,6 +134740,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -122415,9 +135012,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -122742,6 +135376,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -123016,9 +135676,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -123343,6 +136040,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -123615,9 +136338,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -123942,6 +136702,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -124082,6 +136868,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
         type: "object",
         additionalProperties: false,
         properties: {
+          ageBusinessHours: {
+            type: "integer",
+            minimum: 0,
+          },
           id: {
             type: "string",
             maxLength: 200,
@@ -124339,9 +137129,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -124666,6 +137493,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -124794,6 +137647,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
         type: "object",
         additionalProperties: false,
         properties: {
+          ageBusinessHours: {
+            type: "integer",
+            minimum: 0,
+          },
           id: {
             type: "string",
             maxLength: 200,
@@ -125051,9 +137908,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -125378,6 +138272,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -125506,6 +138426,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
         type: "object",
         additionalProperties: false,
         properties: {
+          ageBusinessHours: {
+            type: "integer",
+            minimum: 0,
+          },
           id: {
             type: "string",
             maxLength: 200,
@@ -125763,9 +138687,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -126090,6 +139051,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -126218,6 +139205,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
         type: "object",
         additionalProperties: false,
         properties: {
+          ageBusinessHours: {
+            type: "integer",
+            minimum: 0,
+          },
           id: {
             type: "string",
             maxLength: 200,
@@ -126475,9 +139466,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -126802,6 +139830,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -126930,6 +139984,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
         type: "object",
         additionalProperties: false,
         properties: {
+          ageBusinessHours: {
+            type: "integer",
+            minimum: 0,
+          },
           id: {
             type: "string",
             maxLength: 200,
@@ -127187,9 +140245,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -127514,6 +140609,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -127749,9 +140870,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -128076,6 +141234,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -128311,9 +141495,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -128638,6 +141859,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -128761,6 +142008,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
           "coverage",
         ],
         properties: {
+          metricsAsOf: {
+            type: "string",
+            format: "date-time",
+          },
           metricsVersion: {
             type: "string",
             maxLength: 500,
@@ -128978,9 +142229,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -129305,6 +142593,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -129461,7 +142775,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           data: {
             type: "object",
@@ -129576,9 +142890,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -129903,6 +143254,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -130157,9 +143534,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -130484,6 +143898,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -130718,9 +144158,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -131045,6 +144522,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -131427,9 +144930,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -131754,6 +145294,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -131865,6 +145431,45 @@ export const AGENT_OUTPUT_SCHEMAS = {
         type: "object",
         additionalProperties: false,
         properties: {
+          aggregates: {
+            type: "array",
+            maxItems: 10,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              properties: {
+                tool: {
+                  type: "string",
+                },
+                calls: {
+                  type: "integer",
+                },
+                errors: {
+                  type: "integer",
+                },
+                bytes: {
+                  oneOf: [
+                    {
+                      type: "integer",
+                    },
+                    {
+                      type: "string",
+                    },
+                  ],
+                },
+                p50Ms: {
+                  type: "integer",
+                },
+                p95Ms: {
+                  type: "integer",
+                },
+              },
+              required: ["tool", "calls", "errors", "bytes", "p50Ms", "p95Ms"],
+            },
+          },
+          aggregatesHasMore: {
+            type: "boolean",
+          },
           run: {
             $ref: "#/$defs/AgentRunRecord",
           },
@@ -132044,6 +145649,22 @@ export const AGENT_OUTPUT_SCHEMAS = {
         type: "object",
         additionalProperties: false,
         properties: {
+          requestId: {
+            oneOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
           seq: {
             type: "integer",
             minimum: 0,
@@ -132217,9 +145838,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -132544,6 +146202,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -132804,9 +146488,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -133131,6 +146852,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -133374,9 +147121,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -133701,6 +147485,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -133961,9 +147771,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -134288,6 +148135,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -134467,10 +148340,17 @@ export const AGENT_OUTPUT_SCHEMAS = {
               data: {
                 oneOf: [
                   {
-                    $ref: "#/$defs/AgentFeedbackSubmitData",
+                    $ref: "#/$defs/AgentWritePreviewData",
                   },
                   {
-                    type: "null",
+                    oneOf: [
+                      {
+                        $ref: "#/$defs/AgentFeedbackSubmitData",
+                      },
+                      {
+                        type: "null",
+                      },
+                    ],
                   },
                 ],
               },
@@ -134545,9 +148425,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -134872,6 +148789,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -134976,6 +148919,47 @@ export const AGENT_OUTPUT_SCHEMAS = {
           resetAt: {
             type: "string",
             format: "date-time",
+          },
+        },
+      },
+      AgentWritePreviewData: {
+        type: "object",
+        additionalProperties: false,
+        required: ["dryRun", "wouldChange", "policyDecision", "budgetImpact"],
+        properties: {
+          dryRun: {
+            type: "boolean",
+            const: true,
+          },
+          wouldChange: {
+            type: "object",
+            additionalProperties: true,
+          },
+          policyDecision: {
+            type: "object",
+            additionalProperties: false,
+            required: ["allowed", "ruleId", "reasons"],
+            properties: {
+              allowed: {
+                type: "boolean",
+              },
+              ruleId: {
+                type: "string",
+              },
+              reasons: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+          budgetImpact: {
+            type: "object",
+            additionalProperties: {
+              type: "integer",
+              minimum: 0,
+            },
           },
         },
       },
@@ -135112,9 +149096,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -135439,6 +149460,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -135772,9 +149819,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -136099,6 +150183,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -136523,6 +150633,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
         type: "object",
         additionalProperties: false,
         properties: {
+          ageBusinessHours: {
+            type: "integer",
+            minimum: 0,
+          },
           id: {
             type: "string",
             maxLength: 200,
@@ -136773,9 +150887,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -137100,6 +151251,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -137450,9 +151627,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -137777,6 +151991,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -138143,9 +152383,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -138470,6 +152747,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -138836,9 +153139,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -139163,6 +153503,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -139423,9 +153789,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -139750,6 +154153,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -140010,9 +154439,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -140337,6 +154803,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -140448,6 +154940,9 @@ export const AGENT_OUTPUT_SCHEMAS = {
         type: "object",
         additionalProperties: false,
         properties: {
+          enforcementEnabled: {
+            type: "boolean",
+          },
           agentId: {
             $ref: "#/$defs/ResourceId",
           },
@@ -140644,9 +155139,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -140971,6 +155503,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -141897,9 +156455,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -142224,6 +156819,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -142500,9 +157121,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -142827,6 +157485,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -143157,9 +157841,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -143484,6 +158205,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -144102,9 +158849,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -144429,6 +159213,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -144744,9 +159554,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -145071,6 +159918,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -145372,9 +160245,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -145699,6 +160609,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -146026,9 +160962,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -146353,6 +161326,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -147991,9 +162990,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -148318,6 +163354,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -148599,9 +163661,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -148926,6 +164025,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -149248,9 +164373,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -149575,6 +164737,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -149835,9 +165023,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -150162,6 +165387,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -150439,9 +165690,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -150766,6 +166054,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -151043,9 +166357,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -151370,6 +166721,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -151641,9 +167018,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -151968,6 +167382,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -152239,9 +167679,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -152566,6 +168043,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -152837,9 +168340,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -153164,6 +168704,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -153512,9 +169078,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -153839,6 +169442,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -154126,9 +169755,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -154453,6 +170119,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -154740,9 +170432,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -155067,6 +170796,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -155318,9 +171073,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -155645,6 +171437,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -155922,9 +171740,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -156249,6 +172104,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -156531,9 +172412,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -156858,6 +172776,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -157140,9 +173084,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -157467,6 +173448,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -157749,9 +173756,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -158076,6 +174120,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -158358,9 +174428,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -158685,6 +174792,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -158967,9 +175100,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -159294,6 +175464,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -159576,9 +175772,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -159903,6 +176136,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -160185,9 +176444,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -160512,6 +176808,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -160794,9 +177116,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -161121,6 +177480,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -161403,9 +177788,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -161730,6 +178152,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -162012,9 +178460,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -162339,6 +178824,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -162621,9 +179132,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -162948,6 +179496,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -163230,9 +179804,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -163557,6 +180168,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -163839,9 +180476,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -164166,6 +180840,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -164448,9 +181148,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -164775,6 +181512,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -165057,9 +181820,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -165384,6 +182184,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,
@@ -165669,9 +182495,46 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             ],
           },
+          requestId: {
+            type: "string",
+          },
+          serverVersion: {
+            type: "string",
+          },
+          build: {
+            type: "string",
+          },
+          serverTimingMs: {
+            type: "object",
+            additionalProperties: {
+              type: "number",
+            },
+          },
+          executionReceipt: {
+            type: "object",
+            additionalProperties: false,
+            description:
+              "Durable tool completion, not provider delivery. Resolve with agent_run_inspect using agentRunId, afterSeq callSeq-1 and limit 1.",
+            required: ["receiptId", "agentRunId", "callSeq", "kind"],
+            properties: {
+              receiptId: {
+                type: "string",
+              },
+              agentRunId: {
+                type: "string",
+              },
+              callSeq: {
+                type: "integer",
+                minimum: 1,
+              },
+              kind: {
+                const: "tool_execution",
+              },
+            },
+          },
           contractVersion: {
             type: "string",
-            const: "2.5.1",
+            const: "2.6.0",
           },
           rateLimit: {
             oneOf: [
@@ -165996,6 +182859,32 @@ export const AGENT_OUTPUT_SCHEMAS = {
         additionalProperties: false,
         required: ["code", "message", "retryable"],
         properties: {
+          errors: {
+            type: "array",
+            maxItems: 30,
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["path", "code", "message"],
+              properties: {
+                path: {
+                  type: "string",
+                },
+                code: {
+                  type: "string",
+                },
+                message: {
+                  type: "string",
+                },
+                allowed: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
           code: {
             type: "string",
             minLength: 1,

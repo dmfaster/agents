@@ -125,6 +125,10 @@ const readinessFields = {
     .optional(),
 };
 const connectionViewFields = {
+  blockedTools: z
+    .array(z.object({ name: z.string(), requiredScope: z.string() }).strict())
+    .optional(),
+  grantUrl: z.string().url().optional(),
   agent: z.object({ id: z.string(), name: z.string(), status: z.string() }).strict().optional(),
   toolsView: z.enum(["summary", "names", "full"]).optional(),
   tools: z
