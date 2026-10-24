@@ -43,7 +43,7 @@ export async function measureAgentCatalog() {
           params: {
             _meta: {
               "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-              "io.modelcontextprotocol/clientInfo": { name: "catalog-check", version: "2.6.0" },
+              "io.modelcontextprotocol/clientInfo": { name: "catalog-check", version: "2.6.1" },
               "io.modelcontextprotocol/clientCapabilities": {},
             },
           },
