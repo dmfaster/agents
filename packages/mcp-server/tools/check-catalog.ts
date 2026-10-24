@@ -40,7 +40,7 @@ export async function measureAgentCatalog() {
           params: {
             _meta: {
               "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-              "io.modelcontextprotocol/clientInfo": { name: "catalog-check", version: "2.6.1" },
+              "io.modelcontextprotocol/clientInfo": { name: "catalog-check", version: "2.6.2" },
               "io.modelcontextprotocol/clientCapabilities": {},
             },
           },
@@ -92,7 +92,7 @@ export async function measureAgentCatalog() {
                 arguments: {},
                 _meta: {
                   "io.modelcontextprotocol/protocolVersion": "2026-07-28",
-                  "io.modelcontextprotocol/clientInfo": { name: "catalog-check", version: "2.6.1" },
+                  "io.modelcontextprotocol/clientInfo": { name: "catalog-check", version: "2.6.2" },
                   "io.modelcontextprotocol/clientCapabilities": {},
                 },
               },

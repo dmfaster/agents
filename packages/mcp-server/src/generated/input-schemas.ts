@@ -21,12 +21,15 @@ export const ResourceVersionSchema = z
   );
 export const AnalyticsSummaryInputSchema = z
   .object({
-    scope: z.union([
-      z.literal("today"),
-      z.literal("last_24_hours"),
-      z.literal("campaign_to_date"),
-      z.literal("range"),
-    ]),
+    scope: z
+      .union([
+        z.literal("today"),
+        z.literal("last_24_hours"),
+        z.literal("campaign_to_date"),
+        z.literal("range"),
+      ])
+      .describe("Defaults to range over the last 30 days ending now when omitted.")
+      .optional(),
     campaign: ResourceIdSchema.describe(
       "Optional campaign identifier or exact campaign name.",
     ).optional(),
@@ -1097,7 +1100,7 @@ export const CompanySearchFiltersSchema = z
   })
   .strict()
   .describe(
-    "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
+    "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies_filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
   );
 export const ProspectingCopySchema = z
   .object({
@@ -1230,6 +1233,10 @@ export const AudiencePreviewInputSchema = z
 export const ListsListInputSchema = z
   .object({
     query: z.string().min(1).max(120).optional(),
+    isCompanyLeadList: z
+      .boolean()
+      .describe("Return only company lead lists (true) or only profile lists (false).")
+      .optional(),
     limit: z.number().int().min(1).max(25).optional(),
     offset: z.number().int().min(0).max(1000000).optional(),
     runId: z
@@ -1592,7 +1599,7 @@ export const CompanySearchInputSchema = z
     projection: z
       .union([z.literal("list"), z.literal("rich")])
       .describe(
-        "List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company.inspect.",
+        "List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company_inspect.",
       )
       .optional(),
     page: z.number().int().min(1).max(10000).optional(),
@@ -1814,7 +1821,7 @@ export const CompanyEvidenceStatusInputSchema = z
     includeCompanies: z
       .boolean()
       .describe(
-        "Set false for progress-only polling without fetching company rows or quotations. Omitted or true preserves the first result page. Use companies.evidence.results to inspect matches.",
+        "Set false for progress-only polling without fetching company rows or quotations. Omitted or true preserves the first result page. Use companies_evidence_results to inspect matches.",
       )
       .optional(),
   })
@@ -2253,7 +2260,12 @@ export const CalendarAvailabilityInputSchema = z
   .object({
     from: ResourceVersionSchema,
     to: ResourceVersionSchema,
-    timezone: z.string().min(1).max(80),
+    timezone: z
+      .string()
+      .min(1)
+      .max(80)
+      .describe("IANA timezone. Defaults to the workspace timezone.")
+      .optional(),
     durationMinutes: z.union([
       z.literal(15),
       z.literal(30),
@@ -3963,6 +3975,10 @@ export const SenderUnretireInputSchema = z
 export const AttributionCheckInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
+    from: ResourceVersionSchema.describe(
+      "Window start. Defaults to seven days before to; the window is at most 92 days.",
+    ).optional(),
+    to: ResourceVersionSchema.describe("Exclusive window end. Defaults to now.").optional(),
     runId: z
       .string()
       .min(1)
@@ -4981,7 +4997,12 @@ export const CallBotJoinInputSchema = z
     runId: z.string().max(100).optional(),
   })
   .strict();
-export const RecorderJoinGetInputSchema = z.object({ requestId: ResourceIdSchema }).strict();
+export const RecorderJoinGetInputSchema = z
+  .object({ requestId: ResourceIdSchema.optional(), meetingId: ResourceIdSchema.optional() })
+  .strict()
+  .describe(
+    "Supply requestId, or meetingId for the latest request of a meeting (state none when there is no request).",
+  );
 export const CallParticipantWithdrawalReportInputSchema = z
   .object({
     meetingId: ResourceIdSchema,

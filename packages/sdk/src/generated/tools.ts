@@ -1,5 +1,5 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
-export const AGENT_CONTRACT_VERSION = "2.6.1" as const;
+export const AGENT_CONTRACT_VERSION = "2.6.2" as const;
 export const AGENT_TOOL_NAMES = [
   "analytics.summary",
   "workspace.briefing",
@@ -2752,7 +2752,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "list_target_remove",
       title: "Remove an Instagram target",
       description:
-        "Ensure one exact Instagram username is absent from an owner-owned saved list after the user requests removal. Echo list.inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and lists protected by active campaigns. Already absent is a verified no-op. Sends nothing.",
+        "Ensure one exact Instagram username is absent from an owner-owned saved list after the user requests removal. Echo list_inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and lists protected by active campaigns. Already absent is a verified no-op. Sends nothing.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: true,
@@ -2771,7 +2771,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "campaign_draft_prepare",
       title: "Prepare a campaign from a saved list",
       description:
-        "Create an idempotent disabled campaign from a reviewed saved list. Instagram lists default to Instagram. For company lists supply channel or channels, expectedAudienceCount, and the exact sum of selected channelCounts as expectedTargetCount from companies.list.inspect. Multichannel LinkedIn requires a separate linkedinInviteNote of at most 300 characters. Email uses channel gmail and channelCounts.email; supply gmailSubject, explicitly confirmed gmailRecipientConsentConfirmed and connected mailboxIds from senders.inspect. messageVariants become email body variants. SMS requires workspace setup and a separate smsBody. Echo the list version and supply delivery settings. Never launches or sends messages.",
+        "Create an idempotent disabled campaign from a reviewed saved list. Instagram lists default to Instagram. For company lists supply channel or channels, expectedAudienceCount, and the exact sum of selected channelCounts as expectedTargetCount from companies_list_inspect. Multichannel LinkedIn requires a separate linkedinInviteNote of at most 300 characters. Email uses channel gmail and channelCounts.email; supply gmailSubject, explicitly confirmed gmailRecipientConsentConfirmed and connected mailboxIds from senders_inspect. messageVariants become email body variants. SMS requires workspace setup and a separate smsBody. Echo the list version and supply delivery settings. Never launches or sends messages.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -2790,7 +2790,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "campaign_draft_update",
       title: "Update a saved social campaign draft",
       description:
-        "Patch social copy, channel toggles, LinkedIn invitation and accepted-message sequence, delivery cap, pacing, or sending window of an existing disabled, unstarted social draft. Echo campaign.inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale versions and started campaigns are rejected; saving a window never arms it. Inspect after an uncertain response before retrying. Never creates another campaign, enables sending, or launches.",
+        "Patch social copy, channel toggles, LinkedIn invitation and accepted-message sequence, delivery cap, pacing, or sending window of an existing disabled, unstarted social draft. Echo campaign_inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale versions and started campaigns are rejected; saving a window never arms it. Inspect after an uncertain response before retrying. Never creates another campaign, enables sending, or launches.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -3000,7 +3000,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "companies_evidence_search",
       title: "Preview website evidence shortlist",
       description:
-        "Fast bounded preview only. For every fitting company use companies.evidence.start and companies.evidence.results. Search saved company website passages for arbitrary ICP criteria, preserving seller/service/buyer relationships. Agent-supplied source-language text retrieval with bounded JEV relationship verification. Advertised offerings, portfolio-only evidence, inference and unknown are distinct. Ranked shortlist has no audience total. Echo cursor, querySignature and expectedRevision to continue. Supply Finnish keywords and synonyms per criterion. Original passages allow independent assistant inspection. No OpenAI API or embeddings are required.",
+        "Fast bounded preview only. For every fitting company use companies_evidence_start and companies_evidence_results. Search saved company website passages for arbitrary ICP criteria, preserving seller/service/buyer relationships. Agent-supplied source-language text retrieval with bounded JEV relationship verification. Advertised offerings, portfolio-only evidence, inference and unknown are distinct. Ranked shortlist has no audience total. Echo cursor, querySignature and expectedRevision to continue. Supply Finnish keywords and synonyms per criterion. Original passages allow independent assistant inspection. No OpenAI API or embeddings are required.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -3247,7 +3247,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "companies_list_prepare",
       title: "Save company shortlist",
       description:
-        "Save explicitly inspected companies as a private company list. Echo each company.inspect revision. No campaign is created or started. Retry using the same key.",
+        "Save explicitly inspected companies as a private company list. Echo each company_inspect revision. No campaign is created or started. Retry using the same key.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -3266,7 +3266,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "companies_list_inspect",
       title: "Inspect company shortlist",
       description:
-        "Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile.",
+        "Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company_inspect for the current full research profile.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -3475,7 +3475,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "companies_fit_cohort",
       title: "Select a ranked audience cohort",
       description:
-        "Return the best requested number of evidenced strong/possible matches, with stable ties and exact guarded refinement input. Unknowns are excluded only as an explicit cohort selection, never labelled poor. Preview and review the selection before applying companies.list.refine.",
+        "Return the best requested number of evidenced strong/possible matches, with stable ties and exact guarded refinement input. Unknowns are excluded only as an explicit cohort selection, never labelled poor. Preview and review the selection before applying companies_list_refine.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -3608,7 +3608,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "instagram_extract_quote",
       title: "Quote an Instagram audience extraction",
       description:
-        "Read existing prepaid capacity in the signed-in owner's account wallet. When insufficient, return the full one-time standalone price and human checkout URL. Payment starts a separate purchase job; read it through instagram.purchases.list/inspect/results using the same connection. Standalone payment cannot fund or resume an account request. No provider calls or payment.",
+        "Read existing prepaid capacity in the signed-in owner's account wallet. When insufficient, return the full one-time standalone price and human checkout URL. Payment starts a separate purchase job; read it through instagram_purchases_list/inspect/results using the same connection. Standalone payment cannot fund or resume an account request. No provider calls or payment.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -3703,7 +3703,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "instagram_purchases_inspect",
       title: "Inspect my purchased Instagram extraction",
       description:
-        "Read an owned paid purchase and a bounded page of its saved jobs. Use orderId from instagram.purchases.list; follow nextCursor for more jobs. Does not advance providers or spend profiles.",
+        "Read an owned paid purchase and a bounded page of its saved jobs. Use orderId from instagram_purchases_list; follow nextCursor for more jobs. Does not advance providers or spend profiles.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -3722,7 +3722,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "instagram_purchases_results",
       title: "Read my purchased Instagram profiles",
       description:
-        "Read exact saved profiles from an owned paid purchase and job. Use orderId and jobId from instagram.purchases.list/inspect. Follow nextCursor. Uses the buyer's existing connection without copying a purchase token; never reads another buyer's order.",
+        "Read exact saved profiles from an owned paid purchase and job. Use orderId and jobId from instagram_purchases_list/inspect. Follow nextCursor. Uses the buyer's existing connection without copying a purchase token; never reads another buyer's order.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -6045,7 +6045,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "call_bot_cancel",
       title: "Cancel a scheduled recorder bot",
       description:
-        "Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.",
+        "Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: true,
@@ -6064,7 +6064,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "call_bot_remove",
       title: "Remove a recorder bot and preserve captured media",
       description:
-        "Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.",
+        "Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: true,
@@ -6083,7 +6083,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "call_recording_stop",
       title: "Stop recording and preserve captured media",
       description:
-        "Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.",
+        "Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: true,
@@ -6178,7 +6178,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "call_delete",
       title: "Delete selected call artifacts",
       description:
-        "Permanently delete media, transcript and dependent analysis, analysis alone, or all artifacts for this meeting through durable deletion jobs. Requires delete_call access. Legal holds preserve quarantined content. Media deletion removes provider recording artifacts; already stored local transcripts and analysis remain. dryRun makes no changes and returns current requests or planned deletions. Full deletion uses the existing deletion pipeline. Late ingest cannot restore deleted scope. expectedVersion comes from call.inspect meeting.updatedAt.",
+        "Permanently delete media, transcript and dependent analysis, analysis alone, or all artifacts for this meeting through durable deletion jobs. Requires delete_call access. Legal holds preserve quarantined content. Media deletion removes provider recording artifacts; already stored local transcripts and analysis remain. dryRun makes no changes and returns current requests or planned deletions. Full deletion uses the existing deletion pipeline. Late ingest cannot restore deleted scope. expectedVersion comes from call_inspect meeting.updatedAt.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: true,
@@ -6254,7 +6254,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "prospecting_preview",
       title: "Preview a compact exact prospect audience",
       description:
-        "Filters-only exact audience, contact status, channel counts, saturation and eligible sample. Same audience engine as campaign.draft.plan. Bounded to 25000 matches; narrow larger audiences.",
+        "Filters-only exact audience, contact status, channel counts, saturation and eligible sample. Same audience engine as campaign_draft_plan. Bounded to 25000 matches; narrow larger audiences.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -7221,10 +7221,10 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
   AnalyticsSummaryInput: {
     type: "object",
     additionalProperties: false,
-    required: ["scope"],
     properties: {
       scope: {
         type: "string",
+        description: "Defaults to range over the last 30 days ending now when omitted.",
         enum: ["today", "last_24_hours", "campaign_to_date", "range"],
       },
       campaign: {
@@ -9299,7 +9299,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
     description:
-      "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
+      "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies_filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
   },
   ProspectingCopy: {
     type: "object",
@@ -9439,6 +9439,10 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "string",
         minLength: 1,
         maxLength: 120,
+      },
+      isCompanyLeadList: {
+        type: "boolean",
+        description: "Return only company lead lists (true) or only profile lists (false).",
       },
       limit: {
         type: "integer",
@@ -10083,7 +10087,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "string",
         enum: ["list", "rich"],
         description:
-          "List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company.inspect.",
+          "List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company_inspect.",
       },
       page: {
         type: "integer",
@@ -10473,7 +10477,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       includeCompanies: {
         type: "boolean",
         description:
-          "Set false for progress-only polling without fetching company rows or quotations. Omitted or true preserves the first result page. Use companies.evidence.results to inspect matches.",
+          "Set false for progress-only polling without fetching company rows or quotations. Omitted or true preserves the first result page. Use companies_evidence_results to inspect matches.",
       },
     },
     required: ["runId", "expectedRevision"],
@@ -11311,7 +11315,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
   CalendarAvailabilityInput: {
     type: "object",
     additionalProperties: false,
-    required: ["from", "to", "timezone", "durationMinutes"],
+    required: ["from", "to", "durationMinutes"],
     properties: {
       from: {
         $ref: "#/components/schemas/ResourceVersion",
@@ -11323,6 +11327,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "string",
         minLength: 1,
         maxLength: 80,
+        description: "IANA timezone. Defaults to the workspace timezone.",
       },
       durationMinutes: {
         type: "integer",
@@ -14562,6 +14567,23 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       campaignId: {
         $ref: "#/components/schemas/ResourceId",
       },
+      from: {
+        allOf: [
+          {
+            $ref: "#/components/schemas/ResourceVersion",
+          },
+        ],
+        description:
+          "Window start. Defaults to seven days before to; the window is at most 92 days.",
+      },
+      to: {
+        allOf: [
+          {
+            $ref: "#/components/schemas/ResourceVersion",
+          },
+        ],
+        description: "Exclusive window end. Defaults to now.",
+      },
       runId: {
         type: "string",
         minLength: 1,
@@ -16565,12 +16587,16 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
   RecorderJoinGetInput: {
     type: "object",
     additionalProperties: false,
+    description:
+      "Supply requestId, or meetingId for the latest request of a meeting (state none when there is no request).",
     properties: {
       requestId: {
         $ref: "#/components/schemas/ResourceId",
       },
+      meetingId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
     },
-    required: ["requestId"],
   },
   CallParticipantWithdrawalReportInput: {
     type: "object",

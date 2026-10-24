@@ -672,7 +672,7 @@ export interface paths {
         put?: never;
         /**
          * Cancel a scheduled recorder bot
-         * @description Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.
+         * @description Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.
          */
         post: operations["callBotCancel"];
         delete?: never;
@@ -712,7 +712,7 @@ export interface paths {
         put?: never;
         /**
          * Remove a recorder bot and preserve captured media
-         * @description Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.
+         * @description Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.
          */
         post: operations["callBotRemove"];
         delete?: never;
@@ -752,7 +752,7 @@ export interface paths {
         put?: never;
         /**
          * Delete selected call artifacts
-         * @description Permanently delete media, transcript and dependent analysis, analysis alone, or all artifacts for this meeting through durable deletion jobs. Requires delete_call access. Legal holds preserve quarantined content. Media deletion removes provider recording artifacts; already stored local transcripts and analysis remain. dryRun makes no changes and returns current requests or planned deletions. Full deletion uses the existing deletion pipeline. Late ingest cannot restore deleted scope. expectedVersion comes from call.inspect meeting.updatedAt.
+         * @description Permanently delete media, transcript and dependent analysis, analysis alone, or all artifacts for this meeting through durable deletion jobs. Requires delete_call access. Legal holds preserve quarantined content. Media deletion removes provider recording artifacts; already stored local transcripts and analysis remain. dryRun makes no changes and returns current requests or planned deletions. Full deletion uses the existing deletion pipeline. Late ingest cannot restore deleted scope. expectedVersion comes from call_inspect meeting.updatedAt.
          */
         post: operations["callDelete"];
         delete?: never;
@@ -912,7 +912,7 @@ export interface paths {
         put?: never;
         /**
          * Stop recording and preserve captured media
-         * @description Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder.bots.list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.
+         * @description Submit one durable recorder command with current control_recording access. Specify exactly one botId or meetingId; expectedVersion comes from recorder_bots_list. A queued receipt is not confirmation of provider completion. dryRun performs no writes or provider calls.
          */
         post: operations["callRecordingStop"];
         delete?: never;
@@ -1137,7 +1137,7 @@ export interface paths {
         put?: never;
         /**
          * Prepare a campaign from a saved list
-         * @description Create an idempotent disabled campaign from a reviewed saved list. Instagram lists default to Instagram. For company lists supply channel or channels, expectedAudienceCount, and the exact sum of selected channelCounts as expectedTargetCount from companies.list.inspect. Multichannel LinkedIn requires a separate linkedinInviteNote of at most 300 characters. Email uses channel gmail and channelCounts.email; supply gmailSubject, explicitly confirmed gmailRecipientConsentConfirmed and connected mailboxIds from senders.inspect. messageVariants become email body variants. SMS requires workspace setup and a separate smsBody. Echo the list version and supply delivery settings. Never launches or sends messages.
+         * @description Create an idempotent disabled campaign from a reviewed saved list. Instagram lists default to Instagram. For company lists supply channel or channels, expectedAudienceCount, and the exact sum of selected channelCounts as expectedTargetCount from companies_list_inspect. Multichannel LinkedIn requires a separate linkedinInviteNote of at most 300 characters. Email uses channel gmail and channelCounts.email; supply gmailSubject, explicitly confirmed gmailRecipientConsentConfirmed and connected mailboxIds from senders_inspect. messageVariants become email body variants. SMS requires workspace setup and a separate smsBody. Echo the list version and supply delivery settings. Never launches or sends messages.
          */
         post: operations["campaignDraftPrepare"];
         delete?: never;
@@ -1177,7 +1177,7 @@ export interface paths {
         put?: never;
         /**
          * Update a saved social campaign draft
-         * @description Patch social copy, channel toggles, LinkedIn invitation and accepted-message sequence, delivery cap, pacing, or sending window of an existing disabled, unstarted social draft. Echo campaign.inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale versions and started campaigns are rejected; saving a window never arms it. Inspect after an uncertain response before retrying. Never creates another campaign, enables sending, or launches.
+         * @description Patch social copy, channel toggles, LinkedIn invitation and accepted-message sequence, delivery cap, pacing, or sending window of an existing disabled, unstarted social draft. Echo campaign_inspect updatedAt as expectedCampaignUpdatedAt. Omitted fields are preserved. Stale versions and started campaigns are rejected; saving a window never arms it. Inspect after an uncertain response before retrying. Never creates another campaign, enables sending, or launches.
          */
         post: operations["campaignDraftUpdate"];
         delete?: never;
@@ -1259,7 +1259,7 @@ export interface paths {
          * Inspect campaign settings and performance
          * @description Returns saved social copy and delivery settings alongside execution and
          *     pipeline facts. When campaignId is omitted, the selected, active, or most
-         *     recent campaign is used. Read-only. Use campaign.copy.inspect for exact
+         *     recent campaign is used. Read-only. Use campaign_copy_inspect for exact
          *     LinkedIn invitation and accepted-message settings.
          */
         post: operations["campaignInspect"];
@@ -1820,7 +1820,7 @@ export interface paths {
         put?: never;
         /**
          * Preview website evidence shortlist
-         * @description Fast bounded preview only. For every fitting company use companies.evidence.start and companies.evidence.results. Search saved company website passages for arbitrary ICP criteria, preserving seller/service/buyer relationships. Agent-supplied source-language text retrieval with bounded JEV relationship verification. Advertised offerings, portfolio-only evidence, inference and unknown are distinct. Ranked shortlist has no audience total. Echo cursor, querySignature and expectedRevision to continue. Supply Finnish keywords and synonyms per criterion. Original passages allow independent assistant inspection. No OpenAI API or embeddings are required.
+         * @description Fast bounded preview only. For every fitting company use companies_evidence_start and companies_evidence_results. Search saved company website passages for arbitrary ICP criteria, preserving seller/service/buyer relationships. Agent-supplied source-language text retrieval with bounded JEV relationship verification. Advertised offerings, portfolio-only evidence, inference and unknown are distinct. Ranked shortlist has no audience total. Echo cursor, querySignature and expectedRevision to continue. Supply Finnish keywords and synonyms per criterion. Original passages allow independent assistant inspection. No OpenAI API or embeddings are required.
          */
         post: operations["companyEvidenceSearch"];
         delete?: never;
@@ -1940,7 +1940,7 @@ export interface paths {
         put?: never;
         /**
          * Select a ranked audience cohort
-         * @description Return the best requested number of evidenced strong/possible matches, with stable ties and exact guarded refinement input. Unknowns are excluded only as an explicit cohort selection, never labelled poor. Preview and review the selection before applying companies.list.refine.
+         * @description Return the best requested number of evidenced strong/possible matches, with stable ties and exact guarded refinement input. Unknowns are excluded only as an explicit cohort selection, never labelled poor. Preview and review the selection before applying companies_list_refine.
          */
         post: operations["companyFitCohort"];
         delete?: never;
@@ -1960,7 +1960,7 @@ export interface paths {
         put?: never;
         /**
          * Prepare reviewed audience refinement
-         * @description After every company is reviewed, return high-confidence poor-fit exclusions and exact counts as a dry-run companies.list.refine input. The caller must preview and explicitly apply that separate operation.
+         * @description After every company is reviewed, return high-confidence poor-fit exclusions and exact counts as a dry-run companies_list_refine input. The caller must preview and explicitly apply that separate operation.
          */
         post: operations["companyFitProposal"];
         delete?: never;
@@ -2120,7 +2120,7 @@ export interface paths {
         put?: never;
         /**
          * Inspect company shortlist
-         * @description Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile.
+         * @description Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company_inspect for the current full research profile.
          */
         post: operations["companyListInspect"];
         delete?: never;
@@ -2140,7 +2140,7 @@ export interface paths {
         put?: never;
         /**
          * Save company shortlist
-         * @description Save explicitly inspected companies as a private company list. Echo each company.inspect revision. No campaign is created or started. Retry using the same key.
+         * @description Save explicitly inspected companies as a private company list. Echo each company_inspect revision. No campaign is created or started. Retry using the same key.
          */
         post: operations["companyListPrepare"];
         delete?: never;
@@ -2220,7 +2220,7 @@ export interface paths {
         put?: never;
         /**
          * Suggest company identities
-         * @description Bounded company suggestions for entity selection. No audience total or exhaustive result is returned. Use companies.search for exact filtered totals and pagination, and company.inspect for a current profile. This read never creates a list or spends credits.
+         * @description Bounded company suggestions for entity selection. No audience total or exhaustive result is returned. Use companies_search for exact filtered totals and pagination, and company_inspect for a current profile. This read never creates a list or spends credits.
          */
         post: operations["companySuggestions"];
         delete?: never;
@@ -2400,7 +2400,7 @@ export interface paths {
         put?: never;
         /**
          * Inspect actual reply delivery state
-         * @description Reads the durable action created by conversation.reply, including queued, sent, failed, or delivery unknown state.
+         * @description Reads the durable action created by conversation_reply, including queued, sent, failed, or delivery unknown state.
          */
         post: operations["conversationReplyInspect"];
         delete?: never;
@@ -2820,7 +2820,7 @@ export interface paths {
         put?: never;
         /**
          * Page through confirmed sent-message history
-         * @description Reads confirmed sends for one campaign. Cursor pages can be used to build an export; failed and skipped attempts are in campaign.outcomes.list.
+         * @description Reads confirmed sends for one campaign. Cursor pages can be used to build an export; failed and skipped attempts are in campaign_outcomes_list.
          */
         post: operations["historyList"];
         delete?: never;
@@ -2880,7 +2880,7 @@ export interface paths {
         put?: never;
         /**
          * Quote an Instagram audience extraction
-         * @description Read existing prepaid capacity in the signed-in owner's account wallet. When insufficient, return the full one-time standalone price and human checkout URL. Payment starts a separate purchase job; read it through instagram.purchases.list/inspect/results using the same connection. Standalone payment cannot fund or resume an account request. No provider calls or payment.
+         * @description Read existing prepaid capacity in the signed-in owner's account wallet. When insufficient, return the full one-time standalone price and human checkout URL. Payment starts a separate purchase job; read it through instagram_purchases_list/inspect/results using the same connection. Standalone payment cannot fund or resume an account request. No provider calls or payment.
          */
         post: operations["instagramExtractionQuote"];
         delete?: never;
@@ -2940,7 +2940,7 @@ export interface paths {
         put?: never;
         /**
          * Inspect my purchased Instagram extraction
-         * @description Read an owned paid purchase and a bounded page of its saved jobs. Use orderId from instagram.purchases.list; follow nextCursor for more jobs. Does not advance providers or spend profiles.
+         * @description Read an owned paid purchase and a bounded page of its saved jobs. Use orderId from instagram_purchases_list; follow nextCursor for more jobs. Does not advance providers or spend profiles.
          */
         post: operations["instagramPurchasesInspect"];
         delete?: never;
@@ -2980,7 +2980,7 @@ export interface paths {
         put?: never;
         /**
          * Read my purchased Instagram profiles
-         * @description Read exact saved profiles from an owned paid purchase and job. Use orderId and jobId from instagram.purchases.list/inspect. Follow nextCursor. Uses the buyer's existing connection without copying a purchase token; never reads another buyer's order.
+         * @description Read exact saved profiles from an owned paid purchase and job. Use orderId and jobId from instagram_purchases_list/inspect. Follow nextCursor. Uses the buyer's existing connection without copying a purchase token; never reads another buyer's order.
          */
         post: operations["instagramPurchasesResults"];
         delete?: never;
@@ -3400,7 +3400,7 @@ export interface paths {
         put?: never;
         /**
          * Remove an Instagram target
-         * @description Ensure one exact Instagram username is absent from an owner-owned saved list after the user requests removal. Echo list.inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and lists protected by active campaigns. Already absent is a verified no-op. Sends nothing.
+         * @description Ensure one exact Instagram username is absent from an owner-owned saved list after the user requests removal. Echo list_inspect updatedAt as expectedListUpdatedAt. Refuse stale writes and lists protected by active campaigns. Already absent is a verified no-op. Sends nothing.
          */
         post: operations["listTargetRemove"];
         delete?: never;
@@ -3675,7 +3675,7 @@ export interface paths {
         put?: never;
         /**
          * Preview a compact exact prospect audience
-         * @description Filters-only exact audience, contact status, channel counts, saturation and eligible sample. Same audience engine as campaign.draft.plan. Bounded to 25000 matches; narrow larger audiences.
+         * @description Filters-only exact audience, contact status, channel counts, saturation and eligible sample. Same audience engine as campaign_draft_plan. Bounded to 25000 matches; narrow larger audiences.
          */
         post: operations["prospectingPreview"];
         delete?: never;
@@ -5204,7 +5204,7 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.6.1";
+            contractVersion: "2.6.2";
             data: {
                 nextInSeconds: number;
             };
@@ -5594,7 +5594,7 @@ export interface components {
             build?: string;
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.6.1";
+            contractVersion?: "2.6.2";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
@@ -5685,8 +5685,11 @@ export interface components {
             include?: ("canonical" | "legacy" | "metrics" | "definitions")[];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
-            /** @enum {string} */
-            scope: "today" | "last_24_hours" | "campaign_to_date" | "range";
+            /**
+             * @description Defaults to range over the last 30 days ending now when omitted.
+             * @enum {string}
+             */
+            scope?: "today" | "last_24_hours" | "campaign_to_date" | "range";
             timezone?: string;
             to?: components["schemas"]["ResourceVersion"];
         };
@@ -5777,8 +5780,12 @@ export interface components {
         };
         AttributionCheckInput: {
             campaignId: components["schemas"]["ResourceId"];
+            /** @description Window start. Defaults to seven days before to; the window is at most 92 days. */
+            from?: components["schemas"]["ResourceVersion"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
+            /** @description Exclusive window end. Defaults to now. */
+            to?: components["schemas"]["ResourceVersion"];
         };
         AttributionCheckOutput: {
             attributed: number;
@@ -5890,7 +5897,8 @@ export interface components {
             limit?: number;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
-            timezone: string;
+            /** @description IANA timezone. Defaults to the workspace timezone. */
+            timezone?: string;
             to: components["schemas"]["ResourceVersion"];
         };
         CalendarAvailabilityResult: components["schemas"]["AgentToolResultBase"] & {
@@ -8498,7 +8506,7 @@ export interface components {
         };
         CompanyEvidenceStatusInput: {
             expectedRevision: string;
-            /** @description Set false for progress-only polling without fetching company rows or quotations. Omitted or true preserves the first result page. Use companies.evidence.results to inspect matches. */
+            /** @description Set false for progress-only polling without fetching company rows or quotations. Omitted or true preserves the first result page. Use companies_evidence_results to inspect matches. */
             includeCompanies?: boolean;
             runId: string;
         };
@@ -8942,7 +8950,7 @@ export interface components {
             pageSize: number;
             totalPassages: number;
         };
-        /** @description Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company.inspect for the current full research profile. */
+        /** @description Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company_inspect for the current full research profile. */
         CompanyListInspectData: {
             channelCounts?: {
                 email?: number;
@@ -8978,7 +8986,7 @@ export interface components {
             /** @constant */
             tool?: "companies.list.inspect";
         };
-        /** @description Save explicitly inspected companies as a private company list. Echo each company.inspect revision. No campaign is created or started. Retry using the same key. */
+        /** @description Save explicitly inspected companies as a private company list. Echo each company_inspect revision. No campaign is created or started. Retry using the same key. */
         CompanyListPrepareData: {
             channelCounts?: {
                 email?: number;
@@ -9133,7 +9141,7 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
-        /** @description Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected. */
+        /** @description Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies_filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected. */
         CompanySearchFilters: {
             activeOnly?: boolean;
             businessIdRegistrationEnd?: string;
@@ -9199,7 +9207,7 @@ export interface components {
             page?: number;
             pageSize?: number;
             /**
-             * @description List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company.inspect.
+             * @description List returns the compact app row and flat primary contact fields. Rich preserves contact arrays and is the default. Full profiles remain available through company_inspect.
              * @enum {string}
              */
             projection?: "list" | "rich";
@@ -10776,6 +10784,8 @@ export interface components {
                 channelCounts?: {
                     [key: string]: number;
                 };
+                /** @description Another list (lowest listId) with the same normalized name, or null when the name is unique. */
+                duplicateOf?: string | null;
                 isCompanyLeadList: boolean;
                 listId: string;
                 name: string;
@@ -10786,6 +10796,8 @@ export interface components {
             total: number;
         };
         ListsListInput: {
+            /** @description Return only company lead lists (true) or only profile lists (false). */
+            isCompanyLeadList?: boolean;
             limit?: number;
             offset?: number;
             query?: string;
@@ -11482,8 +11494,10 @@ export interface components {
             /** @constant */
             tool?: "recorder.event.override.update";
         };
+        /** @description Supply requestId, or meetingId for the latest request of a meeting (state none when there is no request). */
         RecorderJoinGetInput: {
-            requestId: components["schemas"]["ResourceId"];
+            meetingId?: components["schemas"]["ResourceId"];
+            requestId?: components["schemas"]["ResourceId"];
         };
         RecorderJoinGetOutput: {
             botId: components["schemas"]["ResourceId"] | null;
@@ -11493,7 +11507,7 @@ export interface components {
             requestId: components["schemas"]["ResourceId"] | null;
             safeErrorCode: string | null;
             /** @enum {string} */
-            state: "preview" | "queued" | "submitting" | "scheduled" | "denied";
+            state: "preview" | "queued" | "submitting" | "scheduled" | "denied" | "none";
         };
         RecorderJoinGetResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["RecorderJoinGetOutput"] | null;
@@ -11571,7 +11585,11 @@ export interface components {
         RecorderStatusOutput: {
             /** Format: date-time */
             asOf: string;
+            /** @description True only when calendarAutojoinEnabled is on, consent is recorded and mode is not off. */
+            autojoinActive?: boolean;
+            autojoinBlockedBy?: ("feature_disabled" | "consent_required" | "recording_off")[];
             botsStartingToday: number;
+            /** @description Workspace rollout flag only. See autojoinActive for whether calendar meetings are admitted. */
             calendarAutojoinEnabled: boolean;
             calendars: {
                 id: components["schemas"]["ResourceId"];
