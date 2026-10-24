@@ -4,7 +4,7 @@ import { identity, readData, type CompanyDetail, type CompanyRow } from "./compa
 import { savedCompanyRow } from "./company-saved-list.ts";
 
 export type ShortlistRequest = AgentToolInputMap["companies.list.prepare"];
-export type Shortlist = AgentToolDataMap["companies.list.prepare"];
+export type Shortlist = Exclude<AgentToolDataMap["companies.list.prepare"], { dryRun: true }>;
 
 export function checkedSelection(rows: CompanyRow[], count: number): CompanyRow[] {
   if (
