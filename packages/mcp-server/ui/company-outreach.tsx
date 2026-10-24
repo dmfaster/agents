@@ -39,9 +39,9 @@ import { t } from "./locale.ts";
 export type OutreachState = { locked: boolean; reviewed: boolean; launched: boolean };
 
 type Channel = "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
-type SavedList = AgentToolDataMap["companies.list.prepare"];
-type Draft = AgentToolDataMap["campaign.draft.prepare"];
-type Launch = AgentToolDataMap["campaign.launch"];
+type SavedList = Exclude<AgentToolDataMap["companies.list.prepare"], { dryRun: true }>;
+type Draft = Exclude<AgentToolDataMap["campaign.draft.prepare"], { dryRun: true }>;
+type Launch = Exclude<AgentToolDataMap["campaign.launch"], { dryRun: true }>;
 const channels: { id: Channel; label: string }[] = [
   { id: "instagram", label: "Instagram" },
   { id: "facebook", label: "Facebook" },
@@ -371,7 +371,9 @@ export function CompanyOutreach({
       // Preserve an uncertain launch's exact authorization and key. The server
       // handles replay; never submit another command after a lost response.
       if (!launchRequest.current) {
-        const ready = readData<AgentToolDataMap["campaign.launch.preflight"]>(
+        const ready = readData<
+          Exclude<AgentToolDataMap["campaign.launch.preflight"], { dryRun: true }>
+        >(
           await bridge.callTool("campaign_launch_preflight", {
             campaignId: draft.campaignId,
             idempotencyKey: launchKey.current,
