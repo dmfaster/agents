@@ -231,6 +231,10 @@ export type AgentToolInputMap = {
   "list.rename": operations["listRename"]["requestBody"]["content"]["application/json"];
   "list.archive": operations["listArchive"]["requestBody"]["content"]["application/json"];
   "campaign.draft.archive": operations["campaignDraftArchive"]["requestBody"]["content"]["application/json"];
+  "copy.approval.inspect": operations["copy.approval.inspect"]["requestBody"]["content"]["application/json"];
+  "copy.approval.cancel": operations["copy.approval.cancel"]["requestBody"]["content"]["application/json"];
+  "approval.cancel": operations["approval.cancel"]["requestBody"]["content"]["application/json"];
+  "approvals.list": operations["approvals.list"]["requestBody"]["content"]["application/json"];
 };
 export type AgentToolDataMap = {
   "analytics.summary": NonNullable<
@@ -922,5 +926,17 @@ export type AgentToolDataMap = {
   >;
   "campaign.draft.archive": NonNullable<
     operations["campaignDraftArchive"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "copy.approval.inspect": NonNullable<
+    operations["copy.approval.inspect"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "copy.approval.cancel": NonNullable<
+    operations["copy.approval.cancel"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "approval.cancel": NonNullable<
+    operations["approval.cancel"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "approvals.list": NonNullable<
+    operations["approvals.list"]["responses"][200]["content"]["application/json"]["data"]
   >;
 };

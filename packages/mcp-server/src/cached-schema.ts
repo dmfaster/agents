@@ -17,7 +17,7 @@ export function cachedMcpSchema(schema: z.ZodType): McpSchema {
       if (Object.keys(options).some((key) => key !== "target")) return convert(options);
       const existing = descriptions.get(options.target);
       if (existing) return existing;
-      const description = convert(options);
+      const description = compactSchema(convert(options));
       descriptions.set(options.target, description);
       return description;
     };
@@ -33,4 +33,30 @@ export function cachedMcpSchema(schema: z.ZodType): McpSchema {
   };
   schemas.set(schema, cached);
   return cached;
+}
+
+/** Equivalent enum forms avoid repeating scalar const branches in every tool. */
+function compactSchema<T>(value: T): T {
+  if (Array.isArray(value)) return value.map(compactSchema) as T;
+  if (!value || typeof value !== "object") return value;
+  const node = value as Record<string, unknown>;
+  const alternatives = node.anyOf || node.oneOf;
+  if (
+    Array.isArray(alternatives) &&
+    alternatives.length &&
+    alternatives.every(
+      (v) =>
+        v &&
+        typeof v === "object" &&
+        Object.keys(v).every((k) => ["const", "type"].includes(k)) &&
+        "const" in v,
+    )
+  ) {
+    const constants = alternatives.map((v) => v.const);
+    if (new Set(constants.map((v) => JSON.stringify(v))).size === constants.length) {
+      const { anyOf: _a, oneOf: _o, ...rest } = node;
+      return { ...rest, enum: constants } as T;
+    }
+  }
+  return Object.fromEntries(Object.entries(node).map(([key, v]) => [key, compactSchema(v)])) as T;
 }

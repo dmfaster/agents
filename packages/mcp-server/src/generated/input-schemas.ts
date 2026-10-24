@@ -1004,6 +1004,12 @@ export const CompanySearchFiltersSchema = z
     metaAdsIncludeUncorroborated: z.boolean().optional(),
     hasWebsite: z.boolean().optional(),
     activeOnly: z.boolean().optional(),
+    includeUnknownSize: z
+      .boolean()
+      .describe(
+        "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
+      )
+      .optional(),
   })
   .strict()
   .describe(
@@ -1028,7 +1034,7 @@ export const ProspectingCopySchema = z
           .strict(),
       )
       .min(1)
-      .max(4),
+      .max(20),
     followups: z
       .array(
         z
@@ -1046,7 +1052,7 @@ export const ProspectingCopySchema = z
           })
           .strict(),
       )
-      .max(3)
+      .max(15)
       .optional(),
   })
   .strict();
@@ -3578,6 +3584,7 @@ export const ReadinessCheckInputSchema = z
       z.literal("send:instagram"),
       z.literal("send:facebook"),
       z.literal("send:linkedin"),
+      z.literal("launch"),
     ]),
     runId: z
       .string()
@@ -3585,6 +3592,7 @@ export const ReadinessCheckInputSchema = z
       .max(100)
       .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
       .optional(),
+    campaignId: z.string().min(1).max(200).optional(),
   })
   .strict();
 export const SenderRetireInputSchema = z
@@ -4656,7 +4664,11 @@ export const CallDeleteInputSchema = z
   })
   .strict();
 export const CopyApprovalRequestInputSchema = z
-  .object({ plan: ProspectingPlanSchema, idempotencyKey: z.string().min(1).max(160) })
+  .object({
+    plan: ProspectingPlanSchema.optional(),
+    idempotencyKey: z.string().min(1).max(160),
+    campaignId: z.string().min(1).max(160).optional(),
+  })
   .strict();
 export const CampaignDraftPlanInputSchema = z
   .object({
@@ -4821,6 +4833,35 @@ export const CampaignDraftArchiveInputSchema = z
     expectedUpdatedAt: z
       .string()
       .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
+  })
+  .strict();
+export const CopyApprovalInspectInputSchema = z
+  .object({ approvalId: z.string().min(1).max(160) })
+  .strict();
+export const CopyApprovalCancelInputSchema = z
+  .object({ approvalId: z.string().min(1).max(160), idempotencyKey: z.string().min(8).max(160) })
+  .strict();
+export const ApprovalCancelInputSchema = z
+  .object({
+    approvalId: z.string().min(1).max(160),
+    idempotencyKey: z.string().min(8).max(160),
+    expectedRevision: z.number().int().min(1),
+    reason: z.string().min(1).max(500),
+  })
+  .strict();
+export const ApprovalsListInputSchema = z
+  .object({
+    cursor: z.string().min(1).max(1000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    status: z
+      .union([z.literal("pending"), z.literal("approved"), z.literal("rejected")])
+      .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const AGENT_INPUT_SCHEMAS = {
@@ -5054,4 +5095,8 @@ export const AGENT_INPUT_SCHEMAS = {
   "list.rename": ListRenameInputSchema,
   "list.archive": ListArchiveInputSchema,
   "campaign.draft.archive": CampaignDraftArchiveInputSchema,
+  "copy.approval.inspect": CopyApprovalInspectInputSchema,
+  "copy.approval.cancel": CopyApprovalCancelInputSchema,
+  "approval.cancel": ApprovalCancelInputSchema,
+  "approvals.list": ApprovalsListInputSchema,
 } as const;
