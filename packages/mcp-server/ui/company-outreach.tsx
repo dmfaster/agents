@@ -94,7 +94,7 @@ export function CompanyOutreach({
   const mailboxes = senders?.emailAvailable
     ? senders.mailboxes.filter(
         (mailbox) =>
-          mailbox.status === "connected" &&
+          mailbox.status === "healthy" &&
           mailbox.sendEnabled &&
           mailbox.canSend &&
           !mailbox.needsReauthorization,
