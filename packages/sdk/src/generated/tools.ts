@@ -218,6 +218,19 @@ export const AGENT_TOOL_NAMES = [
   "recorder.join.get",
   "call.participant.withdrawal.report",
   "call.delete",
+  "copy.approval.request",
+  "campaign.draft.plan",
+  "campaign.draft.readiness",
+  "prospecting.preview",
+  "companies.lookalike",
+  "commitments.propose",
+  "commitments.list",
+  "commitment.update",
+  "commitment.confirm.batch",
+  "commitment.reminder.draft",
+  "list.rename",
+  "list.archive",
+  "campaign.draft.archive",
 ] as const;
 export const AGENT_TOOL_POLICIES = Object.freeze({
   "analytics.summary": {
@@ -1305,6 +1318,71 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "copy.approval.request": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.draft.plan": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.draft.readiness": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "prospecting.preview": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "companies.lookalike": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "commitments.propose": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "commitments.list": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "commitment.update": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "commitment.confirm.batch": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "commitment.reminder.draft": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "list.rename": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "list.archive": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.draft.archive": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
 } as const);
 export const AGENT_TOOL_SCOPES = {
   "analytics.summary": ["workspace:read"],
@@ -1534,6 +1612,35 @@ export const AGENT_TOOL_SCOPES = {
   "recorder.join.get": ["calls:read"],
   "call.participant.withdrawal.report": ["calls:record", "calls:transcripts:read"],
   "call.delete": ["calls:write"],
+  "copy.approval.request": ["audiences:read", "campaigns:read", "campaigns:write"],
+  "campaign.draft.plan": ["audiences:read", "campaigns:read", "campaigns:write"],
+  "campaign.draft.readiness": ["campaigns:read"],
+  "prospecting.preview": ["audiences:read"],
+  "companies.lookalike": ["audiences:read", "pipeline:read"],
+  "commitments.propose": [
+    "calls:read",
+    "calls:transcripts:read",
+    "pipeline:read",
+    "pipeline:write",
+  ],
+  "commitments.list": ["calls:read", "calls:transcripts:read", "pipeline:read"],
+  "commitment.update": ["calls:read", "calls:transcripts:read", "pipeline:read", "pipeline:write"],
+  "commitment.confirm.batch": [
+    "calls:read",
+    "calls:transcripts:read",
+    "pipeline:read",
+    "pipeline:write",
+  ],
+  "commitment.reminder.draft": [
+    "calls:read",
+    "calls:transcripts:read",
+    "pipeline:read",
+    "pipeline:write",
+    "inbox:write",
+  ],
+  "list.rename": ["campaigns:read", "campaigns:write"],
+  "list.archive": ["campaigns:read", "campaigns:write"],
+  "campaign.draft.archive": ["campaigns:read", "campaigns:write"],
 } as const;
 export const AGENT_OWNER_ONLY_TOOLS = [
   "conversation.update",
@@ -1667,6 +1774,19 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "entity.merge",
   "entity.split",
   "call.outcome.confirm",
+  "copy.approval.request",
+  "campaign.draft.plan",
+  "campaign.draft.readiness",
+  "prospecting.preview",
+  "companies.lookalike",
+  "commitments.propose",
+  "commitments.list",
+  "commitment.update",
+  "commitment.confirm.batch",
+  "commitment.reminder.draft",
+  "list.rename",
+  "list.archive",
+  "campaign.draft.archive",
 ] as const;
 export const AGENT_ERROR_CATALOG = {
   authorization_pending: {
@@ -1841,6 +1961,13 @@ export const AGENT_SALES_EVENT_TYPES = [
   "campaign.state.changed",
   "sender.unhealthy",
   "reply.approval.requested",
+  "copy.approval_requested",
+  "commitment.done",
+  "commitment.overdue",
+  "commitment.due",
+  "commitment.created",
+  "copy.approval_approved",
+  "copy.approval_rejected",
   "reply.approval.decided",
   "credential.expiring",
   "webhook.test",
@@ -5980,6 +6107,252 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["call", "delete"],
     },
   },
+  "copy.approval.request": {
+    mcp: {
+      name: "copy_approval_request",
+      title: "Request owner approval of campaign copy",
+      description:
+        "Create an owner review of exact campaign copy and audience. Email recipient consent is entered by the owner in the approval page. Never sends or authorizes launch.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "copy approval request --input FILE",
+      command: ["copy", "approval", "request"],
+    },
+  },
+  "campaign.draft.plan": {
+    mcp: {
+      name: "campaign_draft_plan",
+      title: "Plan or create a complete disabled campaign",
+      description:
+        "Compact ICP to draft workflow. Supply plan for dryRun (default true), or an approved copy approvalId and idempotencyKey with dryRun false to atomically create a named list and disabled draft. One selected channel: LinkedIn, email, SMS, Instagram or Facebook subject to capabilities. Supports variants, follow-ups and prospect-local window. Never launches.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "campaign draft plan --input FILE",
+      command: ["campaign", "draft", "plan"],
+    },
+  },
+  "campaign.draft.readiness": {
+    mcp: {
+      name: "campaign_draft_readiness",
+      title: "Check draft readiness without launch intent",
+      description:
+        "Read-only copy approval, labels, sender and shared launch preflight checks. Never creates an authorization or launches.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "campaign draft readiness --input FILE",
+      command: ["campaign", "draft", "readiness"],
+    },
+  },
+  "prospecting.preview": {
+    mcp: {
+      name: "prospecting_preview",
+      title: "Preview a compact exact prospect audience",
+      description:
+        "Filters-only exact audience, contact status, channel counts, saturation and eligible sample. Same audience engine as campaign.draft.plan. Bounded to 25000 matches; narrow larger audiences.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "prospecting preview --input FILE",
+      command: ["prospecting", "preview"],
+    },
+  },
+  "companies.lookalike": {
+    mcp: {
+      name: "companies_lookalike",
+      title: "Find deterministic company lookalikes",
+      description:
+        "Workspace-scoped conversion or explicit seeds. Deterministic industry, size, revenue, region, technology, ads and channel similarity. Excludes existing workspace company contacts.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "companies lookalike --input FILE",
+      command: ["companies", "lookalike"],
+    },
+  },
+  "commitments.propose": {
+    mcp: {
+      name: "commitments_propose",
+      title: "Propose commitments from a fresh call",
+      description:
+        "Extract explicit Finnish or English commitments from a retained, accessible transcript page. Fresh calls only; historical extraction is blocked. Quotes are referenced, never copied into storage.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "commitments propose --input FILE",
+      command: ["commitments", "propose"],
+    },
+  },
+  "commitments.list": {
+    mcp: {
+      name: "commitments_list",
+      title: "Read call commitments",
+      description:
+        "Read retained call commitments with current call access, redacted quote and timestamps. Source deletion, expiry or replacement hides the quote and commitment.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "commitments list --input FILE",
+      command: ["commitments", "list"],
+    },
+  },
+  "commitment.update": {
+    mcp: {
+      name: "commitment_update",
+      title: "Update a call commitment",
+      description:
+        "Confirm, complete, cancel or reschedule a version-bound commitment. Never sends a reminder.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "commitment update --input FILE",
+      command: ["commitment", "update"],
+    },
+  },
+  "commitment.confirm.batch": {
+    mcp: {
+      name: "commitment_confirm_batch",
+      title: "Confirm call commitments",
+      description:
+        "Confirm explicit proposed commitments as linked follow-up work. Requires current call access and pipeline write scope; never sends.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "commitment confirm batch --input FILE",
+      command: ["commitment", "confirm", "batch"],
+    },
+  },
+  "commitment.reminder.draft": {
+    mcp: {
+      name: "commitment_reminder_draft",
+      title: "Draft a commitment reminder",
+      description:
+        "Create a pending owner-reviewed reply draft for the linked conversation. Never sends.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "commitment reminder draft --input FILE",
+      command: ["commitment", "reminder", "draft"],
+    },
+  },
+  "list.rename": {
+    mcp: {
+      name: "list_rename",
+      title: "Rename a saved list",
+      description: "Rename an owned list using its current timestamp. Does not alter membership.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "list rename --input FILE",
+      command: ["list", "rename"],
+    },
+  },
+  "list.archive": {
+    mcp: {
+      name: "list_archive",
+      title: "Archive an unused agent list",
+      description:
+        "Remove an unused agent-created list with a current version. Refuses lists referenced by a campaign.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "list archive --input FILE",
+      command: ["list", "archive"],
+    },
+  },
+  "campaign.draft.archive": {
+    mcp: {
+      name: "campaign_draft_archive",
+      title: "Archive an unstarted agent draft",
+      description:
+        "Remove only a disabled, unstarted agent-created campaign with a current version and no authoritative sending work.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: true,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "campaign draft archive --input FILE",
+      command: ["campaign", "draft", "archive"],
+    },
+  },
 } as const;
 export const AGENT_TOOL_INPUT_SCHEMAS = {
   "analytics.summary": {
@@ -6632,6 +7005,45 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "call.delete": {
     $ref: "#/components/schemas/CallDeleteInput",
+  },
+  "copy.approval.request": {
+    $ref: "#/components/schemas/CopyApprovalRequestInput",
+  },
+  "campaign.draft.plan": {
+    $ref: "#/components/schemas/CampaignDraftPlanInput",
+  },
+  "campaign.draft.readiness": {
+    $ref: "#/components/schemas/CampaignDraftReadinessInput",
+  },
+  "prospecting.preview": {
+    $ref: "#/components/schemas/ProspectingPreviewInput",
+  },
+  "companies.lookalike": {
+    $ref: "#/components/schemas/CompaniesLookalikeInput",
+  },
+  "commitments.propose": {
+    $ref: "#/components/schemas/CommitmentsProposeInput",
+  },
+  "commitments.list": {
+    $ref: "#/components/schemas/CommitmentsListInput",
+  },
+  "commitment.update": {
+    $ref: "#/components/schemas/CommitmentUpdateInput",
+  },
+  "commitment.confirm.batch": {
+    $ref: "#/components/schemas/CommitmentConfirmBatchInput",
+  },
+  "commitment.reminder.draft": {
+    $ref: "#/components/schemas/CommitmentReminderDraftInput",
+  },
+  "list.rename": {
+    $ref: "#/components/schemas/ListRenameInput",
+  },
+  "list.archive": {
+    $ref: "#/components/schemas/ListArchiveInput",
+  },
+  "campaign.draft.archive": {
+    $ref: "#/components/schemas/CampaignDraftArchiveInput",
   },
 } as const;
 export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
@@ -7688,6 +8100,9 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["query"],
     properties: {
+      country: {
+        $ref: "#/components/schemas/SupportedCountry",
+      },
       query: {
         type: "string",
         minLength: 1,
@@ -7706,7 +8121,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
       language: {
         type: "string",
-        enum: ["en", "fi"],
+        enum: ["en", "fi", "sv"],
       },
       runId: {
         type: "string",
@@ -7716,6 +8131,40 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
   },
+  SupportedCountry: {
+    type: "string",
+    enum: [
+      "FI",
+      "NO",
+      "EE",
+      "SE",
+      "DK",
+      "UK",
+      "IE",
+      "AE",
+      "AT",
+      "BE",
+      "CA",
+      "NL",
+      "NZ",
+      "ES",
+      "FR",
+      "HK",
+      "IL",
+      "LV",
+      "LT",
+      "IT",
+      "CH",
+      "PT",
+      "SA",
+      "SG",
+      "IS",
+      "AU",
+      "DE",
+      "US",
+      "ZA",
+    ],
+  },
   TolVersion: {
     type: "string",
     enum: ["2008", "2025"],
@@ -7723,7 +8172,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
   CampaignValidateInput: {
     type: "object",
     additionalProperties: false,
-    required: ["state"],
     properties: {
       state: {
         $ref: "#/components/schemas/AgentCampaignState",
@@ -7733,6 +8181,14 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         minLength: 1,
         maxLength: 100,
         description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
+      },
+      plan: {
+        $ref: "#/components/schemas/ProspectingPlan",
+      },
+      approvalId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
       },
     },
   },
@@ -7823,40 +8279,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         },
       },
     },
-  },
-  SupportedCountry: {
-    type: "string",
-    enum: [
-      "FI",
-      "NO",
-      "EE",
-      "SE",
-      "DK",
-      "UK",
-      "IE",
-      "AE",
-      "AT",
-      "BE",
-      "CA",
-      "NL",
-      "NZ",
-      "ES",
-      "FR",
-      "HK",
-      "IL",
-      "LV",
-      "LT",
-      "IT",
-      "CH",
-      "PT",
-      "SA",
-      "SG",
-      "IS",
-      "AU",
-      "DE",
-      "US",
-      "ZA",
-    ],
   },
   AgentCampaignBrief: {
     type: "object",
@@ -8093,6 +8515,13 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     additionalProperties: false,
     required: ["id", "label", "selections"],
     properties: {
+      companyCount: {
+        type: "integer",
+        minimum: 0,
+      },
+      country: {
+        $ref: "#/components/schemas/SupportedCountry",
+      },
       id: {
         type: "string",
         maxLength: 80,
@@ -8293,10 +8722,365 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
   },
+  ProspectingPlan: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      name: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+      },
+      listName: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+      },
+      filters: {
+        $ref: "#/components/schemas/CompanySearchFilters",
+      },
+      excludePreviouslyContacted: {
+        type: "boolean",
+      },
+      copy: {
+        $ref: "#/components/schemas/ProspectingCopy",
+      },
+      mailboxIds: {
+        type: "array",
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 160,
+        },
+        maxItems: 8,
+      },
+      dailyCap: {
+        type: "integer",
+        minimum: 1,
+        maximum: 60,
+      },
+      pacingSeconds: {
+        type: "integer",
+        minimum: 12,
+        maximum: 3600,
+      },
+      window: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          timezone: {
+            type: "string",
+            minLength: 1,
+            maxLength: 80,
+          },
+          startMinute: {
+            type: "integer",
+            minimum: 0,
+            maximum: 1380,
+          },
+          endMinute: {
+            type: "integer",
+            minimum: 60,
+            maximum: 1440,
+          },
+          weekdays: {
+            type: "integer",
+            minimum: 1,
+            maximum: 127,
+          },
+        },
+        required: ["timezone", "startMinute", "endMinute"],
+      },
+      labels: {
+        type: "array",
+        items: {
+          const: "agent_test",
+        },
+        maxItems: 1,
+      },
+    },
+    required: ["name", "filters", "copy"],
+  },
+  CompanySearchFilters: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      country: {
+        $ref: "#/components/schemas/SupportedCountry",
+      },
+      countries: {
+        type: "array",
+        items: {
+          $ref: "#/components/schemas/SupportedCountry",
+        },
+        maxItems: 32,
+        minItems: 1,
+      },
+      q: {
+        type: "string",
+        maxLength: 120,
+      },
+      industryCodes: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 8,
+      },
+      industryCodeSelections: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            classification: {
+              const: "TOL",
+            },
+            version: {
+              enum: ["2008", "2025"],
+            },
+            codes: {
+              type: "array",
+              items: {
+                type: "string",
+                maxLength: 5,
+              },
+              maxItems: 64,
+            },
+          },
+          required: ["classification", "version", "codes"],
+        },
+        maxItems: 2,
+      },
+      tolCodes: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 8,
+      },
+      companyForm: {
+        type: "string",
+        maxLength: 4096,
+      },
+      states: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 32,
+      },
+      cities: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 32,
+      },
+      registrationDateEnabled: {
+        type: "boolean",
+      },
+      registrationDateStart: {
+        type: "string",
+        maxLength: 10,
+      },
+      registrationDateEnd: {
+        type: "string",
+        maxLength: 10,
+      },
+      businessIdRegistrationStart: {
+        type: "string",
+        maxLength: 10,
+      },
+      businessIdRegistrationEnd: {
+        type: "string",
+        maxLength: 10,
+      },
+      revenueMinEur: {
+        type: "string",
+        maxLength: 16,
+      },
+      revenueMaxEur: {
+        type: "string",
+        maxLength: 16,
+      },
+      employeeRanges: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 32,
+      },
+      employeeMin: {
+        type: "string",
+        maxLength: 10,
+      },
+      employeeMax: {
+        type: "string",
+        maxLength: 10,
+      },
+      technologies: {
+        type: "array",
+        description:
+          "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
+        items: {
+          type: "string",
+          maxLength: 80,
+        },
+        maxItems: 40,
+      },
+      websiteFacts: {
+        type: "array",
+        description:
+          "Positive-only saved Finnish website classifications with non-exhaustive coverage. Multiple selected facts must all match. b2c is a provisional consumer-targeting candidate; b2b and saas are independently scored positive candidates. Omission applies no website-fact restriction; absence is not a negative classification. Available only for Finnish audiences.",
+        items: {
+          type: "string",
+          enum: ["b2c", "b2b", "saas"],
+        },
+        maxItems: 3,
+      },
+      hasExhibitionParticipation: {
+        type: "boolean",
+      },
+      exhibitionEventKeys: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 160,
+        },
+        maxItems: 32,
+      },
+      exhibitionMinEditions: {
+        type: "string",
+        maxLength: 8,
+      },
+      hasActiveHiring: {
+        type: "boolean",
+        description:
+          "Require verified open employer job postings in Finland. False removes this requirement; it does not mean not hiring. Unavailable or stale recruitment publications fail closed.",
+      },
+      hiringTitleQuery: {
+        type: "string",
+        maxLength: 120,
+        description:
+          "Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only.",
+      },
+      hasPublicFunding: {
+        type: "boolean",
+      },
+      fundingSources: {
+        type: "array",
+        items: {
+          type: "string",
+          maxLength: 40,
+        },
+        maxItems: 5,
+      },
+      fundingFromYear: {
+        type: "string",
+        maxLength: 4,
+      },
+      googleAdsActivityWindow: {
+        enum: [null, "last_30_days", "last_90_days", "last_12_months"],
+      },
+      metaAdsActiveOnly: {
+        type: "boolean",
+      },
+      metaAdsMinimumEuReach: {
+        type: "string",
+        maxLength: 10,
+      },
+      metaAdsTargetAge: {
+        type: "string",
+        maxLength: 3,
+      },
+      metaAdsTargetGender: {
+        enum: ["", "all", "men", "women"],
+      },
+      metaAdsTargetLocation: {
+        type: "string",
+        maxLength: 80,
+      },
+      metaAdsIncludeUncorroborated: {
+        type: "boolean",
+      },
+      hasWebsite: {
+        type: "boolean",
+      },
+      activeOnly: {
+        type: "boolean",
+      },
+    },
+    description:
+      "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
+  },
+  ProspectingCopy: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      messages: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            channel: {
+              enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+            },
+            subject: {
+              type: "string",
+              maxLength: 500,
+            },
+            body: {
+              type: "string",
+              minLength: 1,
+              maxLength: 1600,
+            },
+          },
+          required: ["channel", "body"],
+        },
+        minItems: 1,
+        maxItems: 4,
+      },
+      followups: {
+        type: "array",
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            channel: {
+              enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+            },
+            subject: {
+              type: "string",
+              maxLength: 500,
+            },
+            body: {
+              type: "string",
+              minLength: 1,
+              maxLength: 1600,
+            },
+            delayDays: {
+              type: "integer",
+              minimum: 1,
+              maximum: 30,
+            },
+          },
+          required: ["channel", "body", "delayDays"],
+        },
+        maxItems: 3,
+      },
+    },
+    required: ["messages"],
+  },
   AudiencePreviewInput: {
     type: "object",
     additionalProperties: false,
-    required: ["state"],
     properties: {
       state: {
         $ref: "#/components/schemas/AgentCampaignState",
@@ -8311,6 +9095,34 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         minLength: 1,
         maxLength: 100,
         description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
+      },
+      filters: {
+        $ref: "#/components/schemas/CompanySearchFilters",
+      },
+      channels: {
+        type: "array",
+        items: {
+          enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+        },
+        maxItems: 5,
+      },
+      contactStatus: {
+        type: "array",
+        items: {
+          enum: [
+            "never",
+            "contacted",
+            "replied",
+            "booked",
+            "closed",
+            "suppressed",
+            "contacted_no_reply_older_than_90d",
+          ],
+        },
+        maxItems: 7,
+      },
+      excludePreviouslyContacted: {
+        type: "boolean",
       },
     },
   },
@@ -8403,7 +9215,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     required: [
       "listId",
       "expectedListUpdatedAt",
-      "expectedTargetCount",
       "name",
       "messageVariants",
       "dailyCap",
@@ -8935,227 +9746,26 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         maxLength: 100,
         description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
       },
+      contactStatus: {
+        type: "array",
+        items: {
+          enum: [
+            "never",
+            "contacted",
+            "replied",
+            "booked",
+            "closed",
+            "suppressed",
+            "contacted_no_reply_older_than_90d",
+          ],
+        },
+        maxItems: 7,
+      },
+      excludePreviouslyContacted: {
+        type: "boolean",
+      },
     },
     required: ["filters"],
-  },
-  CompanySearchFilters: {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      country: {
-        $ref: "#/components/schemas/SupportedCountry",
-      },
-      countries: {
-        type: "array",
-        items: {
-          $ref: "#/components/schemas/SupportedCountry",
-        },
-        maxItems: 32,
-        minItems: 1,
-      },
-      q: {
-        type: "string",
-        maxLength: 120,
-      },
-      industryCodes: {
-        type: "array",
-        items: {
-          type: "string",
-          maxLength: 80,
-        },
-        maxItems: 8,
-      },
-      industryCodeSelections: {
-        type: "array",
-        items: {
-          type: "object",
-          additionalProperties: false,
-          properties: {
-            classification: {
-              const: "TOL",
-            },
-            version: {
-              enum: ["2008", "2025"],
-            },
-            codes: {
-              type: "array",
-              items: {
-                type: "string",
-                maxLength: 5,
-              },
-              maxItems: 64,
-            },
-          },
-          required: ["classification", "version", "codes"],
-        },
-        maxItems: 2,
-      },
-      tolCodes: {
-        type: "array",
-        items: {
-          type: "string",
-          maxLength: 80,
-        },
-        maxItems: 8,
-      },
-      companyForm: {
-        type: "string",
-        maxLength: 4096,
-      },
-      states: {
-        type: "array",
-        items: {
-          type: "string",
-          maxLength: 80,
-        },
-        maxItems: 32,
-      },
-      cities: {
-        type: "array",
-        items: {
-          type: "string",
-          maxLength: 80,
-        },
-        maxItems: 32,
-      },
-      registrationDateEnabled: {
-        type: "boolean",
-      },
-      registrationDateStart: {
-        type: "string",
-        maxLength: 10,
-      },
-      registrationDateEnd: {
-        type: "string",
-        maxLength: 10,
-      },
-      businessIdRegistrationStart: {
-        type: "string",
-        maxLength: 10,
-      },
-      businessIdRegistrationEnd: {
-        type: "string",
-        maxLength: 10,
-      },
-      revenueMinEur: {
-        type: "string",
-        maxLength: 16,
-      },
-      revenueMaxEur: {
-        type: "string",
-        maxLength: 16,
-      },
-      employeeRanges: {
-        type: "array",
-        items: {
-          type: "string",
-          maxLength: 80,
-        },
-        maxItems: 32,
-      },
-      employeeMin: {
-        type: "string",
-        maxLength: 10,
-      },
-      employeeMax: {
-        type: "string",
-        maxLength: 10,
-      },
-      technologies: {
-        type: "array",
-        description:
-          "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
-        items: {
-          type: "string",
-          maxLength: 80,
-        },
-        maxItems: 40,
-      },
-      websiteFacts: {
-        type: "array",
-        description:
-          "Positive-only saved Finnish website classifications with non-exhaustive coverage. Multiple selected facts must all match. b2c is a provisional consumer-targeting candidate; b2b and saas are independently scored positive candidates. Omission applies no website-fact restriction; absence is not a negative classification. Available only for Finnish audiences.",
-        items: {
-          type: "string",
-          enum: ["b2c", "b2b", "saas"],
-        },
-        maxItems: 3,
-      },
-      hasExhibitionParticipation: {
-        type: "boolean",
-      },
-      exhibitionEventKeys: {
-        type: "array",
-        items: {
-          type: "string",
-          maxLength: 160,
-        },
-        maxItems: 32,
-      },
-      exhibitionMinEditions: {
-        type: "string",
-        maxLength: 8,
-      },
-      hasActiveHiring: {
-        type: "boolean",
-        description:
-          "Require verified open employer job postings in Finland. False removes this requirement; it does not mean not hiring. Unavailable or stale recruitment publications fail closed.",
-      },
-      hiringTitleQuery: {
-        type: "string",
-        maxLength: 120,
-        description:
-          "Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only.",
-      },
-      hasPublicFunding: {
-        type: "boolean",
-      },
-      fundingSources: {
-        type: "array",
-        items: {
-          type: "string",
-          maxLength: 40,
-        },
-        maxItems: 5,
-      },
-      fundingFromYear: {
-        type: "string",
-        maxLength: 4,
-      },
-      googleAdsActivityWindow: {
-        enum: [null, "last_30_days", "last_90_days", "last_12_months"],
-      },
-      metaAdsActiveOnly: {
-        type: "boolean",
-      },
-      metaAdsMinimumEuReach: {
-        type: "string",
-        maxLength: 10,
-      },
-      metaAdsTargetAge: {
-        type: "string",
-        maxLength: 3,
-      },
-      metaAdsTargetGender: {
-        enum: ["", "all", "men", "women"],
-      },
-      metaAdsTargetLocation: {
-        type: "string",
-        maxLength: 80,
-      },
-      metaAdsIncludeUncorroborated: {
-        type: "boolean",
-      },
-      hasWebsite: {
-        type: "boolean",
-      },
-      activeOnly: {
-        type: "boolean",
-      },
-    },
-    required: ["countries"],
-    description:
-      "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
   },
   CompanyEvidenceSearchInput: {
     type: "object",
@@ -11305,6 +11915,13 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       "campaign.state.changed",
       "sender.unhealthy",
       "reply.approval.requested",
+      "copy.approval_requested",
+      "commitment.done",
+      "commitment.overdue",
+      "commitment.due",
+      "commitment.created",
+      "copy.approval_approved",
+      "copy.approval_rejected",
       "reply.approval.decided",
       "credential.expiring",
       "webhook.test",
@@ -15434,5 +16051,355 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
     required: ["meetingId", "scope", "expectedVersion", "idempotencyKey"],
+  },
+  CopyApprovalRequestInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      plan: {
+        $ref: "#/components/schemas/ProspectingPlan",
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+    },
+    required: ["plan", "idempotencyKey"],
+  },
+  CampaignDraftPlanInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      plan: {
+        $ref: "#/components/schemas/ProspectingPlan",
+      },
+      approvalId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      dryRun: {
+        type: "boolean",
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+    },
+  },
+  CampaignDraftReadinessInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      campaignId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+    },
+    required: ["campaignId"],
+  },
+  ProspectingPreviewInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      filters: {
+        $ref: "#/components/schemas/CompanySearchFilters",
+      },
+      channels: {
+        type: "array",
+        items: {
+          enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+        },
+        maxItems: 5,
+      },
+      excludePreviouslyContacted: {
+        type: "boolean",
+      },
+      contactStatus: {
+        type: "array",
+        items: {
+          enum: [
+            "never",
+            "contacted",
+            "replied",
+            "booked",
+            "closed",
+            "suppressed",
+            "contacted_no_reply_older_than_90d",
+          ],
+        },
+        maxItems: 7,
+      },
+      sampleSize: {
+        type: "integer",
+        minimum: 1,
+        maximum: 50,
+      },
+      offset: {
+        type: "integer",
+        minimum: 0,
+        maximum: 25000,
+      },
+      expectedRevision: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1024,
+      },
+      querySignature: {
+        type: "string",
+        minLength: 1,
+        maxLength: 200,
+      },
+    },
+    required: ["filters"],
+  },
+  CompaniesLookalikeInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      seed: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          companyKeys: {
+            type: "array",
+            items: {
+              type: "string",
+              minLength: 1,
+              maxLength: 240,
+            },
+            maxItems: 500,
+            minItems: 1,
+          },
+          pipelineStages: {
+            type: "array",
+            items: {
+              enum: ["call_booked", "meeting_held", "won"],
+            },
+            maxItems: 3,
+            minItems: 1,
+          },
+        },
+      },
+      country: {
+        $ref: "#/components/schemas/SupportedCountry",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 50,
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1000,
+      },
+    },
+    required: ["seed"],
+  },
+  CommitmentsProposeInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      meetingId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 2000,
+      },
+      timezone: {
+        type: "string",
+        minLength: 1,
+        maxLength: 80,
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+    },
+    required: ["meetingId", "idempotencyKey"],
+  },
+  CommitmentsListInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      status: {
+        enum: ["proposed", "confirmed", "due", "done", "cancelled", "overdue"],
+      },
+      dueBefore: {
+        type: "string",
+        pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+      },
+      ownerSide: {
+        enum: ["us", "prospect"],
+      },
+      pipelineCardId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 240,
+      },
+      cursor: {
+        type: "string",
+        minLength: 1,
+        maxLength: 2000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 50,
+      },
+    },
+  },
+  CommitmentUpdateInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      id: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      expectedUpdatedAt: {
+        type: "string",
+        pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+      },
+      status: {
+        enum: ["confirmed", "done", "cancelled"],
+      },
+      dueAt: {
+        type: "string",
+        pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+    },
+    required: ["id", "expectedUpdatedAt", "status", "idempotencyKey"],
+  },
+  CommitmentConfirmBatchInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      items: {
+        type: "array",
+        minItems: 1,
+        maxItems: 50,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            id: {
+              type: "string",
+              minLength: 1,
+              maxLength: 160,
+            },
+            expectedUpdatedAt: {
+              type: "string",
+              pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+            },
+            dueAt: {
+              type: "string",
+              pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+            },
+          },
+          required: ["id", "expectedUpdatedAt"],
+        },
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+    },
+    required: ["items", "idempotencyKey"],
+  },
+  CommitmentReminderDraftInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      id: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      text: {
+        type: "string",
+        minLength: 1,
+        maxLength: 1000,
+      },
+      expectedConversationUpdatedAt: {
+        type: "string",
+        pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+      },
+      idempotencyKey: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+    },
+    required: ["id", "text", "expectedConversationUpdatedAt", "idempotencyKey"],
+  },
+  ListRenameInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      listId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      name: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+      },
+      expectedUpdatedAt: {
+        type: "string",
+        pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+      },
+    },
+    required: ["listId", "name", "expectedUpdatedAt"],
+  },
+  ListArchiveInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      listId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      expectedUpdatedAt: {
+        type: "string",
+        pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+      },
+    },
+    required: ["listId", "expectedUpdatedAt"],
+  },
+  CampaignDraftArchiveInput: {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      campaignId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 160,
+      },
+      expectedUpdatedAt: {
+        type: "string",
+        pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+      },
+    },
+    required: ["campaignId", "expectedUpdatedAt"],
   },
 } as const;

@@ -276,7 +276,9 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
       (effect !== "read" &&
         !owner &&
         !(
-          ["recorder.settings.update", "recorder.event.override.update", "call.bot.join"].includes(name) &&
+          ["recorder.settings.update", "recorder.event.override.update", "call.bot.join"].includes(
+            name,
+          ) &&
           effect === "write" &&
           operation["x-dmfaster-write-boundary"] === "authenticated_user" &&
           operation["x-dmfaster-required-scopes"]?.includes("calls:record")
@@ -286,7 +288,10 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
             effect === "write" &&
             operation["x-dmfaster-write-boundary"] === "call_control_recording" &&
             operation["x-dmfaster-required-scopes"]?.includes("calls:record")) ||
-          (name === "call.delete" && effect === "write" && operation["x-dmfaster-write-boundary"] === "call_delete" && operation["x-dmfaster-required-scopes"]?.includes("calls:write")) ||
+          (name === "call.delete" &&
+            effect === "write" &&
+            operation["x-dmfaster-write-boundary"] === "call_delete" &&
+            operation["x-dmfaster-required-scopes"]?.includes("calls:write")) ||
           (name === "call.participant.withdrawal.report" &&
             effect === "write" &&
             operation["x-dmfaster-write-boundary"] === "call_participant_withdrawal" &&

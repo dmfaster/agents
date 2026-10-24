@@ -218,6 +218,19 @@ export type AgentToolInputMap = {
   "recorder.join.get": operations["recorderJoinGet"]["requestBody"]["content"]["application/json"];
   "call.participant.withdrawal.report": operations["callParticipantWithdrawalReport"]["requestBody"]["content"]["application/json"];
   "call.delete": operations["callDelete"]["requestBody"]["content"]["application/json"];
+  "copy.approval.request": operations["copyApprovalRequest"]["requestBody"]["content"]["application/json"];
+  "campaign.draft.plan": operations["campaignDraftPlan"]["requestBody"]["content"]["application/json"];
+  "campaign.draft.readiness": operations["campaignDraftReadiness"]["requestBody"]["content"]["application/json"];
+  "prospecting.preview": operations["prospectingPreview"]["requestBody"]["content"]["application/json"];
+  "companies.lookalike": operations["companiesLookalike"]["requestBody"]["content"]["application/json"];
+  "commitments.propose": operations["commitmentsPropose"]["requestBody"]["content"]["application/json"];
+  "commitments.list": operations["commitmentsList"]["requestBody"]["content"]["application/json"];
+  "commitment.update": operations["commitmentUpdate"]["requestBody"]["content"]["application/json"];
+  "commitment.confirm.batch": operations["commitmentConfirmBatch"]["requestBody"]["content"]["application/json"];
+  "commitment.reminder.draft": operations["commitmentReminderDraft"]["requestBody"]["content"]["application/json"];
+  "list.rename": operations["listRename"]["requestBody"]["content"]["application/json"];
+  "list.archive": operations["listArchive"]["requestBody"]["content"]["application/json"];
+  "campaign.draft.archive": operations["campaignDraftArchive"]["requestBody"]["content"]["application/json"];
 };
 export type AgentToolDataMap = {
   "analytics.summary": NonNullable<
@@ -870,5 +883,44 @@ export type AgentToolDataMap = {
   >;
   "call.delete": NonNullable<
     operations["callDelete"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "copy.approval.request": NonNullable<
+    operations["copyApprovalRequest"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.draft.plan": NonNullable<
+    operations["campaignDraftPlan"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.draft.readiness": NonNullable<
+    operations["campaignDraftReadiness"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "prospecting.preview": NonNullable<
+    operations["prospectingPreview"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "companies.lookalike": NonNullable<
+    operations["companiesLookalike"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "commitments.propose": NonNullable<
+    operations["commitmentsPropose"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "commitments.list": NonNullable<
+    operations["commitmentsList"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "commitment.update": NonNullable<
+    operations["commitmentUpdate"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "commitment.confirm.batch": NonNullable<
+    operations["commitmentConfirmBatch"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "commitment.reminder.draft": NonNullable<
+    operations["commitmentReminderDraft"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "list.rename": NonNullable<
+    operations["listRename"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "list.archive": NonNullable<
+    operations["listArchive"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.draft.archive": NonNullable<
+    operations["campaignDraftArchive"]["responses"][200]["content"]["application/json"]["data"]
   >;
 };

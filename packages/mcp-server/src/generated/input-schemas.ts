@@ -627,28 +627,6 @@ export const CompanyTimelineInputSchema = z
       .optional(),
   })
   .strict();
-export const TolVersionSchema = z.union([z.literal("2008"), z.literal("2025")]);
-export const IndustryLookupInputSchema = z
-  .object({
-    query: z.string().min(1).max(800).regex(new RegExp(".*\\S.*")),
-    version: z
-      .union([TolVersionSchema, z.null()])
-      .refine(
-        (value) =>
-          [TolVersionSchema, z.null()].filter((candidate) => candidate.safeParse(value).success)
-            .length === 1,
-        "Expected exactly one schema match",
-      )
-      .optional(),
-    language: z.union([z.literal("en"), z.literal("fi")]).optional(),
-    runId: z
-      .string()
-      .min(1)
-      .max(100)
-      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
-      .optional(),
-  })
-  .strict();
 export const SupportedCountrySchema = z.union([
   z.literal("FI"),
   z.literal("NO"),
@@ -680,6 +658,29 @@ export const SupportedCountrySchema = z.union([
   z.literal("US"),
   z.literal("ZA"),
 ]);
+export const TolVersionSchema = z.union([z.literal("2008"), z.literal("2025")]);
+export const IndustryLookupInputSchema = z
+  .object({
+    country: SupportedCountrySchema.optional(),
+    query: z.string().min(1).max(800).regex(new RegExp(".*\\S.*")),
+    version: z
+      .union([TolVersionSchema, z.null()])
+      .refine(
+        (value) =>
+          [TolVersionSchema, z.null()].filter((candidate) => candidate.safeParse(value).success)
+            .length === 1,
+        "Expected exactly one schema match",
+      )
+      .optional(),
+    language: z.union([z.literal("en"), z.literal("fi"), z.literal("sv")]).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const AgentBusinessProfileSchema = z
   .object({
     version: z.literal(1),
@@ -705,6 +706,8 @@ export const AgentIndustryCodeSelectionSchema = z
   .strict();
 export const AgentIndustryClarificationOptionSchema = z
   .object({
+    companyCount: z.number().int().min(0).optional(),
+    country: SupportedCountrySchema.optional(),
     id: z.string().max(80),
     label: z.string().max(180),
     selections: z.array(AgentIndustryCodeSelectionSchema).max(2),
@@ -918,20 +921,173 @@ export const AgentCampaignStateSchema = z
   .describe(
     "Complete stateless campaign state. Send the latest returned or user-confirmed state on every planning call.",
   );
+export const CompanySearchFiltersSchema = z
+  .object({
+    country: SupportedCountrySchema.optional(),
+    countries: z.array(SupportedCountrySchema).min(1).max(32).optional(),
+    q: z.string().max(120).optional(),
+    industryCodes: z.array(z.string().max(80)).max(8).optional(),
+    industryCodeSelections: z
+      .array(
+        z
+          .object({
+            classification: z.literal("TOL"),
+            version: z.union([z.literal("2008"), z.literal("2025")]),
+            codes: z.array(z.string().max(5)).max(64),
+          })
+          .strict(),
+      )
+      .max(2)
+      .optional(),
+    tolCodes: z.array(z.string().max(80)).max(8).optional(),
+    companyForm: z.string().max(4096).optional(),
+    states: z.array(z.string().max(80)).max(32).optional(),
+    cities: z.array(z.string().max(80)).max(32).optional(),
+    registrationDateEnabled: z.boolean().optional(),
+    registrationDateStart: z.string().max(10).optional(),
+    registrationDateEnd: z.string().max(10).optional(),
+    businessIdRegistrationStart: z.string().max(10).optional(),
+    businessIdRegistrationEnd: z.string().max(10).optional(),
+    revenueMinEur: z.string().max(16).optional(),
+    revenueMaxEur: z.string().max(16).optional(),
+    employeeRanges: z.array(z.string().max(80)).max(32).optional(),
+    employeeMin: z.string().max(10).optional(),
+    employeeMax: z.string().max(10).optional(),
+    technologies: z
+      .array(z.string().max(80))
+      .max(40)
+      .describe(
+        "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
+      )
+      .optional(),
+    websiteFacts: z
+      .array(z.union([z.literal("b2c"), z.literal("b2b"), z.literal("saas")]))
+      .max(3)
+      .describe(
+        "Positive-only saved Finnish website classifications with non-exhaustive coverage. Multiple selected facts must all match. b2c is a provisional consumer-targeting candidate; b2b and saas are independently scored positive candidates. Omission applies no website-fact restriction; absence is not a negative classification. Available only for Finnish audiences.",
+      )
+      .optional(),
+    hasExhibitionParticipation: z.boolean().optional(),
+    exhibitionEventKeys: z.array(z.string().max(160)).max(32).optional(),
+    exhibitionMinEditions: z.string().max(8).optional(),
+    hasActiveHiring: z
+      .boolean()
+      .describe(
+        "Require verified open employer job postings in Finland. False removes this requirement; it does not mean not hiring. Unavailable or stale recruitment publications fail closed.",
+      )
+      .optional(),
+    hiringTitleQuery: z
+      .string()
+      .max(120)
+      .describe(
+        "Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only.",
+      )
+      .optional(),
+    hasPublicFunding: z.boolean().optional(),
+    fundingSources: z.array(z.string().max(40)).max(5).optional(),
+    fundingFromYear: z.string().max(4).optional(),
+    googleAdsActivityWindow: z
+      .union([
+        z.literal(null),
+        z.literal("last_30_days"),
+        z.literal("last_90_days"),
+        z.literal("last_12_months"),
+      ])
+      .optional(),
+    metaAdsActiveOnly: z.boolean().optional(),
+    metaAdsMinimumEuReach: z.string().max(10).optional(),
+    metaAdsTargetAge: z.string().max(3).optional(),
+    metaAdsTargetGender: z
+      .union([z.literal(""), z.literal("all"), z.literal("men"), z.literal("women")])
+      .optional(),
+    metaAdsTargetLocation: z.string().max(80).optional(),
+    metaAdsIncludeUncorroborated: z.boolean().optional(),
+    hasWebsite: z.boolean().optional(),
+    activeOnly: z.boolean().optional(),
+  })
+  .strict()
+  .describe(
+    "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
+  );
+export const ProspectingCopySchema = z
+  .object({
+    messages: z
+      .array(
+        z
+          .object({
+            channel: z.union([
+              z.literal("instagram"),
+              z.literal("facebook"),
+              z.literal("linkedin"),
+              z.literal("gmail"),
+              z.literal("sms"),
+            ]),
+            subject: z.string().max(500).optional(),
+            body: z.string().min(1).max(1600),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(4),
+    followups: z
+      .array(
+        z
+          .object({
+            channel: z.union([
+              z.literal("instagram"),
+              z.literal("facebook"),
+              z.literal("linkedin"),
+              z.literal("gmail"),
+              z.literal("sms"),
+            ]),
+            subject: z.string().max(500).optional(),
+            body: z.string().min(1).max(1600),
+            delayDays: z.number().int().min(1).max(30),
+          })
+          .strict(),
+      )
+      .max(3)
+      .optional(),
+  })
+  .strict();
+export const ProspectingPlanSchema = z
+  .object({
+    name: z.string().min(1).max(120),
+    listName: z.string().min(1).max(120).optional(),
+    filters: CompanySearchFiltersSchema,
+    excludePreviouslyContacted: z.boolean().optional(),
+    copy: ProspectingCopySchema,
+    mailboxIds: z.array(z.string().min(1).max(160)).max(8).optional(),
+    dailyCap: z.number().int().min(1).max(60).optional(),
+    pacingSeconds: z.number().int().min(12).max(3600).optional(),
+    window: z
+      .object({
+        timezone: z.string().min(1).max(80),
+        startMinute: z.number().int().min(0).max(1380),
+        endMinute: z.number().int().min(60).max(1440),
+        weekdays: z.number().int().min(1).max(127).optional(),
+      })
+      .strict()
+      .optional(),
+    labels: z.array(z.literal("agent_test")).max(1).optional(),
+  })
+  .strict();
 export const CampaignValidateInputSchema = z
   .object({
-    state: AgentCampaignStateSchema,
+    state: AgentCampaignStateSchema.optional(),
     runId: z
       .string()
       .min(1)
       .max(100)
       .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
       .optional(),
+    plan: ProspectingPlanSchema.optional(),
+    approvalId: z.string().min(1).max(160).optional(),
   })
   .strict();
 export const AudiencePreviewInputSchema = z
   .object({
-    state: AgentCampaignStateSchema,
+    state: AgentCampaignStateSchema.optional(),
     sampleSize: z.number().int().min(1).max(25).optional(),
     runId: z
       .string()
@@ -939,6 +1095,34 @@ export const AudiencePreviewInputSchema = z
       .max(100)
       .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
       .optional(),
+    filters: CompanySearchFiltersSchema.optional(),
+    channels: z
+      .array(
+        z.union([
+          z.literal("instagram"),
+          z.literal("facebook"),
+          z.literal("linkedin"),
+          z.literal("gmail"),
+          z.literal("sms"),
+        ]),
+      )
+      .max(5)
+      .optional(),
+    contactStatus: z
+      .array(
+        z.union([
+          z.literal("never"),
+          z.literal("contacted"),
+          z.literal("replied"),
+          z.literal("booked"),
+          z.literal("closed"),
+          z.literal("suppressed"),
+          z.literal("contacted_no_reply_older_than_90d"),
+        ]),
+      )
+      .max(7)
+      .optional(),
+    excludePreviouslyContacted: z.boolean().optional(),
   })
   .strict();
 export const ListsListInputSchema = z
@@ -1047,7 +1231,8 @@ export const CampaignDraftPrepareInputSchema = z
       .number()
       .int()
       .min(1)
-      .describe("Exact sum of selected channelCounts, not the number of distinct companies."),
+      .describe("Exact sum of selected channelCounts, not the number of distinct companies.")
+      .optional(),
     name: z.string().min(1).max(120),
     messageVariants: z
       .array(z.string().min(1).max(1600))
@@ -1237,94 +1422,6 @@ export const CompanySuggestionsInputSchema = z
       .optional(),
   })
   .strict();
-export const CompanySearchFiltersSchema = z
-  .object({
-    country: SupportedCountrySchema.optional(),
-    countries: z.array(SupportedCountrySchema).min(1).max(32),
-    q: z.string().max(120).optional(),
-    industryCodes: z.array(z.string().max(80)).max(8).optional(),
-    industryCodeSelections: z
-      .array(
-        z
-          .object({
-            classification: z.literal("TOL"),
-            version: z.union([z.literal("2008"), z.literal("2025")]),
-            codes: z.array(z.string().max(5)).max(64),
-          })
-          .strict(),
-      )
-      .max(2)
-      .optional(),
-    tolCodes: z.array(z.string().max(80)).max(8).optional(),
-    companyForm: z.string().max(4096).optional(),
-    states: z.array(z.string().max(80)).max(32).optional(),
-    cities: z.array(z.string().max(80)).max(32).optional(),
-    registrationDateEnabled: z.boolean().optional(),
-    registrationDateStart: z.string().max(10).optional(),
-    registrationDateEnd: z.string().max(10).optional(),
-    businessIdRegistrationStart: z.string().max(10).optional(),
-    businessIdRegistrationEnd: z.string().max(10).optional(),
-    revenueMinEur: z.string().max(16).optional(),
-    revenueMaxEur: z.string().max(16).optional(),
-    employeeRanges: z.array(z.string().max(80)).max(32).optional(),
-    employeeMin: z.string().max(10).optional(),
-    employeeMax: z.string().max(10).optional(),
-    technologies: z
-      .array(z.string().max(80))
-      .max(40)
-      .describe(
-        "Match any selected technology within each technology subsection and every selected subsection. Country picker options require at least 50 active companies; explicit saved criteria remain executable.",
-      )
-      .optional(),
-    websiteFacts: z
-      .array(z.union([z.literal("b2c"), z.literal("b2b"), z.literal("saas")]))
-      .max(3)
-      .describe(
-        "Positive-only saved Finnish website classifications with non-exhaustive coverage. Multiple selected facts must all match. b2c is a provisional consumer-targeting candidate; b2b and saas are independently scored positive candidates. Omission applies no website-fact restriction; absence is not a negative classification. Available only for Finnish audiences.",
-      )
-      .optional(),
-    hasExhibitionParticipation: z.boolean().optional(),
-    exhibitionEventKeys: z.array(z.string().max(160)).max(32).optional(),
-    exhibitionMinEditions: z.string().max(8).optional(),
-    hasActiveHiring: z
-      .boolean()
-      .describe(
-        "Require verified open employer job postings in Finland. False removes this requirement; it does not mean not hiring. Unavailable or stale recruitment publications fail closed.",
-      )
-      .optional(),
-    hiringTitleQuery: z
-      .string()
-      .max(120)
-      .describe(
-        "Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only.",
-      )
-      .optional(),
-    hasPublicFunding: z.boolean().optional(),
-    fundingSources: z.array(z.string().max(40)).max(5).optional(),
-    fundingFromYear: z.string().max(4).optional(),
-    googleAdsActivityWindow: z
-      .union([
-        z.literal(null),
-        z.literal("last_30_days"),
-        z.literal("last_90_days"),
-        z.literal("last_12_months"),
-      ])
-      .optional(),
-    metaAdsActiveOnly: z.boolean().optional(),
-    metaAdsMinimumEuReach: z.string().max(10).optional(),
-    metaAdsTargetAge: z.string().max(3).optional(),
-    metaAdsTargetGender: z
-      .union([z.literal(""), z.literal("all"), z.literal("men"), z.literal("women")])
-      .optional(),
-    metaAdsTargetLocation: z.string().max(80).optional(),
-    metaAdsIncludeUncorroborated: z.boolean().optional(),
-    hasWebsite: z.boolean().optional(),
-    activeOnly: z.boolean().optional(),
-  })
-  .strict()
-  .describe(
-    "Every filter supported by the Companies app. Numeric bounds use decimal strings, dates YYYY-MM-DD; empty values disable filters. Call companies.filters for country-specific options. Saved website classifications are positive-only with non-exhaustive coverage and currently Finnish; absent classifications do not imply a negative. Unsupported or discarded criteria are rejected.",
-  );
 export const CompanySearchInputSchema = z
   .object({
     filters: CompanySearchFiltersSchema,
@@ -1351,6 +1448,21 @@ export const CompanySearchInputSchema = z
       .max(100)
       .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
       .optional(),
+    contactStatus: z
+      .array(
+        z.union([
+          z.literal("never"),
+          z.literal("contacted"),
+          z.literal("replied"),
+          z.literal("booked"),
+          z.literal("closed"),
+          z.literal("suppressed"),
+          z.literal("contacted_no_reply_older_than_90d"),
+        ]),
+      )
+      .max(7)
+      .optional(),
+    excludePreviouslyContacted: z.boolean().optional(),
   })
   .strict();
 export const WebsiteEvidenceCriterionSchema = z
@@ -2418,6 +2530,13 @@ export const AgentSalesEventTypeSchema = z.union([
   z.literal("campaign.state.changed"),
   z.literal("sender.unhealthy"),
   z.literal("reply.approval.requested"),
+  z.literal("copy.approval_requested"),
+  z.literal("commitment.done"),
+  z.literal("commitment.overdue"),
+  z.literal("commitment.due"),
+  z.literal("commitment.created"),
+  z.literal("copy.approval_approved"),
+  z.literal("copy.approval_rejected"),
   z.literal("reply.approval.decided"),
   z.literal("credential.expiring"),
   z.literal("webhook.test"),
@@ -4536,6 +4655,174 @@ export const CallDeleteInputSchema = z
     runId: z.string().max(100).optional(),
   })
   .strict();
+export const CopyApprovalRequestInputSchema = z
+  .object({ plan: ProspectingPlanSchema, idempotencyKey: z.string().min(1).max(160) })
+  .strict();
+export const CampaignDraftPlanInputSchema = z
+  .object({
+    plan: ProspectingPlanSchema.optional(),
+    approvalId: z.string().min(1).max(160).optional(),
+    dryRun: z.boolean().optional(),
+    idempotencyKey: z.string().min(1).max(160).optional(),
+  })
+  .strict();
+export const CampaignDraftReadinessInputSchema = z
+  .object({ campaignId: z.string().min(1).max(160) })
+  .strict();
+export const ProspectingPreviewInputSchema = z
+  .object({
+    filters: CompanySearchFiltersSchema,
+    channels: z
+      .array(
+        z.union([
+          z.literal("instagram"),
+          z.literal("facebook"),
+          z.literal("linkedin"),
+          z.literal("gmail"),
+          z.literal("sms"),
+        ]),
+      )
+      .max(5)
+      .optional(),
+    excludePreviouslyContacted: z.boolean().optional(),
+    contactStatus: z
+      .array(
+        z.union([
+          z.literal("never"),
+          z.literal("contacted"),
+          z.literal("replied"),
+          z.literal("booked"),
+          z.literal("closed"),
+          z.literal("suppressed"),
+          z.literal("contacted_no_reply_older_than_90d"),
+        ]),
+      )
+      .max(7)
+      .optional(),
+    sampleSize: z.number().int().min(1).max(50).optional(),
+    offset: z.number().int().min(0).max(25000).optional(),
+    expectedRevision: z.string().min(1).max(1024).optional(),
+    querySignature: z.string().min(1).max(200).optional(),
+  })
+  .strict();
+export const CompaniesLookalikeInputSchema = z
+  .object({
+    seed: z
+      .object({
+        companyKeys: z.array(z.string().min(1).max(240)).min(1).max(500).optional(),
+        pipelineStages: z
+          .array(z.union([z.literal("call_booked"), z.literal("meeting_held"), z.literal("won")]))
+          .min(1)
+          .max(3)
+          .optional(),
+      })
+      .strict(),
+    country: SupportedCountrySchema.optional(),
+    limit: z.number().int().min(1).max(50).optional(),
+    cursor: z.string().min(1).max(1000).optional(),
+  })
+  .strict();
+export const CommitmentsProposeInputSchema = z
+  .object({
+    meetingId: z.string().min(1).max(160),
+    cursor: z.string().min(1).max(2000).optional(),
+    timezone: z.string().min(1).max(80).optional(),
+    idempotencyKey: z.string().min(1).max(160),
+  })
+  .strict();
+export const CommitmentsListInputSchema = z
+  .object({
+    status: z
+      .union([
+        z.literal("proposed"),
+        z.literal("confirmed"),
+        z.literal("due"),
+        z.literal("done"),
+        z.literal("cancelled"),
+        z.literal("overdue"),
+      ])
+      .optional(),
+    dueBefore: z
+      .string()
+      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"))
+      .optional(),
+    ownerSide: z.union([z.literal("us"), z.literal("prospect")]).optional(),
+    pipelineCardId: z.string().min(1).max(240).optional(),
+    cursor: z.string().min(1).max(2000).optional(),
+    limit: z.number().int().min(1).max(50).optional(),
+  })
+  .strict();
+export const CommitmentUpdateInputSchema = z
+  .object({
+    id: z.string().min(1).max(160),
+    expectedUpdatedAt: z
+      .string()
+      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
+    status: z.union([z.literal("confirmed"), z.literal("done"), z.literal("cancelled")]),
+    dueAt: z
+      .string()
+      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"))
+      .optional(),
+    idempotencyKey: z.string().min(1).max(160),
+  })
+  .strict();
+export const CommitmentConfirmBatchInputSchema = z
+  .object({
+    items: z
+      .array(
+        z
+          .object({
+            id: z.string().min(1).max(160),
+            expectedUpdatedAt: z
+              .string()
+              .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
+            dueAt: z
+              .string()
+              .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"))
+              .optional(),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(50),
+    idempotencyKey: z.string().min(1).max(160),
+  })
+  .strict();
+export const CommitmentReminderDraftInputSchema = z
+  .object({
+    id: z.string().min(1).max(160),
+    text: z.string().min(1).max(1000),
+    expectedConversationUpdatedAt: z
+      .string()
+      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
+    idempotencyKey: z.string().min(1).max(160),
+  })
+  .strict();
+export const ListRenameInputSchema = z
+  .object({
+    listId: z.string().min(1).max(160),
+    name: z.string().min(1).max(120),
+    expectedUpdatedAt: z
+      .string()
+      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
+  })
+  .strict();
+export const ListArchiveInputSchema = z
+  .object({
+    listId: z.string().min(1).max(160),
+    expectedUpdatedAt: z
+      .string()
+      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
+  })
+  .strict();
+export const CampaignDraftArchiveInputSchema = z
+  .object({
+    campaignId: z.string().min(1).max(160),
+    expectedUpdatedAt: z
+      .string()
+      .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$")),
+  })
+  .strict();
 export const AGENT_INPUT_SCHEMAS = {
   "analytics.summary": AnalyticsSummaryInputSchema,
   "workspace.briefing": WorkspaceBriefingInputSchema,
@@ -4754,4 +5041,17 @@ export const AGENT_INPUT_SCHEMAS = {
   "recorder.join.get": RecorderJoinGetInputSchema,
   "call.participant.withdrawal.report": CallParticipantWithdrawalReportInputSchema,
   "call.delete": CallDeleteInputSchema,
+  "copy.approval.request": CopyApprovalRequestInputSchema,
+  "campaign.draft.plan": CampaignDraftPlanInputSchema,
+  "campaign.draft.readiness": CampaignDraftReadinessInputSchema,
+  "prospecting.preview": ProspectingPreviewInputSchema,
+  "companies.lookalike": CompaniesLookalikeInputSchema,
+  "commitments.propose": CommitmentsProposeInputSchema,
+  "commitments.list": CommitmentsListInputSchema,
+  "commitment.update": CommitmentUpdateInputSchema,
+  "commitment.confirm.batch": CommitmentConfirmBatchInputSchema,
+  "commitment.reminder.draft": CommitmentReminderDraftInputSchema,
+  "list.rename": ListRenameInputSchema,
+  "list.archive": ListArchiveInputSchema,
+  "campaign.draft.archive": CampaignDraftArchiveInputSchema,
 } as const;

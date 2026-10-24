@@ -504,7 +504,9 @@ export function CompaniesWorkspace({
             </header>
           ) : (
             <div className="company-filter-chips" aria-label={t("Search criteria")}>
-              <span className="company-market">{filters.countries.join(" · ")}</span>
+              <span className="company-market">
+                {(filters.countries || [filters.country || "FI"]).join(" · ")}
+              </span>
               {filters.q ? <span className="company-filter-chip">{filters.q}</span> : null}
               {filterChips(filters).map((chip) => (
                 <span className="company-filter-chip" key={chip.key}>
