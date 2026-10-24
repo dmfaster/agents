@@ -1,3 +1,4 @@
+import { expandHeartbeatResult } from "./heartbeat.ts";
 import {
   AGENT_TOOL_POLICIES,
   type AgentToolDataMap,
@@ -23,6 +24,7 @@ export type DmfasterClientOptions = {
 };
 
 export type AgentToolCallOptions = {
+  runId?: string;
   signal?: AbortSignal;
 };
 
@@ -104,6 +106,17 @@ function transportErrorFromBody(body: unknown) {
     details: isRecord(error?.details) ? error.details : null,
     nextAction: boundedTransportString(error?.nextAction, 1000),
     docsUrl: boundedTransportString(error?.docsUrl, 2000),
+    requiredScope: boundedTransportString(error?.requiredScope, 100),
+    reason: boundedTransportString(error?.reason, 200),
+    setupUrl: boundedTransportString(error?.setupUrl, 2000),
+    requiredConnection: boundedTransportString(error?.requiredConnection, 100),
+    blockedUntil: boundedTransportString(error?.blockedUntil, 100),
+    retryAfterMs:
+      typeof error?.retryAfterMs === "number" &&
+      Number.isSafeInteger(error.retryAfterMs) &&
+      error.retryAfterMs >= 0
+        ? error.retryAfterMs
+        : null,
   };
 }
 
@@ -262,6 +275,8 @@ export class DmfasterClient {
     input: AgentToolInputMap[Name],
     options: AgentToolCallOptions = {},
   ): Promise<AgentToolResult<AgentToolDataMap[Name]>> {
+    if (options.runId && !/^run_[A-Za-z0-9_-]{1,96}$/.test(options.runId))
+      throw new DmfasterSdkError("Invalid run ID", "invalid_run_id");
     const controller = new AbortController();
     let timedOut = false;
     const signals = [
@@ -291,6 +306,15 @@ export class DmfasterClient {
               authorization: `Bearer ${this.#token}`,
               "content-type": "application/json",
               "x-dmfaster-contract-version": "2.0",
+              "x-dmfaster-call-artifacts": "1",
+              "x-dmfaster-sender-health": "1",
+              "x-dmfaster-event-envelope": "2",
+              "x-dmfaster-classification": "2",
+              "x-dmfaster-work-queue": "1",
+              "x-dmfaster-identity-graph": "1",
+              "x-dmfaster-rate-limit": "1",
+              "x-dmfaster-metrics": "2",
+              ...(options.runId ? { "x-dmfaster-run-id": options.runId } : {}),
               ...(tool === "sending.inspect" ? { "x-dmfaster-sending-observation": "1" } : {}),
             },
             body: JSON.stringify(input),
@@ -316,10 +340,17 @@ export class DmfasterClient {
           details: transportError.details,
           nextAction: transportError.nextAction,
           docsUrl: transportError.docsUrl,
+          requiredScope: transportError.requiredScope,
+          reason: transportError.reason,
+          setupUrl: transportError.setupUrl,
+          requiredConnection: transportError.requiredConnection,
+          blockedUntil: transportError.blockedUntil,
+          retryAfterMs: transportError.retryAfterMs,
         });
       }
-      assertToolResult(body, tool);
-      return body;
+      const normalized = expandHeartbeatResult(tool, input, body);
+      assertToolResult(normalized, tool);
+      return normalized;
     } catch (cause) {
       if (timedOut) throw new DmfasterTimeoutError(this.timeoutMs, { cause });
       if (cause instanceof DmfasterSdkError) throw cause;

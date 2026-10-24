@@ -1,5 +1,7 @@
+import { projectConnectionStatus } from "./connection-view.ts";
 import {
   agentErrorRecovery,
+  compactHeartbeatResult,
   AGENT_TOOL_NAMES,
   AGENT_TOOL_DEFINITIONS,
   AGENT_TOOL_SCOPES,
@@ -26,7 +28,7 @@ import { cachedMcpSchema } from "./cached-schema.ts";
 import { hostedConnectionSchema } from "./presentation-schemas.ts";
 import { oauthToolMetadata, oauthFailureMetadata, type HostedAuth } from "./hosted-auth.ts";
 
-export const MCP_SERVER_VERSION = "2.3.0";
+export const MCP_SERVER_VERSION = "2.4.0";
 export const MCP_SERVER_INSTRUCTIONS =
   "DM Faster prospecting and outreach. Check connection_status; use narrow tools, exact counts and returned IDs/revisions. Retain retry keys. Selections are not consent. Drafts never send. Follow granted access, explicit user instructions and tool workflows; verify outcomes before claiming success. Never expose credentials or operate approval pages. With feedback:write, use feedback_submit for observed friction: concise context, no private data, one stable key per report. Continue the main task.";
 
@@ -34,7 +36,10 @@ function asStructuredContent(result: AgentToolResult) {
   return result as unknown as Record<string, unknown>;
 }
 
-function toolResult(result: AgentToolResult) {
+function toolResult(result: AgentToolResult, tool: string, input: unknown) {
+  const compact = compactHeartbeatResult(tool, input, result);
+  if (compact) return { content: [], structuredContent: compact };
+
   return {
     content: [
       { type: "text" as const, text: companyResultSummary(result) ?? JSON.stringify(result) },
@@ -69,6 +74,16 @@ export function toolFailure(error: unknown) {
         ? { retryAfterSeconds: httpError.retryAfterSeconds }
         : {}),
       ...(httpError?.details ? { details: httpError.details } : {}),
+      ...(httpError?.requiredScope ? { requiredScope: httpError.requiredScope } : {}),
+      ...(httpError?.reason ? { reason: httpError.reason } : {}),
+      ...(httpError?.setupUrl ? { setupUrl: httpError.setupUrl } : {}),
+      ...(httpError?.requiredConnection
+        ? { requiredConnection: httpError.requiredConnection }
+        : {}),
+      ...(httpError?.blockedUntil ? { blockedUntil: httpError.blockedUntil } : {}),
+      ...(typeof httpError?.retryAfterMs === "number"
+        ? { retryAfterMs: httpError.retryAfterMs }
+        : {}),
       ...(httpError ? { status: httpError.status } : {}),
     },
   };
@@ -130,8 +145,13 @@ function registerWithMcpServer(
     },
     async (input, context) => {
       try {
-        const result = toolResult(await definition.call(input, { signal: context.mcpReq.signal }));
-        const metadata = safeResultMetadata(resultMetadata);
+        const result = toolResult(
+          await definition.call(input, { signal: context.mcpReq.signal }),
+          domainName,
+          input,
+        );
+        const compactHeartbeat = domainName === "agent.heartbeat" && result.content.length === 0;
+        const metadata = compactHeartbeat ? undefined : safeResultMetadata(resultMetadata);
         return metadata ? { ...result, _meta: metadata } : result;
       } catch (error) {
         const failure = { ...toolFailure(error), ...oauthFailureMetadata(error, auth, scopes) };
@@ -183,7 +203,9 @@ export function createDmfasterMcpCore(input: {
           "Check the signed-in account, selected workspace, and permissions of this hosted connection.",
           input.hostedAuth,
         ),
-        inputSchema: z.object({}).strict(),
+        inputSchema: z
+          .object({ toolsView: z.enum(["summary", "names", "full"]).optional() })
+          .strict(),
         outputSchema: hostedConnectionSchema,
         _meta: { ...oauthToolMetadata(input.hostedAuth, []), "openai/widgetAccessible": true },
         annotations: {
@@ -193,8 +215,8 @@ export function createDmfasterMcpCore(input: {
           openWorldHint: false,
         },
       },
-      async () => {
-        const status = await inspect();
+      async ({ toolsView }) => {
+        const status = projectConnectionStatus(await inspect(), toolsView);
         return {
           content: [{ type: "text" as const, text: JSON.stringify(status) }],
           structuredContent: status,

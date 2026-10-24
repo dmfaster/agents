@@ -1,3 +1,30 @@
+# 2.4.0
+
+Agent 3.0 owner-gated v2:P0-1–11: identities, event delivery, work queue, metrics, runs/controls, budgets, classification, follow-ups, identity graph, health and recorder orchestration/read/analysis/access/deletion. See docs/agent-3.0-release-scope.md in the product repository for owner-accepted P1 deferrals.
+
+## Unreleased — Agent 3.0 recorder foundation (v2:P0-11; partial)
+
+Adds opt-in transcript/media/recording scopes, own-user recorder settings with
+versioned dry-run/idempotent writes, authorized bot listing, transcript reads,
+recording metadata and audited private media sessions. Transcripts use the
+existing call access service, retention fences, content-free audit events and
+optional PII redaction. Compact pages are bounded and resumable. Call metadata
+is negotiated with `X-DMFaster-Call-Artifacts: 1` to preserve strict older clients.
+SDK, CLI and MCP retain structured scope and recovery errors (part of v2:P0-10).
+
+Calendar V2 HTTP/rules modules and fake-provider tests are foundations; live
+calendar connection, scheduling, bot commands, search, analysis, confirmation
+and lifecycle events are not implemented by this slice. No P0 item is closed.
+No package version or response compatibility marker changes until the complete
+P0 milestone is ready. No production migration/deployment/publication yet.
+
+Migration 0401 is additive, grants no scopes, and enables recorder eligibility
+only for user_d144fee14b087834. Settings default off without consent. Individual
+calendar connection and consent remain required. No real bots, prospect messages,
+historical repairs or bulk call analysis are part of development verification.
+Broad regression/acceptance unverified; focused fake/disposable tests, types,
+builds and generator checks are recorded separately in STATUS-V2.md.
+
 # Agent contract changelog
 
 ## 2.3.0 — Agent product feedback (2026-10-23)
@@ -37,3 +64,11 @@ Rollout: new classification and auto-close are off for existing customers except
 Events: human inbox events wait for classification; automatic replies emit their own event. Scope checks are repeated at delivery time. `events:read` initially requires the workspace owner to avoid exposing private call entities to teammates. Meeting-outcome no-show follow-ups use the existing outcome follow-up field. Policy/booking-link/follow-up scheduling tools are P1 and are not promised by this release.
 
 Validation: the owner explicitly selected typecheck/build-only validation. Regression, browser, contract, database, sandbox acceptance and package install suites were skipped after that instruction. This changelog is a source description; STATUS.md records actual merge/deploy/publication evidence.
+
+Recorder foundation follow-up (unreleased, partial v2:P0-11): default complete
+compact transcript text with a 512 KiB page boundary, explicit segment pages,
+opt-in batched transcript reads (ten calls, 1 MiB total), and workspace/call-access
+filtered Finnish/English transcript search. Precomputed compact text is written
+only for new flagged ingests; older calls are not backfilled. Per-call access,
+retention, revocation, redaction and source revision are checked on every read.
+No P0 milestone completion or production availability is claimed by this entry.

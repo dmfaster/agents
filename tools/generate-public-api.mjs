@@ -25,11 +25,14 @@ if (unknownArguments.length > 0) {
 }
 
 function runOpenapiTypescript(arguments_) {
-  const executable = process.platform === "win32" ? "openapi-typescript.cmd" : "openapi-typescript";
-  const nested = path.join(rootDir, "tools", "tooling-compat", "node_modules", ".bin", executable);
-  const binary = existsSync(nested)
-    ? nested
-    : path.join(rootDir, "node_modules", ".bin", executable);
+  const binary = path.join(
+    rootDir,
+    "tools",
+    "tooling-compat",
+    "node_modules",
+    ".bin",
+    process.platform === "win32" ? "openapi-typescript.cmd" : "openapi-typescript",
+  );
   const result = spawnSync(binary, arguments_, {
     cwd: rootDir,
     encoding: "utf8",

@@ -42,7 +42,7 @@ import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "2.3.0";
+export const CLI_VERSION = "2.4.0";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();
@@ -1000,6 +1000,16 @@ function publicClientError(error: DmfasterSdkError | AgentAuthError) {
         ? { retryAfterSeconds: httpError?.retryAfterSeconds ?? authError?.retryAfterSeconds }
         : {}),
       ...(httpError?.details ? { details: httpError.details } : {}),
+      ...(httpError?.requiredScope ? { requiredScope: httpError.requiredScope } : {}),
+      ...(httpError?.reason ? { reason: httpError.reason } : {}),
+      ...(httpError?.setupUrl ? { setupUrl: httpError.setupUrl } : {}),
+      ...(httpError?.requiredConnection
+        ? { requiredConnection: httpError.requiredConnection }
+        : {}),
+      ...(httpError?.blockedUntil ? { blockedUntil: httpError.blockedUntil } : {}),
+      ...(typeof httpError?.retryAfterMs === "number"
+        ? { retryAfterMs: httpError.retryAfterMs }
+        : {}),
       ...(typeof (httpError?.status ?? authError?.status) === "number"
         ? { status: httpError?.status ?? authError?.status }
         : {}),

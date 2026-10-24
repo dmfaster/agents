@@ -1,94 +1,5 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
 import { z } from "zod";
-export const IdempotencyKeySchema = z
-  .string()
-  .trim()
-  .min(1)
-  .max(160)
-  .regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$"));
-export const AgentFeedbackSubmitInputSchema = z
-  .object({
-    category: z.union([
-      z.literal("bug"),
-      z.literal("missing_capability"),
-      z.literal("confusing_behavior"),
-      z.literal("performance"),
-      z.literal("improvement"),
-    ]),
-    summary: z
-      .string()
-      .trim()
-      .min(1)
-      .max(240)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("One concrete problem or improvement."),
-    task: z
-      .string()
-      .trim()
-      .min(1)
-      .max(1000)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("The task being attempted, without customer data.")
-      .optional(),
-    observed: z
-      .string()
-      .trim()
-      .min(1)
-      .max(2000)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("What actually happened; omit private transcripts and raw tool payloads.")
-      .optional(),
-    expected: z
-      .string()
-      .trim()
-      .min(1)
-      .max(2000)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("What should happen instead.")
-      .optional(),
-    suggestion: z
-      .string()
-      .trim()
-      .min(1)
-      .max(2000)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("Optional proposed improvement; distinguish speculation from observed behavior.")
-      .optional(),
-    toolName: z
-      .string()
-      .trim()
-      .min(1)
-      .max(120)
-      .regex(new RegExp(".*\\S.*"))
-      .describe(
-        "Affected MCP or API tool name, if known. Unknown names are allowed for missing tools.",
-      )
-      .optional(),
-    requestId: z
-      .string()
-      .trim()
-      .min(1)
-      .max(128)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("Optional request reference already returned by DM Faster; do not invent one.")
-      .optional(),
-    impact: z.union([z.literal("blocked"), z.literal("workaround"), z.literal("minor")]).optional(),
-    idempotencyKey: IdempotencyKeySchema,
-  })
-  .strict();
-export const AgentFeedbackListInputSchema = z
-  .object({
-    limit: z.number().int().min(1).max(25).optional(),
-    before: z
-      .string()
-      .trim()
-      .min(1)
-      .max(100)
-      .regex(new RegExp(".*\\S.*"))
-      .describe("Use nextCursor from the previous page, unchanged.")
-      .optional(),
-  })
-  .strict();
 export const ResourceIdSchema = z
   .string()
   .trim()
@@ -134,9 +45,29 @@ export const AnalyticsSummaryInputSchema = z
       )
       .max(6)
       .optional(),
+    timezone: z.string().max(100).optional(),
+    include: z
+      .array(z.union([z.literal("canonical"), z.literal("legacy"), z.literal("definitions")]))
+      .max(3)
+      .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
-export const WorkspaceBriefingInputSchema = z.object({}).strict();
+export const WorkspaceBriefingInputSchema = z
+  .object({
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const CampaignStatusSchema = z.union([
   z.literal("Draft"),
   z.literal("Queued"),
@@ -164,6 +95,12 @@ export const CampaignsListInputSchema = z
       .max(500)
       .describe("Opaque nextCursor returned by the preceding page.")
       .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const OptionalCampaignInputSchema = z
@@ -171,10 +108,30 @@ export const OptionalCampaignInputSchema = z
     campaignId: ResourceIdSchema.describe(
       "Omit to use the selected, active, or most recent campaign.",
     ).optional(),
+    include: z
+      .array(z.union([z.literal("legacy")]))
+      .max(1)
+      .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignInspectInputSchema = OptionalCampaignInputSchema;
-export const CampaignCopyInspectInputSchema = z.object({ campaignId: ResourceIdSchema }).strict();
+export const CampaignCopyInspectInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const SendingInspectInputSchema = OptionalCampaignInputSchema;
 export const RepliesListInputSchema = z
   .object({
@@ -188,6 +145,12 @@ export const RepliesListInputSchema = z
       .describe("Optional case-insensitive reply search text.")
       .optional(),
     cursor: z.string().min(1).max(6000).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const InboxChannelSchema = z.union([
@@ -249,6 +212,16 @@ export const ConversationsListInputSchema = z
       .union([z.literal("none"), z.literal("booked"), z.literal("held"), z.literal("no_show")])
       .optional(),
     followupDue: z.boolean().optional(),
+    include: z
+      .array(z.union([z.literal("legacy")]))
+      .max(1)
+      .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ConversationInspectInputSchema = z
@@ -256,10 +229,17 @@ export const ConversationInspectInputSchema = z
     conversationId: ResourceIdSchema,
     cursor: z.string().min(1).max(2000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ConversationUpdateInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     conversationId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     action: z.union([
@@ -292,6 +272,12 @@ export const ConversationUpdateInputSchema = z
         z.literal("unclear"),
       ])
       .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ReplyTemplateVariablesSchema = z
@@ -306,6 +292,7 @@ export const ReplyTemplateVariablesSchema = z
   .strict();
 export const ConversationReplyInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     conversationId: ResourceIdSchema,
     expectedLastInboundAt: ResourceVersionSchema,
     expectedLastMessageAt: ResourceVersionSchema,
@@ -319,18 +306,44 @@ export const ConversationReplyInputSchema = z
         "For 2.1 clients only: the owner explicitly approved this exact free text and conversation. Otherwise save a draft.",
       )
       .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ConversationReplyInspectInputSchema = z
-  .object({ idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9_-]+$")) })
+  .object({
+    idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9_-]+$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
   .strict();
 export const CampaignMessagesDraftListInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
     afterId: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
+export const IdempotencyKeySchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(160)
+  .regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$"));
 export const CampaignMessagesDraftUpdateInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
@@ -349,6 +362,12 @@ export const CampaignMessagesDraftUpdateInputSchema = z
       )
       .min(1)
       .max(100),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignMessagesListInputSchema = z
@@ -363,6 +382,12 @@ export const CampaignMessagesListInputSchema = z
     jobIds: z.array(ResourceIdSchema).min(1).max(100).optional(),
     afterJobId: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignMessagesUpdateInputSchema = z
@@ -414,6 +439,12 @@ export const CampaignFollowupsListInputSchema = z
     campaignId: ResourceIdSchema,
     view: z.union([z.literal("upcoming"), z.literal("done")]).optional(),
     cursor: z.string().min(1).max(512).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignFollowupsCancelInputSchema = z
@@ -422,6 +453,12 @@ export const CampaignFollowupsCancelInputSchema = z
     expectedCampaignUpdatedAt: ResourceVersionSchema,
     jobIds: z.array(ResourceIdSchema).min(1).max(50),
     idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9._:-]+$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignOutcomesListInputSchema = z
@@ -429,6 +466,12 @@ export const CampaignOutcomesListInputSchema = z
     campaignId: ResourceIdSchema,
     cursor: z.string().min(1).max(512).optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const DeliveryTestPrepareInputSchema = z
@@ -438,16 +481,36 @@ export const DeliveryTestPrepareInputSchema = z
     mailboxId: ResourceIdSchema.optional(),
     recipientConsentConfirmed: z.literal(true),
     idempotencyKey: z.string().max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const DeliveryTestSendInputSchema = z
   .object({
     testId: z.string().regex(new RegExp("^delivery_test_[a-f0-9]{64}$")),
     reviewDigest: z.string().regex(new RegExp("^[a-f0-9]{64}$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const DeliveryTestInspectInputSchema = z
-  .object({ testId: z.string().regex(new RegExp("^delivery_test_[a-f0-9]{64}$")) })
+  .object({
+    testId: z.string().regex(new RegExp("^delivery_test_[a-f0-9]{64}$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
   .strict();
 export const HistoryListInputSchema = z
   .object({
@@ -455,6 +518,12 @@ export const HistoryListInputSchema = z
     cursor: z.string().min(1).max(512).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     search: z.string().min(3).max(120).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const PipelineInspectInputSchema = OptionalCampaignInputSchema;
@@ -488,10 +557,21 @@ export const PipelineCardsListInputSchema = z
       .min(1)
       .max(8)
       .optional(),
+    include: z
+      .array(z.union([z.literal("legacy")]))
+      .max(1)
+      .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const PipelineStageUpdateInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     campaignId: ResourceIdSchema,
     entityKey: z.string().min(1).max(320),
     stageKey: z.string().min(1).max(500),
@@ -501,10 +581,25 @@ export const PipelineStageUpdateInputSchema = z
     lostReason: z.string().max(2000).optional(),
     expectedUpdatedAt: ResourceVersionSchema.optional(),
     idempotencyKey: IdempotencyKeySchema.optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const PipelineNoteListInputSchema = z
-  .object({ campaignId: ResourceIdSchema, entityKey: z.string().min(1).max(320) })
+  .object({
+    campaignId: ResourceIdSchema,
+    entityKey: z.string().min(1).max(320),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
   .strict();
 export const PipelineNoteAddInputSchema = z
   .object({
@@ -512,10 +607,25 @@ export const PipelineNoteAddInputSchema = z
     entityKey: z.string().min(1).max(320),
     body: z.string().min(1).max(2000),
     idempotencyKey: z.string().min(8).max(160).regex(new RegExp("^[a-zA-Z0-9._:-]+$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanyTimelineInputSchema = z
-  .object({ campaignId: ResourceIdSchema, companyOutreachId: ResourceIdSchema })
+  .object({
+    campaignId: ResourceIdSchema,
+    companyOutreachId: ResourceIdSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
   .strict();
 export const TolVersionSchema = z.union([z.literal("2008"), z.literal("2025")]);
 export const IndustryLookupInputSchema = z
@@ -531,6 +641,12 @@ export const IndustryLookupInputSchema = z
       )
       .optional(),
     language: z.union([z.literal("en"), z.literal("fi")]).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const SupportedCountrySchema = z.union([
@@ -802,11 +918,27 @@ export const AgentCampaignStateSchema = z
   .describe(
     "Complete stateless campaign state. Send the latest returned or user-confirmed state on every planning call.",
   );
-export const CampaignValidateInputSchema = z.object({ state: AgentCampaignStateSchema }).strict();
+export const CampaignValidateInputSchema = z
+  .object({
+    state: AgentCampaignStateSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const AudiencePreviewInputSchema = z
   .object({
     state: AgentCampaignStateSchema,
     sampleSize: z.number().int().min(1).max(25).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ListsListInputSchema = z
@@ -814,6 +946,12 @@ export const ListsListInputSchema = z
     query: z.string().min(1).max(120).optional(),
     limit: z.number().int().min(1).max(25).optional(),
     offset: z.number().int().min(0).max(1000000).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ListInspectInputSchema = z
@@ -822,6 +960,12 @@ export const ListInspectInputSchema = z
     username: z.string().min(1).max(64).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     offset: z.number().int().min(0).max(1000000).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ListTargetRemoveInputSchema = z
@@ -829,6 +973,12 @@ export const ListTargetRemoveInputSchema = z
     listId: ResourceIdSchema,
     username: z.string().min(1).max(64),
     expectedListUpdatedAt: ResourceVersionSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignDraftPrepareInputSchema = z
@@ -911,6 +1061,12 @@ export const CampaignDraftPrepareInputSchema = z
     onlyNewChats: z.literal(true),
     skipPreviouslyMessaged: z.literal(true),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignFollowUpStepInputSchema = z
@@ -973,6 +1129,12 @@ export const CampaignDraftUpdateInputSchema = z
       })
       .strict()
       .refine((value) => Object.keys(value).length >= 1, "Provide at least 1 properties"),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ListImportInputSchema = z
@@ -986,6 +1148,12 @@ export const ListImportInputSchema = z
         "Instagram handles; whitespace and a leading @ are removed and case is normalized. Invalid handles reject the whole import.",
       ),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ReviewedAudienceSchema = z
@@ -1009,17 +1177,38 @@ export const ListPrepareInputSchema = z
     sampleSize: z.number().int().min(1).max(25).optional(),
     idempotencyKey: IdempotencyKeySchema.optional(),
     reviewedAudience: ReviewedAudienceSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignPrepareInputSchema = ListPrepareInputSchema;
 export const CampaignActionPreflightInputSchema = z
-  .object({ campaignId: ResourceIdSchema, idempotencyKey: IdempotencyKeySchema })
+  .object({
+    campaignId: ResourceIdSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
   .strict();
 export const CampaignActionInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
     idempotencyKey: IdempotencyKeySchema,
     authorizationId: z.string().regex(new RegExp("^agent_action_[a-f0-9]{32}$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanyFiltersInputSchema = z
@@ -1027,6 +1216,12 @@ export const CompanyFiltersInputSchema = z
     countries: z.array(SupportedCountrySchema).min(1).max(32),
     states: z.array(z.string().max(80)).max(32).optional(),
     citySearch: z.string().max(120).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanySuggestionsInputSchema = z
@@ -1034,6 +1229,12 @@ export const CompanySuggestionsInputSchema = z
     query: z.string().min(2).max(120),
     countries: z.array(SupportedCountrySchema).min(1).max(32),
     limit: z.number().int().min(1).max(10).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanySearchFiltersSchema = z
@@ -1144,6 +1345,12 @@ export const CompanySearchInputSchema = z
       )
       .optional(),
     querySignature: z.string().max(200).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const WebsiteEvidenceCriterionSchema = z
@@ -1188,6 +1395,12 @@ export const CompanyEvidenceSearchInputSchema = z
     cursor: z.string().min(1).max(200).optional(),
     expectedRevision: z.string().min(1).max(200).optional(),
     querySignature: z.string().min(1).max(200).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const WorkspaceCompanyKnowledgeInputSchema = z
@@ -1243,6 +1456,12 @@ export const WorkspaceCompanyKnowledgeInputSchema = z
     page: z.number().int().min(1).max(10000).optional(),
     pageSize: z.number().int().min(1).max(100).optional(),
     expectedRevision: z.string().min(64).max(64).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanyKnowledgeInputSchema = z
@@ -1269,6 +1488,12 @@ export const CompanyKnowledgeInputSchema = z
       .regex(new RegExp("^[a-f0-9]{64}$"))
       .describe("Pin subsequent source pages to the knowledgeRevision returned by the first read.")
       .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanyEvidenceStartInputSchema = z
@@ -1291,6 +1516,12 @@ export const CompanyEvidenceStartInputSchema = z
     filters: CompanySearchFiltersSchema.optional(),
     maxAgeDays: z.number().int().min(1).max(90).optional(),
     idempotencyKey: z.string().min(1).max(100),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanyEvidenceAdvanceInputSchema = z
@@ -1325,7 +1556,16 @@ export const CompanyEvidenceCancelInputSchema = z
   .object({ runId: z.string().min(36).max(36), expectedRevision: z.string().min(64).max(64) })
   .strict();
 export const CompanyInspectInputSchema = z
-  .object({ country: SupportedCountrySchema, businessId: z.string().min(1).max(192) })
+  .object({
+    country: SupportedCountrySchema,
+    businessId: z.string().min(1).max(192),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
   .strict();
 export const CompanyFitStartInputSchema = z
   .object({
@@ -1357,6 +1597,12 @@ export const CompanyFitStartInputSchema = z
     unknownsFromRunId: ResourceIdSchema.describe(
       "Review only unknowns from this completed, recent run; carry forward its other assessments only for the same offer, website and exact audience.",
     ).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanyFitAdvanceInputSchema = z
@@ -1409,6 +1655,12 @@ export const CompanyListPrepareInputSchema = z
       .min(1)
       .max(50),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanyListInspectInputSchema = z
@@ -1417,6 +1669,12 @@ export const CompanyListInspectInputSchema = z
     offset: z.number().int().min(0).max(1000000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     expectedUpdatedAt: z.string().max(160).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanyListRefineInputSchema = z
@@ -1468,16 +1726,44 @@ export const CompanyListRefineInputSchema = z
       .describe(
         "False previews exact removals without a write. True applies the same reviewed selection to the disabled draft list.",
       ),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignOperationInspectInputSchema = z
   .object({
     campaignId: z.string().min(1).max(160),
     commandId: z.string().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]+$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignDeliveryInspectInputSchema = z
-  .object({ campaignId: z.string().min(1).max(160) })
+  .object({
+    contactPolicyReport: z
+      .boolean()
+      .describe(
+        "Read-only pre-enable impact report for the current page of unsent jobs. No flags or jobs change.",
+      )
+      .optional(),
+    afterJobId: z.string().max(160).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    campaignId: z.string().min(1).max(160),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
   .strict();
 export const CampaignDeliveryUpdateInputSchema = z
   .object({
@@ -1495,9 +1781,24 @@ export const CampaignDeliveryUpdateInputSchema = z
       })
       .strict()
       .refine((value) => Object.keys(value).length >= 1, "Provide at least 1 properties"),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
-export const InstagramPacingInspectInputSchema = z.object({}).strict();
+export const InstagramPacingInspectInputSchema = z
+  .object({
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const InstagramPacingPolicySchema = z
   .object({
     gapMinSeconds: z.number().int().min(12).max(3600),
@@ -1530,6 +1831,12 @@ export const InstagramPacingUpdateInputSchema = z
           ).length === 1,
         "Expected exactly one schema match",
       ),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanyFitStatusInputSchema = z.object({ runId: ResourceIdSchema }).strict();
@@ -1542,6 +1849,12 @@ export const CompanyFitRunsListInputSchema = z
     campaignId: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(25).optional(),
     before: CompanyFitRunCursorSchema.optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CompanyFitRunInputSchema = z
@@ -1578,9 +1891,28 @@ export const CopyPerformanceInputSchema = z
     to: z.string().min(20).max(40),
     limit: z.number().int().min(1).max(25).optional(),
     offset: z.number().int().min(0).max(1000000).optional(),
+    include: z
+      .array(z.union([z.literal("legacy")]))
+      .max(1)
+      .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
-export const CalendarStatusInputSchema = z.object({}).strict();
+export const CalendarStatusInputSchema = z
+  .object({
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const CalendarAvailabilityInputSchema = z
   .object({
     from: z.string().min(20).max(40),
@@ -1603,10 +1935,17 @@ export const CalendarAvailabilityInputSchema = z
         "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
       )
       .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CalendarMeetingBookInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     conversationId: ResourceIdSchema,
     expectedConversationUpdatedAt: z.string().min(20).max(40),
     idempotencyKey: z.string().min(8).max(120).regex(new RegExp("^[a-zA-Z0-9_-]{8,120}$")),
@@ -1645,6 +1984,12 @@ export const CalendarMeetingBookInputSchema = z
         "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
       )
       .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CallsListInputSchema = z
@@ -1665,9 +2010,33 @@ export const CallsListInputSchema = z
     awaitingOutcome: z.boolean().optional(),
     from: ResourceVersionSchema.optional(),
     to: ResourceVersionSchema.optional(),
+    hasTranscript: z.boolean().optional(),
+    outcomeProposed: z.boolean().optional(),
+    linkState: z.union([z.literal("linked"), z.literal("unlinked")]).optional(),
+    source: z.string().min(1).max(200).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
-export const CallInspectInputSchema = z.object({ meetingId: ResourceIdSchema }).strict();
+export const CallInspectInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+    include: z
+      .array(z.union([z.literal("speakers")]))
+      .max(1)
+      .optional(),
+  })
+  .strict();
 export const InstagramExtractionQuoteInputSchema = z
   .object({
     username: z.string().trim().min(1).max(31).regex(new RegExp("^@?[A-Za-z0-9._]{1,30}$")),
@@ -1680,6 +2049,12 @@ export const InstagramExtractionQuoteInputSchema = z
     count: z.number().int().min(1).max(2147483647),
     currency: z.union([z.literal("USD"), z.literal("EUR")]).optional(),
     postUrl: z.string().trim().min(1).max(300).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const InstagramExtractionStartInputSchema = z
@@ -1695,20 +2070,48 @@ export const InstagramExtractionStartInputSchema = z
     currency: z.union([z.literal("USD"), z.literal("EUR")]).optional(),
     postUrl: z.string().trim().min(1).max(300).optional(),
     idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
-export const InstagramExtractionInspectInputSchema = z.object({ jobId: ResourceIdSchema }).strict();
+export const InstagramExtractionInspectInputSchema = z
+  .object({
+    jobId: ResourceIdSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const InstagramExtractionResultsInputSchema = z
   .object({
     jobId: ResourceIdSchema,
     cursor: z.string().min(1).max(30).regex(new RegExp("^[A-Za-z0-9._]+$")).optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const InstagramPurchasesListInputSchema = z
   .object({
     cursor: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(20).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const InstagramPurchasesInspectInputSchema = z
@@ -1716,6 +2119,12 @@ export const InstagramPurchasesInspectInputSchema = z
     orderId: ResourceIdSchema,
     cursor: ResourceIdSchema.optional(),
     limit: z.number().int().min(1).max(20).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const InstagramPurchasesResultsInputSchema = z
@@ -1724,12 +2133,24 @@ export const InstagramPurchasesResultsInputSchema = z
     jobId: ResourceIdSchema,
     cursor: z.string().min(1).max(30).regex(new RegExp("^[A-Za-z0-9._]+$")).optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const LeadsStatusInputSchema = z
   .object({
     cursor: z.string().trim().min(1).max(1000).optional(),
     limit: z.number().int().min(1).max(50).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const LeadExtractionQuoteInputSchema = z
@@ -1745,10 +2166,17 @@ export const LeadExtractionQuoteInputSchema = z
     postUrls: z.array(z.string().trim().min(1).max(300)).min(1).optional(),
     priority: z.union([z.literal("high"), z.literal("normal"), z.literal("low")]).optional(),
     feedType: z.union([z.literal("top"), z.literal("recent")]).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const LeadExtractionStartInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     type: z.union([
       z.literal("followers"),
       z.literal("following"),
@@ -1761,26 +2189,87 @@ export const LeadExtractionStartInputSchema = z
     priority: z.union([z.literal("high"), z.literal("normal"), z.literal("low")]).optional(),
     feedType: z.union([z.literal("top"), z.literal("recent")]).optional(),
     idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
-export const LeadExtractionInspectInputSchema = z.object({ jobId: ResourceIdSchema }).strict();
-export const LeadExtractionRefreshInputSchema = z.object({ jobId: ResourceIdSchema }).strict();
+export const LeadExtractionInspectInputSchema = z
+  .object({
+    jobId: ResourceIdSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const LeadExtractionRefreshInputSchema = z
+  .object({
+    dryRun: z.boolean().optional(),
+    jobId: ResourceIdSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const LeadExtractionContinueInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     jobId: ResourceIdSchema,
     count: z.number().int().min(1).max(2147483647).optional(),
     idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
-export const LeadEnrichmentPreviewInputSchema = z.object({ listId: ResourceIdSchema }).strict();
+export const LeadEnrichmentPreviewInputSchema = z
+  .object({
+    listId: ResourceIdSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const LeadEnrichmentStartInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     listId: ResourceIdSchema,
     maxCredits: z.number().int().min(0).max(2147483647).optional(),
     idempotencyKey: z.string().trim().min(1).max(160).regex(new RegExp("^[A-Za-z0-9._:-]{1,160}$")),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
-export const LeadEnrichmentInspectInputSchema = z.object({ jobId: ResourceIdSchema }).strict();
+export const LeadEnrichmentInspectInputSchema = z
+  .object({
+    jobId: ResourceIdSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const InstagramProspectCriterionSchema = z
   .object({
     id: z.string().min(1).max(40).regex(new RegExp("^[a-z][a-z0-9_]{0,39}$")),
@@ -1856,11 +2345,27 @@ export const InstagramProspectInputSchema = z
     includeReview: z.boolean().optional(),
     excludePreviouslyContacted: z.boolean().optional(),
     name: z.string().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const InstagramProspectStartInputSchema = z.intersection(
   InstagramProspectInputSchema,
-  z.object({ idempotencyKey: z.string().min(1).max(120) }).strict(),
+  z
+    .object({
+      idempotencyKey: z.string().min(1).max(120),
+      runId: z
+        .string()
+        .min(1)
+        .max(100)
+        .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+        .optional(),
+    })
+    .strict(),
 );
 export const InstagramProspectRunInputSchema = z
   .object({ runId: z.string().min(1).max(100) })
@@ -1882,6 +2387,22 @@ export const InstagramProspectResultsInputSchema = z
   })
   .strict();
 export const AgentSalesEventTypeSchema = z.union([
+  z.literal("call.stats.ready"),
+  z.literal("call.stats.updated"),
+  z.literal("call.coaching.flagged"),
+  z.literal("call.attendance.detected"),
+  z.literal("call.insight.failed"),
+  z.literal("call.bot.scheduled"),
+  z.literal("call.bot.cancelled"),
+  z.literal("call.bot.joined"),
+  z.literal("call.bot.failed"),
+  z.literal("call.recording.ready"),
+  z.literal("call.recording.stopped"),
+  z.literal("call.transcript.ready"),
+  z.literal("call.analysis.ready"),
+  z.literal("call.deleted"),
+  z.literal("recorder.cap.reached"),
+  z.literal("recorder.health.degraded"),
   z.literal("inbox.message.received"),
   z.literal("inbox.auto_reply.received"),
   z.literal("conversation.intent.changed"),
@@ -1900,6 +2421,36 @@ export const AgentSalesEventTypeSchema = z.union([
   z.literal("reply.approval.decided"),
   z.literal("credential.expiring"),
   z.literal("webhook.test"),
+  z.literal("sender.recovered"),
+  z.literal("calendar.connected"),
+  z.literal("calendar.disconnected"),
+  z.literal("agent.paused"),
+  z.literal("agent.resumed"),
+  z.literal("credential.rotated"),
+  z.literal("message.sent"),
+  z.literal("message.delivery.failed"),
+  z.literal("message.bounced"),
+  z.literal("reaction.received"),
+  z.literal("system_event.received"),
+  z.literal("conversation.assigned"),
+  z.literal("conversation.takeover.started"),
+  z.literal("conversation.takeover.ended"),
+  z.literal("work_item.created"),
+  z.literal("work_item.updated"),
+  z.literal("work_queue.rebuilt"),
+  z.literal("meeting.reminder.due"),
+  z.literal("meeting.ended"),
+  z.literal("booking_link.opened"),
+  z.literal("booking_link.used"),
+  z.literal("booking_link.expired"),
+  z.literal("suppression.added"),
+  z.literal("suppression.removed"),
+  z.literal("agent.lagging"),
+  z.literal("agent.stale"),
+  z.literal("budget.threshold_reached"),
+  z.literal("kill_switch.changed"),
+  z.literal("webhook.delivery.failed"),
+  z.literal("metrics.recomputed"),
 ]);
 export const EventsListInputSchema = z
   .object({
@@ -1915,6 +2466,18 @@ export const EventsListInputSchema = z
       .optional(),
     types: z.array(AgentSalesEventTypeSchema).min(1).max(17).optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    consumerId: ResourceIdSchema.optional(),
+    waitSeconds: z.number().int().min(0).max(30).optional(),
+    expand: z
+      .array(z.union([z.literal("message"), z.literal("conversation"), z.literal("campaign")]))
+      .max(3)
+      .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ConversationsChangesInputSchema = z
@@ -1933,6 +2496,13 @@ export const ConversationsChangesInputSchema = z
       .max(4)
       .optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    after: z.string().max(1000).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const SuppressionsListInputSchema = z
@@ -1940,6 +2510,12 @@ export const SuppressionsListInputSchema = z
     query: z.string().min(1).max(120).optional(),
     cursor: z.string().min(1).max(1000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const SuppressionEntryInputSchema = z
@@ -1960,23 +2536,55 @@ export const SuppressionEntryInputSchema = z
   .strict();
 export const SuppressionsAddInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     entries: z.array(SuppressionEntryInputSchema).min(1).max(100),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const SuppressionsRemoveInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     id: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     reason: z.string().min(1).max(500),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const WorkspaceSandboxCreateInputSchema = z
-  .object({ name: z.string().min(1).max(100), idempotencyKey: IdempotencyKeySchema })
+  .object({
+    name: z.string().min(1).max(100),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
   .strict();
 export const SandboxSeedInputSchema = z
-  .object({ preset: z.literal("appointment_setter_v1"), idempotencyKey: IdempotencyKeySchema })
+  .object({
+    preset: z.literal("appointment_setter_v1"),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
   .strict();
 export const SandboxInboundSimulateInputSchema = z
   .object({
@@ -1994,6 +2602,12 @@ export const SandboxInboundSimulateInputSchema = z
     at: ResourceVersionSchema.optional(),
     expectedUpdatedAt: ResourceVersionSchema.optional(),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const SandboxClockAdvanceInputSchema = z
@@ -2001,10 +2615,17 @@ export const SandboxClockAdvanceInputSchema = z
     minutes: z.number().int().min(1).max(525600),
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CallOutcomeSetInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     meetingId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
@@ -2026,22 +2647,77 @@ export const CallOutcomeSetInputSchema = z
     lostReason: z.string().max(2000).optional(),
     valueEur: z.number().min(0).max(999999999999.99).optional(),
     note: z.string().max(5000).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const MeetingLinkInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     meetingId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
     conversationId: ResourceIdSchema.optional(),
     companyOutreachId: ResourceIdSchema.optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const MeetingUnlinkInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     meetingId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WebhookHeadersSchema = z
+  .record(
+    z
+      .string()
+      .max(66)
+      .regex(
+        new RegExp(
+          "^(?:[Aa][Uu][Tt][Hh][Oo][Rr][Ii][Zz][Aa][Tt][Ii][Oo][Nn]|[Xx]-[A-Za-z0-9-]{1,64})$",
+        ),
+      ),
+    z.string().max(2048).regex(new RegExp("^[^\\r\\n\\u0000]*$")),
+  )
+  .refine((value) => Object.keys(value).length <= 5, "Provide at most 5 properties");
+export const WebhookFiltersSchema = z
+  .object({
+    campaignIds: z.array(z.string().min(1).max(160)).max(100).optional(),
+    channels: z.array(z.string().min(1).max(30)).max(10).optional(),
+    intents: z.array(z.string().min(1).max(80)).max(30).optional(),
+    minIntentConfidence: z.number().min(0).max(1).optional(),
+    excludeAutomatic: z.boolean().optional(),
+    excludeReactions: z.boolean().optional(),
+    actorTypes: z
+      .array(
+        z.union([
+          z.literal("agent"),
+          z.literal("human"),
+          z.literal("system"),
+          z.literal("automation"),
+        ]),
+      )
+      .max(4)
+      .optional(),
+    agentIds: z.array(z.string().min(1).max(160)).max(100).optional(),
   })
   .strict();
 export const WebhooksCreateInputSchema = z
@@ -2050,9 +2726,30 @@ export const WebhooksCreateInputSchema = z
     events: z.array(AgentSalesEventTypeSchema).min(1).max(30),
     description: z.string().max(1000).optional(),
     idempotencyKey: IdempotencyKeySchema,
+    headers: WebhookHeadersSchema.optional(),
+    secret: z.string().min(32).max(100).optional(),
+    filters: WebhookFiltersSchema.optional(),
+    ordering: z.union([z.literal("strict"), z.literal("per_key")]).optional(),
+    payload: z.union([z.literal("thin"), z.literal("standard"), z.literal("full")]).optional(),
+    dryRun: z.boolean().optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
-export const WebhooksListInputSchema = z.object({}).strict();
+export const WebhooksListInputSchema = z
+  .object({
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const WebhooksUpdateInputSchema = z
   .object({
     id: ResourceIdSchema,
@@ -2062,6 +2759,18 @@ export const WebhooksUpdateInputSchema = z
     events: z.array(AgentSalesEventTypeSchema).min(1).max(30).optional(),
     description: z.string().max(1000).optional(),
     enabled: z.boolean().optional(),
+    headers: WebhookHeadersSchema.optional(),
+    secret: z.string().min(32).max(100).optional(),
+    filters: WebhookFiltersSchema.optional(),
+    ordering: z.union([z.literal("strict"), z.literal("per_key")]).optional(),
+    payload: z.union([z.literal("thin"), z.literal("standard"), z.literal("full")]).optional(),
+    dryRun: z.boolean().optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const WebhooksDeleteInputSchema = z
@@ -2069,6 +2778,13 @@ export const WebhooksDeleteInputSchema = z
     id: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
+    dryRun: z.boolean().optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const WebhooksTestInputSchema = z
@@ -2076,6 +2792,13 @@ export const WebhooksTestInputSchema = z
     id: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
+    dryRun: z.boolean().optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const WebhooksReplayInputSchema = z
@@ -2093,12 +2816,31 @@ export const WebhooksReplayInputSchema = z
         "Expected exactly one schema match",
       )
       .optional(),
+    dryRun: z.boolean().optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const MeetingsUnlinkedListInputSchema = z
   .object({
+    includeIdentitySuggestions: z
+      .boolean()
+      .describe(
+        "Read-only current identity matches, including historical calls. Never applies links.",
+      )
+      .optional(),
     cursor: z.string().max(2000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const PipelineReconcileInputSchema = z
@@ -2106,9 +2848,24 @@ export const PipelineReconcileInputSchema = z
     campaignId: ResourceIdSchema.optional(),
     dryRun: z.boolean().optional(),
     idempotencyKey: IdempotencyKeySchema.optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
-export const WorkspaceAgentSalesGetInputSchema = z.object({}).strict();
+export const WorkspaceAgentSalesGetInputSchema = z
+  .object({
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const WorkspaceAgentSalesUpdateInputSchema = z
   .object({
     enabled: z.boolean(),
@@ -2117,6 +2874,12 @@ export const WorkspaceAgentSalesUpdateInputSchema = z
     suppressCompany: z.boolean(),
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const SandboxProviderUpdateInputSchema = z
@@ -2130,12 +2893,24 @@ export const SandboxProviderUpdateInputSchema = z
     connected: z.boolean(),
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ReplyTemplatesListInputSchema = z
   .object({
     cursor: z.string().min(1).max(1000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ReplyTemplateSchema = z
@@ -2163,6 +2938,12 @@ export const ReplyTemplatesCreateInputSchema = z
     template: ReplyTemplateSchema,
     expectedRevision: z.literal(0),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ReplyTemplatesUpdateInputSchema = z
@@ -2171,6 +2952,12 @@ export const ReplyTemplatesUpdateInputSchema = z
     template: ReplyTemplateSchema,
     expectedRevision: z.number().int().min(0),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ReplyTemplatesDeleteInputSchema = z
@@ -2178,9 +2965,24 @@ export const ReplyTemplatesDeleteInputSchema = z
     id: ResourceIdSchema,
     expectedRevision: z.number().int().min(0),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
-export const ReplyPolicyGetInputSchema = z.object({}).strict();
+export const ReplyPolicyGetInputSchema = z
+  .object({
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
 export const ReplyPolicySchema = z
   .object({
     enabled: z.boolean(),
@@ -2217,6 +3019,12 @@ export const ReplyPolicyUpdateInputSchema = z
     policy: ReplyPolicySchema,
     expectedRevision: z.number().int().min(0),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ReplyApprovalsListInputSchema = z
@@ -2225,6 +3033,12 @@ export const ReplyApprovalsListInputSchema = z
     limit: z.number().int().min(1).max(100).optional(),
     status: z
       .union([z.literal("pending"), z.literal("approved"), z.literal("rejected")])
+      .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
       .optional(),
   })
   .strict();
@@ -2237,6 +3051,12 @@ export const ConversationDraftSaveInputSchema = z
     variables: ReplyTemplateVariablesSchema.optional(),
     rationale: z.string().min(1).max(2000).optional(),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const FollowupAutoSendSchema = z
@@ -2244,6 +3064,7 @@ export const FollowupAutoSendSchema = z
   .strict();
 export const ConversationFollowupSetInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     conversationId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     at: ResourceVersionSchema,
@@ -2258,13 +3079,26 @@ export const ConversationFollowupSetInputSchema = z
     owner: ResourceIdSchema.optional(),
     autoSend: FollowupAutoSendSchema.optional(),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ConversationFollowupClearInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     conversationId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const FollowupsDueInputSchema = z
@@ -2273,18 +3107,37 @@ export const FollowupsDueInputSchema = z
     limit: z.number().int().min(1).max(100).optional(),
     before: ResourceVersionSchema.optional(),
     owner: ResourceIdSchema.optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const ConversationsBulkUpdateInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     items: z.array(ConversationUpdateInputSchema).min(1).max(50),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const PipelineBoardInputSchema = z
   .object({
     campaignIds: z.array(ResourceIdSchema).max(100).optional(),
     limitPerStage: z.number().int().min(1).max(20).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CalendarBookingLinkCreateInputSchema = z
@@ -2314,23 +3167,43 @@ export const CalendarBookingLinkCreateInputSchema = z
         "Calendar owned by the connected Google account. Defaults to primary; calendar_status reports discoverable calendars.",
       )
       .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CalendarMeetingRescheduleInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     meetingId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     start: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CalendarMeetingCancelInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     meetingId: ResourceIdSchema,
     expectedUpdatedAt: ResourceVersionSchema,
     reason: z.string().min(1).max(2000),
     notifyAttendees: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignFollowupsConfigureInputSchema = z
@@ -2373,10 +3246,26 @@ export const CampaignFollowupsConfigureInputSchema = z
     applyTo: z.union([z.literal("future_only"), z.literal("contacted_no_reply")]),
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
+    maxAgeDays: z
+      .number()
+      .int()
+      .min(1)
+      .max(3650)
+      .describe(
+        "Default 30. Older recipients are excluded from follow-up and returned as re-engagement candidates; no historical live apply.",
+      )
+      .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
   })
   .strict();
 export const CampaignVariantsConfigureInputSchema = z
   .object({
+    dryRun: z.boolean().optional(),
     campaignId: ResourceIdSchema,
     expectedCampaignUpdatedAt: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
@@ -2406,11 +3295,1248 @@ export const CampaignVariantsConfigureInputSchema = z
       })
       .strict(),
     prospectTimezone: z.string().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const RecorderSettingsGetInputSchema = z
+  .object({
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const RecorderSettingsSchema = z
+  .object({
+    mode: z.union([
+      z.literal("all"),
+      z.literal("hosted_by_me"),
+      z.literal("external_attendees"),
+      z.literal("dmfaster_booked_only"),
+      z.literal("off"),
+    ]),
+    consent: z.boolean(),
+    consentNoticeVersion: z.string().min(1).max(100),
+    consentNotice: z.string().min(1).max(2000),
+    excludeTitleKeywords: z.array(z.string().max(200)).max(100),
+    excludeDomains: z.array(z.string().max(200)).max(100),
+    excludeEmails: z.array(z.string().max(254)).max(100),
+    minDurationMinutes: z.number().int().min(1).max(240),
+    maxDurationMinutes: z.number().int().min(1).max(240),
+    botName: z.string().min(1).max(60),
+    language: z.union([z.literal("auto"), z.literal("fi"), z.literal("en")]),
+    redactPii: z.boolean(),
+    analyzeNewCalls: z.boolean(),
+    monthlyBotMinutes: z.number().int().min(0).max(100000),
+    monthlyTranscriptionMinutes: z.number().int().min(0).max(100000),
+    ownDomains: z.array(z.string().min(3).max(253)).max(20).optional(),
+    coachingThresholds: z
+      .object({
+        talkRatioBps: z.number().int().min(1).max(10000),
+        monologueMs: z.number().int().min(1000).max(3600000),
+        questionsPer30m: z.number().int().min(0).max(100),
+        interruptionMultiple: z.number().int().min(1).max(20),
+      })
+      .strict()
+      .optional(),
+  })
+  .strict();
+export const RecorderSettingsUpdateInputSchema = z
+  .object({
+    settings: RecorderSettingsSchema,
+    expectedVersion: z.number().int().min(0),
+    dryRun: z.boolean().optional(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const RecorderBotsListInputSchema = z
+  .object({
+    from: ResourceVersionSchema.optional(),
+    to: ResourceVersionSchema.optional(),
+    status: z
+      .union([
+        z.literal("scheduled"),
+        z.literal("joining"),
+        z.literal("in_call"),
+        z.literal("done"),
+        z.literal("failed"),
+        z.literal("cancelled"),
+      ])
+      .optional(),
+    cursor: z.string().max(2000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const CallTranscriptGetInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    cursor: z.string().max(2000).optional(),
+    fromMs: z.number().int().min(0).optional(),
+    toMs: z.number().int().min(0).optional(),
+    speaker: z.string().max(200).optional(),
+    format: z
+      .union([z.literal("compact"), z.literal("segments")])
+      .describe(
+        "Complete timestamped text by default (up to 512 KiB); segments selects paged structured output. Compact text preserves every word.",
+      )
+      .optional(),
+    mode: z.union([z.literal("full"), z.literal("compact")]).optional(),
+    limit: z.number().int().min(1).max(200).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const CallRecordingGetInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const CallTranscriptsGetInputSchema = z
+  .object({
+    meetingIds: z.array(ResourceIdSchema).min(1).max(10),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const CallTranscriptsSearchInputSchema = z
+  .object({
+    query: z.string().min(2).max(200),
+    from: ResourceVersionSchema.optional(),
+    to: ResourceVersionSchema.optional(),
+    companyId: ResourceIdSchema.optional(),
+    speaker: z.string().max(200).optional(),
+    limit: z.number().int().min(1).max(50).optional(),
+    cursor: z.string().max(2000).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const ReadinessCheckInputSchema = z
+  .object({
+    for: z.union([
+      z.literal("reply"),
+      z.literal("book"),
+      z.literal("followups"),
+      z.literal("send:sms"),
+      z.literal("send:gmail"),
+      z.literal("send:instagram"),
+      z.literal("send:facebook"),
+      z.literal("send:linkedin"),
+    ]),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const SenderRetireInputSchema = z
+  .object({
+    workerId: ResourceIdSchema,
+    reason: z.string().min(1).max(1000),
+    expectedUpdatedAt: ResourceVersionSchema,
+    dryRun: z.boolean().optional(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const SenderUnretireInputSchema = z
+  .object({
+    workerId: ResourceIdSchema,
+    reason: z.string().min(1).max(1000),
+    expectedUpdatedAt: ResourceVersionSchema,
+    dryRun: z.boolean().optional(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AttributionCheckInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const CampaignReengagementPrepareInputSchema = z
+  .object({
+    campaignId: ResourceIdSchema,
+    expectedCampaignUpdatedAt: ResourceVersionSchema,
+    name: z.string().min(1).max(120),
+    channel: z.union([
+      z.literal("instagram"),
+      z.literal("facebook"),
+      z.literal("linkedin"),
+      z.literal("gmail"),
+      z.literal("sms"),
+    ]),
+    maxAgeDays: z.number().int().min(1).max(3650).optional(),
+    expectedAudienceFingerprint: z.string().max(64).optional(),
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentsListInputSchema = z
+  .object({
+    limit: z.number().int().min(1).max(100).optional(),
+    afterId: ResourceIdSchema.optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentInspectInputSchema = z
+  .object({
+    agentId: ResourceIdSchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentCreateRequestInputSchema = z
+  .object({
+    name: z.string().min(1).max(100),
+    kind: z.union([
+      z.literal("setter"),
+      z.literal("prospector"),
+      z.literal("analyst"),
+      z.literal("custom"),
+    ]),
+    runtime: z.string().max(200).optional(),
+    scopes: z
+      .array(
+        z.union([
+          z.literal("workspace:read"),
+          z.literal("campaigns:read"),
+          z.literal("sending:read"),
+          z.literal("inbox:read"),
+          z.literal("inbox:write"),
+          z.literal("pipeline:read"),
+          z.literal("pipeline:write"),
+          z.literal("audiences:read"),
+          z.literal("campaigns:write"),
+          z.literal("campaigns:launch"),
+          z.literal("campaigns:control"),
+          z.literal("calendar:read"),
+          z.literal("calendar:write"),
+          z.literal("calls:read"),
+          z.literal("events:read"),
+          z.literal("leads:read"),
+          z.literal("leads:write"),
+          z.literal("sending:test"),
+          z.literal("suppressions:write"),
+          z.literal("sandbox:write"),
+          z.literal("calls:write"),
+          z.literal("webhooks:write"),
+          z.literal("policy:write"),
+          z.literal("calls:transcripts:read"),
+          z.literal("calls:media:read"),
+          z.literal("calls:record"),
+          z.literal("sending:write"),
+          z.literal("calls:stats:read"),
+        ]),
+      )
+      .min(1)
+      .max(29),
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentPauseInputSchema = z
+  .object({
+    agentId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentResumeInputSchema = z
+  .object({
+    agentId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentCredentialRotateInputSchema = z
+  .object({
+    agentId: ResourceIdSchema,
+    expectedUpdatedAt: ResourceVersionSchema,
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    graceDays: z.number().int().min(0).max(30).optional(),
+    expiresInDays: z.number().int().min(30).max(365).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const EventConsumersListInputSchema = z
+  .object({
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const EventConsumersCreateInputSchema = z
+  .object({
+    name: z.string().min(1).max(100),
+    startAt: z.union([z.literal("head"), z.literal("retention_floor")]).optional(),
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const EventsAckInputSchema = z
+  .object({
+    consumerId: ResourceIdSchema,
+    throughSequence: z.number().int().min(0).max(9007199254740991),
+    expectedVersion: z.number().int().min(1),
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const EventsSnapshotInputSchema = z
+  .object({
+    after: z.string().max(1000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WebhookDeliveriesListInputSchema = z
+  .object({
+    webhookId: ResourceIdSchema,
+    status: z
+      .union([z.literal("pending"), z.literal("delivered"), z.literal("failed"), z.literal("dead")])
+      .optional(),
+    cursor: z.string().max(1000).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WebhooksDlqReplayInputSchema = z
+  .object({
+    webhookId: ResourceIdSchema,
+    deliveryIds: z.array(ResourceIdSchema).min(1).max(100).optional(),
+    since: z.string().max(40).optional(),
+    expectedUpdatedAt: ResourceVersionSchema,
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const ClassificationFeedbackInputSchema = z
+  .object({
+    messageId: ResourceIdSchema.optional(),
+    conversationId: ResourceIdSchema.optional(),
+    correctIntent: z.union([
+      z.literal("meeting_intent"),
+      z.literal("meeting_proposed_time"),
+      z.literal("asks_pricing"),
+      z.literal("information_requested"),
+      z.literal("not_now"),
+      z.literal("not_interested"),
+      z.literal("wrong_person"),
+      z.literal("opt_out"),
+      z.literal("interested"),
+      z.literal("acknowledgement"),
+      z.literal("unclear"),
+    ]),
+    correctMessageType: z
+      .union([
+        z.literal("text"),
+        z.literal("reaction"),
+        z.literal("system_event"),
+        z.literal("attachment"),
+        z.literal("auto_reply"),
+      ])
+      .optional(),
+    note: z.string().min(1).max(1000),
+    expectedUpdatedAt: ResourceVersionSchema,
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const ClassificationQualityInputSchema = z
+  .object({
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const ClassificationBackfillPlanInputSchema = z
+  .object({
+    afterId: ResourceIdSchema.optional(),
+    limit: z.number().int().min(1).max(500).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WorkQueueListInputSchema = z
+  .object({
+    types: z.array(z.string().max(60)).max(16).optional(),
+    minPriority: z.number().int().min(0).max(100).optional(),
+    campaignIds: z.array(ResourceIdSchema).max(100).optional(),
+    assignee: z.union([z.literal("me"), z.literal("unassigned"), z.literal("any")]).optional(),
+    view: z.union([z.literal("compact"), z.literal("standard")]).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    cursor: z.string().max(1000).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WorkItemClaimInputSchema = z
+  .object({
+    id: ResourceIdSchema,
+    expectedVersion: z.string().min(1).max(100),
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    leaseSeconds: z.number().int().min(1).max(3600).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WorkItemReleaseInputSchema = z
+  .object({
+    id: ResourceIdSchema,
+    expectedVersion: z.string().min(1).max(100),
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WorkItemSnoozeInputSchema = z
+  .object({
+    id: ResourceIdSchema,
+    expectedVersion: z.string().min(1).max(100),
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    until: z.string().min(1).max(40),
+    reason: z.string().min(1).max(500),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WorkItemCompleteInputSchema = z
+  .object({
+    id: ResourceIdSchema,
+    expectedVersion: z.string().min(1).max(100),
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    outcome: z.string().min(1).max(500),
+    receiptIds: z.array(ResourceIdSchema).max(20).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WorkQueueConfigGetInputSchema = z
+  .object({
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WorkQueueConfigUpdateInputSchema = z
+  .object({
+    expectedVersion: z.number().int().min(0),
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    settings: z
+      .object({
+        stalePositiveDays: z.number().int().min(1).max(90).optional(),
+        slaBusinessHours: z.number().int().min(1).max(168).optional(),
+        businessStartHour: z.number().int().min(0).max(23).optional(),
+        businessEndHour: z.number().int().min(1).max(24).optional(),
+        ageWeight: z.number().min(0).max(10).optional(),
+        campaignWeights: z
+          .array(
+            z
+              .object({ campaignId: ResourceIdSchema, weight: z.number().min(-20).max(20) })
+              .strict(),
+          )
+          .max(100)
+          .optional(),
+      })
+      .strict(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const MetricsReconcileInputSchema = z
+  .object({
+    scope: z.union([z.literal("workspace"), z.literal("campaign"), z.literal("range")]).optional(),
+    campaign: ResourceIdSchema.optional(),
+    from: ResourceVersionSchema.optional(),
+    to: ResourceVersionSchema.optional(),
+    timezone: z.string().max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentHeartbeatInputSchema = z
+  .object({
+    responseMode: z
+      .union([z.literal("compact"), z.literal("full")])
+      .describe(
+        "Defaults to compact. Success acknowledgement is at most 300 bytes including the MCP result. Full retains the standard diagnostic envelope. Failures retain actionable errors.",
+      )
+      .optional(),
+    agentId: ResourceIdSchema,
+    status: z.union([z.literal("idle"), z.literal("working"), z.literal("degraded")]),
+    consumerLagSeq: z.number().int().min(0).max(9007199254740991).optional(),
+    note: z.string().max(500).optional(),
+    dryRun: z.boolean().optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentRunStartInputSchema = z
+  .object({
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    trigger: z.union([z.literal("schedule"), z.literal("webhook"), z.literal("manual")]),
+    triggerRef: z.string().max(500).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentRunEndInputSchema = z
+  .object({
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: ResourceIdSchema,
+    summary: z.string().max(2000),
+    outcome: z.union([z.literal("completed"), z.literal("failed"), z.literal("cancelled")]),
+  })
+  .strict();
+export const AgentRunsListInputSchema = z
+  .object({
+    agentId: ResourceIdSchema.optional(),
+    before: ResourceIdSchema.optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentRunInspectInputSchema = z
+  .object({
+    runId: ResourceIdSchema,
+    afterSeq: z.number().int().min(0).max(9007199254740991).optional(),
+    limit: z.number().int().min(1).max(200).optional(),
+  })
+  .strict();
+export const WorkspaceHaltInputSchema = z
+  .object({
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    expectedVersion: z.number().int().min(0),
+    haltEverything: z.boolean().optional(),
+    reason: z.string().min(1).max(500),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WorkspaceResumeInputSchema = z
+  .object({
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    expectedVersion: z.number().int().min(0),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const ChannelHaltInputSchema = z
+  .object({
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    expectedVersion: z.number().int().min(0),
+    channel: z.union([
+      z.literal("instagram"),
+      z.literal("facebook"),
+      z.literal("linkedin"),
+      z.literal("gmail"),
+      z.literal("sms"),
+    ]),
+    halted: z.boolean(),
+    reason: z.string().min(1).max(500),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const WorkspaceAutomationInspectInputSchema = z
+  .object({
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentFeedbackSubmitInputSchema = z
+  .object({
+    category: z.union([
+      z.literal("bug"),
+      z.literal("missing_capability"),
+      z.literal("confusing_behavior"),
+      z.literal("performance"),
+      z.literal("improvement"),
+    ]),
+    summary: z
+      .string()
+      .trim()
+      .min(1)
+      .max(240)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("One concrete problem or improvement."),
+    task: z
+      .string()
+      .trim()
+      .min(1)
+      .max(1000)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("The task being attempted, without customer data.")
+      .optional(),
+    observed: z
+      .string()
+      .trim()
+      .min(1)
+      .max(2000)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("What actually happened; omit private transcripts and raw tool payloads.")
+      .optional(),
+    expected: z
+      .string()
+      .trim()
+      .min(1)
+      .max(2000)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("What should happen instead.")
+      .optional(),
+    suggestion: z
+      .string()
+      .trim()
+      .min(1)
+      .max(2000)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("Optional proposed improvement; distinguish speculation from observed behavior.")
+      .optional(),
+    toolName: z
+      .string()
+      .trim()
+      .min(1)
+      .max(120)
+      .regex(new RegExp(".*\\S.*"))
+      .describe(
+        "Affected MCP or API tool name, if known. Unknown names are allowed for missing tools.",
+      )
+      .optional(),
+    requestId: z
+      .string()
+      .trim()
+      .min(1)
+      .max(128)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("Optional request reference already returned by DM Faster; do not invent one.")
+      .optional(),
+    impact: z.union([z.literal("blocked"), z.literal("workaround"), z.literal("minor")]).optional(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const AgentFeedbackListInputSchema = z
+  .object({
+    limit: z.number().int().min(1).max(25).optional(),
+    before: z
+      .string()
+      .trim()
+      .min(1)
+      .max(100)
+      .regex(new RegExp(".*\\S.*"))
+      .describe("Use nextCursor from the previous page, unchanged.")
+      .optional(),
+    runId: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe("Optional run correlation. Also accepted as X-DMFaster-Run-Id.")
+      .optional(),
+  })
+  .strict();
+export const EntityResolveInputSchema = z
+  .object({
+    identity: z
+      .object({
+        type: z.union([
+          z.literal("phone"),
+          z.literal("email"),
+          z.literal("instagram"),
+          z.literal("facebook"),
+          z.literal("linkedin"),
+          z.literal("website_form"),
+          z.literal("domain"),
+          z.literal("business_id"),
+          z.literal("company_outreach"),
+        ]),
+        value: z.string().min(1).max(500),
+      })
+      .strict()
+      .optional(),
+    conversationId: ResourceIdSchema.optional(),
+    meetingId: ResourceIdSchema.optional(),
+    runId: ResourceIdSchema.optional(),
+  })
+  .strict();
+export const EntitiesGetInputSchema = z
+  .object({ ids: z.array(ResourceIdSchema).min(1).max(100), runId: ResourceIdSchema.optional() })
+  .strict();
+export const PeopleUpsertInputSchema = z
+  .object({
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: ResourceIdSchema.optional(),
+    matchingIdentity: z
+      .object({
+        type: z.union([
+          z.literal("phone"),
+          z.literal("email"),
+          z.literal("instagram"),
+          z.literal("facebook"),
+          z.literal("linkedin"),
+          z.literal("website_form"),
+          z.literal("domain"),
+          z.literal("business_id"),
+          z.literal("company_outreach"),
+        ]),
+        value: z.string().min(1).max(500),
+      })
+      .strict(),
+    name: z.string().min(1).max(200),
+    identities: z
+      .array(
+        z
+          .object({
+            type: z.union([
+              z.literal("phone"),
+              z.literal("email"),
+              z.literal("instagram"),
+              z.literal("facebook"),
+              z.literal("linkedin"),
+              z.literal("website_form"),
+              z.literal("domain"),
+              z.literal("business_id"),
+              z.literal("company_outreach"),
+            ]),
+            value: z.string().min(1).max(500),
+          })
+          .strict(),
+      )
+      .max(49)
+      .optional(),
+    companyId: ResourceIdSchema.optional(),
+    role: z.string().max(200).optional(),
+    country: z.string().regex(new RegExp("^[A-Z]{2}$")).optional(),
+    timezone: z.string().max(80).optional(),
+    nameVariants: z.array(z.string().min(1).max(200)).max(20).optional(),
+    source: z.string().min(1).max(120),
+    expectedVersion: z.number().int().min(0),
+  })
+  .strict();
+export const CompaniesUpsertInputSchema = z
+  .object({
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: ResourceIdSchema.optional(),
+    matchingIdentity: z
+      .object({
+        type: z.union([
+          z.literal("phone"),
+          z.literal("email"),
+          z.literal("instagram"),
+          z.literal("facebook"),
+          z.literal("linkedin"),
+          z.literal("website_form"),
+          z.literal("domain"),
+          z.literal("business_id"),
+          z.literal("company_outreach"),
+        ]),
+        value: z.string().min(1).max(500),
+      })
+      .strict(),
+    name: z.string().min(1).max(200),
+    identities: z
+      .array(
+        z
+          .object({
+            type: z.union([
+              z.literal("phone"),
+              z.literal("email"),
+              z.literal("instagram"),
+              z.literal("facebook"),
+              z.literal("linkedin"),
+              z.literal("website_form"),
+              z.literal("domain"),
+              z.literal("business_id"),
+              z.literal("company_outreach"),
+            ]),
+            value: z.string().min(1).max(500),
+          })
+          .strict(),
+      )
+      .max(49)
+      .optional(),
+    companyId: ResourceIdSchema.optional(),
+    role: z.string().max(200).optional(),
+    country: z.string().regex(new RegExp("^[A-Z]{2}$")).optional(),
+    timezone: z.string().max(80).optional(),
+    nameVariants: z.array(z.string().min(1).max(200)).max(20).optional(),
+    source: z.string().min(1).max(120),
+    expectedVersion: z.number().int().min(0),
+  })
+  .strict();
+export const EntityMergeInputSchema = z
+  .object({
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: ResourceIdSchema.optional(),
+    sourceId: ResourceIdSchema,
+    targetId: ResourceIdSchema,
+    sourceVersion: z.number().int().min(0),
+    targetVersion: z.number().int().min(0),
+  })
+  .strict();
+export const EntitySplitInputSchema = z
+  .object({
+    dryRun: z.boolean(),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: ResourceIdSchema.optional(),
+    changeId: ResourceIdSchema,
+    sourceVersion: z.number().int().min(0),
+    targetVersion: z.number().int().min(0),
+  })
+  .strict();
+export const BudgetStatusInputSchema = z
+  .object({ agentId: ResourceIdSchema.optional(), runId: ResourceIdSchema.optional() })
+  .strict();
+export const CallStatsGetInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema.optional(),
+    meetingIds: z.array(ResourceIdSchema).min(1).max(50).optional(),
+    includeSpeakers: z.boolean().optional(),
+  })
+  .strict();
+export const CallCoachingGetInputSchema = z.object({ meetingId: ResourceIdSchema }).strict();
+export const CallAnalyticsQueryInputSchema = z
+  .object({
+    from: z.string().min(20).max(40),
+    to: z.string().min(20).max(40),
+    groupBy: z.union([
+      z.literal("rep"),
+      z.literal("agent"),
+      z.literal("outcome"),
+      z.literal("campaign"),
+      z.literal("week"),
+      z.literal("month"),
+      z.literal("meetingSource"),
+      z.literal("language"),
+    ]),
+    metrics: z
+      .array(
+        z.union([
+          z.literal("talkRatioTeam"),
+          z.literal("longestMonologueTeam"),
+          z.literal("questionsByTeam"),
+          z.literal("questionsByExternal"),
+          z.literal("interruptionsByTeam"),
+          z.literal("durationMs"),
+          z.literal("silenceShare"),
+          z.literal("callsRecorded"),
+          z.literal("callsWithStats"),
+          z.literal("heldRate"),
+        ]),
+      )
+      .min(1)
+      .max(10),
+    filters: z
+      .object({
+        repUserId: ResourceIdSchema.optional(),
+        agentId: ResourceIdSchema.optional(),
+        campaignId: ResourceIdSchema.optional(),
+        outcome: z.string().max(40).optional(),
+        minCoverageBps: z.number().int().min(0).max(10000).optional(),
+      })
+      .strict()
+      .optional(),
+    cursor: z.string().max(2000).optional(),
+  })
+  .strict();
+export const CallInsightGetInputSchema = z
+  .object({ meetingId: ResourceIdSchema, runId: z.string().max(100).optional() })
+  .strict();
+export const CallAccessListInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    cursor: z.string().max(1500).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    runId: z.string().max(100).optional(),
+  })
+  .strict();
+export const CallAuditListInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    cursor: z.string().max(1500).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    runId: z.string().max(100).optional(),
+  })
+  .strict();
+export const CallActivityGetInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    cursor: z.string().max(1500).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    runId: z.string().max(100).optional(),
+  })
+  .strict();
+export const CallAnalysisGetInputSchema = z
+  .object({ meetingId: ResourceIdSchema, runId: z.string().max(100).optional() })
+  .strict();
+export const CallOutcomeConfirmInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    outcome: z.union([
+      z.literal("meeting_held"),
+      z.literal("no_show"),
+      z.literal("won"),
+      z.literal("lost"),
+      z.literal("follow_up"),
+      z.literal("rescheduled"),
+    ]),
+    lostReason: z.string().max(500).optional(),
+    notes: z.string().max(2000).optional(),
+    fromAnalysisVersion: z.string().regex(new RegExp("^[a-f0-9]{64}$")),
+    expectedVersion: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    dryRun: z.boolean().optional(),
+    runId: z.string().max(100).optional(),
+  })
+  .strict();
+export const CallAttendanceGetInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    cursor: z.string().max(1500).optional(),
+    limit: z.number().int().min(1).max(100).optional(),
+    runId: z.string().max(100).optional(),
+  })
+  .strict();
+export const CallInsightReviewInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    insightId: ResourceIdSchema,
+    action: z.union([z.literal("approve"), z.literal("reject")]),
+    selectedSections: z
+      .array(
+        z.union([
+          z.literal("summary"),
+          z.literal("painPoints"),
+          z.literal("objections"),
+          z.literal("decisionProcess"),
+          z.literal("commitments"),
+          z.literal("nextSteps"),
+          z.literal("crmNoteDraft"),
+        ]),
+      )
+      .min(1)
+      .max(7)
+      .optional(),
+    feedback: z.string().max(2000).optional(),
+    expectedVersion: ResourceVersionSchema,
+    idempotencyKey: z.string().min(1).max(120),
+    dryRun: z.boolean().optional(),
+    runId: z.string().max(100).optional(),
+  })
+  .strict();
+export const RecorderEventOverrideGetInputSchema = z
+  .object({
+    calendarId: ResourceIdSchema,
+    eventId: ResourceIdSchema,
+    allInstances: z.boolean().optional(),
+  })
+  .strict();
+export const RecorderEventOverrideUpdateInputSchema = z
+  .object({
+    calendarId: ResourceIdSchema,
+    eventId: ResourceIdSchema,
+    allInstances: z.boolean().optional(),
+    record: z.union([z.literal("on"), z.literal("off")]),
+    expectedVersion: z.number().int().min(0),
+    idempotencyKey: IdempotencyKeySchema,
+    dryRun: z.boolean().optional(),
+    runId: z.string().max(100).optional(),
+  })
+  .strict();
+export const CallBotCancelInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema.optional(),
+    botId: ResourceIdSchema.optional(),
+    expectedVersion: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    dryRun: z.boolean().optional(),
+    runId: z.string().max(100).optional(),
+  })
+  .strict();
+export const CallBotRemoveInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema.optional(),
+    botId: ResourceIdSchema.optional(),
+    expectedVersion: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    dryRun: z.boolean().optional(),
+    runId: z.string().max(100).optional(),
+  })
+  .strict();
+export const CallRecordingStopInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema.optional(),
+    botId: ResourceIdSchema.optional(),
+    expectedVersion: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    dryRun: z.boolean().optional(),
+    runId: z.string().max(100).optional(),
+  })
+  .strict();
+export const RecorderStatusInputSchema = z
+  .object({
+    timezone: z.string().min(1).max(100).optional(),
+    upcomingLimit: z.number().int().min(1).max(50).optional(),
+  })
+  .strict();
+export const CallBotJoinInputSchema = z
+  .object({
+    meetingUrl: z.string().min(1).max(8000),
+    title: z.string().max(500).optional(),
+    joinAt: ResourceVersionSchema.optional(),
+    durationMinutes: z.number().int().min(1).max(240).optional(),
+    language: z.union([z.literal("auto"), z.literal("fi"), z.literal("en")]).optional(),
+    idempotencyKey: IdempotencyKeySchema,
+    dryRun: z.boolean().optional(),
+    runId: z.string().max(100).optional(),
+  })
+  .strict();
+export const RecorderJoinGetInputSchema = z.object({ requestId: ResourceIdSchema }).strict();
+export const CallParticipantWithdrawalReportInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    speakerId: ResourceIdSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    dryRun: z.boolean().optional(),
+    runId: z.string().max(100).optional(),
+    transcriptVersion: z.number().int().min(1),
+    expectedVersion: ResourceVersionSchema,
+  })
+  .strict();
+export const CallDeleteInputSchema = z
+  .object({
+    meetingId: ResourceIdSchema,
+    scope: z.union([
+      z.literal("media"),
+      z.literal("transcript"),
+      z.literal("analysis"),
+      z.literal("all"),
+    ]),
+    expectedVersion: ResourceVersionSchema,
+    idempotencyKey: IdempotencyKeySchema,
+    dryRun: z.boolean().optional(),
+    runId: z.string().max(100).optional(),
   })
   .strict();
 export const AGENT_INPUT_SCHEMAS = {
-  "feedback.submit": AgentFeedbackSubmitInputSchema,
-  "feedback.list": AgentFeedbackListInputSchema,
   "analytics.summary": AnalyticsSummaryInputSchema,
   "workspace.briefing": WorkspaceBriefingInputSchema,
   "campaigns.list": CampaignsListInputSchema,
@@ -2554,4 +4680,78 @@ export const AGENT_INPUT_SCHEMAS = {
   "calendar.meeting.cancel": CalendarMeetingCancelInputSchema,
   "campaign.followups.configure": CampaignFollowupsConfigureInputSchema,
   "campaign.variants.configure": CampaignVariantsConfigureInputSchema,
+  "recorder.settings.get": RecorderSettingsGetInputSchema,
+  "recorder.settings.update": RecorderSettingsUpdateInputSchema,
+  "recorder.bots.list": RecorderBotsListInputSchema,
+  "call.transcript.get": CallTranscriptGetInputSchema,
+  "call.recording.get": CallRecordingGetInputSchema,
+  "call.transcripts.get": CallTranscriptsGetInputSchema,
+  "call.transcripts.search": CallTranscriptsSearchInputSchema,
+  "readiness.check": ReadinessCheckInputSchema,
+  "sender.retire": SenderRetireInputSchema,
+  "sender.unretire": SenderUnretireInputSchema,
+  "attribution.check": AttributionCheckInputSchema,
+  "campaign.reengagement.prepare": CampaignReengagementPrepareInputSchema,
+  "agents.list": AgentsListInputSchema,
+  "agent.inspect": AgentInspectInputSchema,
+  "agent.create.request": AgentCreateRequestInputSchema,
+  "agent.pause": AgentPauseInputSchema,
+  "agent.resume": AgentResumeInputSchema,
+  "agent.credential.rotate": AgentCredentialRotateInputSchema,
+  "event_consumers.list": EventConsumersListInputSchema,
+  "event_consumers.create": EventConsumersCreateInputSchema,
+  "events.ack": EventsAckInputSchema,
+  "events.snapshot": EventsSnapshotInputSchema,
+  "webhook.deliveries.list": WebhookDeliveriesListInputSchema,
+  "webhooks.dlq.replay": WebhooksDlqReplayInputSchema,
+  "classification.feedback": ClassificationFeedbackInputSchema,
+  "classification.quality": ClassificationQualityInputSchema,
+  "classification.backfill.plan": ClassificationBackfillPlanInputSchema,
+  "work_queue.list": WorkQueueListInputSchema,
+  "work_item.claim": WorkItemClaimInputSchema,
+  "work_item.release": WorkItemReleaseInputSchema,
+  "work_item.snooze": WorkItemSnoozeInputSchema,
+  "work_item.complete": WorkItemCompleteInputSchema,
+  "work_queue.config.get": WorkQueueConfigGetInputSchema,
+  "work_queue.config.update": WorkQueueConfigUpdateInputSchema,
+  "metrics.reconcile": MetricsReconcileInputSchema,
+  "agent.heartbeat": AgentHeartbeatInputSchema,
+  "agent.run.start": AgentRunStartInputSchema,
+  "agent.run.end": AgentRunEndInputSchema,
+  "agent.runs.list": AgentRunsListInputSchema,
+  "agent.run.inspect": AgentRunInspectInputSchema,
+  "workspace.halt": WorkspaceHaltInputSchema,
+  "workspace.resume": WorkspaceResumeInputSchema,
+  "channel.halt": ChannelHaltInputSchema,
+  "workspace.automation.inspect": WorkspaceAutomationInspectInputSchema,
+  "feedback.submit": AgentFeedbackSubmitInputSchema,
+  "feedback.list": AgentFeedbackListInputSchema,
+  "entity.resolve": EntityResolveInputSchema,
+  "entities.get": EntitiesGetInputSchema,
+  "people.upsert": PeopleUpsertInputSchema,
+  "companies.upsert": CompaniesUpsertInputSchema,
+  "entity.merge": EntityMergeInputSchema,
+  "entity.split": EntitySplitInputSchema,
+  "budget.status": BudgetStatusInputSchema,
+  "call.stats.get": CallStatsGetInputSchema,
+  "call.coaching.get": CallCoachingGetInputSchema,
+  "call.analytics.query": CallAnalyticsQueryInputSchema,
+  "call.insight.get": CallInsightGetInputSchema,
+  "call.access.list": CallAccessListInputSchema,
+  "call.audit.list": CallAuditListInputSchema,
+  "call.activity.get": CallActivityGetInputSchema,
+  "call.analysis.get": CallAnalysisGetInputSchema,
+  "call.outcome.confirm": CallOutcomeConfirmInputSchema,
+  "call.attendance.get": CallAttendanceGetInputSchema,
+  "call.insight.review": CallInsightReviewInputSchema,
+  "recorder.event.override.get": RecorderEventOverrideGetInputSchema,
+  "recorder.event.override.update": RecorderEventOverrideUpdateInputSchema,
+  "call.bot.cancel": CallBotCancelInputSchema,
+  "call.bot.remove": CallBotRemoveInputSchema,
+  "call.recording.stop": CallRecordingStopInputSchema,
+  "recorder.status": RecorderStatusInputSchema,
+  "call.bot.join": CallBotJoinInputSchema,
+  "recorder.join.get": RecorderJoinGetInputSchema,
+  "call.participant.withdrawal.report": CallParticipantWithdrawalReportInputSchema,
+  "call.delete": CallDeleteInputSchema,
 } as const;

@@ -22,7 +22,7 @@ to perform an action. It has no domain HTTP or CLI operation.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@2.3.0
+npx --yes @dmfaster/cli@2.4.0
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,

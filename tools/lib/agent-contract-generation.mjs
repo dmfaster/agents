@@ -26,6 +26,8 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     "minimum",
     "maximum",
     "minProperties",
+    "maxProperties",
+    "propertyNames",
     "minItems",
     "maxItems",
     "x-dmfaster-trim",
@@ -82,6 +84,16 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     )
       throw Error("minProperties requires an object and a nonnegative integer");
     if (
+      schema.maxProperties !== undefined &&
+      (schema.type !== "object" ||
+        !Number.isInteger(schema.maxProperties) ||
+        schema.maxProperties < 0 ||
+        schema.maxProperties > 100)
+    )
+      throw Error("maxProperties requires an object and a bounded nonnegative integer");
+    if (schema.propertyNames !== undefined && schema.type !== "object")
+      throw Error("propertyNames requires an object");
+    if (
       schema["x-dmfaster-trim"] !== undefined &&
       (schema.type !== "string" || schema["x-dmfaster-trim"] !== true)
     )
@@ -122,11 +134,33 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
       );
       if ((schema.required || []).some((key) => !Object.hasOwn(schema.properties || {}, key)))
         throw Error("Required property has no schema");
-      if (schema.additionalProperties !== false)
-        throw Error("Public input objects must reject unknown properties");
-      result = `z.object({${properties.join(",")}}).strict()`;
+      if (schema.additionalProperties !== false) {
+        if (
+          !schema.additionalProperties ||
+          typeof schema.additionalProperties !== "object" ||
+          properties.length ||
+          schema.required?.length ||
+          schema.maxProperties === undefined ||
+          schema.additionalProperties.type !== "string" ||
+          !Number.isInteger(schema.additionalProperties.maxLength) ||
+          schema.additionalProperties.maxLength < 1 ||
+          schema.additionalProperties.maxLength > 2048 ||
+          schema.propertyNames?.type !== "string" ||
+          !schema.propertyNames.pattern ||
+          !schema.propertyNames.maxLength
+        )
+          throw Error(
+            "Public input maps require bounded property names, values and property count",
+          );
+        result = `z.record(${compile(schema.propertyNames)},${compile(schema.additionalProperties)})`;
+      } else {
+        if (schema.propertyNames) throw Error("propertyNames is only supported for bounded maps");
+        result = `z.object({${properties.join(",")}}).strict()`;
+      }
       if (schema.minProperties !== undefined)
         result += `.refine((value) => Object.keys(value).length >= ${schema.minProperties}, "Provide at least ${schema.minProperties} properties")`;
+      if (schema.maxProperties !== undefined)
+        result += `.refine((value) => Object.keys(value).length <= ${schema.maxProperties}, "Provide at most ${schema.maxProperties} properties")`;
     } else if (schema.type === "string") {
       result = "z.string()";
       if (schema["x-dmfaster-trim"]) result += ".trim()";
@@ -239,7 +273,31 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
 
     if (
       mcp.annotations.readOnlyHint !== (effect === "read") ||
-      (effect !== "read" && !owner) ||
+      (effect !== "read" &&
+        !owner &&
+        !(
+          ["recorder.settings.update", "recorder.event.override.update", "call.bot.join"].includes(name) &&
+          effect === "write" &&
+          operation["x-dmfaster-write-boundary"] === "authenticated_user" &&
+          operation["x-dmfaster-required-scopes"]?.includes("calls:record")
+        ) &&
+        !(
+          (["call.bot.cancel", "call.bot.remove", "call.recording.stop"].includes(name) &&
+            effect === "write" &&
+            operation["x-dmfaster-write-boundary"] === "call_control_recording" &&
+            operation["x-dmfaster-required-scopes"]?.includes("calls:record")) ||
+          (name === "call.delete" && effect === "write" && operation["x-dmfaster-write-boundary"] === "call_delete" && operation["x-dmfaster-required-scopes"]?.includes("calls:write")) ||
+          (name === "call.participant.withdrawal.report" &&
+            effect === "write" &&
+            operation["x-dmfaster-write-boundary"] === "call_participant_withdrawal" &&
+            operation["x-dmfaster-required-scopes"]?.includes("calls:record") &&
+            operation["x-dmfaster-required-scopes"]?.includes("calls:transcripts:read")) ||
+          (name === "call.insight.review" &&
+            effect === "write" &&
+            operation["x-dmfaster-write-boundary"] === "call_approve_insight" &&
+            operation["x-dmfaster-required-scopes"]?.includes("calls:write") &&
+            operation["x-dmfaster-required-scopes"]?.includes("calls:transcripts:read"))
+        )) ||
       (effect === "external" && approval !== "human_confirmation")
     )
       throw Error(`Unsafe metadata: ${name}`);

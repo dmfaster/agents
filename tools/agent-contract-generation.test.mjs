@@ -109,3 +109,53 @@ test("object minimum properties are enforced and invalid constraints fail genera
     assert.throws(() => compileAgentContract(d));
   }
 });
+
+test("webhook headers permit only bounded string maps and reject unconstrained dictionaries", () => {
+  const generated = compileAgentContract(contract()).get(
+    "packages/mcp-server/src/generated/input-schemas.ts",
+  );
+  assert.match(generated, /z\.record\(/);
+  for (const mutate of [
+    (s) => delete s.maxProperties,
+    (s) => (s.maxProperties = 101),
+    (s) => delete s.propertyNames,
+    (s) => (s.additionalProperties = true),
+    (s) => (s.additionalProperties = { type: "object", additionalProperties: true }),
+    (s) => delete s.additionalProperties.maxLength,
+  ]) {
+    const d = contract();
+    mutate(d.components.schemas.WebhookHeaders);
+    assert.throws(() => compileAgentContract(d));
+  }
+});
+
+test("non-owner insight review is restricted to the explicit call capability and both scopes", () => {
+  for (const mutate of [
+    op => delete op["x-dmfaster-write-boundary"],
+    op => op["x-dmfaster-write-boundary"] = "authenticated_user",
+    op => op["x-dmfaster-required-scopes"] = ["calls:write"],
+    op => op["x-dmfaster-required-scopes"] = ["calls:transcripts:read"],
+  ]) {
+    const d = contract();
+    mutate(d.paths["/api/v1/agent/tools/call.insight.review"].post);
+    assert.throws(() => compileAgentContract(d), /Unsafe metadata/);
+  }
+});
+
+
+test("manual withdrawal requires call control boundary and both scopes", () => {
+  for (const mutate of [
+    op => delete op["x-dmfaster-write-boundary"],
+    op => op["x-dmfaster-required-scopes"] = ["calls:record"],
+    op => op["x-dmfaster-required-scopes"] = ["calls:transcripts:read"],
+  ]) {
+    const d = contract();
+    mutate(d.paths["/api/v1/agent/tools/call.participant.withdrawal.report"].post);
+    assert.throws(() => compileAgentContract(d), /Unsafe metadata/);
+  }
+});
+
+test("non-owner call deletion requires explicit delete capability boundary", () => {
+  const d=contract();delete d.paths["/api/v1/agent/tools/call.delete"].post["x-dmfaster-write-boundary"];
+  assert.throws(()=>compileAgentContract(d),/Unsafe metadata/);
+});

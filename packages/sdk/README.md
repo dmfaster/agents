@@ -10,7 +10,7 @@ scoped, workspace-bound `dmf_pat_…` token.
 > authorized source checkout.
 
 ```bash
-npm install @dmfaster/sdk@2.3.0
+npm install @dmfaster/sdk@2.4.0
 ```
 
 Non-loopback endpoints must use HTTPS. The client also refuses HTTP redirects so
@@ -163,3 +163,7 @@ returning data. The new typed tools also cover status/history/cancellation,
 ranked cohorts, copy performance, calendar observations/bookings and permitted
 call reads. External bookings require exact user instructions and granted scopes;
 SDK availability does not establish a production release.
+
+### Heartbeat acknowledgements
+
+`agent.heartbeat` uses a compact success response by default. HTTP and MCP carry the accepted heartbeat timestamp, compatibility marker and next interval; identity, status and dry-run state are already in the request. The SDK restores these request-correlated fields in its conventional result envelope (diagnostic duration is unavailable and represented as zero). Use `responseMode: "full"` for the original diagnostic envelope. Errors retain their full actionable details. Sandbox acknowledgements use the workspace's advanceable clock.
