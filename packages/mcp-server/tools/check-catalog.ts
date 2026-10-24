@@ -8,7 +8,11 @@ export async function measureAgentCatalog() {
   for (const scenario of [
     { catalogProfile: "compact" },
     { catalogProfile: "full" },
-    { catalogProfile: "compact", grantedScopes: [] },
+    {
+      catalogProfile: "compact",
+      grantedScopes: [] as string[],
+      hostedAuth: { grantedScopes: [], resourceMetadataUrl: "https://example.test/oauth/resource" },
+    },
   ] as const) {
     const { catalogProfile } = scenario;
     const input = new PassThrough(),
@@ -17,14 +21,7 @@ export async function measureAgentCatalog() {
     const iterator = lines[Symbol.asyncIterator]();
     const server = createDmfasterMcpCore({
       catalogProfile,
-      ...("grantedScopes" in scenario
-        ? {
-            hostedAuth: {
-              grantedScopes: scenario.grantedScopes,
-              resourceMetadataUrl: "https://example.test/oauth/resource",
-            },
-          }
-        : {}),
+      ...("hostedAuth" in scenario ? { hostedAuth: scenario.hostedAuth } : {}),
       client: {
         async invoke() {
           throw Error("Catalog inspection must not invoke a provider");
@@ -75,6 +72,44 @@ export async function measureAgentCatalog() {
         descriptions.every((d: string) => d.length <= 300),
         "Tool descriptions <=300 chars",
       );
+      if (catalogProfile === "compact" && !("grantedScopes" in scenario)) {
+        for (const [index, name] of [
+          "companies_search",
+          "audience_preview",
+          "prospecting_preview",
+        ].entries()) {
+          assert.ok(
+            result.tools.some((t: { name: string }) => t.name === name),
+            `${name} must be directly callable`,
+          );
+          input.write(
+            JSON.stringify({
+              jsonrpc: "2.0",
+              id: 10 + index,
+              method: "tools/call",
+              params: {
+                name,
+                arguments: {},
+                _meta: {
+                  "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+                  "io.modelcontextprotocol/clientInfo": { name: "catalog-check", version: "2.6.1" },
+                  "io.modelcontextprotocol/clientCapabilities": {},
+                },
+              },
+            }) + "\n",
+          );
+          let call = await iterator.next();
+          while (!call.done && JSON.parse(call.value!).id !== 10 + index)
+            call = await iterator.next();
+          assert.equal(call.done, false);
+          assert.doesNotMatch(call.value!, /tool.*not found|unknown tool/i);
+          const response = JSON.parse(call.value!);
+          assert.ok(
+            response.result?.isError || response.error,
+            "An invalid input or fake provider must be refused, never dispatched externally",
+          );
+        }
+      }
       if ("grantedScopes" in scenario)
         assert.deepEqual(result.tools.map((t: { name: string }) => t.name).sort(), [
           "connection_status",

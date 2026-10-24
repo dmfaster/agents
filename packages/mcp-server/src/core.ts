@@ -150,11 +150,9 @@ function registerWithMcpServer(
     },
     async (input, context) => {
       try {
-        const result = toolResult(
-          await definition.call(input, { signal: context.mcpReq.signal }),
-          domainName,
-          input,
-        );
+        const response = await definition.call(input, { signal: context.mcpReq.signal });
+        definition.outputSchema.parse(response);
+        const result = toolResult(response, domainName, input);
         const compactHeartbeat = domainName === "agent.heartbeat" && result.content.length === 0;
         const metadata = compactHeartbeat ? undefined : safeResultMetadata(resultMetadata);
         return metadata ? { ...result, _meta: metadata } : result;
@@ -220,6 +218,9 @@ export function createDmfasterMcpCore(input: {
   let definitions = permitted();
   const coreNames = new Set([
     "industry_lookup",
+    "companies_search",
+    "audience_preview",
+    "prospecting_preview",
     "campaign_draft_plan",
     "copy_approval_request",
     "campaign_draft_readiness",
