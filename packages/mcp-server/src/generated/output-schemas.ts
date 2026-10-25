@@ -7110,6 +7110,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
             description:
               "Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.",
           },
+          awaitingReply: {
+            type: "boolean",
+            description:
+              "needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged.",
+          },
           interestLevel: {
             type: ["string", "null"],
           },
@@ -7969,6 +7974,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
             description:
               "Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.",
           },
+          awaitingReply: {
+            type: "boolean",
+            description:
+              "needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged.",
+          },
           interestLevel: {
             type: "string",
             enum: ["", "positive", "neutral", "negative", "needs_review"],
@@ -8160,6 +8170,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
             ],
             description:
               "Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.",
+          },
+          awaitingReply: {
+            type: "boolean",
+            description:
+              "needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged.",
           },
           unreadCount: {
             type: "integer",
@@ -9260,6 +9275,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
             ],
             description:
               "Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.",
+          },
+          awaitingReply: {
+            type: "boolean",
+            description:
+              "needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged.",
           },
           interestLevel: {
             type: "string",
@@ -10521,6 +10541,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
             ],
             description:
               "Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.",
+          },
+          awaitingReply: {
+            type: "boolean",
+            description:
+              "needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged.",
           },
           interestLevel: {
             type: "string",
@@ -21559,6 +21584,11 @@ export const AGENT_OUTPUT_SCHEMAS = {
             ],
             description:
               "Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.",
+          },
+          awaitingReply: {
+            type: "boolean",
+            description:
+              "needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged.",
           },
           interestLevel: {
             type: ["string", "null"],
