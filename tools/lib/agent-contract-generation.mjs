@@ -276,8 +276,18 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     const effect = operation["x-dmfaster-effect"],
       approval = operation["x-dmfaster-approval"];
     const owner = operation["x-dmfaster-owner-only"],
-      mcp = operation["x-dmfaster-mcp"],
       cli = operation["x-dmfaster-cli"];
+    let mcp = operation["x-dmfaster-mcp"];
+    const deprecated = operation["x-dmfaster-deprecated"];
+    if (deprecated !== undefined) {
+      if (
+        !deprecated ||
+        typeof deprecated.successor !== "string" ||
+        !/^[a-z][a-z0-9_]*$/.test(deprecated.successor)
+      )
+        throw Error(`Invalid deprecation: ${name}`);
+      mcp = { ...mcp, deprecatedSuccessor: deprecated.successor };
+    }
     if (
       !["read", "draft", "write", "external"].includes(effect) ||
       !["none", "human_confirmation"].includes(approval) ||
@@ -380,6 +390,13 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
   }
   if (json(names) !== json(document.components.schemas.AgentToolName.enum))
     throw Error("AgentToolName enum differs from operations");
+  for (const name of names) {
+    const successor = definitions[name].mcp.deprecatedSuccessor;
+    if (!successor) continue;
+    const target = names.find((item) => definitions[item].mcp.name === successor);
+    if (!target || definitions[target].mcp.deprecatedSuccessor)
+      throw Error(`Deprecated tool ${definitions[name].mcp.name} must point at a live successor`);
+  }
   // Also used by the optional MCP App; its shape comes from the same contract.
   reference("#/components/schemas/ResourceId");
   reference("#/components/schemas/AgentCampaignState");

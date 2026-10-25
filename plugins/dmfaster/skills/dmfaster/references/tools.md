@@ -22,7 +22,7 @@ to perform an action. It has no domain HTTP or CLI operation.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@2.7.4
+npx --yes @dmfaster/cli@2.7.5
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
@@ -150,11 +150,12 @@ page, or `querySignature` alone to rerun the same ICP. No contact channel is
 applied unless requested. SaaS is positive website evidence inside the software
 classes, never the software-development set. `evidence` `require` keeps that
 positive set and fails when the ICP has no website fact. Rows are paged;
-there is no export file. `audience_preview` remains the way to obtain the
-server-issued `reviewedAudience` for a campaign draft.
+there is no export file. `prospecting_preview` and `campaign_draft_plan` are the
+planning reads and the disabled draft. `audience_preview` remains callable with
+`tools_call`.
 
-Use `companies_filters` to discover the current Companies app filter options,
-then `companies_search` with the exact requested criteria. For example:
+Use `companies_search` with the exact requested criteria. `companies_filters`
+remains callable with `tools_call` for the option vocabulary. For example:
 
 ```json
 {
@@ -324,7 +325,8 @@ and sends nothing. The imported list can be selected in the campaign builder.
 
 ## Campaign state
 
-`campaign_validate`, `audience_preview`, `list_prepare`, and `campaign_prepare`
+`campaign_draft_plan` takes the resolved filters and copy. `campaign_validate`,
+`audience_preview`, `list_prepare`, and `campaign_prepare` remain callable and
 take a complete campaign state object. The CLI accepts either that object or
 `{ "state": ... }` in a JSON file. The state is bounded to 32 KB and contains:
 

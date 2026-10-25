@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DM Faster Agent API
-  version: 2.7.4
+  version: 2.7.5
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
@@ -343,6 +343,8 @@ paths:
         - workspace:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: false
+      x-dmfaster-deprecated:
+        successor: analytics_summary
       x-dmfaster-mcp:
         name: workspace_briefing
         title: Workspace briefing
@@ -650,6 +652,8 @@ paths:
         - inbox:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: false
+      x-dmfaster-deprecated:
+        successor: conversations_list
       x-dmfaster-mcp:
         name: replies_list
         title: List priority replies
@@ -1646,6 +1650,8 @@ paths:
         - pipeline:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: false
+      x-dmfaster-deprecated:
+        successor: pipeline_cards_list
       x-dmfaster-mcp:
         name: pipeline_inspect
         title: Inspect pipeline
@@ -2009,6 +2015,8 @@ paths:
         - audiences:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: false
+      x-dmfaster-deprecated:
+        successor: campaign_draft_plan
       x-dmfaster-mcp:
         name: campaign_validate
         title: Validate campaign plan
@@ -2060,6 +2068,8 @@ paths:
         - audiences:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: false
+      x-dmfaster-deprecated:
+        successor: prospecting_preview
       x-dmfaster-mcp:
         name: audience_preview
         title: Preview exact audience
@@ -2461,6 +2471,8 @@ paths:
         - campaigns:write
       x-dmfaster-approval: none
       x-dmfaster-owner-only: true
+      x-dmfaster-deprecated:
+        successor: companies_list_prepare
       x-dmfaster-mcp:
         name: list_prepare
         title: Prepare private company list
@@ -2515,6 +2527,8 @@ paths:
         - campaigns:write
       x-dmfaster-approval: none
       x-dmfaster-owner-only: true
+      x-dmfaster-deprecated:
+        successor: campaign_draft_plan
       x-dmfaster-mcp:
         name: campaign_prepare
         title: Prepare campaign draft
@@ -2798,6 +2812,8 @@ paths:
         - audiences:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: false
+      x-dmfaster-deprecated:
+        successor: companies_search
       x-dmfaster-mcp:
         name: companies_filters
         title: Discover company filters
@@ -2852,6 +2868,8 @@ paths:
         - audiences:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: false
+      x-dmfaster-deprecated:
+        successor: companies_search
       x-dmfaster-mcp:
         name: companies_suggest
         title: Suggest company identities
@@ -3083,6 +3101,8 @@ paths:
         - audiences:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: true
+      x-dmfaster-deprecated:
+        successor: companies_search
       x-dmfaster-mcp:
         name: companies_knowledge_search
         title: Search reviewed Finnish company knowledge
@@ -7425,6 +7445,8 @@ paths:
         - pipeline:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: false
+      x-dmfaster-deprecated:
+        successor: pipeline_cards_list
       x-dmfaster-mcp:
         name: pipeline_board
         title: Read pipeline board
@@ -7901,6 +7923,8 @@ paths:
         - calls:transcripts:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: false
+      x-dmfaster-deprecated:
+        successor: call_transcripts_get
       x-dmfaster-mcp:
         name: call_transcript_get
         title: Read an authorized versioned transcript
@@ -8849,6 +8873,8 @@ paths:
         - events:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: true
+      x-dmfaster-deprecated:
+        successor: events_list
       x-dmfaster-mcp:
         name: events_snapshot
         title: events snapshot
@@ -10491,6 +10517,8 @@ paths:
         - calls:stats:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: false
+      x-dmfaster-deprecated:
+        successor: call_stats_get
       x-dmfaster-mcp:
         name: call_coaching_get
         title: call.coaching.get
@@ -12271,6 +12299,8 @@ paths:
         - campaigns:write
       x-dmfaster-approval: none
       x-dmfaster-owner-only: true
+      x-dmfaster-deprecated:
+        successor: approval_cancel
       x-dmfaster-mcp:
         name: copy_approval_cancel
         title: Cancel campaign copy approval
@@ -14605,7 +14635,7 @@ components:
               const: tool_execution
         contractVersion:
           type: string
-          const: 2.7.4
+          const: 2.7.5
         rateLimit:
           oneOf:
             - $ref: "#/components/schemas/AgentRateLimitEnvelope"
@@ -15426,10 +15456,9 @@ components:
     HistoryListInput:
       type: object
       additionalProperties: false
-      required:
-        - campaignId
       properties:
         campaignId:
+          description: Omit to list confirmed sends for the whole workspace.
           $ref: "#/components/schemas/ResourceId"
         cursor:
           type: string
@@ -16002,6 +16031,8 @@ components:
               type: integer
               minimum: 1
               maximum: 127
+            sendingWindow:
+              $ref: "#/components/schemas/SendingWindow"
         runId:
           type: string
           minLength: 1
@@ -16126,6 +16157,8 @@ components:
           type: integer
           minimum: 1
           maximum: 127
+        sendingWindow:
+          $ref: "#/components/schemas/SendingWindow"
         timezone:
           type: string
     CampaignDraftUpdateResult:
@@ -16393,6 +16426,7 @@ components:
             data:
               oneOf:
                 - $ref: "#/components/schemas/ListInspectData"
+                - $ref: "#/components/schemas/CompanyListInspectData"
                 - type: "null"
     ListTargetRemoveResult:
       allOf:
@@ -20405,7 +20439,10 @@ components:
         - nextCursor
       properties:
         campaignId:
-          type: string
+          description: Null when the page is the whole workspace.
+          oneOf:
+            - type: string
+            - type: "null"
         entries:
           type: array
           maxItems: 100
@@ -23207,7 +23244,7 @@ components:
             dailyCap:
               type: integer
               minimum: 1
-              maximum: 2147483647
+              maximum: 60
             pacingSeconds:
               type: integer
               minimum: 12
@@ -23226,6 +23263,8 @@ components:
               type: integer
               minimum: 1
               maximum: 127
+            sendingWindow:
+              $ref: "#/components/schemas/SendingWindow"
           minProperties: 1
         runId:
           type: string
@@ -31879,8 +31918,7 @@ components:
           minLength: 1
           maxLength: 100
           description: Optional run correlation. Also accepted as X-DMFaster-Run-Id.
-      required:
-        - webhookId
+      required: []
     WebhookDeliveriesListOutput:
       type: object
       additionalProperties: false
@@ -31893,6 +31931,9 @@ components:
             additionalProperties: false
             properties:
               id:
+                type: string
+                maxLength: 200
+              webhookId:
                 type: string
                 maxLength: 200
               eventId:
@@ -31940,6 +31981,7 @@ components:
                   - type: "null"
             required:
               - id
+              - webhookId
               - eventId
               - sequence
               - orderingKey
@@ -33461,7 +33503,7 @@ components:
           description: Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox.
         contractVersion:
           type: string
-          const: 2.7.4
+          const: 2.7.5
         data:
           type: object
           additionalProperties: false
@@ -39336,6 +39378,33 @@ components:
           minimum: 1
           maximum: 500
           description: Defaults to 500.
+    SendingWindow:
+      type: object
+      additionalProperties: false
+      description: Channel-neutral local sending window. Weekdays are ISO 1-7 and default to Monday-Friday.
+      required:
+        - timezone
+        - start
+        - end
+      properties:
+        timezone:
+          type: string
+          minLength: 1
+          maxLength: 80
+        start:
+          type: string
+          pattern: ^(?:[01]\d|2[0-3]):[0-5]\d$
+        end:
+          type: string
+          pattern: ^(?:(?:[01]\d|2[0-3]):[0-5]\d|24:00)$
+        weekdays:
+          type: array
+          minItems: 1
+          maxItems: 7
+          items:
+            type: integer
+            minimum: 1
+            maximum: 7
     ProspectingPlan:
       type: object
       additionalProperties: false
@@ -39395,6 +39464,8 @@ components:
             - timezone
             - startMinute
             - endMinute
+        sendingWindow:
+          $ref: "#/components/schemas/SendingWindow"
         labels:
           type: array
           items:

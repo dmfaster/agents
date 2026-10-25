@@ -119,8 +119,8 @@ tools satisfy the credential's scopes, with missing scopes for the others.
 Workspace role, plan, and action preconditions still apply when a tool runs.
 
 ```bash
-npx --yes @dmfaster/cli@2.7.4 auth login --json
-npx --yes @dmfaster/mcp-server@2.7.4
+npx --yes @dmfaster/cli@2.7.5 auth login --json
+npx --yes @dmfaster/mcp-server@2.7.5
 ```
 
 Login defaults to the complete Agent 2.0 capability set. Use `auth login
@@ -255,7 +255,7 @@ entry:
   "mcpServers": {
     "dmfaster": {
       "command": "npx",
-      "args": ["--yes", "@dmfaster/mcp-server@2.7.4"]
+      "args": ["--yes", "@dmfaster/mcp-server@2.7.5"]
     }
   }
 }

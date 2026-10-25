@@ -5224,7 +5224,7 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.7.4";
+            contractVersion: "2.7.5";
             data: {
                 nextInSeconds: number;
             };
@@ -5628,7 +5628,7 @@ export interface components {
             build?: string;
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.7.4";
+            contractVersion?: "2.7.5";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
@@ -7350,6 +7350,7 @@ export interface components {
                 instagramSendingWindowStartMinute?: number;
                 instagramSendingWindowWeekdays?: number;
                 pacingSeconds?: number;
+                sendingWindow?: components["schemas"]["SendingWindow"];
             };
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
@@ -7514,6 +7515,7 @@ export interface components {
             name: string;
             onlyNewChats: boolean;
             pacingSeconds: number;
+            sendingWindow?: components["schemas"]["SendingWindow"];
             skipPreviouslyMessaged: boolean;
             /** @constant */
             status: "Draft";
@@ -7547,6 +7549,7 @@ export interface components {
                 messageVariants?: string[];
                 name?: string;
                 pacingSeconds?: number;
+                sendingWindow?: components["schemas"]["SendingWindow"];
             };
         };
         CampaignDraftUpdateResult: components["schemas"]["AgentToolResultBase"] & {
@@ -10036,7 +10039,8 @@ export interface components {
             tool: "followups.due";
         };
         HistoryListInput: {
-            campaignId: components["schemas"]["ResourceId"];
+            /** @description Omit to list confirmed sends for the whole workspace. */
+            campaignId?: components["schemas"]["ResourceId"];
             cursor?: string;
             limit?: number;
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
@@ -10044,7 +10048,8 @@ export interface components {
             search?: string;
         };
         HistoryListOutput: {
-            campaignId: string;
+            /** @description Null when the page is the whole workspace. */
+            campaignId: string | null;
             entries: {
                 campaign?: string;
                 campaignId?: string;
@@ -10808,7 +10813,7 @@ export interface components {
             username?: string;
         };
         ListInspectResult: components["schemas"]["AgentToolResultBase"] & {
-            data?: components["schemas"]["ListInspectData"] | null;
+            data?: components["schemas"]["ListInspectData"] | components["schemas"]["CompanyListInspectData"] | null;
             /** @constant */
             tool?: "list.inspect";
         };
@@ -11428,6 +11433,7 @@ export interface components {
             mailboxIds?: string[];
             name: string;
             pacingSeconds?: number;
+            sendingWindow?: components["schemas"]["SendingWindow"];
             window?: {
                 endMinute: number;
                 startMinute: number;
@@ -12508,6 +12514,13 @@ export interface components {
         };
         /** Format: date-time */
         SendingTime: string | null;
+        /** @description Channel-neutral local sending window. Weekdays are ISO 1-7 and default to Monday-Friday. */
+        SendingWindow: {
+            end: string;
+            start: string;
+            timezone: string;
+            weekdays?: number[];
+        };
         /** @enum {string} */
         SupportedCountry: "FI" | "NO" | "EE" | "SE" | "DK" | "UK" | "IE" | "AE" | "AT" | "BE" | "CA" | "NL" | "NZ" | "ES" | "FR" | "HK" | "IL" | "LV" | "LT" | "IT" | "CH" | "PT" | "SA" | "SG" | "IS" | "AU" | "DE" | "US" | "ZA";
         SuppressionEntryInput: {
@@ -12632,7 +12645,7 @@ export interface components {
             runId?: string;
             /** @enum {string} */
             status?: "pending" | "delivered" | "failed" | "dead";
-            webhookId: components["schemas"]["ResourceId"];
+            webhookId?: components["schemas"]["ResourceId"];
         };
         WebhookDeliveriesListOutput: {
             items: {
@@ -12648,6 +12661,7 @@ export interface components {
                 orderingKey: string;
                 sequence: number;
                 status: string;
+                webhookId: string;
             }[];
             nextCursor: string | null;
         };

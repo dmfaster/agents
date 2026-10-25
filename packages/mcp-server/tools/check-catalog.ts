@@ -73,10 +73,32 @@ export async function measureAgentCatalog() {
         "Tool descriptions <=300 chars",
       );
       if (catalogProfile === "compact" && !("grantedScopes" in scenario)) {
+        const retired = [
+          "replies_list",
+          "audience_preview",
+          "campaign_prepare",
+          "campaign_validate",
+          "list_prepare",
+          "pipeline_inspect",
+          "pipeline_board",
+          "call_coaching_get",
+          "call_transcript_get",
+          "companies_knowledge_search",
+          "companies_filters",
+          "companies_suggest",
+          "events_snapshot",
+          "copy_approval_cancel",
+          "workspace_briefing",
+        ];
+        for (const name of retired)
+          assert.ok(
+            !result.tools.some((tool: { name: string }) => tool.name === name),
+            `${name} stays callable through tools_call and is hidden from tools/list`,
+          );
         for (const [index, name] of [
           "companies_search",
-          "audience_preview",
           "prospecting_preview",
+          "campaign_draft_plan",
         ].entries()) {
           assert.ok(
             result.tools.some((t: { name: string }) => t.name === name),

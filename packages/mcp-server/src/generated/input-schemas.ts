@@ -449,7 +449,9 @@ export const DeliveryTestInspectInputSchema = z
   .strict();
 export const HistoryListInputSchema = z
   .object({
-    campaignId: ResourceIdSchema,
+    campaignId: ResourceIdSchema.describe(
+      "Omit to list confirmed sends for the whole workspace.",
+    ).optional(),
     cursor: z.string().min(1).max(512).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     search: z.string().min(3).max(120).optional(),
@@ -969,6 +971,17 @@ export const ProspectingCopySchema = z
       .optional(),
   })
   .strict();
+export const SendingWindowSchema = z
+  .object({
+    timezone: z.string().min(1).max(80),
+    start: z.string().regex(new RegExp("^(?:[01]\\d|2[0-3]):[0-5]\\d$")),
+    end: z.string().regex(new RegExp("^(?:(?:[01]\\d|2[0-3]):[0-5]\\d|24:00)$")),
+    weekdays: z.array(z.number().int().min(1).max(7)).min(1).max(7).optional(),
+  })
+  .strict()
+  .describe(
+    "Channel-neutral local sending window. Weekdays are ISO 1-7 and default to Monday-Friday.",
+  );
 export const ProspectingPlanSchema = z
   .object({
     audiencePage: ProspectingAudiencePageSchema.optional(),
@@ -989,6 +1002,7 @@ export const ProspectingPlanSchema = z
       })
       .strict()
       .optional(),
+    sendingWindow: SendingWindowSchema.optional(),
     labels: z.array(z.literal("agent_test")).max(1).optional(),
   })
   .strict();
@@ -1179,6 +1193,7 @@ export const CampaignDraftUpdateInputSchema = z
         instagramSendingWindowStartMinute: z.number().int().min(0).max(1380).optional(),
         instagramSendingWindowEndMinute: z.number().int().min(60).max(1440).optional(),
         instagramSendingWindowWeekdays: z.number().int().min(1).max(127).optional(),
+        sendingWindow: SendingWindowSchema.optional(),
       })
       .strict()
       .refine((value) => Object.keys(value).length >= 1, "Provide at least 1 properties"),
@@ -1781,12 +1796,13 @@ export const CampaignDeliveryUpdateInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
     patch: z
       .object({
-        dailyCap: z.number().int().min(1).max(2147483647).optional(),
+        dailyCap: z.number().int().min(1).max(60).optional(),
         pacingSeconds: z.number().int().min(12).max(3600).optional(),
         instagramSendingWindowEnabled: z.boolean().optional(),
         instagramSendingWindowStartMinute: z.number().int().min(0).max(1380).optional(),
         instagramSendingWindowEndMinute: z.number().int().min(60).max(1440).optional(),
         instagramSendingWindowWeekdays: z.number().int().min(1).max(127).optional(),
+        sendingWindow: SendingWindowSchema.optional(),
       })
       .strict()
       .refine((value) => Object.keys(value).length >= 1, "Provide at least 1 properties"),
@@ -3213,7 +3229,7 @@ export const EventsSnapshotInputSchema = z
   .strict();
 export const WebhookDeliveriesListInputSchema = z
   .object({
-    webhookId: ResourceIdSchema,
+    webhookId: ResourceIdSchema.optional(),
     status: z.enum(["pending", "delivered", "failed", "dead"]).optional(),
     cursor: z.string().max(1000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
