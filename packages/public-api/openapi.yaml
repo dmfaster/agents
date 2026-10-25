@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DM Faster Agent API
-  version: 2.7.1
+  version: 2.7.2
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
@@ -2910,7 +2910,8 @@ paths:
         title: Query an ICP
         description:
           Give an ICP in words or codes. Returns exact totals and every matching company, paged up to 1000
-          compact rows. Echo nextCursor alone for the next page. Country defaults to Finland.
+          compact rows. Echo nextCursor alone for the next page. Country defaults to Finland. Unknown size
+          and revenue are included and counted. Pass campaignFilters as filters to plan the same set.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -3487,8 +3488,8 @@ paths:
         name: company_inspect
         title: Inspect company
         description:
-          Read the complete company profile shown in the app, including financials, technologies,
-          advertising, funding, hiring and decision-makers wherever available. Missing data is unknown.
+          Read the complete app profile by companyKey (FI:0198452-3), up to 10 companyKeys, or country plus
+          businessId. Covers financials, technologies, ads, funding, hiring and decision-makers. Missing data is unknown.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -14603,7 +14604,7 @@ components:
               const: tool_execution
         contractVersion:
           type: string
-          const: 2.7.1
+          const: 2.7.2
         rateLimit:
           oneOf:
             - $ref: "#/components/schemas/AgentRateLimitEnvelope"
@@ -21076,8 +21077,13 @@ components:
         includeUnknownSize:
           type: boolean
           description:
-            Include companies whose employee count is unknown when a size range is supplied. Default false;
-            exact excludedUnknownSize is reported.
+            Keep companies whose employee count is unknown when a size bound is supplied. Default true,
+            the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.
+        includeUnknownRevenue:
+          type: boolean
+          description:
+            Keep companies without a published revenue when a revenue bound is supplied. Default true,
+            the same rule as prospect_query; unknownRevenue is reported.
       description:
         Every filter supported by the Companies app. Numeric bounds use decimal strings, dates
         YYYY-MM-DD; empty values disable filters. Call companies_filters for country-specific options. Saved
@@ -21516,6 +21522,14 @@ components:
             eligible:
               type: integer
               minimum: 0
+            matchedKnown:
+              type: integer
+              minimum: 0
+              description: Matches whose bounded employee count and revenue are both published.
+            matchedIncludingUnknown:
+              type: integer
+              minimum: 0
+              description: Matches when unknown size and revenue are kept (the default).
             unknownSize:
               type: integer
               minimum: 0
@@ -21558,6 +21572,13 @@ components:
         querySignature:
           type: string
           maxLength: 12000
+        campaignFilters:
+          description:
+            Exact filters for prospecting_preview and campaign_draft_plan; their inventoryTotal equals
+            matched before contact exclusions. Null when the ICP cannot be expressed as filters.
+          oneOf:
+            - $ref: "#/components/schemas/CompanySearchFilters"
+            - type: "null"
         notes:
           type: array
           maxItems: 24
@@ -21834,7 +21855,24 @@ components:
     CompanyInspectInput:
       type: object
       additionalProperties: false
+      description:
+        Supply companyKey as returned by prospect_query or prospecting_preview (for example
+        FI:0198452-3), companyKeys for up to 10 companies, or country plus businessId.
       properties:
+        companyKey:
+          type: string
+          minLength: 4
+          maxLength: 200
+          pattern: "^[A-Za-z]{2}:.+$"
+        companyKeys:
+          type: array
+          minItems: 1
+          maxItems: 10
+          items:
+            type: string
+            minLength: 4
+            maxLength: 200
+            pattern: "^[A-Za-z]{2}:.+$"
         country:
           $ref: "#/components/schemas/SupportedCountry"
         businessId:
@@ -21846,16 +21884,27 @@ components:
           minLength: 1
           maxLength: 100
           description: Optional run correlation. Also accepted as X-DMFaster-Run-Id.
-      required:
-        - country
-        - businessId
     CompanyInspectData:
       type: object
       additionalProperties: true
       required:
-        - profile
         - revision
       properties:
+        companies:
+          type: array
+          maxItems: 10
+          items:
+            type: object
+            additionalProperties: true
+            required:
+              - profile
+              - revision
+        notFound:
+          type: array
+          maxItems: 10
+          items:
+            type: string
+            maxLength: 200
         financialReview:
           type: object
           additionalProperties: false
@@ -22037,6 +22086,8 @@ components:
       description:
         Read the complete company profile shown in the app, including financials, technologies,
         advertising, funding, hiring and decision-makers wherever available. Missing data is unknown.
+        One company returns profile and financialReview; companyKeys returns companies in request order
+        and notFound keys.
     CompanyInspectResult:
       allOf:
         - $ref: "#/components/schemas/AgentToolResultBase"
@@ -33290,7 +33341,7 @@ components:
           description: Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox.
         contractVersion:
           type: string
-          const: 2.7.1
+          const: 2.7.2
         data:
           type: object
           additionalProperties: false

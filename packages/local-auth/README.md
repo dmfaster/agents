@@ -10,7 +10,7 @@ supports `DMFASTER_TOKEN` for non-interactive CI environments.
 > authorized source checkout.
 
 ```sh
-npm install @dmfaster/local-auth@2.7.1
+npm install @dmfaster/local-auth@2.7.2
 ```
 
 Application integrations normally use `@dmfaster/sdk` directly. This package

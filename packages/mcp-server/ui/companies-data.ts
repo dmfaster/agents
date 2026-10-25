@@ -2,7 +2,10 @@ import type { AgentToolDataMap, AgentToolInputMap, AgentToolResult } from "@dmfa
 
 export type CompanyPage = AgentToolDataMap["companies.search"];
 export type CompanyRow = CompanyPage["companies"][number];
-export type CompanyDetail = AgentToolDataMap["company.inspect"];
+/** A single-company inspection; the UI never sends companyKeys, so profile is present. */
+export type CompanyDetail = AgentToolDataMap["company.inspect"] & {
+  profile: NonNullable<AgentToolDataMap["company.inspect"]["profile"]>;
+};
 export type CompanyFilters = AgentToolInputMap["companies.search"]["filters"];
 export type CompanyResult = AgentToolResult<
   CompanyPage | CompanyDetail | AgentToolDataMap["companies.list.inspect"]

@@ -451,7 +451,10 @@ Use this sequence:
    total. Echo `nextCursor` alone to page. Do not add a contact channel unless
    the user asked for one. SaaS is positive website evidence inside the software
    classes, never the software-development set. evidence "require" keeps that
-   positive set and fails when the ICP has no website fact.
+   positive set and fails when the ICP has no website fact. Unknown employee
+   size and revenue are included by default everywhere; report `matchedKnown`
+   with `matched`. To preview or draft the same set, pass `campaignFilters`
+   unchanged as `filters`.
 3. Call `industry_lookup` only when `prospect_query` asks for one industry.
    If it returns `needs_clarification`, show the supplied choices and wait for
    the user; do not silently choose one.

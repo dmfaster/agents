@@ -1,5 +1,5 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
-export const AGENT_CONTRACT_VERSION = "2.7.1" as const;
+export const AGENT_CONTRACT_VERSION = "2.7.2" as const;
 export const AGENT_TOOL_NAMES = [
   "analytics.summary",
   "workspace.briefing",
@@ -2988,7 +2988,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "prospect_query",
       title: "Query an ICP",
       description:
-        "Give an ICP in words or codes. Returns exact totals and every matching company, paged up to 1000 compact rows. Echo nextCursor alone for the next page. Country defaults to Finland.",
+        "Give an ICP in words or codes. Returns exact totals and every matching company, paged up to 1000 compact rows. Echo nextCursor alone for the next page. Country defaults to Finland. Unknown size and revenue are included and counted. Pass campaignFilters as filters to plan the same set.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -3178,7 +3178,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "company_inspect",
       title: "Inspect company",
       description:
-        "Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown.",
+        "Read the complete app profile by companyKey (FI:0198452-3), up to 10 companyKeys, or country plus businessId. Covers financials, technologies, ads, funding, hiring and decision-makers. Missing data is unknown.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -9330,7 +9330,12 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       includeUnknownSize: {
         type: "boolean",
         description:
-          "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
+          "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+      },
+      includeUnknownRevenue: {
+        type: "boolean",
+        description:
+          "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
       },
     },
     description:
@@ -10718,7 +10723,26 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
   CompanyInspectInput: {
     type: "object",
     additionalProperties: false,
+    description:
+      "Supply companyKey as returned by prospect_query or prospecting_preview (for example FI:0198452-3), companyKeys for up to 10 companies, or country plus businessId.",
     properties: {
+      companyKey: {
+        type: "string",
+        minLength: 4,
+        maxLength: 200,
+        pattern: "^[A-Za-z]{2}:.+$",
+      },
+      companyKeys: {
+        type: "array",
+        minItems: 1,
+        maxItems: 10,
+        items: {
+          type: "string",
+          minLength: 4,
+          maxLength: 200,
+          pattern: "^[A-Za-z]{2}:.+$",
+        },
+      },
       country: {
         $ref: "#/components/schemas/SupportedCountry",
       },
@@ -10734,7 +10758,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
       },
     },
-    required: ["country", "businessId"],
   },
   CompanyFitStartInput: {
     type: "object",
