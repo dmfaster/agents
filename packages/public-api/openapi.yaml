@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DM Faster Agent API
-  version: 2.7.5
+  version: 2.7.6
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
@@ -14635,7 +14635,7 @@ components:
               const: tool_execution
         contractVersion:
           type: string
-          const: 2.7.5
+          const: 2.7.6
         rateLimit:
           oneOf:
             - $ref: "#/components/schemas/AgentRateLimitEnvelope"
@@ -18625,6 +18625,19 @@ components:
           type: string
         needsReply:
           type: boolean
+        suggestedAction:
+          type: string
+          enum:
+            - reply
+            - book_meeting
+            - schedule_followup
+            - ask_for_referral
+            - close_politely
+            - close_without_reply
+            - wait
+            - review
+            - none
+          description: Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
         interestLevel:
           type:
             - string
@@ -19000,6 +19013,19 @@ components:
           type: string
         needsReply:
           type: boolean
+        suggestedAction:
+          type: string
+          enum:
+            - reply
+            - book_meeting
+            - schedule_followup
+            - ask_for_referral
+            - close_politely
+            - close_without_reply
+            - wait
+            - review
+            - none
+          description: Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
         unreadCount:
           type: integer
         interestLevel:
@@ -19104,6 +19130,19 @@ components:
           minimum: 0
         needsReply:
           type: boolean
+        suggestedAction:
+          type: string
+          enum:
+            - reply
+            - book_meeting
+            - schedule_followup
+            - ask_for_referral
+            - close_politely
+            - close_without_reply
+            - wait
+            - review
+            - none
+          description: Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
         interestLevel:
           type: string
           enum:
@@ -22084,9 +22123,30 @@ components:
                 - newer_history_available
                 - no_newer_history
                 - unknown
+            newerHistory:
+              type:
+                - object
+                - "null"
+              additionalProperties: false
+              required:
+                - fiscalYear
+                - employeeCount
+                - revenueEur
+              properties:
+                fiscalYear:
+                  type: string
+                employeeCount:
+                  type:
+                    - integer
+                    - "null"
+                revenueEur:
+                  type:
+                    - number
+                    - "null"
           description:
-            The headline year is the latest financial history year when that history is newer than the
-            stored headline. This does not replace published search facts used by prospect_query.
+            The profile headline is the stored figure that prospect_query, prospecting_preview and
+            companies_search filter on, so rows and profiles agree. A newer financial history year is
+            reported in newerHistory and is not used by search until the published revision has it.
         revision:
           type: string
         profile:
@@ -33503,7 +33563,7 @@ components:
           description: Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox.
         contractVersion:
           type: string
-          const: 2.7.5
+          const: 2.7.6
         data:
           type: object
           additionalProperties: false

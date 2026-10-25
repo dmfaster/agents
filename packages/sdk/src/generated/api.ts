@@ -5224,7 +5224,7 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.7.5";
+            contractVersion: "2.7.6";
             data: {
                 nextInSeconds: number;
             };
@@ -5337,6 +5337,11 @@ export interface components {
             } | null;
             needsReply?: boolean;
             stage: components["schemas"]["PipelineStage"];
+            /**
+             * @description Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
+             * @enum {string}
+             */
+            suggestedAction?: "reply" | "book_meeting" | "schedule_followup" | "ask_for_referral" | "close_politely" | "close_without_reply" | "wait" | "review" | "none";
         };
         AgentMetaAdsFilter: {
             includeUncorroborated: boolean;
@@ -5628,7 +5633,7 @@ export interface components {
             build?: string;
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.7.5";
+            contractVersion?: "2.7.6";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
@@ -8830,12 +8835,17 @@ export interface components {
             companies?: {
                 [key: string]: unknown;
             }[];
-            /** @description The headline year is the latest financial history year when that history is newer than the stored headline. This does not replace published search facts used by prospect_query. */
+            /** @description The profile headline is the stored figure that prospect_query, prospecting_preview and companies_search filter on, so rows and profiles agree. A newer financial history year is reported in newerHistory and is not used by search until the published revision has it. */
             financialReview?: {
                 /** @enum {string} */
                 comparison: "newer_history_available" | "no_newer_history" | "unknown";
                 headlineYear: string | null;
                 latestHistoryYear: string | null;
+                newerHistory?: {
+                    employeeCount: number | null;
+                    fiscalYear: string;
+                    revenueEur: number | null;
+                } | null;
             };
             notFound?: string[];
             /** @description The complete current Companies drawer profile. Additional properties preserve all app profile sections as they evolve. */
@@ -10089,6 +10099,11 @@ export interface components {
             lastMessageText?: string;
             needsReply?: boolean;
             status?: string;
+            /**
+             * @description Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
+             * @enum {string}
+             */
+            suggestedAction?: "reply" | "book_meeting" | "schedule_followup" | "ask_for_referral" | "close_politely" | "close_without_reply" | "wait" | "review" | "none";
             targetHandle?: string;
             targetName?: string;
             unreadCount?: number;
@@ -10166,6 +10181,11 @@ export interface components {
             owner?: string | null;
             /** @enum {string} */
             status: "open" | "closed";
+            /**
+             * @description Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
+             * @enum {string}
+             */
+            suggestedAction?: "reply" | "book_meeting" | "schedule_followup" | "ask_for_referral" | "close_politely" | "close_without_reply" | "wait" | "review" | "none";
             targetCompanyName: string;
             targetHandle: string;
             targetName: string;
