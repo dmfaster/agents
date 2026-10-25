@@ -5314,6 +5314,8 @@ export interface components {
         };
         AgentLead: {
             avatarUrl: string;
+            /** @description needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged. */
+            awaitingReply?: boolean;
             campaignId: string;
             channels: components["schemas"]["TargetChannel"][];
             companyName: string;
@@ -10088,6 +10090,8 @@ export interface components {
         /** @enum {string} */
         InboxChannel: "instagram" | "facebook" | "linkedin" | "gmail" | "outlook" | "email" | "sms";
         InboxConversationCompact: {
+            /** @description needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged. */
+            awaitingReply?: boolean;
             campaignId?: string;
             channel: components["schemas"]["InboxChannel"];
             id: string;
@@ -10141,6 +10145,8 @@ export interface components {
         };
         InboxConversationSummary: {
             attributionMethod?: string | null;
+            /** @description needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged. */
+            awaitingReply?: boolean;
             businessId?: string | null;
             campaignId: string;
             campaignName: string;
