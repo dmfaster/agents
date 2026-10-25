@@ -5224,7 +5224,7 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.7.3";
+            contractVersion: "2.7.4";
             data: {
                 nextInSeconds: number;
             };
@@ -5324,11 +5324,12 @@ export interface components {
             conversationId?: string | null;
             handle: string;
             id: string;
+            /** @description Classified reply intent, auto_reply for an automatic inbound, or unclassified. Null only when the row has no linked conversation. */
             intent?: string | null;
             interestLevel?: string | null;
             lastContactedAt: string;
             lastInboundAt?: string | null;
-            /** @description Latest message in that conversation, up to 500 characters; direction says whether it is the reply. */
+            /** @description Latest inbound message with text when one exists; otherwise the latest non-empty message, up to 500 characters. Empty text is not returned. */
             lastMessage?: {
                 at?: string | null;
                 direction?: string | null;
@@ -5627,7 +5628,7 @@ export interface components {
             build?: string;
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.7.3";
+            contractVersion?: "2.7.4";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
@@ -8826,7 +8827,7 @@ export interface components {
             companies?: {
                 [key: string]: unknown;
             }[];
-            /** @description Compare dated financial history with the headline before qualifying employee or revenue bounds. This does not replace published search facts or infer a missing value from another year. */
+            /** @description The headline year is the latest financial history year when that history is newer than the stored headline. This does not replace published search facts used by prospect_query. */
             financialReview?: {
                 /** @enum {string} */
                 comparison: "newer_history_available" | "no_newer_history" | "unknown";
@@ -8902,6 +8903,11 @@ export interface components {
             companyKey?: string;
             companyKeys?: string[];
             country?: components["schemas"]["SupportedCountry"];
+            /**
+             * @description summary returns identity, the latest financial headline, channels, the top three decision makers with roles, technologies and funding/ads/hiring flags. full is the Companies drawer. A companyKeys batch defaults to summary. One company defaults to full.
+             * @enum {string}
+             */
+            projection?: "summary" | "full";
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
         };
@@ -9206,9 +9212,9 @@ export interface components {
             hasWebsite?: boolean;
             /** @description Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only. */
             hiringTitleQuery?: string;
-            /** @description Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported. */
+            /** @description Keep companies without a published revenue when a revenue bound is supplied. Default true, except a minimum with no maximum, which counts published revenue unless this is true. The same rule as prospect_query; unknownRevenue is reported. */
             includeUnknownRevenue?: boolean;
-            /** @description Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported. */
+            /** @description Keep companies whose employee count is unknown when a size bound is supplied. Default true, except a minimum with no maximum, which counts published employee counts unless this is true. The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported. */
             includeUnknownSize?: boolean;
             industryCodes?: string[];
             industryCodeSelections?: {
