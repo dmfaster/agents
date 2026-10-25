@@ -9097,8 +9097,13 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
     type: "object",
     additionalProperties: false,
     description:
-      "Bounded inventory page. Exact eligibility totals cover this page only; follow returned nextOffset for subsequent pages. Each draft page requires its own idempotencyKey.",
+      "Inventory scope. Drafts default to scope whole, every eligible company in a complete inventory up to 5,000. scope page keeps a bounded window; follow nextOffset and use a new idempotencyKey per draft page.",
     properties: {
+      scope: {
+        type: "string",
+        enum: ["whole", "page"],
+        description: "Drafts default to whole; previews default to page.",
+      },
       offset: {
         type: "integer",
         minimum: 0,
