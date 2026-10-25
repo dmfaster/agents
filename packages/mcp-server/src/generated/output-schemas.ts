@@ -39526,6 +39526,16 @@ export const AGENT_OUTPUT_SCHEMAS = {
                 type: "integer",
                 minimum: 0,
               },
+              neverContacted: {
+                type: "integer",
+                minimum: 0,
+                description:
+                  "Matches with no contact history in this workspace (same rule as eligibleNeverContacted in the campaign path).",
+              },
+              saturation: {
+                type: "string",
+                enum: ["healthy", "saturated", "exhausted"],
+              },
               evidencePositive: {
                 type: "integer",
                 minimum: 0,
