@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DM Faster Agent API
-  version: 2.7.2
+  version: 2.7.3
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
@@ -2912,6 +2912,7 @@ paths:
           Give an ICP in words or codes. Returns exact totals and every matching company, paged up to 1000
           compact rows. Echo nextCursor alone for the next page. Country defaults to Finland. Unknown size
           and revenue are included and counted. Pass campaignFilters as filters to plan the same set.
+          status needs_clarification means nothing was searched; pick a counted option.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -14604,7 +14605,7 @@ components:
               const: tool_execution
         contractVersion:
           type: string
-          const: 2.7.2
+          const: 2.7.3
         rateLimit:
           oneOf:
             - $ref: "#/components/schemas/AgentRateLimitEnvelope"
@@ -21424,6 +21425,60 @@ components:
         - nextCursor
         - querySignature
       properties:
+        status:
+          type: string
+          enum:
+            - ok
+            - needs_clarification
+            - too_large
+          description:
+            needs_clarification means the ICP named no single industry and nothing was searched; pick
+            one clarification option. too_large means more than 200,000 companies match.
+        clarification:
+          type: object
+          additionalProperties: false
+          required:
+            - question
+            - options
+          properties:
+            question:
+              type: string
+              maxLength: 300
+            options:
+              type: array
+              maxItems: 6
+              description:
+                Each option keeps the rest of the ICP. matched is its exact total before contact
+                exclusions, or null when unavailable or above 200,000. Re-run with querySignature or
+                pass industries.
+              items:
+                type: object
+                additionalProperties: false
+                required:
+                  - label
+                  - industries
+                  - matched
+                properties:
+                  label:
+                    type: string
+                    maxLength: 80
+                  industries:
+                    type: array
+                    maxItems: 1
+                    items:
+                      type: string
+                      maxLength: 80
+                  matched:
+                    oneOf:
+                      - type: integer
+                        minimum: 0
+                      - type: "null"
+                  matchedKnown:
+                    type: integer
+                    minimum: 0
+                  querySignature:
+                    type: string
+                    maxLength: 12000
         resolved:
           type: object
           additionalProperties: false
@@ -33390,7 +33445,7 @@ components:
           description: Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox.
         contractVersion:
           type: string
-          const: 2.7.2
+          const: 2.7.3
         data:
           type: object
           additionalProperties: false

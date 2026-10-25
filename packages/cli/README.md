@@ -7,35 +7,35 @@ This source prepares the version-pinned 2.3.0 runtime. Verify the coordinated
 Product and package release before using these new commands against production.
 
 ```bash
-npx --yes @dmfaster/cli@2.7.2 auth login --json
-npx --yes @dmfaster/cli@2.7.2 auth login --access plan --json
-npx --yes @dmfaster/cli@2.7.2 auth status --json
-npx --yes @dmfaster/cli@2.7.2 doctor --json
-npx --yes @dmfaster/cli@2.7.2 describe companies search
+npx --yes @dmfaster/cli@2.7.3 auth login --json
+npx --yes @dmfaster/cli@2.7.3 auth login --access plan --json
+npx --yes @dmfaster/cli@2.7.3 auth status --json
+npx --yes @dmfaster/cli@2.7.3 doctor --json
+npx --yes @dmfaster/cli@2.7.3 describe companies search
 
-npx --yes @dmfaster/cli@2.7.2 analytics summary --scope today --json
-npx --yes @dmfaster/cli@2.7.2 workspace briefing --json
-npx --yes @dmfaster/cli@2.7.2 campaigns list --status Running --limit 10 --json
-npx --yes @dmfaster/cli@2.7.2 campaign copy inspect campaign_123 --json
-npx --yes @dmfaster/cli@2.7.2 conversations list --filter unread --channel linkedin --limit 25 --json
-npx --yes @dmfaster/cli@2.7.2 conversation inspect conversation_123 --limit 40 --json
-npx --yes @dmfaster/cli@2.7.2 replies list campaign_123 --limit 5 --query "Visio" --json
-npx --yes @dmfaster/cli@2.7.2 company timeline campaign_123 outreach_456 --json
-npx --yes @dmfaster/cli@2.7.2 companies list refine --input reviewed-refinement.json --json
-npx --yes @dmfaster/cli@2.7.2 companies fit start --input fit-review.json --json
-npx --yes @dmfaster/cli@2.7.2 companies fit advance --input fit-run.json --json
-npx --yes @dmfaster/cli@2.7.2 companies fit results --input fit-page.json --json
-npx --yes @dmfaster/cli@2.7.2 companies fit proposal --input fit-run.json --json
-npx --yes @dmfaster/cli@2.7.2 history export campaign_123 > campaign-history.jsonl
+npx --yes @dmfaster/cli@2.7.3 analytics summary --scope today --json
+npx --yes @dmfaster/cli@2.7.3 workspace briefing --json
+npx --yes @dmfaster/cli@2.7.3 campaigns list --status Running --limit 10 --json
+npx --yes @dmfaster/cli@2.7.3 campaign copy inspect campaign_123 --json
+npx --yes @dmfaster/cli@2.7.3 conversations list --filter unread --channel linkedin --limit 25 --json
+npx --yes @dmfaster/cli@2.7.3 conversation inspect conversation_123 --limit 40 --json
+npx --yes @dmfaster/cli@2.7.3 replies list campaign_123 --limit 5 --query "Visio" --json
+npx --yes @dmfaster/cli@2.7.3 company timeline campaign_123 outreach_456 --json
+npx --yes @dmfaster/cli@2.7.3 companies list refine --input reviewed-refinement.json --json
+npx --yes @dmfaster/cli@2.7.3 companies fit start --input fit-review.json --json
+npx --yes @dmfaster/cli@2.7.3 companies fit advance --input fit-run.json --json
+npx --yes @dmfaster/cli@2.7.3 companies fit results --input fit-page.json --json
+npx --yes @dmfaster/cli@2.7.3 companies fit proposal --input fit-run.json --json
+npx --yes @dmfaster/cli@2.7.3 history export campaign_123 > campaign-history.jsonl
 
-npx --yes @dmfaster/cli@2.7.2 campaign validate --state campaign-state.json --json
-npx --yes @dmfaster/cli@2.7.2 audience preview --state campaign-state.json --json > audience-preview.json
+npx --yes @dmfaster/cli@2.7.3 campaign validate --state campaign-state.json --json
+npx --yes @dmfaster/cli@2.7.3 audience preview --state campaign-state.json --json > audience-preview.json
 # Review the exact count and sample in audience-preview.json before continuing.
-npx --yes @dmfaster/cli@2.7.2 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
-npx --yes @dmfaster/cli@2.7.2 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
-npx --yes @dmfaster/cli@2.7.2 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
+npx --yes @dmfaster/cli@2.7.3 campaign prepare --state campaign-state.json --reviewed-audience audience-preview.json --idempotency-key prepare-001 --json
+npx --yes @dmfaster/cli@2.7.3 campaign launch preflight campaign_123 --idempotency-key launch-001 --json
+npx --yes @dmfaster/cli@2.7.3 campaign launch campaign_123 --idempotency-key launch-001 --authorization-id agent_action_… --json
 
-npx --yes @dmfaster/cli@2.7.2 auth logout --json
+npx --yes @dmfaster/cli@2.7.3 auth logout --json
 ```
 
 `auth login` creates a short-lived PKCE device request, prints a confirmation
@@ -262,8 +262,8 @@ saving a research list creates no campaign and sends nothing.
 ## Resumable reviews (since 1.8.0)
 
 ```bash
-npx --yes @dmfaster/cli@2.7.2 companies fit run --input run.json --until-complete --max-seconds 1800
-npx --yes @dmfaster/cli@2.7.2 companies fit export fit_RETURNED_ID --output complete-review.json
+npx --yes @dmfaster/cli@2.7.3 companies fit run --input run.json --until-complete --max-seconds 1800
+npx --yes @dmfaster/cli@2.7.3 companies fit export fit_RETURNED_ID --output complete-review.json
 ```
 
 `run.json` holds the returned `runId` and optional `limit` (1–8). Transient

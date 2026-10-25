@@ -448,7 +448,9 @@ Use this sequence:
    roles, channels, message language, daily cap, and outreach copy.
 2. Call `prospect_query` with the user's plain-language ICP. It resolves industry
    words, places, size and revenue on the server and returns an exact whole-set
-   total. Echo `nextCursor` alone to page. Do not add a contact channel unless
+   total. If `status` is `needs_clarification`, show `clarification.options` and
+   their counts and wait; nothing was searched, so do not draft or page that
+   result. Echo `nextCursor` alone to page. Do not add a contact channel unless
    the user asked for one. SaaS is positive website evidence inside the software
    classes, never the software-development set. evidence "require" keeps that
    positive set and fails when the ICP has no website fact. Unknown employee
