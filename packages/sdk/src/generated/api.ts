@@ -5224,7 +5224,7 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.7.0";
+            contractVersion: "2.7.1";
             data: {
                 nextInSeconds: number;
             };
@@ -5614,7 +5614,7 @@ export interface components {
             build?: string;
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.7.0";
+            contractVersion?: "2.7.1";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
@@ -11346,6 +11346,8 @@ export interface components {
                 subject?: string;
             }[];
             variables?: {
+                /** @description Empty uses a neutral greeting when no person's name exists. Null leaves those targets unresolved. */
+                firstNameFallback?: string | null;
                 ownerName?: string;
                 slot1?: string;
                 slot2?: string;

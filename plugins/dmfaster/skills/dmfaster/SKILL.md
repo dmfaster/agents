@@ -449,8 +449,9 @@ Use this sequence:
 2. Call `prospect_query` with the user's plain-language ICP. It resolves industry
    words, places, size and revenue on the server and returns an exact whole-set
    total. Echo `nextCursor` alone to page. Do not add a contact channel unless
-   the user asked for one. Website evidence annotates a SaaS result; it does
-   not narrow the industry set unless the user asks to require it.
+   the user asked for one. SaaS is positive website evidence inside the software
+   classes, never the software-development set. evidence "require" keeps that
+   positive set and fails when the ICP has no website fact.
 3. Call `industry_lookup` only when `prospect_query` asks for one industry.
    If it returns `needs_clarification`, show the supplied choices and wait for
    the user; do not silently choose one.
