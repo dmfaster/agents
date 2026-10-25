@@ -1866,7 +1866,6 @@ export const AGENT_INPUT_ONLY_PREVIEW_TOOLS = [
   "reply.templates.update",
   "reply.templates.delete",
   "reply.policy.update",
-  "conversation.draft.save",
   "calendar.booking.link.create",
   "feedback.submit",
   "copy.approval.request",
@@ -13792,7 +13791,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       dryRun: {
         type: "boolean",
         description:
-          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+          "True runs the save's access, version and template checks without writing and returns wouldChange.wouldSave with blocking reasons (for example resource_changed for a stale expectedUpdatedAt).",
       },
       conversationId: {
         $ref: "#/components/schemas/ResourceId",

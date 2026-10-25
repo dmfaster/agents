@@ -7213,7 +7213,6 @@ paths:
                 $ref: "#/components/schemas/ReplyApprovalsListResult"
   /api/v1/agent/tools/conversation.draft.save:
     post:
-      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: conversationDraftSave
@@ -21579,6 +21578,16 @@ components:
             previouslyContacted:
               type: integer
               minimum: 0
+            neverContacted:
+              type: integer
+              minimum: 0
+              description: Matches with no contact history in this workspace (same rule as eligibleNeverContacted in the campaign path).
+            saturation:
+              type: string
+              enum:
+                - healthy
+                - saturated
+                - exhausted
             evidencePositive:
               type: integer
               minimum: 0
@@ -28935,7 +28944,7 @@ components:
       properties:
         dryRun:
           type: boolean
-          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
+          description: True runs the save's access, version and template checks without writing and returns wouldChange.wouldSave with blocking reasons (for example resource_changed for a stale expectedUpdatedAt).
         conversationId:
           $ref: "#/components/schemas/ResourceId"
         expectedUpdatedAt:

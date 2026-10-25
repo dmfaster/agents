@@ -9325,7 +9325,7 @@ export interface components {
         };
         ConversationDraftSaveInput: {
             conversationId: components["schemas"]["ResourceId"];
-            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            /** @description True runs the save's access, version and template checks without writing and returns wouldChange.wouldSave with blocking reasons (for example resource_changed for a stale expectedUpdatedAt). */
             dryRun?: boolean;
             expectedUpdatedAt: components["schemas"]["ResourceVersion"];
             idempotencyKey: components["schemas"]["IdempotencyKey"];
@@ -11499,8 +11499,12 @@ export interface components {
                 matchedIncludingUnknown?: number;
                 /** @description Matches whose bounded employee count and revenue are both published. */
                 matchedKnown?: number;
+                /** @description Matches with no contact history in this workspace (same rule as eligibleNeverContacted in the campaign path). */
+                neverContacted?: number;
                 previouslyContacted?: number;
                 reason?: string;
+                /** @enum {string} */
+                saturation?: "healthy" | "saturated" | "exhausted";
                 unknownRevenue?: number;
                 unknownSize?: number;
                 withAnyChannel?: number;
