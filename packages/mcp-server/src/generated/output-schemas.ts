@@ -142,7 +142,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -1468,7 +1468,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -2697,7 +2697,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -3387,7 +3387,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -4598,7 +4598,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -5358,7 +5358,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -6523,7 +6523,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -7270,7 +7270,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -8561,7 +8561,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -9842,7 +9842,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -10732,7 +10732,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -11653,7 +11653,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -12519,7 +12519,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -13205,7 +13205,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -13878,7 +13878,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -14584,7 +14584,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -15268,7 +15268,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -16016,7 +16016,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -16676,7 +16676,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -17347,7 +17347,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -18053,7 +18053,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -18752,7 +18752,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -19410,7 +19410,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -20168,7 +20168,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -20633,7 +20633,15 @@ export const AGENT_OUTPUT_SCHEMAS = {
         required: ["campaignId", "entries", "hasMore", "nextCursor"],
         properties: {
           campaignId: {
-            type: "string",
+            description: "Null when the page is the whole workspace.",
+            oneOf: [
+              {
+                type: "string",
+              },
+              {
+                type: "null",
+              },
+            ],
           },
           entries: {
             type: "array",
@@ -20837,7 +20845,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -21949,7 +21957,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -23005,7 +23013,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -23801,7 +23809,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -24449,7 +24457,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -25127,7 +25135,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -25797,7 +25805,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -26552,7 +26560,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -27338,7 +27346,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -28196,7 +28204,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -28732,6 +28740,9 @@ export const AGENT_OUTPUT_SCHEMAS = {
                     $ref: "#/$defs/ListInspectData",
                   },
                   {
+                    $ref: "#/$defs/CompanyListInspectData",
+                  },
+                  {
                     type: "null",
                   },
                 ],
@@ -28846,7 +28857,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -29373,6 +29384,65 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
         },
       },
+      CompanyListInspectData: {
+        type: "object",
+        additionalProperties: true,
+        required: ["listId", "name", "total", "companies", "nextOffset"],
+        properties: {
+          channelCounts: {
+            type: "object",
+            additionalProperties: false,
+            required: ["instagram", "facebook", "linkedin"],
+            properties: {
+              instagram: {
+                type: "integer",
+                minimum: 0,
+              },
+              facebook: {
+                type: "integer",
+                minimum: 0,
+              },
+              linkedin: {
+                type: "integer",
+                minimum: 0,
+              },
+              email: {
+                type: "integer",
+                minimum: 0,
+              },
+              sms: {
+                type: "integer",
+                minimum: 0,
+              },
+            },
+          },
+          listId: {
+            type: "string",
+          },
+          name: {
+            type: "string",
+          },
+          total: {
+            type: "integer",
+            minimum: 0,
+          },
+          expectedUpdatedAt: {
+            type: "string",
+          },
+          companies: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: true,
+            },
+          },
+          nextOffset: {
+            type: ["integer", "null"],
+          },
+        },
+        description:
+          "Read paginated company identities and available contact routes from a saved company list. Echo expectedUpdatedAt on subsequent pages. Use company_inspect for the current full research profile.",
+      },
     },
   }),
   "list.target.remove": z.fromJSONSchema({
@@ -29516,7 +29586,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -30204,7 +30274,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -31000,7 +31070,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -31628,8 +31698,43 @@ export const AGENT_OUTPUT_SCHEMAS = {
             minimum: 1,
             maximum: 127,
           },
+          sendingWindow: {
+            $ref: "#/$defs/SendingWindow",
+          },
           timezone: {
             type: "string",
+          },
+        },
+      },
+      SendingWindow: {
+        type: "object",
+        additionalProperties: false,
+        description:
+          "Channel-neutral local sending window. Weekdays are ISO 1-7 and default to Monday-Friday.",
+        required: ["timezone", "start", "end"],
+        properties: {
+          timezone: {
+            type: "string",
+            minLength: 1,
+            maxLength: 80,
+          },
+          start: {
+            type: "string",
+            pattern: "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+          },
+          end: {
+            type: "string",
+            pattern: "^(?:(?:[01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+          },
+          weekdays: {
+            type: "array",
+            minItems: 1,
+            maxItems: 7,
+            items: {
+              type: "integer",
+              minimum: 1,
+              maximum: 7,
+            },
           },
         },
       },
@@ -31776,7 +31881,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -32462,7 +32567,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -33215,7 +33320,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -33968,7 +34073,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -34902,7 +35007,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -35681,7 +35786,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -36481,7 +36586,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -37250,7 +37355,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -38237,7 +38342,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -38901,7 +39006,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -40077,7 +40182,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -41062,7 +41167,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -42337,7 +42442,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -43086,7 +43191,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -44158,7 +44263,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -45526,7 +45631,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -46894,7 +46999,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -48262,7 +48367,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -49630,7 +49735,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -50998,7 +51103,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -51904,7 +52009,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -52630,7 +52735,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -53351,7 +53456,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -54119,7 +54224,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -55017,7 +55122,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -55716,7 +55821,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -56378,7 +56483,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -57094,7 +57199,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -57752,7 +57857,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -58545,7 +58650,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -59212,7 +59317,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -59860,7 +59965,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -60564,7 +60669,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -61268,7 +61373,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -62006,7 +62111,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -62748,7 +62853,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -63495,7 +63600,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -64492,7 +64597,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -65659,7 +65764,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -66294,7 +66399,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -66974,7 +67079,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -67650,7 +67755,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -68487,7 +68592,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -70244,7 +70349,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -70908,7 +71013,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -71657,7 +71762,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -72365,7 +72470,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -73073,7 +73178,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -73718,7 +73823,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -74436,7 +74541,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -75109,7 +75214,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -76028,7 +76133,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -76950,7 +77055,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -77910,7 +78015,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -78832,7 +78937,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -79795,7 +79900,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -80755,7 +80860,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -81677,7 +81782,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -82637,7 +82742,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -83555,7 +83660,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -84465,7 +84570,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -85409,7 +85514,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -86312,7 +86417,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -87222,7 +87327,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -88173,7 +88278,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -89120,7 +89225,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -89945,7 +90050,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -90619,7 +90724,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -91308,7 +91413,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -92014,7 +92119,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -92720,7 +92825,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -93388,7 +93493,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -94077,7 +94182,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -94745,7 +94850,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -95411,7 +95516,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -96093,7 +96198,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -96812,7 +96917,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -97528,7 +97633,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -98281,7 +98386,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -99101,7 +99206,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -99740,7 +99845,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -100379,7 +100484,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -101018,7 +101123,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -101657,7 +101762,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -102410,7 +102515,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -103148,7 +103253,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -103773,7 +103878,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -104458,7 +104563,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -105130,7 +105235,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -105976,7 +106081,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -106863,7 +106968,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -107750,7 +107855,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -108630,7 +108735,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -109476,7 +109581,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -110356,7 +110461,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -111202,7 +111307,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -112085,7 +112190,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -112968,7 +113073,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -113848,7 +113953,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -114705,7 +114810,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -115336,7 +115441,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -115926,7 +116031,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -116523,7 +116628,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -117120,7 +117225,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -117717,7 +117822,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -118307,7 +118412,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -118903,7 +119008,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -119663,7 +119768,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -120419,7 +120524,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -121119,7 +121224,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -122020,7 +122125,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -122689,7 +122794,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -123650,7 +123755,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -124310,7 +124415,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -124989,7 +125094,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -125624,7 +125729,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -126259,7 +126364,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -126924,7 +127029,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -127608,7 +127713,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -128370,7 +128475,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -129109,7 +129214,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -129797,7 +129902,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -130427,7 +130532,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -131057,7 +131162,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -131726,7 +131831,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -132413,7 +132518,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -133084,7 +133189,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -133755,7 +133860,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -134583,7 +134688,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -135057,6 +135162,10 @@ export const AGENT_OUTPUT_SCHEMAS = {
                   type: "string",
                   maxLength: 200,
                 },
+                webhookId: {
+                  type: "string",
+                  maxLength: 200,
+                },
                 eventId: {
                   type: "string",
                   maxLength: 200,
@@ -135139,6 +135248,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
               required: [
                 "id",
+                "webhookId",
                 "eventId",
                 "sequence",
                 "orderingKey",
@@ -135304,7 +135414,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -135922,7 +136032,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -136559,7 +136669,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -137224,7 +137334,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -137887,7 +137997,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -138679,7 +138789,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -139459,7 +139569,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -140239,7 +140349,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -141019,7 +141129,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -141799,7 +141909,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -142425,7 +142535,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -143051,7 +143161,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -143786,7 +143896,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -144294,7 +144404,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           data: {
             type: "object",
@@ -144448,7 +144558,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -145093,7 +145203,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -145718,7 +145828,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -146491,7 +146601,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -147400,7 +147510,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -148051,7 +148161,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -148685,7 +148795,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -149336,7 +149446,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -149991,7 +150101,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -150663,7 +150773,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -151387,7 +151497,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -152456,7 +152566,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -153197,7 +153307,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -153954,7 +154064,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -154711,7 +154821,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -155362,7 +155472,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -156013,7 +156123,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -156714,7 +156824,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -158031,7 +158141,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -158698,7 +158808,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -159419,7 +159529,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -160428,7 +160538,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -161134,7 +161244,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -161826,7 +161936,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -162544,7 +162654,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -164573,7 +164683,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -165245,7 +165355,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -165958,7 +166068,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -166609,7 +166719,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -167277,7 +167387,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -167945,7 +168055,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -168607,7 +168717,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -169269,7 +169379,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -169931,7 +170041,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -170685,7 +170795,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -171363,7 +171473,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -172041,7 +172151,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -172683,7 +172793,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -173351,7 +173461,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -174024,7 +174134,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -174697,7 +174807,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -175370,7 +175480,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -176043,7 +176153,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -176716,7 +176826,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -177389,7 +177499,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -178062,7 +178172,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -178735,7 +178845,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -179408,7 +179518,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -180081,7 +180191,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -180754,7 +180864,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -181427,7 +181537,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -182100,7 +182210,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -182773,7 +182883,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -183446,7 +183556,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [
@@ -184122,7 +184232,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.4",
+            const: "2.7.5",
           },
           rateLimit: {
             oneOf: [

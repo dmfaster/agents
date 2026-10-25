@@ -27,7 +27,7 @@ import { cachedMcpSchema } from "./cached-schema.ts";
 import { hostedConnectionSchema } from "./presentation-schemas.ts";
 import { oauthToolMetadata, oauthFailureMetadata, type HostedAuth } from "./hosted-auth.ts";
 
-export const MCP_SERVER_VERSION = "2.7.4";
+export const MCP_SERVER_VERSION = "2.7.5";
 export const MCP_SERVER_INSTRUCTIONS =
   "DM Faster prospecting and outreach. Check connection_status; use narrow tools, exact counts and returned IDs/revisions. Retain retry keys. Selections are not consent. Drafts never send. Follow granted access, explicit user instructions and tool workflows; verify outcomes before claiming success. Never expose credentials or operate approval pages. With feedback:write, use feedback_submit for observed friction: concise context, no private data, one stable key per report. Continue the main task.";
 
@@ -219,11 +219,20 @@ export function createDmfasterMcpCore(input: {
       );
     });
   let definitions = permitted();
+  const catalogSuccessor = (name: string) => {
+    for (const tool of AGENT_TOOL_NAMES) {
+      const mcp = AGENT_TOOL_DEFINITIONS[tool].mcp as {
+        name: string;
+        deprecatedSuccessor?: string;
+      };
+      if (mcp.name === name) return mcp.deprecatedSuccessor || "";
+    }
+    return "";
+  };
   const coreOrder = [
     "prospect_query",
     "industry_lookup",
     "companies_search",
-    "audience_preview",
     "prospecting_preview",
     "campaign_draft_plan",
     "copy_approval_request",
@@ -235,6 +244,7 @@ export function createDmfasterMcpCore(input: {
   const synchronizeCatalog = () => {
     definitions = permitted();
     const visible = definitions
+      .filter((d) => !catalogSuccessor(d.name))
       .filter((d) => input.catalogProfile === "full" || coreNames.has(d.name))
       .sort((left, right) => {
         const leftIndex = coreOrder.indexOf(left.name);
@@ -299,12 +309,16 @@ export function createDmfasterMcpCore(input: {
       // then name hits rank above description hits.
       const asName = (value: string) => value.toLowerCase().replace(/[\s.-]+/g, "_");
       const exact = asName((query || "").trim());
-      const matches = definitions
+      const successorName = catalogSuccessor(exact);
+      const discoverable = successorName
+        ? definitions.filter((definition) => definition.name === successorName)
+        : definitions.filter((definition) => !catalogSuccessor(definition.name));
+      const matches = discoverable
         .map((definition) => {
           const haystack =
             `${definition.name} ${definition.title} ${definition.description}`.toLowerCase();
           const score =
-            (definition.name === exact ? 1000 : 0) +
+            (successorName || definition.name === exact ? 1000 : 0) +
             terms.reduce(
               (total, term) =>
                 total +
@@ -322,7 +336,11 @@ export function createDmfasterMcpCore(input: {
         .map((item) => item.definition);
       const items = matches.slice(0, Math.min(limit || 10, includeSchema ? 3 : 30)).map((d) => ({
         name: d.name,
-        description: `${d.title}. ${d.description}`.slice(0, 300),
+        description:
+          `${successorName ? `Replaces deprecated ${exact}. ` : ""}${d.title}. ${d.description}`.slice(
+            0,
+            300,
+          ),
         annotations: d.annotations,
         ...(includeSchema
           ? {

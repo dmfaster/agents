@@ -1,5 +1,5 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
-export const AGENT_CONTRACT_VERSION = "2.7.4" as const;
+export const AGENT_CONTRACT_VERSION = "2.7.5" as const;
 export const AGENT_TOOL_NAMES = [
   "analytics.summary",
   "workspace.briefing",
@@ -2126,6 +2126,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "analytics_summary",
     },
     cli: {
       section: "Workspace reads",
@@ -2222,6 +2223,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "conversations_list",
     },
     cli: {
       section: "Workspace reads",
@@ -2561,6 +2563,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "pipeline_cards_list",
     },
     cli: {
       section: "Workspace reads",
@@ -2689,6 +2692,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "campaign_draft_plan",
     },
     cli: {
       section: "Campaign planning and drafts",
@@ -2708,6 +2712,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "prospecting_preview",
     },
     cli: {
       section: "Campaign planning and drafts",
@@ -2841,6 +2846,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "companies_list_prepare",
     },
     cli: {
       section: "Campaign planning and drafts",
@@ -2860,6 +2866,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "campaign_draft_plan",
     },
     cli: {
       section: "Campaign planning and drafts",
@@ -2956,6 +2963,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "companies_search",
     },
     cli: {
       section: "B2B company prospecting",
@@ -2975,6 +2983,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "companies_search",
     },
     cli: {
       section: "B2B company prospecting",
@@ -3051,6 +3060,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "companies_search",
     },
     cli: {
       section: "B2B company prospecting",
@@ -4714,6 +4724,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "pipeline_cards_list",
     },
     cli: {
       section: "Pipeline",
@@ -4880,6 +4891,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "call_transcripts_get",
     },
     cli: {
       section: "Agent workflows",
@@ -5222,6 +5234,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "events_list",
     },
     cli: {
       section: "Agent workflows",
@@ -5849,6 +5862,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "call_stats_get",
     },
     cli: {
       section: "Agent workflows",
@@ -6494,6 +6508,7 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
+      deprecatedSuccessor: "approval_cancel",
     },
     cli: {
       section: "Campaign planning and drafts",
@@ -8152,9 +8167,9 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
   HistoryListInput: {
     type: "object",
     additionalProperties: false,
-    required: ["campaignId"],
     properties: {
       campaignId: {
+        description: "Omit to list confirmed sends for the whole workspace.",
         $ref: "#/components/schemas/ResourceId",
       },
       cursor: {
@@ -9082,6 +9097,9 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         },
         required: ["timezone", "startMinute", "endMinute"],
       },
+      sendingWindow: {
+        $ref: "#/components/schemas/SendingWindow",
+      },
       labels: {
         type: "array",
         items: {
@@ -9431,6 +9449,38 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
     required: ["messages"],
+  },
+  SendingWindow: {
+    type: "object",
+    additionalProperties: false,
+    description:
+      "Channel-neutral local sending window. Weekdays are ISO 1-7 and default to Monday-Friday.",
+    required: ["timezone", "start", "end"],
+    properties: {
+      timezone: {
+        type: "string",
+        minLength: 1,
+        maxLength: 80,
+      },
+      start: {
+        type: "string",
+        pattern: "^(?:[01]\\d|2[0-3]):[0-5]\\d$",
+      },
+      end: {
+        type: "string",
+        pattern: "^(?:(?:[01]\\d|2[0-3]):[0-5]\\d|24:00)$",
+      },
+      weekdays: {
+        type: "array",
+        minItems: 1,
+        maxItems: 7,
+        items: {
+          type: "integer",
+          minimum: 1,
+          maximum: 7,
+        },
+      },
+    },
   },
   AudiencePreviewInput: {
     type: "object",
@@ -9793,6 +9843,9 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
             type: "integer",
             minimum: 1,
             maximum: 127,
+          },
+          sendingWindow: {
+            $ref: "#/components/schemas/SendingWindow",
           },
         },
       },
@@ -11249,7 +11302,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           dailyCap: {
             type: "integer",
             minimum: 1,
-            maximum: 2147483647,
+            maximum: 60,
           },
           pacingSeconds: {
             type: "integer",
@@ -11273,6 +11326,9 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
             type: "integer",
             minimum: 1,
             maximum: 127,
+          },
+          sendingWindow: {
+            $ref: "#/components/schemas/SendingWindow",
           },
         },
         minProperties: 1,
@@ -15174,7 +15230,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
       },
     },
-    required: ["webhookId"],
+    required: [],
   },
   WebhooksDlqReplayInput: {
     type: "object",
