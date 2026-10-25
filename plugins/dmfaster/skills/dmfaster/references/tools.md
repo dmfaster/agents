@@ -22,7 +22,7 @@ to perform an action. It has no domain HTTP or CLI operation.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@2.7.0
+npx --yes @dmfaster/cli@2.7.1
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
@@ -72,7 +72,7 @@ only one input in a command may use `-`.
 | `pipeline_note_add`                | `pipeline.note.add`                | `pipeline note add --input FILE --json`                                                         | `pipeline:read`, `pipeline:write`                     | idempotent private note                                                        |
 | `company_timeline`                 | `company.timeline`                 | `company timeline <campaign-id> <outreach-id> --json`                                           | `pipeline:read`, `campaigns:read`                     | bounded read                                                                   |
 | `industry_lookup`                  | `industry.lookup`                  | `industry lookup <query> [options] --json`                                                      | `audiences:read`                                      | planning read                                                                  |
-| `prospect_query`                   | `prospect.query`                   | `prospect query --input FILE --json`                                                            | `audiences:read`                                      | exact whole-set ICP query                                                     |
+| `prospect_query`                   | `prospect.query`                   | `prospect query --input FILE --json`                                                            | `audiences:read`                                      | exact whole-set ICP query                                                      |
 | `campaign_validate`                | `campaign.validate`                | `campaign validate --state <file> --json`                                                       | `audiences:read`                                      | planning read                                                                  |
 | `audience_preview`                 | `audience.preview`                 | `audience preview --state <file> [--sample-size N] --json`                                      | `audiences:read`                                      | exact preview read                                                             |
 | `lists_list`                       | `lists.list`                       | `lists list [--query TEXT] [--limit N] [--offset N] --json`                                     | `campaigns:read`                                      | saved-list discovery                                                           |
@@ -146,8 +146,9 @@ For a plain-language ICP, call `prospect_query` once. It resolves industry words
 Finnish regions and cities, employee and revenue bounds, and technology names.
 The result is an exact whole-set total. Echo `nextCursor` alone for the next
 page, or `querySignature` alone to rerun the same ICP. No contact channel is
-applied unless requested. SaaS website evidence is counted and does not narrow
-the registered industry set unless `evidence` is `require`. Rows are paged;
+applied unless requested. SaaS is positive website evidence inside the software
+classes, never the software-development set. `evidence` `require` keeps that
+positive set and fails when the ICP has no website fact. Rows are paged;
 there is no export file. `audience_preview` remains the way to obtain the
 server-issued `reviewedAudience` for a campaign draft.
 
