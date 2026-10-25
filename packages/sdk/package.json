@@ -1,6 +1,6 @@
 {
   "name": "@dmfaster/sdk",
-  "version": "2.7.5",
+  "version": "2.7.6",
   "description": "Typed client for the DM Faster Agent API.",
   "license": "Apache-2.0",
   "author": "DM Faster",
