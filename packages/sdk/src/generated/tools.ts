@@ -1,5 +1,5 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
-export const AGENT_CONTRACT_VERSION = "2.7.2" as const;
+export const AGENT_CONTRACT_VERSION = "2.7.3" as const;
 export const AGENT_TOOL_NAMES = [
   "analytics.summary",
   "workspace.briefing",
@@ -2987,7 +2987,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "prospect_query",
       title: "Query an ICP",
       description:
-        "Give an ICP in words or codes. Returns exact totals and every matching company, paged up to 1000 compact rows. Echo nextCursor alone for the next page. Country defaults to Finland. Unknown size and revenue are included and counted. Pass campaignFilters as filters to plan the same set.",
+        "Give an ICP in words or codes. Returns exact totals and every matching company, paged up to 1000 compact rows. Echo nextCursor alone for the next page. Country defaults to Finland. Unknown size and revenue are included and counted. Pass campaignFilters as filters to plan the same set. status needs_clarification means nothing was searched; pick a counted option.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,

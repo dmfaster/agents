@@ -62,7 +62,23 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     }
     return `${name}Schema`;
   }
+  const sharedLeaves = new Map();
   function compile(schema) {
+    const expression = compileSchema(schema);
+    // References already share named declarations. Intern repeated leaf blocks
+    // (countries, versions and run correlation) without changing validation.
+    if (!schema.$ref && (schema.type === "string" || schema.enum) && expression.length > 80) {
+      let name = sharedLeaves.get(expression);
+      if (!name) {
+        name = `SharedInput${sharedLeaves.size + 1}Schema`;
+        sharedLeaves.set(expression, name);
+        declarations.set(name, `const ${name} = ${expression};`);
+      }
+      return name;
+    }
+    return expression;
+  }
+  function compileSchema(schema) {
     for (const key of Object.keys(schema))
       if (!allowed.has(key)) throw Error(`Unsupported input-schema keyword: ${key}`);
     const selector = ["$ref", "const", "enum", "allOf", "oneOf", "anyOf"].filter(
@@ -128,7 +144,11 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     else if (schema.const !== undefined) result = `z.literal(${json(schema.const)})`;
     else if (schema.enum) {
       if (!schema.enum.length) throw Error("Empty enum");
-      result = `z.union([${schema.enum.map((v) => `z.literal(${json(v)})`).join(",")}])`;
+      result = schema.enum.every((value) => typeof value === "string")
+        ? `z.enum(${json(schema.enum)})`
+        : schema.enum.length === 1
+          ? `z.literal(${json(schema.enum[0])})`
+          : `z.union([${schema.enum.map((v) => `z.literal(${json(v)})`).join(",")}])`;
     } else if (schema.allOf) {
       if (!schema.allOf.length) throw Error("Empty allOf");
       result = schema.allOf.map(compile).reduce((a, b) => `z.intersection(${a},${b})`);

@@ -5224,7 +5224,7 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.7.2";
+            contractVersion: "2.7.3";
             data: {
                 nextInSeconds: number;
             };
@@ -5627,7 +5627,7 @@ export interface components {
             build?: string;
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.7.2";
+            contractVersion?: "2.7.3";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
@@ -11448,6 +11448,17 @@ export interface components {
         ProspectQueryData: {
             /** @description Exact filters for prospecting_preview and campaign_draft_plan; their inventoryTotal equals matched before contact exclusions. Null when the ICP cannot be expressed as filters. */
             campaignFilters?: components["schemas"]["CompanySearchFilters"] | null;
+            clarification?: {
+                /** @description Each option keeps the rest of the ICP. matched is its exact total before contact exclusions, or null when unavailable or above 200,000. Re-run with querySignature or pass industries. */
+                options: {
+                    industries: string[];
+                    label: string;
+                    matched: number | null;
+                    matchedKnown?: number;
+                    querySignature?: string;
+                }[];
+                question: string;
+            };
             columns: string[];
             export?: null;
             nextCursor: string;
@@ -11488,6 +11499,11 @@ export interface components {
                 websiteFacts?: ("b2c" | "b2b" | "saas")[];
             };
             rows: (string | number | null)[][];
+            /**
+             * @description needs_clarification means the ICP named no single industry and nothing was searched; pick one clarification option. too_large means more than 200,000 companies match.
+             * @enum {string}
+             */
+            status?: "ok" | "needs_clarification" | "too_large";
             totals: {
                 eligible?: number;
                 evidenceOnlyAvailable?: number;

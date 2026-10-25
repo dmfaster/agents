@@ -22,7 +22,7 @@ to perform an action. It has no domain HTTP or CLI operation.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@2.7.2
+npx --yes @dmfaster/cli@2.7.3
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
@@ -144,7 +144,8 @@ See [reviews-and-bookings.md](reviews-and-bookings.md) for runner, cohort, copy 
 
 For a plain-language ICP, call `prospect_query` once. It resolves industry words,
 Finnish regions and cities, employee and revenue bounds, and technology names.
-The result is an exact whole-set total. Echo `nextCursor` alone for the next
+The result is an exact whole-set total. If `status` is `needs_clarification`,
+show the options and counts and wait; nothing was searched. Echo `nextCursor` alone for the next
 page, or `querySignature` alone to rerun the same ICP. No contact channel is
 applied unless requested. SaaS is positive website evidence inside the software
 classes, never the software-development set. `evidence` `require` keeps that
