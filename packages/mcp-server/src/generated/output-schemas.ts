@@ -142,7 +142,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -1468,7 +1468,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -2697,7 +2697,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -3387,7 +3387,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -4598,7 +4598,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -5358,7 +5358,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -6523,7 +6523,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -7098,11 +7098,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
             type: ["string", "null"],
           },
           intent: {
+            description:
+              "Classified reply intent, auto_reply for an automatic inbound, or unclassified. Null only when the row has no linked conversation.",
             type: ["string", "null"],
           },
           lastMessage: {
             description:
-              "Latest message in that conversation, up to 500 characters; direction says whether it is the reply.",
+              "Latest inbound message with text when one exists; otherwise the latest non-empty message, up to 500 characters. Empty text is not returned.",
             type: ["object", "null"],
             additionalProperties: false,
             properties: {
@@ -7268,7 +7270,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -8559,7 +8561,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -9840,7 +9842,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -10730,7 +10732,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -11651,7 +11653,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -12517,7 +12519,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -13203,7 +13205,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -13876,7 +13878,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -14582,7 +14584,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -15266,7 +15268,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -16014,7 +16016,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -16674,7 +16676,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -17345,7 +17347,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -18051,7 +18053,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -18750,7 +18752,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -19408,7 +19410,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -20166,7 +20168,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -20835,7 +20837,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -21458,11 +21460,13 @@ export const AGENT_OUTPUT_SCHEMAS = {
             type: ["string", "null"],
           },
           intent: {
+            description:
+              "Classified reply intent, auto_reply for an automatic inbound, or unclassified. Null only when the row has no linked conversation.",
             type: ["string", "null"],
           },
           lastMessage: {
             description:
-              "Latest message in that conversation, up to 500 characters; direction says whether it is the reply.",
+              "Latest inbound message with text when one exists; otherwise the latest non-empty message, up to 500 characters. Empty text is not returned.",
             type: ["object", "null"],
             additionalProperties: false,
             properties: {
@@ -21945,7 +21949,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -23001,7 +23005,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -23797,7 +23801,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -24445,7 +24449,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -25123,7 +25127,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -25793,7 +25797,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -26548,7 +26552,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -27334,7 +27338,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -28192,7 +28196,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -28842,7 +28846,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -29512,7 +29516,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -30200,7 +30204,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -30996,7 +31000,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -31772,7 +31776,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -32458,7 +32462,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -33211,7 +33215,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -33964,7 +33968,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -34898,7 +34902,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -35677,7 +35681,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -36477,7 +36481,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -37246,7 +37250,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -38051,12 +38055,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
           includeUnknownSize: {
             type: "boolean",
             description:
-              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, except a minimum with no maximum, which counts published employee counts unless this is true. The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
           },
           includeUnknownRevenue: {
             type: "boolean",
             description:
-              "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
+              "Keep companies without a published revenue when a revenue bound is supplied. Default true, except a minimum with no maximum, which counts published revenue unless this is true. The same rule as prospect_query; unknownRevenue is reported.",
           },
         },
         description:
@@ -38233,7 +38237,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -38897,7 +38901,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -39925,12 +39929,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
           includeUnknownSize: {
             type: "boolean",
             description:
-              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, except a minimum with no maximum, which counts published employee counts unless this is true. The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
           },
           includeUnknownRevenue: {
             type: "boolean",
             description:
-              "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
+              "Keep companies without a published revenue when a revenue bound is supplied. Default true, except a minimum with no maximum, which counts published revenue unless this is true. The same rule as prospect_query; unknownRevenue is reported.",
           },
         },
         description:
@@ -40073,7 +40077,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -40910,12 +40914,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
           includeUnknownSize: {
             type: "boolean",
             description:
-              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, except a minimum with no maximum, which counts published employee counts unless this is true. The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
           },
           includeUnknownRevenue: {
             type: "boolean",
             description:
-              "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
+              "Keep companies without a published revenue when a revenue bound is supplied. Default true, except a minimum with no maximum, which counts published revenue unless this is true. The same rule as prospect_query; unknownRevenue is reported.",
           },
         },
         description:
@@ -41058,7 +41062,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -42185,12 +42189,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
           includeUnknownSize: {
             type: "boolean",
             description:
-              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, except a minimum with no maximum, which counts published employee counts unless this is true. The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
           },
           includeUnknownRevenue: {
             type: "boolean",
             description:
-              "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
+              "Keep companies without a published revenue when a revenue bound is supplied. Default true, except a minimum with no maximum, which counts published revenue unless this is true. The same rule as prospect_query; unknownRevenue is reported.",
           },
         },
         description:
@@ -42333,7 +42337,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -43082,7 +43086,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -44154,7 +44158,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -45142,12 +45146,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
           includeUnknownSize: {
             type: "boolean",
             description:
-              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, except a minimum with no maximum, which counts published employee counts unless this is true. The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
           },
           includeUnknownRevenue: {
             type: "boolean",
             description:
-              "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
+              "Keep companies without a published revenue when a revenue bound is supplied. Default true, except a minimum with no maximum, which counts published revenue unless this is true. The same rule as prospect_query; unknownRevenue is reported.",
           },
         },
         description:
@@ -45522,7 +45526,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -46510,12 +46514,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
           includeUnknownSize: {
             type: "boolean",
             description:
-              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, except a minimum with no maximum, which counts published employee counts unless this is true. The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
           },
           includeUnknownRevenue: {
             type: "boolean",
             description:
-              "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
+              "Keep companies without a published revenue when a revenue bound is supplied. Default true, except a minimum with no maximum, which counts published revenue unless this is true. The same rule as prospect_query; unknownRevenue is reported.",
           },
         },
         description:
@@ -46890,7 +46894,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -47878,12 +47882,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
           includeUnknownSize: {
             type: "boolean",
             description:
-              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, except a minimum with no maximum, which counts published employee counts unless this is true. The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
           },
           includeUnknownRevenue: {
             type: "boolean",
             description:
-              "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
+              "Keep companies without a published revenue when a revenue bound is supplied. Default true, except a minimum with no maximum, which counts published revenue unless this is true. The same rule as prospect_query; unknownRevenue is reported.",
           },
         },
         description:
@@ -48258,7 +48262,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -49246,12 +49250,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
           includeUnknownSize: {
             type: "boolean",
             description:
-              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, except a minimum with no maximum, which counts published employee counts unless this is true. The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
           },
           includeUnknownRevenue: {
             type: "boolean",
             description:
-              "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
+              "Keep companies without a published revenue when a revenue bound is supplied. Default true, except a minimum with no maximum, which counts published revenue unless this is true. The same rule as prospect_query; unknownRevenue is reported.",
           },
         },
         description:
@@ -49626,7 +49630,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -50614,12 +50618,12 @@ export const AGENT_OUTPUT_SCHEMAS = {
           includeUnknownSize: {
             type: "boolean",
             description:
-              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+              "Keep companies whose employee count is unknown when a size bound is supplied. Default true, except a minimum with no maximum, which counts published employee counts unless this is true. The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
           },
           includeUnknownRevenue: {
             type: "boolean",
             description:
-              "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
+              "Keep companies without a published revenue when a revenue bound is supplied. Default true, except a minimum with no maximum, which counts published revenue unless this is true. The same rule as prospect_query; unknownRevenue is reported.",
           },
         },
         description:
@@ -50994,7 +50998,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -51492,7 +51496,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
               },
             },
             description:
-              "Compare dated financial history with the headline before qualifying employee or revenue bounds. This does not replace published search facts or infer a missing value from another year.",
+              "The headline year is the latest financial history year when that history is newer than the stored headline. This does not replace published search facts used by prospect_query.",
           },
           revision: {
             type: "string",
@@ -51900,7 +51904,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -52626,7 +52630,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -53347,7 +53351,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -54115,7 +54119,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -55013,7 +55017,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -55712,7 +55716,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -56374,7 +56378,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -57090,7 +57094,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -57748,7 +57752,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -58541,7 +58545,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -59208,7 +59212,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -59856,7 +59860,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -60560,7 +60564,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -61264,7 +61268,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -62002,7 +62006,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -62744,7 +62748,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -63491,7 +63495,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -64488,7 +64492,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -65655,7 +65659,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -66290,7 +66294,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -66970,7 +66974,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -67646,7 +67650,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -68483,7 +68487,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -70240,7 +70244,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -70904,7 +70908,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -71653,7 +71657,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -72361,7 +72365,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -73069,7 +73073,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -73714,7 +73718,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -74432,7 +74436,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -75105,7 +75109,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -76024,7 +76028,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -76946,7 +76950,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -77906,7 +77910,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -78828,7 +78832,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -79791,7 +79795,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -80751,7 +80755,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -81673,7 +81677,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -82633,7 +82637,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -83551,7 +83555,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -84461,7 +84465,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -85405,7 +85409,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -86308,7 +86312,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -87218,7 +87222,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -88169,7 +88173,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -89116,7 +89120,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -89941,7 +89945,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -90615,7 +90619,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -91304,7 +91308,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -92010,7 +92014,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -92716,7 +92720,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -93384,7 +93388,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -94073,7 +94077,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -94741,7 +94745,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -95407,7 +95411,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -96089,7 +96093,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -96808,7 +96812,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -97524,7 +97528,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -98277,7 +98281,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -99097,7 +99101,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -99736,7 +99740,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -100375,7 +100379,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -101014,7 +101018,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -101653,7 +101657,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -102406,7 +102410,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -103144,7 +103148,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -103769,7 +103773,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -104454,7 +104458,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -105126,7 +105130,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -105972,7 +105976,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -106859,7 +106863,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -107746,7 +107750,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -108626,7 +108630,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -109472,7 +109476,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -110352,7 +110356,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -111198,7 +111202,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -112081,7 +112085,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -112964,7 +112968,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -113844,7 +113848,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -114701,7 +114705,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -115332,7 +115336,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -115922,7 +115926,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -116519,7 +116523,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -117116,7 +117120,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -117713,7 +117717,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -118303,7 +118307,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -118899,7 +118903,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -119659,7 +119663,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -120415,7 +120419,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -121115,7 +121119,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -122016,7 +122020,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -122685,7 +122689,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -123646,7 +123650,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -124306,7 +124310,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -124985,7 +124989,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -125620,7 +125624,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -126255,7 +126259,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -126920,7 +126924,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -127604,7 +127608,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -128366,7 +128370,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -129105,7 +129109,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -129793,7 +129797,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -130423,7 +130427,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -131053,7 +131057,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -131722,7 +131726,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -132409,7 +132413,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -133080,7 +133084,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -133751,7 +133755,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -134579,7 +134583,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -135300,7 +135304,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -135918,7 +135922,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -136555,7 +136559,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -137220,7 +137224,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -137883,7 +137887,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -138675,7 +138679,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -139455,7 +139459,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -140235,7 +140239,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -141015,7 +141019,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -141795,7 +141799,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -142421,7 +142425,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -143047,7 +143051,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -143782,7 +143786,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -144290,7 +144294,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           data: {
             type: "object",
@@ -144444,7 +144448,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -145089,7 +145093,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -145714,7 +145718,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -146487,7 +146491,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -147396,7 +147400,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -148047,7 +148051,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -148681,7 +148685,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -149332,7 +149336,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -149987,7 +149991,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -150659,7 +150663,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -151383,7 +151387,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -152452,7 +152456,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -153193,7 +153197,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -153950,7 +153954,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -154707,7 +154711,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -155358,7 +155362,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -156009,7 +156013,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -156710,7 +156714,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -158027,7 +158031,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -158694,7 +158698,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -159415,7 +159419,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -160424,7 +160428,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -161130,7 +161134,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -161822,7 +161826,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -162540,7 +162544,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -164569,7 +164573,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -165241,7 +165245,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -165954,7 +165958,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -166605,7 +166609,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -167273,7 +167277,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -167941,7 +167945,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -168603,7 +168607,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -169265,7 +169269,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -169927,7 +169931,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -170681,7 +170685,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -171359,7 +171363,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -172037,7 +172041,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -172679,7 +172683,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -173347,7 +173351,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -174020,7 +174024,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -174693,7 +174697,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -175366,7 +175370,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -176039,7 +176043,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -176712,7 +176716,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -177385,7 +177389,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -178058,7 +178062,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -178731,7 +178735,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -179404,7 +179408,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -180077,7 +180081,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -180750,7 +180754,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -181423,7 +181427,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -182096,7 +182100,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -182769,7 +182773,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -183442,7 +183446,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [
@@ -184118,7 +184122,7 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           contractVersion: {
             type: "string",
-            const: "2.7.3",
+            const: "2.7.4",
           },
           rateLimit: {
             oneOf: [

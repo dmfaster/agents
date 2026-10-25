@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DM Faster Agent API
-  version: 2.7.3
+  version: 2.7.4
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
@@ -14605,7 +14605,7 @@ components:
               const: tool_execution
         contractVersion:
           type: string
-          const: 2.7.3
+          const: 2.7.4
         rateLimit:
           oneOf:
             - $ref: "#/components/schemas/AgentRateLimitEnvelope"
@@ -18596,11 +18596,16 @@ components:
             - string
             - "null"
         intent:
+          description:
+            Classified reply intent, auto_reply for an automatic inbound, or unclassified. Null only when
+            the row has no linked conversation.
           type:
             - string
             - "null"
         lastMessage:
-          description: Latest message in that conversation, up to 500 characters; direction says whether it is the reply.
+          description:
+            Latest inbound message with text when one exists; otherwise the latest non-empty message, up to
+            500 characters. Empty text is not returned.
           type:
             - object
             - "null"
@@ -21118,12 +21123,14 @@ components:
           type: boolean
           description:
             Keep companies whose employee count is unknown when a size bound is supplied. Default true,
-            the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.
+            except a minimum with no maximum, which counts published employee counts unless this is true.
+            The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.
         includeUnknownRevenue:
           type: boolean
           description:
             Keep companies without a published revenue when a revenue bound is supplied. Default true,
-            the same rule as prospect_query; unknownRevenue is reported.
+            except a minimum with no maximum, which counts published revenue unless this is true.
+            The same rule as prospect_query; unknownRevenue is reported.
       description:
         Every filter supported by the Companies app. Numeric bounds use decimal strings, dates
         YYYY-MM-DD; empty values disable filters. Call companies_filters for country-specific options. Saved
@@ -21983,6 +21990,15 @@ components:
           type: string
           maxLength: 192
           minLength: 1
+        projection:
+          type: string
+          enum:
+            - summary
+            - full
+          description:
+            summary returns identity, the latest financial headline, channels, the top three decision
+            makers with roles, technologies and funding/ads/hiring flags. full is the Companies drawer.
+            A companyKeys batch defaults to summary. One company defaults to full.
         runId:
           type: string
           minLength: 1
@@ -22032,8 +22048,8 @@ components:
                 - no_newer_history
                 - unknown
           description:
-            Compare dated financial history with the headline before qualifying employee or revenue bounds.
-            This does not replace published search facts or infer a missing value from another year.
+            The headline year is the latest financial history year when that history is newer than the
+            stored headline. This does not replace published search facts used by prospect_query.
         revision:
           type: string
         profile:
@@ -33445,7 +33461,7 @@ components:
           description: Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox.
         contractVersion:
           type: string
-          const: 2.7.3
+          const: 2.7.4
         data:
           type: object
           additionalProperties: false

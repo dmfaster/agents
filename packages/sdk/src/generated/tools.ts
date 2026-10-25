@@ -1,5 +1,5 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
-export const AGENT_CONTRACT_VERSION = "2.7.3" as const;
+export const AGENT_CONTRACT_VERSION = "2.7.4" as const;
 export const AGENT_TOOL_NAMES = [
   "analytics.summary",
   "workspace.briefing",
@@ -9334,12 +9334,12 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       includeUnknownSize: {
         type: "boolean",
         description:
-          "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+          "Keep companies whose employee count is unknown when a size bound is supplied. Default true, except a minimum with no maximum, which counts published employee counts unless this is true. The same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
       },
       includeUnknownRevenue: {
         type: "boolean",
         description:
-          "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
+          "Keep companies without a published revenue when a revenue bound is supplied. Default true, except a minimum with no maximum, which counts published revenue unless this is true. The same rule as prospect_query; unknownRevenue is reported.",
       },
     },
     description:
@@ -10754,6 +10754,12 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "string",
         maxLength: 192,
         minLength: 1,
+      },
+      projection: {
+        type: "string",
+        enum: ["summary", "full"],
+        description:
+          "summary returns identity, the latest financial headline, channels, the top three decision makers with roles, technologies and funding/ads/hiring flags. full is the Companies drawer. A companyKeys batch defaults to summary. One company defaults to full.",
       },
       runId: {
         type: "string",
