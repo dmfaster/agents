@@ -5319,9 +5319,22 @@ export interface components {
             companyName: string;
             companyOutreachId: string;
             contactName: string;
+            conversationChannel?: string;
+            /** @description The newest linked inbox conversation for replies_list rows; null when none is linked. */
+            conversationId?: string | null;
             handle: string;
             id: string;
+            intent?: string | null;
+            interestLevel?: string | null;
             lastContactedAt: string;
+            lastInboundAt?: string | null;
+            /** @description Latest message in that conversation, up to 500 characters; direction says whether it is the reply. */
+            lastMessage?: {
+                at?: string | null;
+                direction?: string | null;
+                text?: string;
+            } | null;
+            needsReply?: boolean;
             stage: components["schemas"]["PipelineStage"];
         };
         AgentMetaAdsFilter: {
@@ -11333,12 +11346,17 @@ export interface components {
             /** @constant */
             tool?: "pipeline.stage.update";
         };
-        /** @description Bounded inventory page. Exact eligibility totals cover this page only; follow returned nextOffset for subsequent pages. Each draft page requires its own idempotencyKey. */
+        /** @description Inventory scope. Drafts default to scope whole, every eligible company in a complete inventory up to 5,000. scope page keeps a bounded window; follow nextOffset and use a new idempotencyKey per draft page. */
         ProspectingAudiencePage: {
             /** @description Defaults to 500. */
             limit?: number;
             /** @description Defaults to 0. */
             offset?: number;
+            /**
+             * @description Drafts default to whole; previews default to page.
+             * @enum {string}
+             */
+            scope?: "whole" | "page";
         };
         ProspectingCopy: {
             followups?: {

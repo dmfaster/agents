@@ -7083,6 +7083,44 @@ export const AGENT_OUTPUT_SCHEMAS = {
           lastContactedAt: {
             type: "string",
           },
+          conversationId: {
+            description:
+              "The newest linked inbox conversation for replies_list rows; null when none is linked.",
+            type: ["string", "null"],
+          },
+          conversationChannel: {
+            type: "string",
+          },
+          needsReply: {
+            type: "boolean",
+          },
+          interestLevel: {
+            type: ["string", "null"],
+          },
+          intent: {
+            type: ["string", "null"],
+          },
+          lastMessage: {
+            description:
+              "Latest message in that conversation, up to 500 characters; direction says whether it is the reply.",
+            type: ["object", "null"],
+            additionalProperties: false,
+            properties: {
+              direction: {
+                type: ["string", "null"],
+              },
+              text: {
+                type: "string",
+                maxLength: 500,
+              },
+              at: {
+                type: ["string", "null"],
+              },
+            },
+          },
+          lastInboundAt: {
+            type: ["string", "null"],
+          },
         },
       },
       PipelineStage: {
@@ -21404,6 +21442,44 @@ export const AGENT_OUTPUT_SCHEMAS = {
           },
           lastContactedAt: {
             type: "string",
+          },
+          conversationId: {
+            description:
+              "The newest linked inbox conversation for replies_list rows; null when none is linked.",
+            type: ["string", "null"],
+          },
+          conversationChannel: {
+            type: "string",
+          },
+          needsReply: {
+            type: "boolean",
+          },
+          interestLevel: {
+            type: ["string", "null"],
+          },
+          intent: {
+            type: ["string", "null"],
+          },
+          lastMessage: {
+            description:
+              "Latest message in that conversation, up to 500 characters; direction says whether it is the reply.",
+            type: ["object", "null"],
+            additionalProperties: false,
+            properties: {
+              direction: {
+                type: ["string", "null"],
+              },
+              text: {
+                type: "string",
+                maxLength: 500,
+              },
+              at: {
+                type: ["string", "null"],
+              },
+            },
+          },
+          lastInboundAt: {
+            type: ["string", "null"],
           },
         },
       },

@@ -18581,6 +18581,45 @@ components:
             $ref: "#/components/schemas/TargetChannel"
         lastContactedAt:
           type: string
+        conversationId:
+          description: The newest linked inbox conversation for replies_list rows; null when none is linked.
+          type:
+            - string
+            - "null"
+        conversationChannel:
+          type: string
+        needsReply:
+          type: boolean
+        interestLevel:
+          type:
+            - string
+            - "null"
+        intent:
+          type:
+            - string
+            - "null"
+        lastMessage:
+          description: Latest message in that conversation, up to 500 characters; direction says whether it is the reply.
+          type:
+            - object
+            - "null"
+          additionalProperties: false
+          properties:
+            direction:
+              type:
+                - string
+                - "null"
+            text:
+              type: string
+              maxLength: 500
+            at:
+              type:
+                - string
+                - "null"
+        lastInboundAt:
+          type:
+            - string
+            - "null"
     PipelineInspectOutput:
       type: object
       additionalProperties: false
@@ -39198,8 +39237,14 @@ components:
     ProspectingAudiencePage:
       type: object
       additionalProperties: false
-      description: Bounded inventory page. Exact eligibility totals cover this page only; follow returned nextOffset for subsequent pages. Each draft page requires its own idempotencyKey.
+      description: Inventory scope. Drafts default to scope whole, every eligible company in a complete inventory up to 5,000. scope page keeps a bounded window; follow nextOffset and use a new idempotencyKey per draft page.
       properties:
+        scope:
+          type: string
+          enum:
+            - whole
+            - page
+          description: Drafts default to whole; previews default to page.
         offset:
           type: integer
           minimum: 0
