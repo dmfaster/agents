@@ -134,7 +134,7 @@ export async function readWorkspaceMention(
   let result;
   if (kind === "companies" && ids.length === 2) {
     const country = SupportedCountrySchema.parse(ids[0]);
-    const businessId = CompanyInspectInputSchema.shape.businessId.parse(ids[1]);
+    const businessId = CompanyInspectInputSchema.shape.businessId.unwrap().parse(ids[1]);
     result = await client.invoke("company.inspect", { country, businessId }, options);
   } else if ((kind === "lists" || kind === "company-lists") && ids.length === 1) {
     const listId = ResourceIdSchema.parse(ids[0]);

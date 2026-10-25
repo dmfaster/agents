@@ -893,7 +893,13 @@ export const CompanySearchFiltersSchema = z
     includeUnknownSize: z
       .boolean()
       .describe(
-        "Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported.",
+        "Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported.",
+      )
+      .optional(),
+    includeUnknownRevenue: z
+      .boolean()
+      .describe(
+        "Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported.",
       )
       .optional(),
   })
@@ -1542,11 +1548,20 @@ export const CompanyEvidenceCancelInputSchema = z
   .strict();
 export const CompanyInspectInputSchema = z
   .object({
-    country: SupportedCountrySchema,
-    businessId: z.string().min(1).max(192),
+    companyKey: z.string().min(4).max(200).regex(new RegExp("^[A-Za-z]{2}:.+$")).optional(),
+    companyKeys: z
+      .array(z.string().min(4).max(200).regex(new RegExp("^[A-Za-z]{2}:.+$")))
+      .min(1)
+      .max(10)
+      .optional(),
+    country: SupportedCountrySchema.optional(),
+    businessId: z.string().min(1).max(192).optional(),
     runId: SharedInput4Schema.optional(),
   })
-  .strict();
+  .strict()
+  .describe(
+    "Supply companyKey as returned by prospect_query or prospecting_preview (for example FI:0198452-3), companyKeys for up to 10 companies, or country plus businessId.",
+  );
 const SharedInput37Schema = z
   .string()
   .min(20)

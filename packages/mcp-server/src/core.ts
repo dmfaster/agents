@@ -239,7 +239,10 @@ export function createDmfasterMcpCore(input: {
       .sort((left, right) => {
         const leftIndex = coreOrder.indexOf(left.name);
         const rightIndex = coreOrder.indexOf(right.name);
-        return (leftIndex < 0 ? coreOrder.length : leftIndex) - (rightIndex < 0 ? coreOrder.length : rightIndex);
+        return (
+          (leftIndex < 0 ? coreOrder.length : leftIndex) -
+          (rightIndex < 0 ? coreOrder.length : rightIndex)
+        );
       });
     for (const [name, tool] of registered)
       if (!visible.some((d) => d.name === name)) {
@@ -292,14 +295,30 @@ export function createDmfasterMcpCore(input: {
         .toLowerCase()
         .split(/\s+/)
         .filter((term) => term.length > 1 && !stop.has(term));
+      // An exact tool name ("company_inspect" or "company.inspect") always ranks first,
+      // then name hits rank above description hits.
+      const asName = (value: string) => value.toLowerCase().replace(/[\s.-]+/g, "_");
+      const exact = asName((query || "").trim());
       const matches = definitions
         .map((definition) => {
-          const haystack = `${definition.name} ${definition.title} ${definition.description}`.toLowerCase();
-          const score = terms.reduce((total, term) => total + (haystack.includes(term) ? 1 : 0), 0);
+          const haystack =
+            `${definition.name} ${definition.title} ${definition.description}`.toLowerCase();
+          const score =
+            (definition.name === exact ? 1000 : 0) +
+            terms.reduce(
+              (total, term) =>
+                total +
+                (haystack.includes(term) ? 1 : 0) +
+                (definition.name.includes(asName(term)) ? 1 : 0),
+              0,
+            );
           return { definition, score };
         })
         .filter((item) => !terms.length || item.score > 0)
-        .sort((left, right) => right.score - left.score || left.definition.name.localeCompare(right.definition.name))
+        .sort(
+          (left, right) =>
+            right.score - left.score || left.definition.name.localeCompare(right.definition.name),
+        )
         .map((item) => item.definition);
       const items = matches.slice(0, Math.min(limit || 10, includeSchema ? 3 : 30)).map((d) => ({
         name: d.name,

@@ -5224,7 +5224,7 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.7.1";
+            contractVersion: "2.7.2";
             data: {
                 nextInSeconds: number;
             };
@@ -5614,7 +5614,7 @@ export interface components {
             build?: string;
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.7.1";
+            contractVersion?: "2.7.2";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
@@ -8808,8 +8808,11 @@ export interface components {
         CompanyFitStatusResult: components["schemas"]["AgentToolResultBase"] & {
             data?: components["schemas"]["CompanyFitStatusData"] | null;
         };
-        /** @description Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown. */
+        /** @description Read the complete company profile shown in the app, including financials, technologies, advertising, funding, hiring and decision-makers wherever available. Missing data is unknown. One company returns profile and financialReview; companyKeys returns companies in request order and notFound keys. */
         CompanyInspectData: {
+            companies?: {
+                [key: string]: unknown;
+            }[];
             /** @description Compare dated financial history with the headline before qualifying employee or revenue bounds. This does not replace published search facts or infer a missing value from another year. */
             financialReview?: {
                 /** @enum {string} */
@@ -8817,8 +8820,9 @@ export interface components {
                 headlineYear: string | null;
                 latestHistoryYear: string | null;
             };
+            notFound?: string[];
             /** @description The complete current Companies drawer profile. Additional properties preserve all app profile sections as they evolve. */
-            profile: {
+            profile?: {
                 advertising: {
                     [key: string]: unknown;
                 };
@@ -8879,9 +8883,12 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
+        /** @description Supply companyKey as returned by prospect_query or prospecting_preview (for example FI:0198452-3), companyKeys for up to 10 companies, or country plus businessId. */
         CompanyInspectInput: {
-            businessId: string;
-            country: components["schemas"]["SupportedCountry"];
+            businessId?: string;
+            companyKey?: string;
+            companyKeys?: string[];
+            country?: components["schemas"]["SupportedCountry"];
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
         };
@@ -9186,7 +9193,9 @@ export interface components {
             hasWebsite?: boolean;
             /** @description Literal case-insensitive title substring on the same verified open employer posting. Implies hasActiveHiring. Finland only. */
             hiringTitleQuery?: string;
-            /** @description Include companies whose employee count is unknown when a size range is supplied. Default false; exact excludedUnknownSize is reported. */
+            /** @description Keep companies without a published revenue when a revenue bound is supplied. Default true, the same rule as prospect_query; unknownRevenue is reported. */
+            includeUnknownRevenue?: boolean;
+            /** @description Keep companies whose employee count is unknown when a size bound is supplied. Default true, the same rule as prospect_query; matchedKnown and matchedIncludingUnknown are reported. */
             includeUnknownSize?: boolean;
             industryCodes?: string[];
             industryCodeSelections?: {
@@ -11419,6 +11428,8 @@ export interface components {
             tool?: "prospecting.preview";
         };
         ProspectQueryData: {
+            /** @description Exact filters for prospecting_preview and campaign_draft_plan; their inventoryTotal equals matched before contact exclusions. Null when the ICP cannot be expressed as filters. */
+            campaignFilters?: components["schemas"]["CompanySearchFilters"] | null;
             columns: string[];
             export?: null;
             nextCursor: string;
@@ -11466,6 +11477,10 @@ export interface components {
                 evidenceUnassessed?: number;
                 exact: boolean;
                 matched?: number;
+                /** @description Matches when unknown size and revenue are kept (the default). */
+                matchedIncludingUnknown?: number;
+                /** @description Matches whose bounded employee count and revenue are both published. */
+                matchedKnown?: number;
                 previouslyContacted?: number;
                 reason?: string;
                 unknownRevenue?: number;

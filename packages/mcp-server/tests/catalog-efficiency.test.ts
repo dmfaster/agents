@@ -144,3 +144,30 @@ test("companies_search accepts supported country filters over the MCP wire", asy
     await handler.close();
   }
 });
+
+test("tools_discover ranks an exact tool name first", async () => {
+  const handler = createMcpHandler(
+    () =>
+      createDmfasterMcpCore({
+        catalogProfile: "compact",
+        client: {
+          invoke: async () => {
+            throw Error("No execution during discovery");
+          },
+        },
+      }),
+    { responseMode: "json" },
+  );
+  try {
+    for (const query of ["company_inspect", "company.inspect"]) {
+      const response = await handler.fetch(
+        request("tools/call", { name: "tools_discover", arguments: { query, limit: 3 } }),
+      );
+      const payload = await response.json();
+      assert.equal(payload.error, undefined);
+      assert.equal(payload.result.structuredContent.items[0].name, "company_inspect", query);
+    }
+  } finally {
+    await handler.close();
+  }
+});
