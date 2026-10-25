@@ -22,9 +22,24 @@ export function cachedMcpSchema(schema: z.ZodType): McpSchema {
       return description;
     };
   };
+  type Result = Awaited<ReturnType<typeof standard.validate>>;
+  const shorten = (result: Result): Result =>
+    result.issues
+      ? {
+          issues: result.issues.slice(0, 5).map((issue) => ({
+            ...issue,
+            message: shortIssueMessage(issue.message),
+          })),
+        }
+      : result;
   const cached = {
     "~standard": {
       ...standard,
+      // Long enum dumps (for example every supported country) become a one-line hint.
+      validate: (value: unknown) => {
+        const result = standard.validate(value);
+        return result instanceof Promise ? result.then(shorten) : shorten(result);
+      },
       jsonSchema: {
         input: memoize(standard.jsonSchema.input),
         output: memoize(standard.jsonSchema.output),
@@ -33,4 +48,13 @@ export function cachedMcpSchema(schema: z.ZodType): McpSchema {
   };
   schemas.set(schema, cached);
   return cached;
+}
+
+export function shortIssueMessage(message: string) {
+  if (message.length <= 160) return message;
+  const head = message
+    .split(/: expected one of|expected one of/i)[0]!
+    .slice(0, 80)
+    .trim();
+  return `${head || "Invalid value"}. Use tools_discover with includeSchema:true for allowed values.`;
 }

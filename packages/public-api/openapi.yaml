@@ -11563,8 +11563,9 @@ paths:
       description:
         "Compact ICP to draft workflow. Supply plan for dryRun (default true), or an approved copy
         approvalId and idempotencyKey with dryRun false to atomically create a named list and disabled draft.
-        One selected channel: LinkedIn, email, SMS, Instagram or Facebook subject to capabilities. Supports
-        variants, follow-ups and prospect-local window. Never launches."
+        One or more channels (LinkedIn, email, SMS, Instagram, Facebook) subject to capabilities. Covers the
+        whole eligible audience. Supports variants, follow-ups (email defaults to Re: subject) and
+        prospect-local window. Never launches."
       x-dmfaster-effect: draft
       x-dmfaster-required-scopes:
         - audiences:read
@@ -11578,8 +11579,8 @@ paths:
         description:
           "Compact ICP to draft workflow. Supply plan for dryRun (default true), or an approved copy
           approvalId and idempotencyKey with dryRun false to atomically create a named list and disabled
-          draft. One selected channel: LinkedIn, email, SMS, Instagram or Facebook subject to capabilities.
-          Supports variants, follow-ups and prospect-local window. Never launches."
+          draft. One or more channels (LinkedIn, email, SMS, Instagram, Facebook) subject to capabilities.
+          Covers the whole eligible audience. Follow-up email subjects default to Re:. Never launches."
         annotations:
           readOnlyHint: false
           destructiveHint: false

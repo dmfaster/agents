@@ -171,3 +171,32 @@ test("tools_discover ranks an exact tool name first", async () => {
     await handler.close();
   }
 });
+
+test("input validation errors stay short instead of dumping every enum value", async () => {
+  const handler = createMcpHandler(
+    () =>
+      createDmfasterMcpCore({
+        catalogProfile: "full",
+        client: {
+          invoke: async () => {
+            throw Error("Invalid input must not execute");
+          },
+        },
+      }),
+    { responseMode: "json" },
+  );
+  try {
+    const response = await handler.fetch(
+      request("tools/call", {
+        name: "company_inspect",
+        arguments: { country: "XX", businessId: "1234567-8" },
+      }),
+    );
+    const text = JSON.stringify(await response.json());
+    assert.match(text, /country/);
+    assert.doesNotMatch(text, /expected one of/);
+    assert.ok(text.length < 900, `${text.length} bytes: ${text.slice(0, 300)}`);
+  } finally {
+    await handler.close();
+  }
+});

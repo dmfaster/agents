@@ -6242,7 +6242,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "campaign_draft_plan",
       title: "Plan or create a complete disabled campaign",
       description:
-        "Compact ICP to draft workflow. Supply plan for dryRun (default true), or an approved copy approvalId and idempotencyKey with dryRun false to atomically create a named list and disabled draft. One selected channel: LinkedIn, email, SMS, Instagram or Facebook subject to capabilities. Supports variants, follow-ups and prospect-local window. Never launches.",
+        "Compact ICP to draft workflow. Supply plan for dryRun (default true), or an approved copy approvalId and idempotencyKey with dryRun false to atomically create a named list and disabled draft. One or more channels (LinkedIn, email, SMS, Instagram, Facebook) subject to capabilities. Covers the whole eligible audience. Follow-up email subjects default to Re:. Never launches.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
