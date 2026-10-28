@@ -40,7 +40,7 @@
   "dependencies": {
     "@dmfaster/local-auth": "2.7.6",
     "@dmfaster/sdk": "2.7.6",
-    "@modelcontextprotocol/server": "2.3.0",
+    "@modelcontextprotocol/server": "2.4.0",
     "zod": "4.6.7"
   },
   "devDependencies": {
