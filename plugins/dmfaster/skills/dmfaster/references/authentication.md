@@ -48,11 +48,8 @@ The browser never receives the issued agent credential. Continue only after the
 CLI emits a verified `authenticated` event. Do not control the approval page for
 the human.
 
-Agent 1.0 defines these bounded scopes: `workspace:read`, `campaigns:read`,
-`sending:read`, `inbox:read`, `pipeline:read`, `audiences:read`, `campaigns:write`,
-`campaigns:launch`, `campaigns:control`, `inbox:write`, `pipeline:write`,
-`calendar:read`, `calendar:write`, `calls:read`, `leads:read`, and `leads:write`.
-Login defaults to the `full` profile.
+Read current scopes and missing permissions from `connection_status` and the
+requested tool’s schema. CLI login defaults to the `full` profile.
 The owner approves this connection once. With `campaigns:control`, explicit user
 instructions authorize launch and pause without another approval page per action;
 the normal `campaigns:launch` or `campaigns:write` permission is still required.
@@ -66,14 +63,16 @@ agent must not operate it for them.
 
 Use `--access read`, `--access plan`, or `--access draft` for smaller grants.
 These profiles add operational reads, planning, and private drafts respectively.
-Campaign write/launch/control, calendar write and lead-credit spending are owner-only. Calendar tools
-also require the owner at execution time. Read/plan/draft profiles include
+Campaign, inbox and pipeline writes require the corresponding current app permissions as well as
+connection scopes. Sending requires send or manageSending permission and the same browser consent
+as the app. Workspace calendar booking requires manageMembers; meeting changes use per-meeting
+capabilities. Paid lead operations and account administration retain owner-only checks.
+Read/plan/draft profiles include
 calendar, call and social prospecting reads; only full includes calendar booking
 and lead-credit spending. Connections without
 `campaigns:control` retain the per-action browser approval workflow.
 
-If the pinned package is unavailable, report that DM Faster Agent 1.0 is not
-installed. Do not search for a private source checkout or fall back to another
+If the pinned package is unavailable, report the package availability failure. Do not search for a private source checkout or fall back to another
 credential.
 
 ## Overrides

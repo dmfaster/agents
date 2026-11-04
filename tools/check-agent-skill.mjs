@@ -61,73 +61,77 @@ if (!existsSync(skillPath)) {
     }
   }
 
+  const guidance = source.replace(/\s+/g, " ");
   if (/\bTODO\b|\[TODO/i.test(source)) fail("SKILL.md still contains template TODO text");
-  if (!/browser cookies/i.test(source) || !/browser-worker tokens/i.test(source)) {
+  if (!/browser cookies/i.test(guidance) || !/browser-worker tokens/i.test(guidance)) {
     fail("SKILL.md must preserve the public-authentication boundary");
   }
-  if (!/generic HTTP/i.test(source) || !/database access/i.test(source)) {
+  if (!/generic HTTP/i.test(guidance) || !/database access/i.test(guidance)) {
     fail("SKILL.md must reject generic transport and database workarounds");
   }
-  if (!/Agent 2\.0/i.test(source)) fail("SKILL.md must describe the Agent 2.0 surface");
-  if (!/exact audience/i.test(source)) {
+  if (!/Agent 2\.0/i.test(guidance)) fail("SKILL.md must describe the Agent 2.0 surface");
+  if (!/exact audience/i.test(guidance)) {
     fail("SKILL.md must preserve the exact-audience invariant");
   }
-  if (!/server-issued authorization ID/i.test(source) || !/approved: true/i.test(source)) {
+  if (!/server-issued authorization ID/i.test(guidance) || !/approved: true/i.test(guidance)) {
     fail("SKILL.md must require server-issued action authorization and reject boolean approval");
   }
-  if (!/Never control the approval page/i.test(source)) {
+  if (!/Never control the approval page/i.test(guidance)) {
     fail("SKILL.md must reserve browser approval for the human");
   }
-  if (!/complete campaign state/i.test(source) || !/stateless/i.test(source)) {
+  if (!/complete campaign state/i.test(guidance) || !/stateless/i.test(guidance)) {
     fail("SKILL.md must document stateless campaign planning");
   }
-  if (!/not a repository-development interface/i.test(source)) {
+  if (!/not a repository-development interface/i.test(guidance)) {
     fail("SKILL.md must route source-checkout development back to repository guidance");
   }
-  if (!/references\/authentication\.md/.test(source)) {
+  if (!/references\/authentication\.md/.test(guidance)) {
     fail("SKILL.md must route authentication through its dedicated reference");
   }
-  if (!/references\/tools\.md/.test(source)) {
+  if (!/references\/tools\.md/.test(guidance)) {
     fail("SKILL.md must route tool selection through its dedicated reference");
   }
 
+  // Bootstrap discovery belongs in the skill; the server owns the domain catalog.
   const requiredTools = [
-    "analytics_summary",
-    "workspace_briefing",
-    "campaigns_list",
-    "campaign_inspect",
-    "campaign_copy_inspect",
-    "sending_inspect",
-    "replies_list",
-    "pipeline_inspect",
-    "company_timeline",
-    "industry_lookup",
-    "prospect_query",
-    "campaign_validate",
-    "audience_preview",
-    "lists_list",
-    "list_inspect",
-    "list_target_remove",
-    "campaign_draft_prepare",
-    "list_import",
-    "list_prepare",
-    "campaign_prepare",
-    "campaign_launch_preflight",
-    "campaign_launch",
-    "campaign_pause_preflight",
-    "campaign_pause",
+    "connection_status",
+    "tools_discover",
+    "dispatchTool",
+    "tools_read",
+    "tools_write",
+    "tools_call",
   ];
   for (const tool of requiredTools) {
     if (!source.includes("`" + tool + "`")) fail(`SKILL.md is missing documented tool ${tool}`);
   }
-  if (!source.includes("`campaign_workspace`")) {
-    fail("SKILL.md is missing the optional MCP Apps campaign workspace");
-  }
-
-  for (const match of source.matchAll(/\]\((references\/[^)]+)\)/g)) {
-    const target = path.resolve(skillRoot, match[1]);
-    if (!target.startsWith(`${skillRoot}${path.sep}`) || !existsSync(target)) {
-      fail(`missing referenced resource ${match[1]}`);
+  const referenceRoot = path.join(skillRoot, "references");
+  const markdownPaths = [
+    skillPath,
+    ...readdirSync(referenceRoot)
+      .filter((name) => name.endsWith(".md"))
+      .map((name) => path.join(referenceRoot, name)),
+  ];
+  for (const markdownPath of markdownPaths) {
+    const markdown = readFileSync(markdownPath, "utf8");
+    for (const retired of [
+      "workspace_open",
+      "companies_workspace",
+      "company_workspace",
+      "campaign_workspace",
+      "outreach_details",
+      "workspace_mentions",
+    ]) {
+      if (markdown.includes("`" + retired + "`")) {
+        fail(`skill guidance references retired presentation tool ${retired}`);
+      }
+    }
+    for (const match of markdown.matchAll(/\]\(([^)]+)\)/g)) {
+      const link = match[1];
+      if (/^[a-z][a-z0-9+.-]*:/i.test(link) || link.startsWith("#")) continue;
+      const target = path.resolve(path.dirname(markdownPath), link.split("#")[0]);
+      if (!target.startsWith(`${skillRoot}${path.sep}`) || !existsSync(target)) {
+        fail(`missing referenced resource ${link} in ${path.relative(skillRoot, markdownPath)}`);
+      }
     }
   }
 }
@@ -139,7 +143,7 @@ if (!existsSync(agentPath)) {
   if (!/^interface:\s*$/m.test(agentSource))
     fail("agents/openai.yaml must define interface metadata");
   if (!/short_description:\s*"[^"]*(?:campaign|operate)[^"]*"/i.test(agentSource)) {
-    fail("agents/openai.yaml must describe the Agent 1.0 campaign surface");
+    fail("agents/openai.yaml must describe the campaign operations surface");
   }
   if (!/default_prompt:\s*"[^"]*\$dmfaster[^"]*"/.test(agentSource)) {
     fail("agents/openai.yaml default prompt must explicitly invoke $dmfaster");
