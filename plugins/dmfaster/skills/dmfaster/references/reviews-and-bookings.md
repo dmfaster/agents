@@ -1,7 +1,7 @@
 # Reviews, cohorts, historical copy and bookings
 
-These controls were introduced in 1.8.0. The commands below use the 1.10.0
-candidate; verify Product and package publication before using that version.
+Discover current tools and schemas before use. Examples explain workflow, not
+live availability or permissions.
 
 ## Review coordination and exports
 
@@ -71,7 +71,9 @@ for the exact title, start, timezone, duration and attendees. Supply an inspecte
 checks the conversation's campaign, saves the confirmed meeting and updates the
 pipeline. The durable key is bound to all request details before provider I/O.
 Exact retries recover a lost receipt; different details return a conflict.
-Cancellation or rescheduling is outside this release; do not invent a tool.
+For cancellation or rescheduling, discover the supported meeting action and use
+its current version and a stable key. Reconcile pending operations before another
+mutation.
 
 `calls_list` and `call_inspect` use `calls:read` and the app's current membership
 and capability policy. They return recorded lifecycle, participants and outcomes,

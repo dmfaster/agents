@@ -1,27 +1,6 @@
 # Social prospecting and lead credits
 
-In a private development host, six optional research tools may be advertised:
-`instagram_icp_plan`, `instagram_evaluation_datasets` and
-`instagram_profiles_evaluate`, plus `instagram_workspace`,
-`instagram_profile_inspect` and `instagram_acquisition_quote`.
-Use them only when present. Translate the user's
-Instagram ICP into independently testable criteria without adding unrequested
-markets, ages, names or agency exclusions. Preserve
-required versus preferred criteria and each unknown-evidence policy. Clef returns
-judgments; the assistant supplies the plan. Inspect available named snapshots,
-use explicit `literalRule` filters for observed follower counts, privacy or
-verification, and keep them consistent with the user's wording. Code checks are
-returned separately from raw model probabilities. Missing metadata remains unknown.
-Prepare or replay pages, and follow exact cursors. A changed question without a
-recorded response is pending, not a poor fit. These local offline tools do not
-qualify a live customer list or start inference; do not present their probabilities
-as calibrated accuracy or claim released availability. A supporting MCP Apps host
-can render `instagram_workspace` from those same results. Inspect saved profile
-evidence using the exact revision; missing cached images remain unavailable.
-CSV selections are provisional research, with review cases marked. The acquisition
-quote forwards the normal authenticated extraction service and covers extraction
-only. Neither a selection nor a quote authorizes paid work or sending. The Basic
-app UI is deferred. Normal live extraction and enrichment keep the workflow below.
+Discover the connected server’s current tools, inputs and readiness before use.
 
 Use `leads_status` for the exact available lead-credit balance and recent jobs.
 Follow `nextCursor`; a page is not the complete history. Recent saved counts may
@@ -111,10 +90,6 @@ qualification accuracy. List creation never activates a campaign or sends.
 
 These six tools use the existing owner-granted `leads:read`, `leads:write`,
 `campaigns:read` and `campaigns:write` permissions. No extra approval page is
-added to a clearly instructed run. Server deployment, migration 0359 and production Clef configuration passed a
-bounded live MCP canary: 20 profiles, 20 model attempts and 40 settled lead credits.
-One match and 14 review profiles were saved, with five provider-unavailable cases
-remaining pending. Original-image decisions and exact list counts were verified;
-same-key recovery added no calls or charges. This is execution evidence, not a
-general accuracy claim. Local clients and plugins require the published 2.2.0
-version; follow each run’s actual provider readiness, costs and unresolved counts.
+added to a clearly instructed run. Follow each run’s actual provider readiness,
+costs and unresolved counts; a tool’s presence does not establish qualification
+accuracy or complete source coverage.

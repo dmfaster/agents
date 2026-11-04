@@ -54,8 +54,6 @@ Weekday masks use Monday=1, Tuesday=2, Wednesday=4, Thursday=8, Friday=16, Satur
 
 ## Boundaries and recovery
 
-Knowledge snippets and cached conversation summaries are not released 2.2 tools. Use owner-approved template text and inspect the actual conversation. A customer-facing eval package and the 40% schema-size target remain follow-ups; do not advertise passing evals or reduced discovery payloads.
-
 `credential.expiring` reports impending expiry. Hosted OAuth hosts may renew through the supported OAuth flow. The local device credential has no refresh token: use `auth status` and follow the documented reconnect guidance. A replacement login may require `auth logout` first; the owner confirms the new browser connection. No `auth refresh` command is advertised. Provider reauthorization remains separate.
 
 Historical suppression, classification, duplicate merging, copy attribution and pipeline repairs require a separate reviewed dry run and owner approval. No recipe authorizes live backfills or real-prospect development tests. Never broaden grants or use Ops/private interfaces as a workaround for a customer's public connection.

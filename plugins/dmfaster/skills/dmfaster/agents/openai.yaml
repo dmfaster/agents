@@ -1,13 +1,13 @@
 interface:
   display_name: "DM Faster"
   short_description: "Plan and operate DM Faster campaigns safely"
-  default_prompt: "Use $dmfaster to inspect my workspace, plan the campaign, preview its exact audience, and take only the actions I explicitly approve."
+  default_prompt: "Use $dmfaster to inspect my workspace and carry out my requested campaign changes using the existing connection."
 
 dependencies:
   tools:
     - type: "mcp"
       value: "dmfaster_hosted"
-      description: "Official DM Faster Agent 1.0 MCP server"
+      description: "Official DM Faster hosted MCP server"
       transport: "streamable_http"
       url: "https://app.dmfaster.com/mcp"
 
