@@ -991,7 +991,7 @@ export const ProspectingPlanSchema = z
     excludePreviouslyContacted: z.boolean().optional(),
     copy: ProspectingCopySchema,
     mailboxIds: z.array(z.string().min(1).max(160)).max(8).optional(),
-    dailyCap: z.number().int().min(1).max(60).optional(),
+    dailyCap: z.number().int().min(1).max(2147483647).optional(),
     pacingSeconds: z.number().int().min(12).max(3600).optional(),
     window: z
       .object({
@@ -1138,7 +1138,7 @@ export const CampaignDraftPrepareInputSchema = z
       .describe(
         "Up to 1000 characters per variant, or 1600 for SMS-only drafts. SMS sends the separate smsBody.",
       ),
-    dailyCap: z.number().int().min(1).max(60),
+    dailyCap: z.number().int().min(1).max(2147483647),
     pacingSeconds: z.number().int().min(12).max(3600),
     onlyNewChats: z.literal(true),
     skipPreviouslyMessaged: z.literal(true),
@@ -1187,7 +1187,7 @@ export const CampaignDraftUpdateInputSchema = z
         linkedinFollowUpSequence: LinkedinFollowUpSequenceInputSchema.describe(
           "For a mixed-channel campaign, step 1 is the message sent as soon as acceptance is verified, including an already-connected prospect. The required delayDays on step 1 does not delay that first message. Step 2, if present, uses its delayDays. A known human reply on another channel suppresses unsent LinkedIn steps.",
         ).optional(),
-        dailyCap: z.number().int().min(1).max(60).optional(),
+        dailyCap: z.number().int().min(1).max(2147483647).optional(),
         pacingSeconds: z.number().int().min(12).max(3600).optional(),
         instagramSendingWindowEnabled: z.boolean().optional(),
         instagramSendingWindowStartMinute: z.number().int().min(0).max(1380).optional(),
@@ -1216,6 +1216,67 @@ export const ListImportInputSchema = z
       .describe(
         "Instagram handles; whitespace and a leading @ are removed and case is normalized. Invalid handles reject the whole import.",
       ),
+    idempotencyKey: IdempotencyKeySchema,
+    runId: SharedInput4Schema.optional(),
+  })
+  .strict();
+export const LeadsAddInputSchema = z
+  .object({
+    campaignId: z.string().min(1).max(180).optional(),
+    listId: z.string().min(1).max(180).optional(),
+    channel: z.enum(["instagram", "facebook", "linkedin", "gmail", "sms"]).optional(),
+    targetTotal: z.number().int().min(1).max(20000).optional(),
+    limit: z.number().int().min(1).max(5000).optional(),
+    allowPriorContactOn: z
+      .array(z.enum(["instagram", "facebook", "linkedin", "gmail", "sms"]))
+      .max(4)
+      .optional(),
+    leads: z
+      .union([
+        z.object({ companyIds: z.array(z.string().min(1).max(180)).min(1).max(5000) }).strict(),
+        z
+          .object({
+            fromListId: z.string().min(1).max(180),
+            limit: z.number().int().min(1).max(5000).optional(),
+            filter: z
+              .object({
+                hasMobile: z.boolean().optional(),
+                hasChannel: z.boolean().optional(),
+                industry: z.string().min(1).max(80).optional(),
+                country: z.string().min(2).max(2).optional(),
+              })
+              .strict()
+              .optional(),
+          })
+          .strict(),
+        z.object({ usernames: z.array(z.string().min(1).max(64)).min(1).max(5000) }).strict(),
+      ])
+      .refine(
+        (value) =>
+          [
+            z.object({ companyIds: z.array(z.string().min(1).max(180)).min(1).max(5000) }).strict(),
+            z
+              .object({
+                fromListId: z.string().min(1).max(180),
+                limit: z.number().int().min(1).max(5000).optional(),
+                filter: z
+                  .object({
+                    hasMobile: z.boolean().optional(),
+                    hasChannel: z.boolean().optional(),
+                    industry: z.string().min(1).max(80).optional(),
+                    country: z.string().min(2).max(2).optional(),
+                  })
+                  .strict()
+                  .optional(),
+              })
+              .strict(),
+            z.object({ usernames: z.array(z.string().min(1).max(64)).min(1).max(5000) }).strict(),
+          ].filter((candidate) => candidate.safeParse(value).success).length === 1,
+        "Expected exactly one schema match",
+      ),
+    preview: z.boolean().optional(),
+    confirmToken: z.string().min(64).max(64).regex(new RegExp("^[a-f0-9]{64}$")).optional(),
+    reason: z.string().min(3).max(500),
     idempotencyKey: IdempotencyKeySchema,
     runId: SharedInput4Schema.optional(),
   })
@@ -1486,12 +1547,19 @@ export const WorkspaceCompanyKnowledgeInputSchema = z
   .strict();
 const SharedInput35Schema = z
   .string()
+  .min(4)
+  .max(200)
+  .regex(new RegExp("^[A-Za-z]{2}:.+$"))
+  .describe("Public company key, for example FI:0198452-3.");
+const SharedInput36Schema = z
+  .string()
   .regex(new RegExp("^[a-f0-9]{64}$"))
   .describe("Pin subsequent source pages to the knowledgeRevision returned by the first read.");
 export const CompanyKnowledgeInputSchema = z
   .object({
-    country: z.enum(["FI"]),
-    businessId: z.string().min(1).max(192),
+    companyKey: SharedInput35Schema.optional(),
+    country: z.enum(["FI"]).optional(),
+    businessId: z.string().min(1).max(192).optional(),
     maxAgeDays: z.number().int().min(1).max(90).optional(),
     sourcePage: z
       .number()
@@ -1507,16 +1575,19 @@ export const CompanyKnowledgeInputSchema = z
       .max(20)
       .describe("Original passages per page; defaults to 10.")
       .optional(),
-    expectedKnowledgeRevision: SharedInput35Schema.optional(),
+    expectedKnowledgeRevision: SharedInput36Schema.optional(),
     runId: SharedInput4Schema.optional(),
   })
-  .strict();
-const SharedInput36Schema = z
+  .strict()
+  .describe(
+    "Supply companyKey as returned by prospect_query or company_inspect (for example FI:0198452-3), or country plus businessId. Finnish companies only.",
+  );
+const SharedInput37Schema = z
   .enum(["binary", "passage"])
   .describe(
     "Binary evaluates related website sections together in one compact request per company. Passage preserves separate relationship statuses and explicit-denial merging. Omission preserves passage behavior.",
   );
-const SharedInput37Schema = z
+const SharedInput38Schema = z
   .enum(["requested_only", "general"])
   .describe(
     "Binary mode only. New runs default to requested_only and ask only uncached requested criteria; general explicitly adds reusable standard offering/buyer questions to the same call on complete sources. Existing omitted-policy keys recover their original general run. Cached requested answers never trigger extra inference. Country and other deterministic filters are checked in code.",
@@ -1526,8 +1597,8 @@ export const CompanyEvidenceStartInputSchema = z
     country: z.enum(["FI"]),
     query: z.string().min(1).max(1500),
     criteria: z.array(WebsiteEvidenceCriterionSchema).min(1).max(4),
-    evaluationMode: SharedInput36Schema.optional(),
-    factExpansion: SharedInput37Schema.optional(),
+    evaluationMode: SharedInput37Schema.optional(),
+    factExpansion: SharedInput38Schema.optional(),
     filters: CompanySearchFiltersSchema.optional(),
     maxAgeDays: z.number().int().min(1).max(90).optional(),
     idempotencyKey: IdempotencyKeySchema,
@@ -1565,7 +1636,7 @@ export const CompanyEvidenceResultsInputSchema = z
 export const CompanyEvidenceCancelInputSchema = z
   .object({ runId: z.string().min(36).max(36), expectedRevision: z.string().min(64).max(64) })
   .strict();
-const SharedInput38Schema = z
+const SharedInput39Schema = z
   .enum(["summary", "full"])
   .describe(
     "summary returns identity, the latest financial headline, channels, the top three decision makers with roles, technologies and funding/ads/hiring flags. full is the Companies drawer. A companyKeys batch defaults to summary. One company defaults to full.",
@@ -1580,14 +1651,14 @@ export const CompanyInspectInputSchema = z
       .optional(),
     country: SupportedCountrySchema.optional(),
     businessId: z.string().min(1).max(192).optional(),
-    projection: SharedInput38Schema.optional(),
+    projection: SharedInput39Schema.optional(),
     runId: SharedInput4Schema.optional(),
   })
   .strict()
   .describe(
     "Supply companyKey as returned by prospect_query or prospecting_preview (for example FI:0198452-3), companyKeys for up to 10 companies, or country plus businessId.",
   );
-const SharedInput39Schema = z
+const SharedInput40Schema = z
   .string()
   .min(20)
   .max(500)
@@ -1606,7 +1677,7 @@ export const CompanyFitStartInputSchema = z
     expectedListUpdatedAt: ResourceVersionSchema,
     expectedTotal: z.number().int().min(1).max(25000),
     expectedTargetCount: z.number().int().min(0).max(125000),
-    offer: SharedInput39Schema,
+    offer: SharedInput40Schema,
     refreshEvidence: z
       .boolean()
       .describe("Ignore recent evidence from the same workspace and fetch websites anew.")
@@ -1704,7 +1775,7 @@ export const CompanyListInspectInputSchema = z
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput40Schema = z
+const SharedInput41Schema = z
   .string()
   .min(64)
   .max(64)
@@ -1753,7 +1824,7 @@ export const CompanyListRefineInputSchema = z
     expectedRemaining: z.number().int().min(1).max(25000),
     expectedRemainingTargetCount: z.number().int().min(1).max(125000),
     idempotencyKey: IdempotencyKeySchema,
-    reviewedSelectionDigest: SharedInput40Schema.optional(),
+    reviewedSelectionDigest: SharedInput41Schema.optional(),
     apply: z
       .boolean()
       .describe(
@@ -1796,7 +1867,7 @@ export const CampaignDeliveryUpdateInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
     patch: z
       .object({
-        dailyCap: z.number().int().min(1).max(60).optional(),
+        dailyCap: z.number().int().min(1).max(2147483647).optional(),
         pacingSeconds: z.number().int().min(12).max(3600).optional(),
         instagramSendingWindowEnabled: z.boolean().optional(),
         instagramSendingWindowStartMinute: z.number().int().min(0).max(1380).optional(),
@@ -1812,7 +1883,7 @@ export const CampaignDeliveryUpdateInputSchema = z
 export const InstagramPacingInspectInputSchema = z
   .object({ runId: SharedInput4Schema.optional() })
   .strict();
-const SharedInput41Schema = z
+const SharedInput42Schema = z
   .string()
   .regex(
     new RegExp(
@@ -1836,7 +1907,7 @@ export const InstagramPacingUpdateInputSchema = z
         "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
       )
       .optional(),
-    expectedRevision: z.union([SharedInput41Schema, z.null()]),
+    expectedRevision: z.union([SharedInput42Schema, z.null()]),
     idempotencyKey: IdempotencyKeySchema,
     reason: z.string().min(3).max(500),
     policy: z
@@ -1894,17 +1965,28 @@ export const CompanyFitCohortInputSchema = z
     minimumPriority: z.number().int().min(1).max(100).optional(),
   })
   .strict();
-const SharedInput42Schema = z
+const SharedInput43Schema = z
+  .enum(["instagram", "facebook", "linkedin", "gmail", "sms"])
+  .describe("Optional channel filter for template_variation only.");
+export const CampaignVariationPerformanceInputSchema = z
+  .object({
+    channel: SharedInput43Schema.optional(),
+    campaignId: ResourceIdSchema,
+    from: ResourceVersionSchema.optional(),
+    to: ResourceVersionSchema.optional(),
+    limit: z.number().int().min(1).max(25).optional(),
+    offset: z.number().int().min(0).max(1000000).optional(),
+    runId: SharedInput4Schema.optional(),
+  })
+  .strict();
+const SharedInput44Schema = z
   .enum(["rendered_text", "template_variation"])
   .describe(
     "Defaults to rendered_text. template_variation requires campaignId and returns variationPerformance with immutable templates and seven-day mature cohorts.",
   );
-const SharedInput43Schema = z
-  .enum(["instagram", "facebook", "linkedin", "gmail", "sms"])
-  .describe("Optional channel filter for template_variation only.");
 export const CopyPerformanceInputSchema = z
   .object({
-    groupBy: SharedInput42Schema.optional(),
+    groupBy: SharedInput44Schema.optional(),
     channel: SharedInput43Schema.optional(),
     campaignId: ResourceIdSchema.optional(),
     from: ResourceVersionSchema,
@@ -1921,12 +2003,12 @@ export const CopyPerformanceInputSchema = z
 export const CalendarStatusInputSchema = z
   .object({ runId: SharedInput4Schema.optional() })
   .strict();
-const SharedInput44Schema = z
+const SharedInput45Schema = z
   .string()
   .min(1)
   .max(80)
   .describe("IANA timezone. Defaults to the workspace timezone.");
-const SharedInput45Schema = z.union([
+const SharedInput46Schema = z.union([
   z.literal(15),
   z.literal(30),
   z.literal(45),
@@ -1934,7 +2016,7 @@ const SharedInput45Schema = z.union([
   z.literal(90),
   z.literal(120),
 ]);
-const SharedInput46Schema = z
+const SharedInput47Schema = z
   .string()
   .min(1)
   .max(500)
@@ -1945,10 +2027,10 @@ export const CalendarAvailabilityInputSchema = z
   .object({
     from: ResourceVersionSchema,
     to: ResourceVersionSchema,
-    timezone: SharedInput44Schema.optional(),
-    durationMinutes: SharedInput45Schema,
+    timezone: SharedInput45Schema.optional(),
+    durationMinutes: SharedInput46Schema,
     limit: z.number().int().min(1).max(100).optional(),
-    calendarId: SharedInput46Schema.optional(),
+    calendarId: SharedInput47Schema.optional(),
     runId: SharedInput4Schema.optional(),
   })
   .strict();
@@ -1961,7 +2043,7 @@ export const CalendarMeetingBookInputSchema = z
     title: z.string().min(1).max(200),
     start: ResourceVersionSchema,
     timezone: z.string().min(1).max(80),
-    durationMinutes: SharedInput45Schema,
+    durationMinutes: SharedInput46Schema,
     attendees: z
       .array(z.string().min(3).max(320).regex(new RegExp("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")))
       .min(1)
@@ -1970,11 +2052,11 @@ export const CalendarMeetingBookInputSchema = z
     conference: z.enum(["google_meet", "teams", "phone", "in_person", "custom_url"]).optional(),
     customUrl: z.string().max(2000).regex(new RegExp("^https://")).optional(),
     attendeePhone: z.string().max(40).optional(),
-    calendarId: SharedInput46Schema.optional(),
+    calendarId: SharedInput47Schema.optional(),
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput47Schema = z.enum([
+const SharedInput48Schema = z.enum([
   "scheduled",
   "awaiting_outcome",
   "completed",
@@ -1987,7 +2069,7 @@ export const CallsListInputSchema = z
     offset: z.number().int().min(0).max(1000000).optional(),
     limit: z.number().int().min(1).max(50).optional(),
     cursor: z.string().max(2000).optional(),
-    lifecycle: SharedInput47Schema.optional(),
+    lifecycle: SharedInput48Schema.optional(),
     awaitingOutcome: z.boolean().optional(),
     from: ResourceVersionSchema.optional(),
     to: ResourceVersionSchema.optional(),
@@ -2011,8 +2093,8 @@ export const CallInspectInputSchema = z
 export const InstagramExtractionQuoteInputSchema = z
   .object({
     username: z.string().trim().min(1).max(31).regex(new RegExp("^@?[A-Za-z0-9._]{1,30}$")),
-    type: z.enum(["followers", "following", "likers", "commenters"]),
-    count: z.number().int().min(1).max(2147483647),
+    type: z.enum(["followers", "following"]),
+    count: z.number().int().min(1).max(100000),
     currency: z.enum(["USD", "EUR"]).optional(),
     postUrl: z.string().trim().min(1).max(300).optional(),
     runId: SharedInput4Schema.optional(),
@@ -2027,7 +2109,7 @@ export const InstagramExtractionStartInputSchema = z
       )
       .optional(),
     username: z.string().trim().min(1).max(31).regex(new RegExp("^@?[A-Za-z0-9._]{1,30}$")),
-    type: z.enum(["followers", "following", "likers", "commenters"]),
+    type: z.enum(["followers", "following"]),
     count: z.number().int().min(1).max(2147483647),
     currency: z.enum(["USD", "EUR"]).optional(),
     postUrl: z.string().trim().min(1).max(300).optional(),
@@ -2245,7 +2327,7 @@ export const InstagramProspectResultsInputSchema = z
     limit: z.number().int().min(1).max(100).optional(),
   })
   .strict();
-const SharedInput48Schema = z.enum([
+const SharedInput49Schema = z.enum([
   "call.stats.ready",
   "call.stats.updated",
   "call.coaching.flagged",
@@ -2318,7 +2400,7 @@ const SharedInput48Schema = z.enum([
   "webhook.delivery.failed",
   "metrics.recomputed",
 ]);
-export const AgentSalesEventTypeSchema = SharedInput48Schema;
+export const AgentSalesEventTypeSchema = SharedInput49Schema;
 export const EventsListInputSchema = z
   .object({
     after: z
@@ -2366,7 +2448,7 @@ export const SuppressionsListInputSchema = z
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput49Schema = z.enum([
+const SharedInput50Schema = z.enum([
   "company",
   "phone",
   "email",
@@ -2377,7 +2459,7 @@ const SharedInput49Schema = z.enum([
 ]);
 export const SuppressionEntryInputSchema = z
   .object({
-    type: SharedInput49Schema,
+    type: SharedInput50Schema,
     value: z.string().min(1).max(500),
     reason: z.string().min(1).max(500),
     source: z.enum(["prospect_request", "owner", "agent"]),
@@ -2494,7 +2576,7 @@ export const MeetingUnlinkInputSchema = z
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput50Schema = z
+const SharedInput51Schema = z
   .string()
   .max(66)
   .regex(
@@ -2503,7 +2585,7 @@ const SharedInput50Schema = z
     ),
   );
 export const WebhookHeadersSchema = z
-  .record(SharedInput50Schema, z.string().max(2048).regex(new RegExp("^[^\\r\\n\\u0000]*$")))
+  .record(SharedInput51Schema, z.string().max(2048).regex(new RegExp("^[^\\r\\n\\u0000]*$")))
   .refine((value) => Object.keys(value).length <= 5, "Provide at most 5 properties");
 export const WebhookFiltersSchema = z
   .object({
@@ -2849,7 +2931,7 @@ export const CalendarBookingLinkCreateInputSchema = z
     expiresAt: ResourceVersionSchema,
     language: z.enum(["fi", "en"]),
     idempotencyKey: IdempotencyKeySchema,
-    calendarId: SharedInput46Schema.optional(),
+    calendarId: SharedInput47Schema.optional(),
     runId: SharedInput4Schema.optional(),
   })
   .strict();
@@ -2874,7 +2956,7 @@ export const CalendarMeetingCancelInputSchema = z
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput51Schema = z.enum([
+const SharedInput52Schema = z.enum([
   "inherit",
   "instagram",
   "facebook",
@@ -2882,7 +2964,7 @@ const SharedInput51Schema = z.enum([
   "gmail",
   "sms",
 ]);
-const SharedInput52Schema = z.enum(["none", "instagram", "facebook", "linkedin", "gmail", "sms"]);
+const SharedInput53Schema = z.enum(["none", "instagram", "facebook", "linkedin", "gmail", "sms"]);
 export const CampaignFollowupsConfigureInputSchema = z
   .object({
     campaignId: ResourceIdSchema,
@@ -2895,8 +2977,8 @@ export const CampaignFollowupsConfigureInputSchema = z
             z
               .object({
                 delayDays: z.number().int().min(1).max(30),
-                channel: SharedInput51Schema,
-                fallbackChannel: SharedInput52Schema,
+                channel: SharedInput52Schema,
+                fallbackChannel: SharedInput53Schema,
                 subject: z.string().max(500).optional(),
                 variants: z.array(z.string().min(1).max(10000)).min(1).max(4),
                 smsBody: z.string().min(1).max(1600).optional(),
@@ -2955,7 +3037,7 @@ export const CampaignVariantsConfigureInputSchema = z
 export const RecorderSettingsGetInputSchema = z
   .object({ runId: SharedInput4Schema.optional() })
   .strict();
-const SharedInput53Schema = z.enum([
+const SharedInput54Schema = z.enum([
   "all",
   "hosted_by_me",
   "external_attendees",
@@ -2964,7 +3046,7 @@ const SharedInput53Schema = z.enum([
 ]);
 export const RecorderSettingsSchema = z
   .object({
-    mode: SharedInput53Schema,
+    mode: SharedInput54Schema,
     consent: z.boolean(),
     consentNoticeVersion: z.string().min(1).max(100),
     consentNotice: z.string().min(1).max(2000),
@@ -3000,7 +3082,7 @@ export const RecorderSettingsUpdateInputSchema = z
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput54Schema = z.enum([
+const SharedInput55Schema = z.enum([
   "scheduled",
   "joining",
   "in_call",
@@ -3012,13 +3094,13 @@ export const RecorderBotsListInputSchema = z
   .object({
     from: ResourceVersionSchema.optional(),
     to: ResourceVersionSchema.optional(),
-    status: SharedInput54Schema.optional(),
+    status: SharedInput55Schema.optional(),
     cursor: z.string().max(2000).optional(),
     limit: z.number().int().min(1).max(100).optional(),
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput55Schema = z
+const SharedInput56Schema = z
   .enum(["compact", "segments"])
   .describe(
     "Complete timestamped text by default (up to 512 KiB); segments selects paged structured output. Compact text preserves every word.",
@@ -3030,7 +3112,7 @@ export const CallTranscriptGetInputSchema = z
     fromMs: z.number().int().min(0).optional(),
     toMs: z.number().int().min(0).optional(),
     speaker: z.string().max(200).optional(),
-    format: SharedInput55Schema.optional(),
+    format: SharedInput56Schema.optional(),
     mode: z.enum(["full", "compact"]).optional(),
     limit: z.number().int().min(1).max(200).optional(),
     runId: SharedInput4Schema.optional(),
@@ -3057,7 +3139,7 @@ export const CallTranscriptsSearchInputSchema = z
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput56Schema = z.enum([
+const SharedInput57Schema = z.enum([
   "reply",
   "book",
   "followups",
@@ -3070,7 +3152,7 @@ const SharedInput56Schema = z.enum([
 ]);
 export const ReadinessCheckInputSchema = z
   .object({
-    for: SharedInput56Schema,
+    for: SharedInput57Schema,
     runId: SharedInput4Schema.optional(),
     campaignId: z.string().min(1).max(200).optional(),
   })
@@ -3128,7 +3210,7 @@ export const AgentsListInputSchema = z
 export const AgentInspectInputSchema = z
   .object({ agentId: ResourceIdSchema, runId: SharedInput4Schema.optional() })
   .strict();
-const SharedInput57Schema = z.enum([
+const SharedInput58Schema = z.enum([
   "workspace:read",
   "campaigns:read",
   "sending:read",
@@ -3163,7 +3245,7 @@ export const AgentCreateRequestInputSchema = z
     name: z.string().min(1).max(100),
     kind: z.enum(["setter", "prospector", "analyst", "custom"]),
     runtime: z.string().max(200).optional(),
-    scopes: z.array(SharedInput57Schema).min(1).max(29),
+    scopes: z.array(SharedInput58Schema).min(1).max(29),
     dryRun: z.boolean(),
     idempotencyKey: IdempotencyKeySchema,
     runId: SharedInput4Schema.optional(),
@@ -3247,7 +3329,7 @@ export const WebhooksDlqReplayInputSchema = z
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput58Schema = z.enum([
+const SharedInput59Schema = z.enum([
   "meeting_intent",
   "meeting_proposed_time",
   "asks_pricing",
@@ -3260,7 +3342,7 @@ const SharedInput58Schema = z.enum([
   "acknowledgement",
   "unclear",
 ]);
-const SharedInput59Schema = z.enum([
+const SharedInput60Schema = z.enum([
   "text",
   "reaction",
   "system_event",
@@ -3271,8 +3353,8 @@ export const ClassificationFeedbackInputSchema = z
   .object({
     messageId: ResourceIdSchema.optional(),
     conversationId: ResourceIdSchema.optional(),
-    correctIntent: SharedInput58Schema,
-    correctMessageType: SharedInput59Schema.optional(),
+    correctIntent: SharedInput59Schema,
+    correctMessageType: SharedInput60Schema.optional(),
     note: z.string().min(1).max(1000),
     expectedUpdatedAt: ResourceVersionSchema,
     dryRun: z.boolean(),
@@ -3290,7 +3372,7 @@ export const ClassificationBackfillPlanInputSchema = z
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput60Schema = z
+const SharedInput61Schema = z
   .enum(["compact", "standard"])
   .describe(
     "Compact is the default and omits full person, company and explanation context while retaining IDs, claim and version fences. Use standard for the full work item.",
@@ -3301,7 +3383,7 @@ export const WorkQueueListInputSchema = z
     minPriority: z.number().int().min(0).max(100).optional(),
     campaignIds: z.array(ResourceIdSchema).max(100).optional(),
     assignee: z.enum(["me", "unassigned", "any"]).optional(),
-    view: SharedInput60Schema.optional(),
+    view: SharedInput61Schema.optional(),
     limit: z.number().int().min(1).max(100).optional(),
     cursor: z.string().max(1000).optional(),
     runId: SharedInput4Schema.optional(),
@@ -3386,14 +3468,14 @@ export const MetricsReconcileInputSchema = z
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput61Schema = z
+const SharedInput62Schema = z
   .enum(["compact", "full"])
   .describe(
     "Defaults to compact. Success acknowledgement is at most 300 bytes including the MCP result. Full retains the standard diagnostic envelope. Failures retain actionable errors.",
   );
 export const AgentHeartbeatInputSchema = z
   .object({
-    responseMode: SharedInput61Schema.optional(),
+    responseMode: SharedInput62Schema.optional(),
     agentId: ResourceIdSchema,
     status: z.enum(["idle", "working", "degraded"]),
     consumerLagSeq: z.number().int().min(0).max(9007199254740991).optional(),
@@ -3469,49 +3551,49 @@ export const ChannelHaltInputSchema = z
 export const WorkspaceAutomationInspectInputSchema = z
   .object({ runId: SharedInput4Schema.optional() })
   .strict();
-const SharedInput62Schema = z.enum([
+const SharedInput63Schema = z.enum([
   "bug",
   "missing_capability",
   "confusing_behavior",
   "performance",
   "improvement",
 ]);
-const SharedInput63Schema = z
+const SharedInput64Schema = z
   .string()
   .trim()
   .min(1)
   .max(240)
   .regex(new RegExp(".*\\S.*"))
   .describe("One concrete problem or improvement.");
-const SharedInput64Schema = z
+const SharedInput65Schema = z
   .string()
   .trim()
   .min(1)
   .max(1000)
   .regex(new RegExp(".*\\S.*"))
   .describe("The task being attempted, without customer data.");
-const SharedInput65Schema = z
-  .string()
-  .trim()
-  .min(1)
-  .max(2000)
-  .regex(new RegExp(".*\\S.*"))
-  .describe("What actually happened; omit private transcripts and raw tool payloads.");
 const SharedInput66Schema = z
   .string()
   .trim()
   .min(1)
   .max(2000)
   .regex(new RegExp(".*\\S.*"))
-  .describe("What should happen instead.");
+  .describe("What actually happened; omit private transcripts and raw tool payloads.");
 const SharedInput67Schema = z
   .string()
   .trim()
   .min(1)
   .max(2000)
   .regex(new RegExp(".*\\S.*"))
-  .describe("Optional proposed improvement; distinguish speculation from observed behavior.");
+  .describe("What should happen instead.");
 const SharedInput68Schema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(2000)
+  .regex(new RegExp(".*\\S.*"))
+  .describe("Optional proposed improvement; distinguish speculation from observed behavior.");
+const SharedInput69Schema = z
   .string()
   .trim()
   .min(1)
@@ -3520,7 +3602,7 @@ const SharedInput68Schema = z
   .describe(
     "Affected MCP or API tool name, if known. Unknown names are allowed for missing tools.",
   );
-const SharedInput69Schema = z
+const SharedInput70Schema = z
   .string()
   .trim()
   .min(1)
@@ -3535,20 +3617,20 @@ export const AgentFeedbackSubmitInputSchema = z
         "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
       )
       .optional(),
-    category: SharedInput62Schema,
-    summary: SharedInput63Schema,
-    task: SharedInput64Schema.optional(),
-    observed: SharedInput65Schema.optional(),
-    expected: SharedInput66Schema.optional(),
-    suggestion: SharedInput67Schema.optional(),
-    toolName: SharedInput68Schema.optional(),
-    requestId: SharedInput69Schema.optional(),
+    category: SharedInput63Schema,
+    summary: SharedInput64Schema,
+    task: SharedInput65Schema.optional(),
+    observed: SharedInput66Schema.optional(),
+    expected: SharedInput67Schema.optional(),
+    suggestion: SharedInput68Schema.optional(),
+    toolName: SharedInput69Schema.optional(),
+    requestId: SharedInput70Schema.optional(),
     impact: z.enum(["blocked", "workaround", "minor"]).optional(),
     idempotencyKey: IdempotencyKeySchema,
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput70Schema = z
+const SharedInput71Schema = z
   .string()
   .trim()
   .min(1)
@@ -3558,11 +3640,11 @@ const SharedInput70Schema = z
 export const AgentFeedbackListInputSchema = z
   .object({
     limit: z.number().int().min(1).max(25).optional(),
-    before: SharedInput70Schema.optional(),
+    before: SharedInput71Schema.optional(),
     runId: SharedInput4Schema.optional(),
   })
   .strict();
-const SharedInput71Schema = z.enum([
+const SharedInput72Schema = z.enum([
   "phone",
   "email",
   "instagram",
@@ -3576,7 +3658,7 @@ const SharedInput71Schema = z.enum([
 export const EntityResolveInputSchema = z
   .object({
     identity: z
-      .object({ type: SharedInput71Schema, value: z.string().min(1).max(500) })
+      .object({ type: SharedInput72Schema, value: z.string().min(1).max(500) })
       .strict()
       .optional(),
     conversationId: ResourceIdSchema.optional(),
@@ -3593,11 +3675,11 @@ export const PeopleUpsertInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
     runId: ResourceIdSchema.optional(),
     matchingIdentity: z
-      .object({ type: SharedInput71Schema, value: z.string().min(1).max(500) })
+      .object({ type: SharedInput72Schema, value: z.string().min(1).max(500) })
       .strict(),
     name: z.string().min(1).max(200),
     identities: z
-      .array(z.object({ type: SharedInput71Schema, value: z.string().min(1).max(500) }).strict())
+      .array(z.object({ type: SharedInput72Schema, value: z.string().min(1).max(500) }).strict())
       .max(49)
       .optional(),
     companyId: ResourceIdSchema.optional(),
@@ -3615,11 +3697,11 @@ export const CompaniesUpsertInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
     runId: ResourceIdSchema.optional(),
     matchingIdentity: z
-      .object({ type: SharedInput71Schema, value: z.string().min(1).max(500) })
+      .object({ type: SharedInput72Schema, value: z.string().min(1).max(500) })
       .strict(),
     name: z.string().min(1).max(200),
     identities: z
-      .array(z.object({ type: SharedInput71Schema, value: z.string().min(1).max(500) }).strict())
+      .array(z.object({ type: SharedInput72Schema, value: z.string().min(1).max(500) }).strict())
       .max(49)
       .optional(),
     companyId: ResourceIdSchema.optional(),
@@ -3663,7 +3745,7 @@ export const CallStatsGetInputSchema = z
   })
   .strict();
 export const CallCoachingGetInputSchema = z.object({ meetingId: ResourceIdSchema }).strict();
-const SharedInput72Schema = z.enum([
+const SharedInput73Schema = z.enum([
   "rep",
   "agent",
   "outcome",
@@ -3673,7 +3755,7 @@ const SharedInput72Schema = z.enum([
   "meetingSource",
   "language",
 ]);
-const SharedInput73Schema = z.enum([
+const SharedInput74Schema = z.enum([
   "talkRatioTeam",
   "longestMonologueTeam",
   "questionsByTeam",
@@ -3689,8 +3771,8 @@ export const CallAnalyticsQueryInputSchema = z
   .object({
     from: ResourceVersionSchema,
     to: ResourceVersionSchema,
-    groupBy: SharedInput72Schema,
-    metrics: z.array(SharedInput73Schema).min(1).max(10),
+    groupBy: SharedInput73Schema,
+    metrics: z.array(SharedInput74Schema).min(1).max(10),
     filters: z
       .object({
         repUserId: ResourceIdSchema.optional(),
@@ -3734,7 +3816,7 @@ export const CallActivityGetInputSchema = z
 export const CallAnalysisGetInputSchema = z
   .object({ meetingId: ResourceIdSchema, runId: z.string().max(100).optional() })
   .strict();
-const SharedInput74Schema = z.enum([
+const SharedInput75Schema = z.enum([
   "meeting_held",
   "no_show",
   "won",
@@ -3745,7 +3827,7 @@ const SharedInput74Schema = z.enum([
 export const CallOutcomeConfirmInputSchema = z
   .object({
     meetingId: ResourceIdSchema,
-    outcome: SharedInput74Schema,
+    outcome: SharedInput75Schema,
     lostReason: z.string().max(500).optional(),
     notes: z.string().max(2000).optional(),
     fromAnalysisVersion: z.string().regex(new RegExp("^[a-f0-9]{64}$")),
@@ -3763,7 +3845,7 @@ export const CallAttendanceGetInputSchema = z
     runId: z.string().max(100).optional(),
   })
   .strict();
-const SharedInput75Schema = z.enum([
+const SharedInput76Schema = z.enum([
   "summary",
   "painPoints",
   "objections",
@@ -3777,7 +3859,7 @@ export const CallInsightReviewInputSchema = z
     meetingId: ResourceIdSchema,
     insightId: ResourceIdSchema,
     action: z.enum(["approve", "reject"]),
-    selectedSections: z.array(SharedInput75Schema).min(1).max(7).optional(),
+    selectedSections: z.array(SharedInput76Schema).min(1).max(7).optional(),
     feedback: z.string().max(2000).optional(),
     expectedVersion: ResourceVersionSchema,
     idempotencyKey: IdempotencyKeySchema,
@@ -3884,7 +3966,7 @@ export const CopyApprovalRequestInputSchema = z
     dryRun: z
       .boolean()
       .describe(
-        "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+        "True renders the exact copy, audience count and approval-page contents without creating a review or authorizing launch. False or omission creates the owner review.",
       )
       .optional(),
     plan: ProspectingPlanSchema.optional(),
@@ -3919,19 +4001,19 @@ export const ProspectingPreviewInputSchema = z
     querySignature: z.string().min(1).max(200).optional(),
   })
   .strict();
-const SharedInput76Schema = z
+const SharedInput77Schema = z
   .string()
   .regex(new RegExp("^look_[a-f0-9]{32}$"))
   .describe(
     "Poll a job using this connection; omit seed when polling. Results recheck current contact and suppression eligibility.",
   );
-const SharedInput77Schema = z
+const SharedInput78Schema = z
   .enum(["async", "sync"])
   .describe("Defaults to async with jobId and pollAfterMs. Sync retains the bounded legacy read.");
 export const CompaniesLookalikeInputSchema = z
   .object({
-    jobId: SharedInput76Schema.optional(),
-    execution: SharedInput77Schema.optional(),
+    jobId: SharedInput77Schema.optional(),
+    execution: SharedInput78Schema.optional(),
     countries: z.array(SupportedCountrySchema).min(1).max(1).optional(),
     seed: z
       .object({
@@ -3963,7 +4045,7 @@ export const CommitmentsProposeInputSchema = z
     idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
-const SharedInput78Schema = z.enum([
+const SharedInput79Schema = z.enum([
   "proposed",
   "confirmed",
   "due",
@@ -3971,13 +4053,13 @@ const SharedInput78Schema = z.enum([
   "cancelled",
   "overdue",
 ]);
-const SharedInput79Schema = z
+const SharedInput80Schema = z
   .string()
   .regex(new RegExp("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$"));
 export const CommitmentsListInputSchema = z
   .object({
-    status: SharedInput78Schema.optional(),
-    dueBefore: SharedInput79Schema.optional(),
+    status: SharedInput79Schema.optional(),
+    dueBefore: SharedInput80Schema.optional(),
     ownerSide: z.enum(["us", "prospect"]).optional(),
     pipelineCardId: z.string().min(1).max(240).optional(),
     cursor: z.string().min(1).max(2000).optional(),
@@ -3993,9 +4075,9 @@ export const CommitmentUpdateInputSchema = z
       )
       .optional(),
     id: z.string().min(1).max(160),
-    expectedUpdatedAt: SharedInput79Schema,
+    expectedUpdatedAt: SharedInput80Schema,
     status: z.enum(["confirmed", "done", "cancelled"]),
-    dueAt: SharedInput79Schema.optional(),
+    dueAt: SharedInput80Schema.optional(),
     idempotencyKey: IdempotencyKeySchema,
   })
   .strict();
@@ -4012,8 +4094,8 @@ export const CommitmentConfirmBatchInputSchema = z
         z
           .object({
             id: z.string().min(1).max(160),
-            expectedUpdatedAt: SharedInput79Schema,
-            dueAt: SharedInput79Schema.optional(),
+            expectedUpdatedAt: SharedInput80Schema,
+            dueAt: SharedInput80Schema.optional(),
           })
           .strict(),
       )
@@ -4032,8 +4114,28 @@ export const CommitmentReminderDraftInputSchema = z
       .optional(),
     id: z.string().min(1).max(160),
     text: z.string().min(1).max(1000),
-    expectedConversationUpdatedAt: SharedInput79Schema,
+    expectedConversationUpdatedAt: SharedInput80Schema,
     idempotencyKey: IdempotencyKeySchema,
+  })
+  .strict();
+export const ListMergeInputSchema = z
+  .object({
+    sourceListIds: z
+      .array(z.string().min(1).max(180))
+      .min(2)
+      .max(10)
+      .describe("Distinct saved list IDs from lists_list."),
+    newName: z.string().min(1).max(120),
+    preview: z
+      .boolean()
+      .describe("Return the resulting lead count without creating a list.")
+      .optional(),
+    archiveSources: z
+      .boolean()
+      .describe(
+        "Archive the source lists after the merged list is saved, as the app's Lists page merge does. Omitted or false keeps them active. Only sources unchanged since they were read are archived; campaigns that target an archived list keep sending to it.",
+      )
+      .optional(),
   })
   .strict();
 export const ListRenameInputSchema = z
@@ -4046,7 +4148,7 @@ export const ListRenameInputSchema = z
       .optional(),
     listId: z.string().min(1).max(160),
     name: z.string().min(1).max(120),
-    expectedUpdatedAt: SharedInput79Schema,
+    expectedUpdatedAt: SharedInput80Schema,
   })
   .strict();
 export const ListArchiveInputSchema = z
@@ -4058,7 +4160,7 @@ export const ListArchiveInputSchema = z
       )
       .optional(),
     listId: z.string().min(1).max(160),
-    expectedUpdatedAt: SharedInput79Schema,
+    expectedUpdatedAt: SharedInput80Schema,
   })
   .strict();
 export const CampaignDraftArchiveInputSchema = z
@@ -4070,7 +4172,7 @@ export const CampaignDraftArchiveInputSchema = z
       )
       .optional(),
     campaignId: z.string().min(1).max(160),
-    expectedUpdatedAt: SharedInput79Schema,
+    expectedUpdatedAt: SharedInput80Schema,
   })
   .strict();
 export const CopyApprovalInspectInputSchema = z
@@ -4150,6 +4252,7 @@ export const AGENT_INPUT_SCHEMAS = {
   "campaign.draft.prepare": CampaignDraftPrepareInputSchema,
   "campaign.draft.update": CampaignDraftUpdateInputSchema,
   "list.import": ListImportInputSchema,
+  "leads.add": LeadsAddInputSchema,
   "list.prepare": ListPrepareInputSchema,
   "campaign.prepare": CampaignPrepareInputSchema,
   "campaign.launch.preflight": CampaignActionPreflightInputSchema,
@@ -4186,6 +4289,7 @@ export const AGENT_INPUT_SCHEMAS = {
   "companies.fit.runs.list": CompanyFitRunsListInputSchema,
   "companies.fit.run": CompanyFitRunInputSchema,
   "companies.fit.cohort": CompanyFitCohortInputSchema,
+  "campaign.variation.performance": CampaignVariationPerformanceInputSchema,
   "copy.performance": CopyPerformanceInputSchema,
   "calendar.status": CalendarStatusInputSchema,
   "calendar.availability": CalendarAvailabilityInputSchema,
@@ -4339,6 +4443,7 @@ export const AGENT_INPUT_SCHEMAS = {
   "commitment.update": CommitmentUpdateInputSchema,
   "commitment.confirm.batch": CommitmentConfirmBatchInputSchema,
   "commitment.reminder.draft": CommitmentReminderDraftInputSchema,
+  "list.merge": ListMergeInputSchema,
   "list.rename": ListRenameInputSchema,
   "list.archive": ListArchiveInputSchema,
   "campaign.draft.archive": CampaignDraftArchiveInputSchema,

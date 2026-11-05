@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { AGENT_TOOL_DEFINITIONS, AGENT_TOOL_NAMES } from "@dmfaster/sdk";
 
-test("the default catalog hides fifteen tools behind a live successor", () => {
+test("the default catalog hides retired tools behind a live successor", () => {
   const retired = AGENT_TOOL_NAMES.filter(
     (name) => "deprecatedSuccessor" in AGENT_TOOL_DEFINITIONS[name].mcp,
   );
@@ -21,7 +21,6 @@ test("the default catalog hides fifteen tools behind a live successor", () => {
     "pipeline_board",
     "pipeline_inspect",
     "replies_list",
-    "workspace_briefing",
   ]);
   for (const name of retired) {
     const mcp = AGENT_TOOL_DEFINITIONS[name].mcp as { deprecatedSuccessor?: string };

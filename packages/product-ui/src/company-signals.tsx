@@ -1,14 +1,6 @@
 "use client";
 import * as React from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "./components/card";
-import { Badge } from "./components/badge";
+import { recruitmentDisplayUntil } from "./lib/recruitment-display";
 import { Button } from "./components/button";
 import { useState } from "react";
 import { Landmark, ChevronDown } from "lucide-react";
@@ -149,9 +141,10 @@ function publicFundingEventAmount(event: PipelinePublicFundingEvent, locale: str
 
 export function FundingSignalsCard({
   profile,
+  standalone = false,
   language = "en",
   t = english,
-}: { profile: CompanySignalsProfile } & SignalLocale) {
+}: { profile: CompanySignalsProfile; standalone?: boolean } & SignalLocale) {
   const locale = language === "fi" ? "fi-FI" : "en-US";
   const [expanded, setExpanded] = useState(false);
   const sourceCount = (profile.funding ? 1 : 0) + (profile.publicFunding?.sources.length || 0);
@@ -160,70 +153,78 @@ export function FundingSignalsCard({
   const latestDate =
     profile.publicFunding?.latestEventDate || profile.funding?.latestProjectDate || "";
 
-  return (
-    <div className="mt-4 rounded-xl bg-success-soft p-4">
-      <Button
-        variant="ghost"
-        size="row"
-        type="button"
-        className="flex w-full items-start justify-between gap-3 text-left"
-        aria-expanded={expanded}
-        onClick={() => setExpanded((value) => !value)}
-      >
-        <span className="flex items-start gap-3">
-          <Landmark className="mt-0.5 h-4 w-4 text-success" />
-          <span>
-            <span className="block text-xs font-semibold text-success">
-              {t("pipeline.canary.company.publicFunding", "Public funding")}
-            </span>
-            <span className="mt-1 block text-sm font-semibold text-success">
-              {t(
-                "pipeline.canary.company.fundingSourcesFound",
-                "{count} sources with funding records",
-                { count: String(sourceCount) },
-              )}
-            </span>
-            <span className="mt-1 block text-xs text-success">
-              {t("pipeline.canary.company.fundingRecords", "{count} source records", {
-                count: formatCount(recordCount, locale),
-              })}
-              {latestDate
-                ? ` · ${t("pipeline.canary.company.fundingLatest", "latest {date}", { date: formatFundingDate(latestDate, locale) })}`
-                : ""}
-            </span>
-          </span>
+  const summary = (
+    <span className="flex items-start gap-3">
+      <Landmark className="mt-0.5 h-4 w-4 text-foreground" />
+      <span>
+        <span className="block text-sm font-medium text-foreground">
+          {t("pipeline.canary.company.publicFunding", "Public funding")}
         </span>
-        <ChevronDown
-          className={
-            expanded
-              ? "mt-0.5 h-4 w-4 shrink-0 rotate-180 text-success transition-transform"
-              : "mt-0.5 h-4 w-4 shrink-0 text-success transition-transform"
-          }
-        />
-      </Button>
+        <span className="mt-1 block text-sm font-semibold text-foreground">
+          {t(
+            "pipeline.canary.company.fundingSourcesFound",
+            "{count} sources with funding records",
+            { count: String(sourceCount) },
+          )}
+        </span>
+        <span className="mt-1 block text-xs text-foreground">
+          {t("pipeline.canary.company.fundingRecords", "{count} source records", {
+            count: formatCount(recordCount, locale),
+          })}
+          {latestDate
+            ? ` · ${t("pipeline.canary.company.fundingLatest", "latest {date}", { date: formatFundingDate(latestDate, locale) })}`
+            : ""}
+        </span>
+      </span>
+    </span>
+  );
 
-      {expanded ? (
-        <div className="mt-4 space-y-3 border-t border-success/14 pt-3 text-xs">
-          <p className="rounded-lg border border-success/16 bg-card/70 px-3 py-2 leading-5 text-success">
-            {t(
-              "pipeline.canary.company.fundingOverlapNote",
-              "Sources can overlap. Amounts are kept source-specific and are not added into a grand total.",
-            )}
-          </p>
+  return (
+    <div className={standalone ? "min-w-0" : "mt-6 border-t border-border pt-6"}>
+      {standalone ? (
+        <p className="text-sm leading-6 text-muted-foreground">
+          {t("pipeline.canary.company.fundingRecords", "{count} source records", {
+            count: formatCount(recordCount, locale),
+          })}
+          {latestDate
+            ? ` · ${t("pipeline.canary.company.fundingLatest", "latest {date}", { date: formatFundingDate(latestDate, locale) })}`
+            : ""}
+        </p>
+      ) : (
+        <Button
+          variant="ghost"
+          size="row"
+          type="button"
+          className="flex w-full items-start justify-between gap-3 text-left"
+          aria-expanded={expanded}
+          onClick={() => setExpanded((value) => !value)}
+        >
+          {summary}
+          <ChevronDown
+            className={
+              expanded
+                ? "mt-0.5 h-4 w-4 shrink-0 rotate-180 text-foreground transition-transform"
+                : "mt-0.5 h-4 w-4 shrink-0 text-foreground transition-transform"
+            }
+          />
+        </Button>
+      )}
 
+      {standalone || expanded ? (
+        <div className="mt-6 flex flex-col gap-6 text-sm">
           {profile.funding ? (
-            <section className="rounded-lg border border-success/16 bg-card/75 p-3">
+            <section className="border-t border-border pt-6 first:border-t-0 first:pt-0">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h4 className="font-semibold text-success">Business Finland</h4>
-                  <p className="mt-0.5 text-xs text-success">
+                  <h4 className="font-semibold text-foreground">Business Finland</h4>
+                  <p className="mt-1 text-xs text-muted-foreground">
                     {t(
                       "pipeline.canary.company.fundingSourceBusinessFinlandDescription",
                       "Company funding and project aggregate",
                     )}
                   </p>
                 </div>
-                <span className="shrink-0 rounded-full bg-success-soft px-2 py-1 text-xs font-semibold text-success">
+                <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
                   {t("pipeline.canary.company.fundingProjectCount", "{count} projects", {
                     count: String(profile.funding.projectCount),
                   })}
@@ -231,35 +232,35 @@ export function FundingSignalsCard({
               </div>
               <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3">
                 <div>
-                  <dt className="text-success">
+                  <dt className="text-xs font-medium text-muted-foreground">
                     {t("pipeline.canary.company.fundingGranted", "Granted")}
                   </dt>
-                  <dd className="mt-0.5 font-semibold text-success">
+                  <dd className="mt-0.5 font-semibold text-foreground">
                     {formatCurrency(profile.funding.grantedEur, locale)}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-success">
+                  <dt className="text-xs font-medium text-muted-foreground">
                     {t("pipeline.canary.company.fundingPaid", "Paid")}
                   </dt>
-                  <dd className="mt-0.5 font-semibold text-success">
+                  <dd className="mt-0.5 font-semibold text-foreground">
                     {formatCurrency(profile.funding.paidEur, locale)}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-success">
+                  <dt className="text-xs font-medium text-muted-foreground">
                     {t("pipeline.canary.company.fundingActiveProjects", "Active projects")}
                   </dt>
-                  <dd className="mt-0.5 font-semibold text-success">
+                  <dd className="mt-0.5 font-semibold text-foreground">
                     {profile.funding.activeProjectCount}
                   </dd>
                 </div>
                 {profile.funding.firstYear || profile.funding.lastYear ? (
                   <div>
-                    <dt className="text-success">
+                    <dt className="text-xs font-medium text-muted-foreground">
                       {t("pipeline.canary.company.fundingPeriod", "Funding period")}
                     </dt>
-                    <dd className="mt-0.5 font-semibold text-success">
+                    <dd className="mt-0.5 font-semibold text-foreground">
                       {[profile.funding.firstYear || "", profile.funding.lastYear || ""]
                         .filter(Boolean)
                         .join("–")}
@@ -268,49 +269,49 @@ export function FundingSignalsCard({
                 ) : null}
                 {profile.funding.latestService ? (
                   <div>
-                    <dt className="text-success">
+                    <dt className="text-xs font-medium text-muted-foreground">
                       {t("pipeline.canary.company.fundingService", "Service")}
                     </dt>
-                    <dd className="mt-0.5 font-semibold text-success">
+                    <dd className="mt-0.5 font-semibold text-foreground">
                       {profile.funding.latestService}
                     </dd>
                   </div>
                 ) : null}
                 {profile.funding.latestProgramme ? (
                   <div>
-                    <dt className="text-success">
+                    <dt className="text-xs font-medium text-muted-foreground">
                       {t("pipeline.canary.company.fundingProgramme", "Programme")}
                     </dt>
-                    <dd className="mt-0.5 font-semibold text-success">
+                    <dd className="mt-0.5 font-semibold text-foreground">
                       {profile.funding.latestProgramme}
                     </dd>
                   </div>
                 ) : null}
                 <div className="col-span-2 border-t border-success/14 pt-3">
-                  <dt className="font-semibold text-success">
+                  <dt className="font-semibold text-foreground">
                     {t("pipeline.canary.company.fundingBreakdown", "Funding breakdown")}
                   </dt>
-                  <dd className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 text-success sm:grid-cols-4">
+                  <dd className="mt-2 grid grid-cols-2 gap-x-4 gap-y-2 text-foreground sm:grid-cols-4">
                     <span>
-                      <strong className="block text-xs text-success">
+                      <strong className="block text-xs text-foreground">
                         {t("pipeline.canary.company.fundingGrant", "Grants")}
                       </strong>
                       {formatCurrency(profile.funding.grantedGrantEur, locale)}
                     </span>
                     <span>
-                      <strong className="block text-xs text-success">
+                      <strong className="block text-xs text-foreground">
                         {t("pipeline.canary.company.fundingLoan", "Loans")}
                       </strong>
                       {formatCurrency(profile.funding.grantedLoanEur, locale)}
                     </span>
                     <span>
-                      <strong className="block text-xs text-success">
+                      <strong className="block text-xs text-foreground">
                         {t("pipeline.canary.company.fundingEakr", "EAKR")}
                       </strong>
                       {formatCurrency(profile.funding.grantedEakrEur, locale)}
                     </span>
                     <span>
-                      <strong className="block text-xs text-success">
+                      <strong className="block text-xs text-foreground">
                         {t("pipeline.canary.company.fundingResearch", "Research")}
                       </strong>
                       {formatCurrency(profile.funding.grantedResearchEur, locale)}
@@ -322,13 +323,13 @@ export function FundingSignalsCard({
                 profile.funding.latestSupportType ||
                 profile.funding.latestProjectDate ? (
                   <div className="col-span-2 border-t border-success/14 pt-3">
-                    <dt className="font-semibold text-success">
+                    <dt className="font-semibold text-foreground">
                       {t(
                         "pipeline.canary.company.latestFundingActivity",
                         "Latest funding activity",
                       )}
                     </dt>
-                    <dd className="mt-1 text-success">
+                    <dd className="mt-1 text-foreground">
                       {[
                         profile.funding.latestProjectStatus,
                         profile.funding.latestInstrument,
@@ -342,49 +343,49 @@ export function FundingSignalsCard({
                 ) : null}
                 {profile.funding.fundingServices.length ? (
                   <div className="col-span-2">
-                    <dt className="text-success">
+                    <dt className="text-xs font-medium text-muted-foreground">
                       {t("pipeline.canary.company.fundingServices", "Funding services")}
                     </dt>
-                    <dd className="mt-0.5 font-semibold text-success">
+                    <dd className="mt-0.5 font-semibold text-foreground">
                       {profile.funding.fundingServices.join(" · ")}
                     </dd>
                   </div>
                 ) : null}
                 {profile.funding.programmes.length ? (
                   <div className="col-span-2">
-                    <dt className="text-success">
+                    <dt className="text-xs font-medium text-muted-foreground">
                       {t("pipeline.canary.company.fundingProgrammes", "Programmes")}
                     </dt>
-                    <dd className="mt-0.5 font-semibold text-success">
+                    <dd className="mt-0.5 font-semibold text-foreground">
                       {profile.funding.programmes.join(" · ")}
                     </dd>
                   </div>
                 ) : null}
                 {profile.funding.projectMunicipalities.length ? (
                   <div className="col-span-2">
-                    <dt className="text-success">
+                    <dt className="text-xs font-medium text-muted-foreground">
                       {t("pipeline.canary.company.fundingMunicipalities", "Project municipalities")}
                     </dt>
-                    <dd className="mt-0.5 font-semibold text-success">
+                    <dd className="mt-0.5 font-semibold text-foreground">
                       {profile.funding.projectMunicipalities.join(" · ")}
                     </dd>
                   </div>
                 ) : null}
                 {profile.funding.projectRegions.length ? (
                   <div className="col-span-2">
-                    <dt className="text-success">
+                    <dt className="text-xs font-medium text-muted-foreground">
                       {t("pipeline.canary.company.fundingRegions", "Project regions")}
                     </dt>
-                    <dd className="mt-0.5 font-semibold text-success">
+                    <dd className="mt-0.5 font-semibold text-foreground">
                       {profile.funding.projectRegions.join(" · ")}
                     </dd>
                   </div>
                 ) : null}
                 <div className="col-span-2 border-t border-success/14 pt-3">
-                  <dt className="font-semibold text-success">
+                  <dt className="font-semibold text-foreground">
                     {t("pipeline.canary.company.projectStatuses", "Project statuses")}
                   </dt>
-                  <dd className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-success">
+                  <dd className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-foreground">
                     <span>
                       {t("pipeline.canary.company.activeProjects", "Active")}:{" "}
                       {profile.funding.activeProjectCount}
@@ -414,18 +415,18 @@ export function FundingSignalsCard({
           {profile.publicFunding?.sources.map((summary) => (
             <section
               key={summary.source}
-              className="rounded-lg border border-success/16 bg-card/75 p-3"
+              className="border-t border-border pt-6 first:border-t-0 first:pt-0"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h4 className="font-semibold text-success">
+                  <h4 className="font-semibold text-foreground">
                     {publicFundingSourceLabel(summary.source, t)}
                   </h4>
-                  <p className="mt-0.5 text-xs text-success">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     {publicFundingSourceDescription(summary.source, t)}
                   </p>
                 </div>
-                <span className="shrink-0 rounded-full bg-success-soft px-2 py-1 text-xs font-semibold text-success">
+                <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
                   {t("pipeline.canary.company.fundingRecordCount", "{count} records", {
                     count: formatCount(summary.eventCount, locale),
                   })}
@@ -434,16 +435,16 @@ export function FundingSignalsCard({
               <dl className="mt-3 grid grid-cols-2 gap-3">
                 {publicFundingSourceMetrics(summary, locale, t).map(([label, value]) => (
                   <div key={label}>
-                    <dt className="text-success">{label}</dt>
-                    <dd className="mt-0.5 font-semibold text-success">{value}</dd>
+                    <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
+                    <dd className="mt-0.5 font-semibold text-foreground">{value}</dd>
                   </div>
                 ))}
                 {summary.latestEventDate ? (
                   <div>
-                    <dt className="text-success">
+                    <dt className="text-xs font-medium text-muted-foreground">
                       {t("pipeline.canary.company.fundingLatestRecord", "Latest record")}
                     </dt>
-                    <dd className="mt-0.5 font-semibold text-success">
+                    <dd className="mt-0.5 font-semibold text-foreground">
                       {formatFundingDate(summary.latestEventDate, locale)}
                     </dd>
                   </div>
@@ -453,11 +454,11 @@ export function FundingSignalsCard({
           ))}
 
           {profile.publicFunding?.recentEvents.length ? (
-            <section className="rounded-lg border border-success/16 bg-card/75 p-3">
-              <h4 className="font-semibold text-success">
+            <section className="border-t border-border pt-6 first:border-t-0 first:pt-0">
+              <h4 className="font-semibold text-foreground">
                 {t("pipeline.canary.company.recentFundingRecords", "Recent funding records")}
               </h4>
-              <div className="mt-2 divide-y divide-success/20">
+              <div className="mt-2 divide-y divide-border">
                 {profile.publicFunding.recentEvents.map((event) => {
                   const eventDate = event.eventDate || event.startDate || event.endDate;
                   const title =
@@ -473,25 +474,25 @@ export function FundingSignalsCard({
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="rounded-full bg-success-soft px-2 py-0.5 text-xs font-semibold text-success">
+                            <span className="rounded-full bg-muted px-2 py-0.5 text-sm font-medium text-foreground">
                               {publicFundingSourceLabel(event.source, t)}
                             </span>
                             {eventDate ? (
-                              <span className="text-xs text-success">
+                              <span className="text-xs text-foreground">
                                 {formatFundingDate(eventDate, locale)}
                               </span>
                             ) : null}
                           </div>
-                          <p className="mt-1.5 line-clamp-2 font-semibold leading-5 text-success">
+                          <p className="mt-1.5 line-clamp-2 font-semibold leading-5 text-foreground">
                             {title}
                           </p>
                           {event.authority || event.status ? (
-                            <p className="mt-1 line-clamp-1 text-xs text-success">
+                            <p className="mt-1 line-clamp-1 text-xs text-foreground">
                               {[event.authority, event.status].filter(Boolean).join(" · ")}
                             </p>
                           ) : null}
                         </div>
-                        <span className="shrink-0 text-right text-xs font-semibold text-success">
+                        <span className="shrink-0 text-right text-sm font-medium text-foreground">
                           {publicFundingEventAmount(event, locale, t)}
                         </span>
                       </div>
@@ -574,10 +575,10 @@ export function GoogleAdvertisingDetails({
       : formatFundingDate(google.lastShown || google.firstShown, locale);
 
   return (
-    <div className="mt-4 rounded-xl border border-info/20 bg-info-soft/50 p-4">
+    <div className="mt-6 border-t border-border pt-6 first:mt-0 first:border-t-0 first:pt-0">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold text-info">
+          <p className="text-sm font-semibold text-foreground">
             {t("pipeline.canary.company.googleAdsDetails", "Google advertising details")}
           </p>
           <p className="mt-1 text-xs leading-4 text-muted-foreground">
@@ -597,16 +598,16 @@ export function GoogleAdvertisingDetails({
             href={google.evidenceUrl}
             target="_blank"
             rel="noreferrer"
-            className="shrink-0 text-xs font-semibold text-info hover:underline"
+            className="shrink-0 text-sm font-semibold text-foreground hover:underline"
           >
             {t("pipeline.canary.company.googleAdsEvidence", "View source")}
           </a>
         ) : null}
       </div>
 
-      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+      <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
         {google.creativeCount !== null ? (
-          <div className="rounded-lg bg-card px-3 py-2">
+          <div className="min-w-0 py-2">
             <p className="text-xs font-semibold text-muted-foreground">
               {t("pipeline.canary.company.googleAdsCreatives", "Ads")}
             </p>
@@ -616,7 +617,7 @@ export function GoogleAdvertisingDetails({
           </div>
         ) : null}
         {impressionLabel ? (
-          <div className="rounded-lg bg-card px-3 py-2">
+          <div className="min-w-0 py-2">
             <p className="text-xs font-semibold text-muted-foreground">
               {t("pipeline.canary.company.googleAdsImpressions", "Impressions")}
             </p>
@@ -624,7 +625,7 @@ export function GoogleAdvertisingDetails({
           </div>
         ) : null}
         {activityPeriod ? (
-          <div className="rounded-lg bg-card px-3 py-2">
+          <div className="min-w-0 py-2">
             <p className="text-xs font-semibold text-muted-foreground">
               {t("pipeline.canary.company.googleAdsActivityPeriod", "Activity period")}
             </p>
@@ -638,12 +639,9 @@ export function GoogleAdvertisingDetails({
           <p className="text-xs font-semibold text-muted-foreground">
             {t("pipeline.canary.company.googleAdsFormats", "Formats")}
           </p>
-          <div className="mt-1.5 flex flex-wrap gap-1.5">
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
             {formats.map((format) => (
-              <span
-                key={format}
-                className="rounded-md bg-card px-2 py-1 text-xs font-semibold text-foreground"
-              >
+              <span key={format} className="text-sm text-foreground">
                 {format}
               </span>
             ))}
@@ -656,12 +654,9 @@ export function GoogleAdvertisingDetails({
           <p className="text-xs font-semibold text-muted-foreground">
             {t("pipeline.canary.company.googleAdsTargeting", "Audience selection used")}
           </p>
-          <div className="mt-1.5 flex flex-wrap gap-1.5">
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
             {targetingSignals.map((signal) => (
-              <span
-                key={signal.label}
-                className="rounded-md bg-card px-2 py-1 text-xs font-semibold text-foreground"
-              >
+              <span key={signal.label} className="text-sm text-foreground">
                 {signal.label}
               </span>
             ))}
@@ -697,24 +692,18 @@ export function GoogleAdvertisingDetails({
       verificationStatuses.length ? (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {google.isFundedByGoogleAdGrants ? (
-            <span className="rounded-md bg-success-soft px-2 py-1 text-xs font-semibold text-success">
+            <span className="text-xs text-muted-foreground">
               {t("pipeline.canary.company.googleAdsGrant", "Google Ad Grants")}
             </span>
           ) : null}
           {google.advertiserLocations.map((location) => (
-            <span
-              key={location}
-              className="rounded-md bg-card px-2 py-1 text-xs font-semibold text-foreground"
-            >
+            <span key={location} className="text-sm text-foreground">
               {t("pipeline.canary.company.googleAdsAdvertiserLocation", "Advertiser location")}:{" "}
               {location}
             </span>
           ))}
           {verificationStatuses.map((status) => (
-            <span
-              key={status}
-              className="rounded-md bg-card px-2 py-1 text-xs font-semibold text-foreground"
-            >
+            <span key={status} className="text-sm text-foreground">
               {status}
             </span>
           ))}
@@ -795,11 +784,11 @@ export function MetaAdvertisingDetails({
   return (
     <div
       data-testid="meta-advertising-details"
-      className="mt-4 rounded-xl border border-brand/20 bg-brand-soft/50 p-4"
+      className="mt-6 border-t border-border pt-6 first:mt-0 first:border-t-0 first:pt-0"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold text-brand">
+          <p className="text-sm font-semibold text-foreground">
             {t("pipeline.canary.company.metaAdsDetails", "Meta advertising details")}
           </p>
           <p className="mt-1 text-xs leading-4 text-muted-foreground">{snapshotDescription}</p>
@@ -812,16 +801,16 @@ export function MetaAdvertisingDetails({
             href={meta.evidenceUrl}
             target="_blank"
             rel="noreferrer"
-            className="shrink-0 text-xs font-semibold text-brand hover:underline"
+            className="shrink-0 text-sm font-semibold text-foreground hover:underline"
           >
             {t("pipeline.canary.company.metaAdsEvidence", "View source")}
           </a>
         ) : null}
       </div>
 
-      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+      <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
         {meta.activeAdCount !== null ? (
-          <div className="rounded-lg bg-card px-3 py-2">
+          <div className="min-w-0 py-2">
             <p className="text-xs font-semibold text-muted-foreground">
               {t("pipeline.canary.company.metaAdsActiveAds", "Active ads")}
             </p>
@@ -831,7 +820,7 @@ export function MetaAdvertisingDetails({
           </div>
         ) : null}
         {activeStartRange ? (
-          <div className="rounded-lg bg-card px-3 py-2">
+          <div className="min-w-0 py-2">
             <p className="text-xs font-semibold text-muted-foreground">
               {t("pipeline.canary.company.metaAdsStartRange", "Active-ad start range")}
             </p>
@@ -839,7 +828,7 @@ export function MetaAdvertisingDetails({
           </div>
         ) : null}
         {meta.maxSingleAdReach !== null && meta.maxSingleAdReach > 0 ? (
-          <div className="rounded-lg bg-card px-3 py-2">
+          <div className="min-w-0 py-2">
             <p className="text-xs font-semibold text-muted-foreground">
               {t("pipeline.canary.company.metaAdsMaxEuReach", "Largest single-ad EU reach")}
             </p>
@@ -849,7 +838,7 @@ export function MetaAdvertisingDetails({
           </div>
         ) : null}
         {meta.checkedAt ? (
-          <div className="rounded-lg bg-card px-3 py-2">
+          <div className="min-w-0 py-2">
             <p className="text-xs font-semibold text-muted-foreground">
               {t("pipeline.canary.company.metaAdsChecked", "Checked")}
             </p>
@@ -865,12 +854,9 @@ export function MetaAdvertisingDetails({
           <p className="text-xs font-semibold text-muted-foreground">
             {t("pipeline.canary.company.metaAdsPlatforms", "Platforms")}
           </p>
-          <div className="mt-1.5 flex flex-wrap gap-1.5">
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
             {publisherPlatforms.map((platform) => (
-              <span
-                key={platform}
-                className="rounded-md bg-card px-2 py-1 text-xs font-semibold text-foreground"
-              >
+              <span key={platform} className="text-sm text-foreground">
                 {platform}
               </span>
             ))}
@@ -883,20 +869,14 @@ export function MetaAdvertisingDetails({
           <p className="text-xs font-semibold text-muted-foreground">
             {t("pipeline.canary.company.metaAdsTargeting", "Targeting selections")}
           </p>
-          <div className="mt-1.5 flex flex-wrap gap-1.5">
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
             {ageRanges.map((ageRange) => (
-              <span
-                key={ageRange}
-                className="rounded-md bg-card px-2 py-1 text-xs font-semibold text-foreground"
-              >
+              <span key={ageRange} className="text-sm text-foreground">
                 {t("pipeline.canary.company.metaAdsAge", "Age")}: {ageRange}
               </span>
             ))}
             {genders.map((gender) => (
-              <span
-                key={gender}
-                className="rounded-md bg-card px-2 py-1 text-xs font-semibold text-foreground"
-              >
+              <span key={gender} className="text-sm text-foreground">
                 {gender}
               </span>
             ))}
@@ -906,7 +886,7 @@ export function MetaAdvertisingDetails({
                 className={
                   location.excluded
                     ? "rounded-md bg-warning-soft px-2 py-1 text-xs font-semibold text-warning"
-                    : "rounded-md bg-card px-2 py-1 text-xs font-semibold text-foreground"
+                    : "text-sm text-foreground"
                 }
               >
                 {location.excluded
@@ -924,7 +904,7 @@ export function MetaAdvertisingDetails({
           <span
             className={
               meta.associationStatus === "corroborated"
-                ? "rounded-md bg-success-soft px-2 py-1 text-xs font-semibold text-success"
+                ? "text-xs text-muted-foreground"
                 : "rounded-md bg-warning-soft px-2 py-1 text-xs font-semibold text-warning"
             }
           >
@@ -969,22 +949,33 @@ function RecruitmentCard({
   t: Translate;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const displayUntil = recruitmentDisplayUntil(recruitment);
   const [observedNow, setObservedNow] = useState(() => Date.now());
   React.useEffect(() => {
     if (!recruitment.verifiedUntil) return;
-    const remaining = Math.max(0, Date.parse(recruitment.verifiedUntil) - Date.now());
+    const nextBoundary = [Date.parse(recruitment.verifiedUntil), displayUntil]
+      .filter((at) => at > Date.now())
+      .sort((a, b) => a - b)[0];
+    if (!nextBoundary) return;
+    const remaining = nextBoundary - Date.now();
     const timer = setTimeout(() => setObservedNow(Date.now()), remaining + 1);
     return () => clearTimeout(timer);
-  }, [recruitment.verifiedUntil]);
+  }, [recruitment.verifiedUntil, displayUntil, observedNow]);
   const verified =
     recruitment.status === "verified" &&
     Boolean(recruitment.verifiedUntil && Date.parse(recruitment.verifiedUntil) > observedNow);
+  const hasApiPostings = recruitment.postings.some((p) => p.source === "tyomarkkinatori");
+  if (
+    hasApiPostings &&
+    (displayUntil <= observedNow || Date.parse(recruitment.snapshotAt) > observedNow)
+  )
+    return null;
   const postings = expanded ? recruitment.postings : recruitment.postings.slice(0, 5);
   return (
-    <Card data-testid="company-recruitment">
-      <CardHeader>
-        <CardTitle>{t("companies.recruitment", "Recruitment")}</CardTitle>
-        <CardDescription>
+    <section data-testid="company-recruitment" className="min-w-0">
+      <header className="flex flex-col items-start gap-2">
+        <h3 className="text-sm font-semibold">{t("companies.recruitment", "Recruitment")}</h3>
+        <p className="text-sm text-muted-foreground">
           {verified
             ? t(
                 recruitment.activeJobCount === 1
@@ -1004,22 +995,20 @@ function RecruitmentCard({
                   : "{count} employer ads in the saved snapshot · current availability unverified",
                 { count: String(recruitment.snapshotJobCount) },
               )}
-        </CardDescription>
-        <Badge variant={verified ? "secondary" : "outline"}>
-          {verified
-            ? t("companies.verifiedHiring", "Verified recruitment")
-            : t("companies.historicalHiring", "Historical snapshot")}
-        </Badge>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+        </p>
+      </header>
+      <div className="mt-6 flex flex-col divide-y divide-border border-t border-border">
         {postings.map((posting) => (
-          <div key={`${posting.source}:${posting.externalId}`} className="flex flex-col gap-1">
+          <div
+            key={`${posting.source}:${posting.externalId}`}
+            className="flex flex-col gap-1.5 py-4"
+          >
             {/^https:\/\//u.test(posting.sourceUrl) ? (
               <a
                 href={posting.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-medium underline underline-offset-4"
+                className="text-sm font-semibold hover:underline underline-offset-4"
               >
                 {posting.title}
               </a>
@@ -1030,7 +1019,7 @@ function RecruitmentCard({
               {[
                 posting.location,
                 posting.publishedAt ? formatCompanyDate(posting.publishedAt, language) : "",
-                posting.source,
+                posting.source === "tyomarkkinatori" ? "Työmarkkinatori" : posting.source,
               ]
                 .filter(Boolean)
                 .join(" · ")}
@@ -1051,21 +1040,15 @@ function RecruitmentCard({
               : t("companies.moreJobs", "Show more postings")}
           </Button>
         ) : null}
-      </CardContent>
-      <CardFooter className="flex flex-col items-start gap-1">
-        <p className="text-xs text-muted-foreground">
-          {t("companies.recruitmentSnapshot", "Snapshot: {date}", {
-            date: formatCompanyDate(recruitment.snapshotAt, language),
-          })}
-        </p>
-        <p className="text-xs text-muted-foreground">
-          {t(
-            "companies.recruitmentCountNote",
-            "Counts cover observed postings and may omit other vacancies. Ads are not a headcount. Up to 20 postings are shown.",
-          )}
-        </p>
-      </CardFooter>
-    </Card>
+      </div>
+      {hasApiPostings ? (
+        <footer className="mt-5 border-t border-border pt-4">
+          <p className="text-xs text-muted-foreground">
+            Lähde: Työmarkkinatorin asiakastietojärjestelmä
+          </p>
+        </footer>
+      ) : null}
+    </section>
   );
 }
 
@@ -1093,18 +1076,18 @@ export function HiringSignalCard({
   const roleFamilies = hiring.roleFamilies.slice(0, 3);
 
   return (
-    <section className="rounded-xl border border-success/20 bg-success-soft/60 p-4">
+    <section className="min-w-0">
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-        <h3 className="text-sm font-semibold text-success">
+        <h3 className="text-sm font-semibold text-foreground">
           {t("pipeline.canary.company.hiringNow", "Hiring now")}
         </h3>
         {hiring.latestJobAt ? (
-          <span className="text-xs font-semibold text-success/70">
+          <span className="text-xs text-muted-foreground">
             {formatCompanyDate(hiring.latestJobAt, language)}
           </span>
         ) : null}
       </div>
-      <p className="mt-1 text-xs font-semibold text-success">
+      <p className="mt-1 text-sm font-medium text-foreground">
         {openPositions !== null
           ? t(
               openPositions === 1
@@ -1130,15 +1113,15 @@ export function HiringSignalCard({
       </p>
 
       {recentRoles.length ? (
-        <div className="mt-3 divide-y divide-success/20 border-t border-success/16">
+        <div className="mt-6 divide-y divide-border border-t border-border">
           {recentRoles.map((role, index) => (
             <div
               key={`${role.title}:${role.publishedAt}:${index}`}
-              className="flex items-center justify-between gap-3 py-2 first:pt-3 last:pb-0"
+              className="flex items-center justify-between gap-3 py-4"
             >
-              <p className="min-w-0 truncate text-xs font-semibold text-success">{role.title}</p>
+              <p className="min-w-0 truncate text-sm font-medium text-foreground">{role.title}</p>
               {role.location ? (
-                <span className="shrink-0 text-xs text-success/70">{role.location}</span>
+                <span className="shrink-0 text-xs text-muted-foreground">{role.location}</span>
               ) : null}
             </div>
           ))}
@@ -1148,7 +1131,7 @@ export function HiringSignalCard({
           {roleFamilies.map((role) => (
             <span
               key={role}
-              className="rounded-full bg-card px-2.5 py-1 text-xs font-semibold text-success ring-1 ring-success/20"
+              className="rounded-full bg-card px-2.5 py-1 text-sm font-medium text-foreground ring-1 ring-success/20"
             >
               {hiringRoleLabel(role, t)}
             </span>

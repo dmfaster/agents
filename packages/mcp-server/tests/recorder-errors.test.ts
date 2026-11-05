@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createDmfasterClient, DmfasterHttpError } from "@dmfaster/sdk";
 import { toolFailure } from "../src/core.ts";
-import { toolFailureSchema } from "../src/presentation-schemas.ts";
+import { toolFailureSchema } from "../src/connection-schemas.ts";
 
 test("a fake recorder 403 keeps scope and recovery metadata across SDK and MCP", async () => {
   const client = createDmfasterClient({

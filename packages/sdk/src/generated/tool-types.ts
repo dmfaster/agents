@@ -40,6 +40,7 @@ export type AgentToolInputMap = {
   "campaign.draft.prepare": operations["campaignDraftPrepare"]["requestBody"]["content"]["application/json"];
   "campaign.draft.update": operations["campaignDraftUpdate"]["requestBody"]["content"]["application/json"];
   "list.import": operations["listImport"]["requestBody"]["content"]["application/json"];
+  "leads.add": operations["leadsAdd"]["requestBody"]["content"]["application/json"];
   "list.prepare": operations["listPrepare"]["requestBody"]["content"]["application/json"];
   "campaign.prepare": operations["campaignPrepare"]["requestBody"]["content"]["application/json"];
   "campaign.launch.preflight": operations["campaignLaunchPreflight"]["requestBody"]["content"]["application/json"];
@@ -76,6 +77,7 @@ export type AgentToolInputMap = {
   "companies.fit.runs.list": operations["companyFitRunsList"]["requestBody"]["content"]["application/json"];
   "companies.fit.run": operations["companyFitRun"]["requestBody"]["content"]["application/json"];
   "companies.fit.cohort": operations["companyFitCohort"]["requestBody"]["content"]["application/json"];
+  "campaign.variation.performance": operations["campaignVariationPerformance"]["requestBody"]["content"]["application/json"];
   "copy.performance": operations["copyPerformance"]["requestBody"]["content"]["application/json"];
   "calendar.status": operations["calendarStatus"]["requestBody"]["content"]["application/json"];
   "calendar.availability": operations["calendarAvailability"]["requestBody"]["content"]["application/json"];
@@ -229,6 +231,7 @@ export type AgentToolInputMap = {
   "commitment.update": operations["commitmentUpdate"]["requestBody"]["content"]["application/json"];
   "commitment.confirm.batch": operations["commitmentConfirmBatch"]["requestBody"]["content"]["application/json"];
   "commitment.reminder.draft": operations["commitmentReminderDraft"]["requestBody"]["content"]["application/json"];
+  "list.merge": operations["listMerge"]["requestBody"]["content"]["application/json"];
   "list.rename": operations["listRename"]["requestBody"]["content"]["application/json"];
   "list.archive": operations["listArchive"]["requestBody"]["content"]["application/json"];
   "campaign.draft.archive": operations["campaignDraftArchive"]["requestBody"]["content"]["application/json"];
@@ -355,6 +358,9 @@ export type AgentToolDataMap = {
   "list.import": NonNullable<
     operations["listImport"]["responses"][200]["content"]["application/json"]["data"]
   >;
+  "leads.add": NonNullable<
+    operations["leadsAdd"]["responses"][200]["content"]["application/json"]["data"]
+  >;
   "list.prepare": NonNullable<
     operations["listPrepare"]["responses"][200]["content"]["application/json"]["data"]
   >;
@@ -462,6 +468,9 @@ export type AgentToolDataMap = {
   >;
   "companies.fit.cohort": NonNullable<
     operations["companyFitCohort"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "campaign.variation.performance": NonNullable<
+    operations["campaignVariationPerformance"]["responses"][200]["content"]["application/json"]["data"]
   >;
   "copy.performance": NonNullable<
     operations["copyPerformance"]["responses"][200]["content"]["application/json"]["data"]
@@ -921,6 +930,9 @@ export type AgentToolDataMap = {
   >;
   "commitment.reminder.draft": NonNullable<
     operations["commitmentReminderDraft"]["responses"][200]["content"]["application/json"]["data"]
+  >;
+  "list.merge": NonNullable<
+    operations["listMerge"]["responses"][200]["content"]["application/json"]["data"]
   >;
   "list.rename": NonNullable<
     operations["listRename"]["responses"][200]["content"]["application/json"]["data"]

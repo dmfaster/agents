@@ -148,7 +148,7 @@ export async function parseSavedListCommand(
           updates[key] = sequence as NonNullable<(typeof updates)[typeof key]>;
         }
       }
-      if ("dailyCap" in patch) updates.dailyCap = integer(patch.dailyCap, 1, 60);
+      if ("dailyCap" in patch) updates.dailyCap = integer(patch.dailyCap, 1, 2147483647);
       if ("pacingSeconds" in patch) updates.pacingSeconds = integer(patch.pacingSeconds, 12, 3600);
       if ("instagramSendingWindowEnabled" in patch) {
         if (typeof patch.instagramSendingWindowEnabled !== "boolean")
@@ -223,7 +223,7 @@ export async function parseSavedListCommand(
       expectedTargetCount: integer(value.expectedTargetCount, 1, Number.MAX_SAFE_INTEGER),
       name: bounded(value.name, 120),
       messageVariants,
-      dailyCap: integer(value.dailyCap, 1, 60),
+      dailyCap: integer(value.dailyCap, 1, 2147483647),
       pacingSeconds: integer(value.pacingSeconds, 12, 3600),
       onlyNewChats: newContactsOnly(value.onlyNewChats),
       skipPreviouslyMessaged: newContactsOnly(value.skipPreviouslyMessaged),

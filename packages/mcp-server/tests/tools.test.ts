@@ -131,6 +131,7 @@ test("registers the complete Agent 1.0 surface with honest MCP safety hints", ()
   }
   for (const name of [
     "list_import",
+    "leads_add",
     "list_prepare",
     "campaign_prepare",
     "campaign_launch_preflight",
@@ -436,10 +437,10 @@ test("draft update MCP requires a version and bounded nonempty patch, never acti
   const input = {
     campaignId: "existing",
     expectedCampaignUpdatedAt: "2026-09-08T12:00:00.000Z",
-    updates: { dailyCap: 60 },
+    updates: { dailyCap: 250 },
   };
   assert.deepEqual(tool.inputSchema.parse(input), input);
-  for (const updates of [{}, { enabled: true }, { dailyCap: 61 }, { targetListId: "other" }])
+  for (const updates of [{}, { enabled: true }, { dailyCap: 1.5 }, { targetListId: "other" }])
     assert.equal(tool.inputSchema.safeParse({ ...input, updates }).success, false);
   assert.equal(
     tool.inputSchema.safeParse({ ...input, expectedCampaignUpdatedAt: undefined }).success,

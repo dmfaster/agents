@@ -87,17 +87,7 @@ for (const [relativePath, expectedSource] of versionSources) {
   }
 }
 
-for (const { name: packageName } of packageDefinitions) {
-  const result = spawnSync("npm", ["pack", "--dry-run", "--json", "--workspace", packageName], {
-    cwd: repoRoot,
-    encoding: "utf8",
-  });
-  if (result.status !== 0) {
-    throw new Error(
-      result.stderr.trim() || result.stdout.trim() || `Unable to inspect ${packageName}.`,
-    );
-  }
-  const report = JSON.parse(result.stdout)[0];
+export function validateAgentPackageReport(packageName, report) {
   if (!report || !Array.isArray(report.files))
     throw new Error(`npm returned no package report for ${packageName}.`);
   if (report.name !== packageName || report.version !== releaseVersion) {
@@ -126,4 +116,20 @@ for (const { name: packageName } of packageDefinitions) {
   process.stdout.write(
     `${packageName}@${releaseVersion} is aligned, package-clean, and configured for public publishing.\n`,
   );
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  for (const { name: packageName } of packageDefinitions) {
+    const result = spawnSync("npm", ["pack", "--dry-run", "--json", "--workspace", packageName], {
+      cwd: repoRoot,
+      encoding: "utf8",
+    });
+    if (result.status !== 0) {
+      throw new Error(
+        result.stderr.trim() || result.stdout.trim() || `Unable to inspect ${packageName}.`,
+      );
+    }
+    const report = JSON.parse(result.stdout)[0];
+    validateAgentPackageReport(packageName, report);
+  }
 }

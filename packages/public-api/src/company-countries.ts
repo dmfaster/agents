@@ -1,0 +1,35 @@
+// Shared by the real Companies page and public marketing previews.
+export const COMPANY_COUNTRY_OPTIONS = [
+  { value: "FI", label: "Finland" },
+  { value: "NO", label: "Norway" },
+  { value: "EE", label: "Estonia" },
+  { value: "SE", label: "Sweden" },
+  { value: "DK", label: "Denmark" },
+  { value: "UK", label: "United Kingdom" },
+  { value: "IE", label: "Ireland" },
+  { value: "AE", label: "United Arab Emirates" },
+  { value: "AT", label: "Austria" },
+  { value: "BE", label: "Belgium" },
+  { value: "CA", label: "Canada" },
+  { value: "NL", label: "Netherlands" },
+  { value: "NZ", label: "New Zealand" },
+  { value: "ES", label: "Spain" },
+  { value: "FR", label: "France" },
+  { value: "HK", label: "Hong Kong" },
+  { value: "IL", label: "Israel" },
+  { value: "LV", label: "Latvia" },
+  { value: "LT", label: "Lithuania" },
+  { value: "IT", label: "Italy" },
+  { value: "CH", label: "Switzerland" },
+  { value: "PT", label: "Portugal" },
+  { value: "SA", label: "Saudi Arabia" },
+  { value: "SG", label: "Singapore" },
+  { value: "IS", label: "Iceland" },
+  { value: "AU", label: "Australia" },
+  { value: "DE", label: "Germany" },
+  { value: "US", label: "United States" },
+  { value: "ZA", label: "South Africa" },
+] as const;
+
+export type CompanyCountry = (typeof COMPANY_COUNTRY_OPTIONS)[number]["value"];
+export const COMPANY_COUNTRIES = COMPANY_COUNTRY_OPTIONS.map(({ value }) => value);

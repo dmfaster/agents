@@ -1,5 +1,5 @@
 // Generated from packages/public-api/openapi.yaml. Run npm run generate:agent-api.
-export const AGENT_CONTRACT_VERSION = "2.7.6" as const;
+export const AGENT_CONTRACT_VERSION = "2.9.0" as const;
 export const AGENT_TOOL_NAMES = [
   "analytics.summary",
   "workspace.briefing",
@@ -40,6 +40,7 @@ export const AGENT_TOOL_NAMES = [
   "campaign.draft.prepare",
   "campaign.draft.update",
   "list.import",
+  "leads.add",
   "list.prepare",
   "campaign.prepare",
   "campaign.launch.preflight",
@@ -76,6 +77,7 @@ export const AGENT_TOOL_NAMES = [
   "companies.fit.runs.list",
   "companies.fit.run",
   "companies.fit.cohort",
+  "campaign.variation.performance",
   "copy.performance",
   "calendar.status",
   "calendar.availability",
@@ -229,6 +231,7 @@ export const AGENT_TOOL_NAMES = [
   "commitment.update",
   "commitment.confirm.batch",
   "commitment.reminder.draft",
+  "list.merge",
   "list.rename",
   "list.archive",
   "campaign.draft.archive",
@@ -433,6 +436,11 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "leads.add": {
+    effect: "write",
+    approval: "none",
+    exposure: "public_api",
+  },
   "list.prepare": {
     effect: "draft",
     approval: "none",
@@ -609,6 +617,11 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     exposure: "public_api",
   },
   "companies.fit.cohort": {
+    effect: "read",
+    approval: "none",
+    exposure: "public_api",
+  },
+  "campaign.variation.performance": {
     effect: "read",
     approval: "none",
     exposure: "public_api",
@@ -1378,6 +1391,11 @@ export const AGENT_TOOL_POLICIES = Object.freeze({
     approval: "none",
     exposure: "public_api",
   },
+  "list.merge": {
+    effect: "draft",
+    approval: "none",
+    exposure: "public_api",
+  },
   "list.rename": {
     effect: "write",
     approval: "none",
@@ -1454,6 +1472,7 @@ export const AGENT_TOOL_SCOPES = {
   "campaign.draft.prepare": ["campaigns:read", "campaigns:write"],
   "campaign.draft.update": ["campaigns:read", "campaigns:write"],
   "list.import": ["campaigns:write"],
+  "leads.add": ["campaigns:write"],
   "list.prepare": ["audiences:read", "campaigns:write"],
   "campaign.prepare": ["audiences:read", "campaigns:write"],
   "campaign.launch.preflight": ["campaigns:launch"],
@@ -1490,6 +1509,7 @@ export const AGENT_TOOL_SCOPES = {
   "companies.fit.runs.list": ["campaigns:read", "audiences:read"],
   "companies.fit.run": ["campaigns:read", "audiences:read", "campaigns:write"],
   "companies.fit.cohort": ["campaigns:read", "audiences:read"],
+  "campaign.variation.performance": ["campaigns:read", "sending:read"],
   "copy.performance": ["campaigns:read", "sending:read", "inbox:read", "calendar:read"],
   "calendar.status": ["calendar:read"],
   "calendar.availability": ["calendar:read"],
@@ -1669,6 +1689,7 @@ export const AGENT_TOOL_SCOPES = {
     "pipeline:write",
     "inbox:write",
   ],
+  "list.merge": ["campaigns:read", "campaigns:write"],
   "list.rename": ["campaigns:read", "campaigns:write"],
   "list.archive": ["campaigns:read", "campaigns:write"],
   "campaign.draft.archive": ["campaigns:read", "campaigns:write"],
@@ -1678,39 +1699,16 @@ export const AGENT_TOOL_SCOPES = {
   "approvals.list": ["inbox:read"],
 } as const;
 export const AGENT_OWNER_ONLY_TOOLS = [
-  "conversation.update",
-  "conversation.reply",
-  "campaign.messages.draft.update",
-  "campaign.messages.update",
-  "campaign.followups.cancel",
   "sending.test.prepare",
   "sending.test.send",
   "sending.test.inspect",
   "senders.inspect",
-  "pipeline.stage.update",
-  "pipeline.note.add",
-  "list.target.remove",
-  "campaign.draft.prepare",
-  "campaign.draft.update",
-  "list.import",
-  "list.prepare",
-  "campaign.prepare",
-  "campaign.launch.preflight",
-  "campaign.launch",
-  "campaign.pause.preflight",
-  "campaign.pause",
   "companies.knowledge.search",
   "companies.fit.start",
   "companies.fit.advance",
-  "companies.list.prepare",
-  "companies.list.refine",
-  "campaign.delivery.update",
   "sending.instagram.pacing.update",
   "companies.fit.cancel",
   "companies.fit.run",
-  "calendar.status",
-  "calendar.availability",
-  "calendar.meeting.book",
   "instagram.extract.quote",
   "instagram.extract.start",
   "instagram.extract.inspect",
@@ -1734,9 +1732,6 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "sandbox.seed",
   "sandbox.inbound.simulate",
   "sandbox.clock.advance",
-  "call.outcome.set",
-  "meeting.link",
-  "meeting.unlink",
   "webhooks.create",
   "webhooks.list",
   "webhooks.update",
@@ -1755,17 +1750,8 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "reply.policy.get",
   "reply.policy.update",
   "reply.approvals.list",
-  "conversation.draft.save",
-  "conversation.followup.set",
-  "conversation.followup.clear",
   "followups.due",
-  "conversations.bulk.update",
   "calendar.booking.link.create",
-  "calendar.meeting.reschedule",
-  "calendar.meeting.cancel",
-  "campaign.followups.configure",
-  "campaign.variants.configure",
-  "readiness.check",
   "sender.retire",
   "sender.unretire",
   "attribution.check",
@@ -1809,24 +1795,57 @@ export const AGENT_OWNER_ONLY_TOOLS = [
   "entity.merge",
   "entity.split",
   "call.outcome.confirm",
-  "copy.approval.request",
-  "campaign.draft.plan",
-  "campaign.draft.readiness",
-  "prospecting.preview",
-  "companies.lookalike",
   "commitments.propose",
   "commitments.list",
   "commitment.update",
   "commitment.confirm.batch",
   "commitment.reminder.draft",
-  "list.rename",
-  "list.archive",
-  "campaign.draft.archive",
-  "copy.approval.inspect",
-  "copy.approval.cancel",
   "approval.cancel",
   "approvals.list",
 ] as const;
+export const AGENT_WORKSPACE_TOOL_PERMISSIONS = {
+  "conversation.update": ["reply"],
+  "conversation.reply": ["reply"],
+  "campaign.messages.draft.update": ["edit"],
+  "campaign.messages.update": ["edit"],
+  "campaign.followups.cancel": ["edit"],
+  "pipeline.stage.update": ["edit"],
+  "pipeline.note.add": ["edit"],
+  "list.target.remove": ["delete"],
+  "campaign.draft.prepare": ["edit"],
+  "campaign.draft.update": ["edit"],
+  "list.import": ["edit"],
+  "list.prepare": ["edit"],
+  "campaign.prepare": ["edit"],
+  "campaign.launch.preflight": ["send", "manageSending"],
+  "campaign.launch": ["send", "manageSending"],
+  "campaign.pause.preflight": ["send", "manageSending"],
+  "campaign.pause": ["send", "manageSending"],
+  "companies.list.prepare": ["edit"],
+  "companies.list.refine": ["delete"],
+  "campaign.delivery.update": ["edit"],
+  "calendar.status": [],
+  "calendar.availability": [],
+  "calendar.meeting.book": ["manageMembers"],
+  "conversation.draft.save": ["reply"],
+  "conversation.followup.set": ["reply"],
+  "conversation.followup.clear": ["reply"],
+  "conversations.bulk.update": ["reply"],
+  "campaign.followups.configure": ["edit"],
+  "campaign.variants.configure": ["edit"],
+  "readiness.check": ["send", "manageSending", "reply", "edit", "manageMembers"],
+  "copy.approval.request": ["edit"],
+  "campaign.draft.plan": ["edit"],
+  "campaign.draft.readiness": [],
+  "prospecting.preview": [],
+  "companies.lookalike": [],
+  "list.merge": ["edit"],
+  "list.rename": ["edit"],
+  "list.archive": ["delete"],
+  "campaign.draft.archive": ["delete"],
+  "copy.approval.inspect": [],
+  "copy.approval.cancel": ["edit"],
+} as const;
 export const AGENT_INPUT_ONLY_PREVIEW_TOOLS = [
   "campaign.messages.draft.update",
   "campaign.messages.update",
@@ -1868,7 +1887,6 @@ export const AGENT_INPUT_ONLY_PREVIEW_TOOLS = [
   "reply.policy.update",
   "calendar.booking.link.create",
   "feedback.submit",
-  "copy.approval.request",
   "commitments.propose",
   "commitment.update",
   "commitment.confirm.batch",
@@ -1904,6 +1922,16 @@ export const AGENT_ERROR_CATALOG = {
   insufficient_scope: {
     nextAction: "Ask the workspace owner to grant the required scope through connection settings.",
     docsUrl: "https://dmfaster.com/docs/agents#errors-insufficient_scope",
+  },
+  workspace_permission_required: {
+    nextAction:
+      "Ask a workspace administrator to review your app permissions. Reconnecting does not change them.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-workspace_permission_required",
+  },
+  daily_cap_exceeded: {
+    nextAction:
+      "Use the workspace sending limit returned by the server, then retry with the corrected daily cap.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-daily_cap_exceeded",
   },
   invalid_cursor: {
     nextAction: "Restart from the first page without a cursor.",
@@ -1981,8 +2009,14 @@ export const AGENT_ERROR_CATALOG = {
     nextAction: "Ask the organizer to share the call and the owner to grant requiredScope.",
     docsUrl: "https://dmfaster.com/docs/agents#errors-call_access_denied",
   },
+  agent_prospecting_disabled: {
+    nextAction:
+      "Prospecting is not enabled for this workspace. Contact DM Faster support with the workspace ID and request ID. Do not retry unchanged or change connection permissions; no customer opt-in setting is required.",
+    docsUrl: "https://dmfaster.com/docs/agents#errors-agent_prospecting_disabled",
+  },
   feature_disabled: {
-    nextAction: "Ask the workspace owner to opt in to this feature.",
+    nextAction:
+      "This feature is not enabled for this workspace. Contact DM Faster support with the tool name, workspace ID and request ID. Reconnecting or changing scopes does not enable it; do not assume a customer settings toggle exists.",
     docsUrl: "https://dmfaster.com/docs/agents#errors-feature_disabled",
   },
   recorder_consent_required: {
@@ -2126,7 +2160,6 @@ export const AGENT_TOOL_DEFINITIONS = {
         idempotentHint: true,
         openWorldHint: false,
       },
-      deprecatedSuccessor: "analytics_summary",
     },
     cli: {
       section: "Workspace reads",
@@ -2256,7 +2289,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "conversation_inspect",
       title: "Read inbox conversation",
       description:
-        "Read an exact conversation's inbound and outbound message page. Pass nextCursor with the same conversation ID to continue.",
+        "Read an exact conversation's inbound and outbound message page. Pass nextCursor with the same conversation ID to continue. Reading does not mark it read.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -2834,6 +2867,25 @@ export const AGENT_TOOL_DEFINITIONS = {
       command: ["list", "import"],
     },
   },
+  "leads.add": {
+    mcp: {
+      name: "leads_add",
+      title: "Add leads",
+      description:
+        "Add leads to one of your campaigns or lists. Preview first, then apply the returned confirm token with the same idempotency key. Completed campaigns reopen to paused. Sending never starts.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "leads add --campaign CAMPAIGN --idempotency-key KEY",
+      command: ["leads", "add"],
+    },
+  },
   "list.prepare": {
     mcp: {
       name: "list_prepare",
@@ -3015,7 +3067,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "companies_search",
       title: "Search companies",
       description:
-        "Search indexed saved company data without website model calls. Results are candidates matching saved filters; industry membership does not establish the actual offering, buyer type or current contact employment. Qualify shortlisted companies with company_inspect and website evidence. Combine country, industry, employee/revenue bounds, technologies, Google Ads activity windows and Meta Ads filters in one request. Use this for structured ICPs before website evidence research; only unsupported website predicates need inference. Discover options with companies_filters. Ads reflect dated observations, not guaranteed live activity. Use projection list for fast prospecting views and company_inspect for full profiles; omit projection for rich rows. Returns an exact total and stable pagination. Echo querySignature and expectedRevision on subsequent pages.",
+        "Use projection list for fast prospecting; company_inspect loads full profiles for shortlisted companies. Returns exact totals and stable pagination. Search indexed saved data without website model calls. Results are candidates matching saved filters; industry membership does not establish the actual offering, buyer type or current contact employment. Qualify shortlisted companies with company_inspect and website evidence. Combine country, industry, employee/revenue bounds, technologies, Google Ads activity windows and Meta Ads filters in one request. Use this for structured ICPs before website evidence research; only unsupported website predicates need inference. Discover options with companies_filters. Ads reflect dated observations, not guaranteed live activity. Omit projection or use rich when contact arrays are needed. Echo querySignature and expectedRevision on subsequent pages.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -3073,7 +3125,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "companies_knowledge",
       title: "Read saved public company knowledge",
       description:
-        "Inspect one Finnish company's offering and buyers using saved website facts and paginated original sourceEvidence, including when assessments are null. Read related sections together and preserve seller, customer and partner attribution. For further sourcePage values pass the first response's knowledgeRevision as expectedKnowledgeRevision with unchanged sourcePageSize. No website fetch, Jev call or private run access. Source passages are unassessed; fact quotations are context samples, not selected supporting citations.",
+        "Inspect one Finnish company by companyKey (FI:0198452-3) or country plus businessId. Saved website facts and paginated sourceEvidence stay available when assessments are null. Pass knowledgeRevision as expectedKnowledgeRevision on later source pages. No website fetch, Jev call or private run access.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -3522,6 +3574,25 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "Agent workflows",
       usage: "companies fit cohort --input FILE",
       command: ["companies", "fit", "cohort"],
+    },
+  },
+  "campaign.variation.performance": {
+    mcp: {
+      name: "campaign_variation_performance",
+      title: "Compare message variation reply rates",
+      description:
+        "Compare A/B message variations and best reply rates for one campaign. Returns saved copy, seven-day mature counts and attribution coverage, ranked best first. Defaults to 30 days; no inbound reply text or calendar data. Null rates mean incomplete evidence, not zero.",
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Agent workflows",
+      usage: "campaign variation performance --input FILE",
+      command: ["campaign", "variation", "performance"],
     },
   },
   "copy.performance": {
@@ -4961,7 +5032,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "readiness_check",
       title: "Inspect readiness for an agent action",
       description:
-        "Read current connection scope and provider readiness. Per-action approval, policy, budgets and launch preflights still apply.",
+        "Check action permissions, connection scope and provider readiness. Teammates use their app permissions; sender setup stays owner-only. A generic teammate sender check reports an explicit blocker and directs exact campaign checks to campaign_launch_preflight. Readiness never authorizes sending; action preflights still apply.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -6236,7 +6307,7 @@ export const AGENT_TOOL_DEFINITIONS = {
       name: "copy_approval_request",
       title: "Request owner approval of campaign copy",
       description:
-        "Create an owner review of exact campaign copy and audience. Email recipient consent is entered by the owner in the approval page. Never sends or authorizes launch.",
+        "dryRun renders the exact copy, audience count and approval page without creating a review. Otherwise creates an owner review. Email consent is entered on that page. Never sends or authorizes launch.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -6419,6 +6490,25 @@ export const AGENT_TOOL_DEFINITIONS = {
       section: "Campaign planning and drafts",
       usage: "commitment reminder draft --input FILE",
       command: ["commitment", "reminder", "draft"],
+    },
+  },
+  "list.merge": {
+    mcp: {
+      name: "list_merge",
+      title: "Combine lead lists into a new named list",
+      description:
+        "Combine 2–10 saved lead lists into a new named list. Resolve names with lists_list. Set preview to true for the unique lead count before saving. Set archiveSources to true to archive unchanged originals like the app does; campaigns keep using archived lists. The same sources and name reuse the saved list.",
+      annotations: {
+        readOnlyHint: false,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    cli: {
+      section: "Campaign planning and drafts",
+      usage: "list merge --input FILE",
+      command: ["list", "merge"],
     },
   },
   "list.rename": {
@@ -6671,6 +6761,9 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   "list.import": {
     $ref: "#/components/schemas/ListImportInput",
   },
+  "leads.add": {
+    $ref: "#/components/schemas/LeadsAddInput",
+  },
   "list.prepare": {
     $ref: "#/components/schemas/ListPrepareInput",
   },
@@ -6778,6 +6871,9 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "companies.fit.cohort": {
     $ref: "#/components/schemas/CompanyFitCohortInput",
+  },
+  "campaign.variation.performance": {
+    $ref: "#/components/schemas/CampaignVariationPerformanceInput",
   },
   "copy.performance": {
     $ref: "#/components/schemas/CopyPerformanceInput",
@@ -7237,6 +7333,9 @@ export const AGENT_TOOL_INPUT_SCHEMAS = {
   },
   "commitment.reminder.draft": {
     $ref: "#/components/schemas/CommitmentReminderDraftInput",
+  },
+  "list.merge": {
+    $ref: "#/components/schemas/ListMergeInput",
   },
   "list.rename": {
     $ref: "#/components/schemas/ListRenameInput",
@@ -9063,7 +9162,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       dailyCap: {
         type: "integer",
         minimum: 1,
-        maximum: 60,
+        maximum: 2147483647,
       },
       pacingSeconds: {
         type: "integer",
@@ -9725,7 +9824,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       dailyCap: {
         type: "integer",
         minimum: 1,
-        maximum: 60,
+        maximum: 2147483647,
       },
       pacingSeconds: {
         type: "integer",
@@ -9819,7 +9918,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           dailyCap: {
             type: "integer",
             minimum: 1,
-            maximum: 60,
+            maximum: 2147483647,
           },
           pacingSeconds: {
             type: "integer",
@@ -9951,6 +10050,145 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         },
         description:
           "Instagram handles; whitespace and a leading @ are removed and case is normalized. Invalid handles reject the whole import.",
+      },
+      idempotencyKey: {
+        $ref: "#/components/schemas/IdempotencyKey",
+      },
+      runId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+        description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
+      },
+    },
+  },
+  LeadsAddInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["leads", "reason", "idempotencyKey"],
+    properties: {
+      campaignId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 180,
+      },
+      listId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 180,
+      },
+      channel: {
+        type: "string",
+        enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+      },
+      targetTotal: {
+        type: "integer",
+        minimum: 1,
+        maximum: 20000,
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 5000,
+      },
+      allowPriorContactOn: {
+        type: "array",
+        maxItems: 4,
+        items: {
+          type: "string",
+          enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+        },
+      },
+      leads: {
+        oneOf: [
+          {
+            type: "object",
+            additionalProperties: false,
+            required: ["companyIds"],
+            properties: {
+              companyIds: {
+                type: "array",
+                minItems: 1,
+                maxItems: 5000,
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 180,
+                },
+              },
+            },
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: ["fromListId"],
+            properties: {
+              fromListId: {
+                type: "string",
+                minLength: 1,
+                maxLength: 180,
+              },
+              limit: {
+                type: "integer",
+                minimum: 1,
+                maximum: 5000,
+              },
+              filter: {
+                type: "object",
+                additionalProperties: false,
+                properties: {
+                  hasMobile: {
+                    type: "boolean",
+                  },
+                  hasChannel: {
+                    type: "boolean",
+                  },
+                  industry: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 80,
+                  },
+                  country: {
+                    type: "string",
+                    minLength: 2,
+                    maxLength: 2,
+                  },
+                },
+              },
+            },
+          },
+          {
+            type: "object",
+            additionalProperties: false,
+            required: ["usernames"],
+            properties: {
+              usernames: {
+                type: "array",
+                minItems: 1,
+                maxItems: 5000,
+                items: {
+                  type: "string",
+                  minLength: 1,
+                  maxLength: 64,
+                },
+              },
+            },
+          },
+        ],
+      },
+      preview: {
+        type: "boolean",
+      },
+      confirmToken: {
+        type: "string",
+        minLength: 64,
+        maxLength: 64,
+        pattern: "^[a-f0-9]{64}$",
+      },
+      reason: {
+        type: "string",
+        minLength: 3,
+        maxLength: 500,
       },
       idempotencyKey: {
         $ref: "#/components/schemas/IdempotencyKey",
@@ -10590,7 +10828,16 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
   CompanyKnowledgeInput: {
     type: "object",
     additionalProperties: false,
+    description:
+      "Supply companyKey as returned by prospect_query or company_inspect (for example FI:0198452-3), or country plus businessId. Finnish companies only.",
     properties: {
+      companyKey: {
+        type: "string",
+        minLength: 4,
+        maxLength: 200,
+        pattern: "^[A-Za-z]{2}:.+$",
+        description: "Public company key, for example FI:0198452-3.",
+      },
       country: {
         type: "string",
         enum: ["FI"],
@@ -10630,7 +10877,6 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
       },
     },
-    required: ["country", "businessId"],
   },
   CompanyEvidenceStartInput: {
     type: "object",
@@ -11302,7 +11548,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
           dailyCap: {
             type: "integer",
             minimum: 1,
-            maximum: 60,
+            maximum: 2147483647,
           },
           pacingSeconds: {
             type: "integer",
@@ -11519,6 +11765,43 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
         type: "integer",
         minimum: 1,
         maximum: 100,
+      },
+    },
+  },
+  CampaignVariationPerformanceInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["campaignId"],
+    properties: {
+      channel: {
+        type: "string",
+        enum: ["instagram", "facebook", "linkedin", "gmail", "sms"],
+        description: "Optional channel filter for template_variation only.",
+      },
+      campaignId: {
+        $ref: "#/components/schemas/ResourceId",
+      },
+      from: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      to: {
+        $ref: "#/components/schemas/ResourceVersion",
+      },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: 25,
+      },
+      offset: {
+        type: "integer",
+        minimum: 0,
+        maximum: 1000000,
+      },
+      runId: {
+        type: "string",
+        minLength: 1,
+        maxLength: 100,
+        description: "Optional run correlation. Also accepted as X-DMFaster-Run-Id.",
       },
     },
   },
@@ -11801,12 +12084,12 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
       type: {
         type: "string",
-        enum: ["followers", "following", "likers", "commenters"],
+        enum: ["followers", "following"],
       },
       count: {
         type: "integer",
         minimum: 1,
-        maximum: 2147483647,
+        maximum: 100000,
       },
       currency: {
         type: "string",
@@ -11845,7 +12128,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
       type: {
         type: "string",
-        enum: ["followers", "following", "likers", "commenters"],
+        enum: ["followers", "following"],
       },
       count: {
         type: "integer",
@@ -16938,7 +17221,7 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       dryRun: {
         type: "boolean",
         description:
-          "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements.",
+          "True renders the exact copy, audience count and approval-page contents without creating a review or authorizing launch. False or omission creates the owner review.",
       },
       plan: {
         $ref: "#/components/schemas/ProspectingPlan",
@@ -17267,6 +17550,38 @@ export const AGENT_INPUT_SCHEMA_DEFINITIONS = {
       },
     },
     required: ["id", "text", "expectedConversationUpdatedAt", "idempotencyKey"],
+  },
+  ListMergeInput: {
+    type: "object",
+    additionalProperties: false,
+    required: ["sourceListIds", "newName"],
+    properties: {
+      sourceListIds: {
+        type: "array",
+        minItems: 2,
+        maxItems: 10,
+        items: {
+          type: "string",
+          minLength: 1,
+          maxLength: 180,
+        },
+        description: "Distinct saved list IDs from lists_list.",
+      },
+      newName: {
+        type: "string",
+        minLength: 1,
+        maxLength: 120,
+      },
+      preview: {
+        type: "boolean",
+        description: "Return the resulting lead count without creating a list.",
+      },
+      archiveSources: {
+        type: "boolean",
+        description:
+          "Archive the source lists after the merged list is saved, as the app's Lists page merge does. Omitted or false keeps them active. Only sources unchanged since they were read are archived; campaigns that target an archived list keep sending to it.",
+      },
+    },
   },
   ListRenameInput: {
     type: "object",

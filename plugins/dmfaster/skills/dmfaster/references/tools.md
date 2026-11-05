@@ -21,7 +21,7 @@ credit spending, launch, pause or sending.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@2.7.6
+npx --yes @dmfaster/cli@2.9.0
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
@@ -39,7 +39,10 @@ For “combine Coaches and Founders into Spring outreach”, resolve each source
 `lists_list`. If a name matches several lists, ask which one the user means. Discover
 `list_merge` and pass the returned IDs as `sourceListIds` and `Spring outreach` as
 `newName`. Use `preview: true` when the user asks for a count before saving.
-Report the saved name and lead count. The originals stay available.
+Report the saved name and lead count. The originals stay available unless the user
+asks to archive or tidy them up, as the app's Lists page merge does; then pass
+`archiveSources: true`. A preview with it lists `archiveSourceListIds`; a created
+merge reports `archivedSourceCount`. Campaigns keep using archived lists.
 
 `lists_list` returns at most 25 list summaries, the exact matching-list `total`,
 and a nullable `nextOffset`. Search is case-insensitive; never infer IDs from names.
