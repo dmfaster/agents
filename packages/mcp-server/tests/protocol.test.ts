@@ -3,22 +3,17 @@ import { createInterface } from "node:readline";
 import { PassThrough } from "node:stream";
 import test from "node:test";
 
-import type { AgentToolInputMap, AgentToolName, AgentToolResult } from "@dmfaster/sdk";
+import {
+  AGENT_TOOL_DEFINITIONS,
+  type AgentToolInputMap,
+  type AgentToolName,
+  type AgentToolResult,
+} from "@dmfaster/sdk";
 import { serveStdio, StdioServerTransport } from "@modelcontextprotocol/server/stdio";
 
 import { MCP_SERVER_INSTRUCTIONS, createDmfasterMcpServer } from "../src/server.ts";
 import { MCP_TOOL_NAMES, type AgentInvoker } from "../src/tools.ts";
-import { evidenceInitial } from "../browser-tests/companies-fixture.mjs";
-import {
-  CAMPAIGN_WORKSPACE_RESOURCE_URI,
-  LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-  PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-  V5_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-  V4_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-  V3_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-  V2_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-  MCP_APP_RESOURCE_MIME_TYPE,
-} from "../src/campaign-workspace.ts";
+import { evidenceInitial } from "./fixtures/company-evidence.mjs";
 
 type JsonObject = Record<string, unknown>;
 
@@ -52,12 +47,10 @@ function createWire(client: AgentInvoker) {
   const output = new PassThrough();
   const lines = createInterface({ input: output, crlfDelay: Infinity });
   const iterator = lines[Symbol.asyncIterator]();
-  // Explicitly exercise the retained optional UI adapter; the shipped server is headless.
   const handle = serveStdio(
     () =>
       createDmfasterMcpServer({
         client,
-        uiTools: true,
         env: { DMFASTER_API_URL: "https://app.dmfaster.test", DMFASTER_MCP_PROFILE: "full" },
         auth: {
           credentialStore: {
@@ -186,311 +179,78 @@ test("progress-only evidence status forwards the typed flag and distinguishes om
   assert.equal(data.companiesIncluded, false);
 });
 
-test("mention resource templates reach the current domain client with decoded identities", async (t) => {
-  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
-  let allowed = true;
-  const client: AgentInvoker = {
-    async invoke(tool, input) {
-      calls.push({ tool, input });
-      const receipt = result(tool);
-      receipt.ok = allowed;
-      receipt.data = allowed
-        ? {
-            list: {
-              listId: "list/one%two",
-              name: "Current list",
-              updatedAt: "2026-10-01",
-              total: 1,
-            },
-            usernames: ["one"],
-            nextOffset: null,
-            membership: null,
-          }
-        : null;
-      return receipt;
-    },
-  };
-  const wire = createWire(client);
-  t.after(() => wire.close());
-  const uri = "dmfaster://lists/list%2Fone%25two";
-  wire.send({
-    jsonrpc: "2.0",
-    id: 1,
-    method: "resources/read",
-    params: { uri, _meta: modernEnvelope },
-  });
-  const response = await wire.receive();
-  assert.equal(response.error, undefined);
-  const contents = (response.result as JsonObject).contents as Array<JsonObject>;
-  assert.equal(contents[0]?.uri, uri);
-  assert.equal(JSON.parse(String(contents[0]?.text)).contextOnly, true);
-  assert.deepEqual(calls, [{ tool: "list.inspect", input: { listId: "list/one%two", limit: 25 } }]);
-  allowed = false;
-  wire.send({
-    jsonrpc: "2.0",
-    id: 2,
-    method: "resources/read",
-    params: { uri, _meta: modernEnvelope },
-  });
-  const denied = await wire.receive();
-  assert.ok(denied.error);
-  assert.equal(calls.length, 2);
-});
-
-const campaignState = {
-  profile: {
-    version: 1 as const,
-    businessName: "Example Analytics",
-    websiteUrl: "https://example.test",
-    businessDescription: "Revenue analytics for B2B software companies.",
-    offer: "A revenue analytics workspace",
-    customerOutcome: "Find pipeline gaps and improve conversion.",
-    differentiators: ["Fast setup"],
-    proofPoints: ["Used by revenue teams"],
-    preferredTone: "Direct and useful",
-    preferredLanguages: ["English"],
-    defaultCountries: ["FI" as const],
-    excludedCompanyTraits: [],
-  },
-  brief: {
-    version: 1 as const,
-    objective: "Book a discovery call",
-    offer: "A revenue analytics workspace",
-    targetDescription: "Finnish B2B software companies",
-    countries: ["FI" as const],
-    industryCodes: ["62010"],
-    decisionMakerRoles: ["Head of Sales"],
-    companySize: {
-      employeeMin: 10,
-      employeeMax: 250,
-      revenueMinEur: null,
-      revenueMaxEur: null,
-    },
-    requestedSignals: [],
-    exclusions: [],
-    callToAction: "Open to a 15-minute review?",
-    requestedChannels: ["instagram" as const],
-    messageLanguage: "English",
-    tone: "Direct and useful",
-    dailyVolume: 20,
-    deliverySettings: {
-      dailyCap: 20,
-      windowStart: "09:00",
-      windowEnd: "16:00",
-      weekdays: 31,
-      timezone: "Europe/Helsinki",
-      confirmed: true,
-    },
-    outreachMessages: [
-      {
-        channels: ["instagram" as const],
-        subject: "",
-        body: "Hi — would a quick revenue pipeline review be useful?",
-        origin: "user" as const,
-      },
-    ],
-  },
-};
-
-test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) => {
+test("serves headless domain tools and docs over the stateless MCP wire", async (context) => {
   const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
   const wire = createWire(fakeClient(calls));
   context.after(() => wire.close());
-
   wire.send({
     jsonrpc: "2.0",
     id: 1,
     method: "server/discover",
     params: { _meta: modernEnvelope },
   });
-  const discover = await wire.receive();
-  assert.deepEqual((discover.result as JsonObject).supportedVersions, ["2026-07-28"]);
-  assert.equal((discover.result as JsonObject).instructions, MCP_SERVER_INSTRUCTIONS);
-  assert(MCP_SERVER_INSTRUCTIONS.length <= 512);
-  assert.deepEqual(((discover.result as JsonObject).capabilities as JsonObject).extensions, {
-    "openai/mentions": { searchTool: "workspace_mentions" },
-  });
-
-  wire.send({
-    jsonrpc: "2.0",
-    id: 2,
-    method: "tools/list",
-    params: { _meta: modernEnvelope },
-  });
-  const listed = await wire.receive();
-  const tools = (listed.result as JsonObject).tools as Array<JsonObject>;
-  assert.deepEqual(tools.map((tool) => tool.name).sort(), [...MCP_TOOL_NAMES].sort());
-  for (const name of [
-    "senders_inspect",
-    "agent_heartbeat",
-    "companies_search",
-    "campaign_workspace",
-    "companies_workspace",
-    "workspace_open",
-  ]) {
-    assert.equal(
-      tools.find((tool) => tool.name === name)?.outputSchema,
-      undefined,
-      `${name} omits full output schemas by default`,
-    );
+  const discover = (await wire.receive()).result as JsonObject;
+  assert.deepEqual(discover.supportedVersions, ["2026-07-28"]);
+  assert.equal(discover.instructions, MCP_SERVER_INSTRUCTIONS);
+  assert.ok(MCP_SERVER_INSTRUCTIONS.length <= 512);
+  assert.equal((discover.capabilities as JsonObject).extensions, undefined);
+  wire.send({ jsonrpc: "2.0", id: 2, method: "tools/list", params: { _meta: modernEnvelope } });
+  const tools = ((await wire.receive()).result as JsonObject).tools as JsonObject[];
+  const hidden = new Set<string>(
+    Object.values(AGENT_TOOL_DEFINITIONS)
+      .filter(
+        (definition) =>
+          "deprecatedSuccessor" in definition.mcp && definition.mcp.deprecatedSuccessor,
+      )
+      .map((definition) => definition.mcp.name),
+  );
+  assert.deepEqual(
+    tools.map((tool) => tool.name).sort(),
+    MCP_TOOL_NAMES.filter((name) => !hidden.has(name)).sort(),
+  );
+  for (const tool of tools) {
+    assert.equal((tool._meta as JsonObject | undefined)?.ui, undefined);
+    assert.equal((tool._meta as JsonObject | undefined)?.["openai/outputTemplate"], undefined);
   }
-  assert.equal(
-    (tools.find((tool) => tool.name === "campaign_launch")?._meta as JsonObject)[
-      "openai/widgetAccessible"
-    ],
-    true,
-  );
-  assert.equal(
-    (tools.find((tool) => tool.name === "campaign_prepare")?._meta as JsonObject)[
-      "openai/widgetAccessible"
-    ],
-    true,
-  );
-  const workspaceTool = tools.find((tool) => tool.name === "campaign_workspace");
-  assert.ok(workspaceTool);
-  assert.equal(
-    ((workspaceTool._meta as JsonObject).ui as JsonObject).resourceUri,
-    CAMPAIGN_WORKSPACE_RESOURCE_URI,
-  );
-  assert.equal(
-    (workspaceTool._meta as JsonObject)["openai/outputTemplate"],
-    CAMPAIGN_WORKSPACE_RESOURCE_URI,
-  );
-
+  assert.equal(tools.find((tool) => tool.name === "senders_inspect")?.outputSchema, undefined);
+  // Deprecated names remain available through the scoped domain dispatcher.
   wire.send({
     jsonrpc: "2.0",
     id: 3,
     method: "tools/call",
     params: {
-      name: "workspace_briefing",
-      arguments: {},
+      name: "tools_call",
+      arguments: { tool: "workspace_briefing", input: {} },
       _meta: modernEnvelope,
     },
   });
-  const called = await wire.receive();
-  assert.equal((called.result as JsonObject).isError, undefined);
+  assert.equal(((await wire.receive()).result as JsonObject).isError, undefined);
   assert.deepEqual(calls, [{ tool: "workspace.briefing", input: {} }]);
-
-  wire.send({
-    jsonrpc: "2.0",
-    id: 31,
-    method: "tools/call",
-    params: { name: "connection_status", arguments: {}, _meta: modernEnvelope },
-  });
-  const connection = await wire.receive();
-  assert.equal(
-    ((connection.result as JsonObject).structuredContent as JsonObject).status,
-    "not_authenticated",
-  );
-
   wire.send({
     jsonrpc: "2.0",
     id: 4,
-    method: "resources/list",
-    params: { _meta: modernEnvelope },
+    method: "tools/call",
+    params: { name: "connection_status", arguments: {}, _meta: modernEnvelope },
   });
-  const resourcesResponse = await wire.receive();
-  const resources = (resourcesResponse.result as JsonObject).resources as Array<JsonObject>;
+  assert.equal(
+    (((await wire.receive()).result as JsonObject).structuredContent as JsonObject).status,
+    "not_authenticated",
+  );
+  wire.send({ jsonrpc: "2.0", id: 5, method: "resources/list", params: { _meta: modernEnvelope } });
+  const resources = ((await wire.receive()).result as JsonObject).resources as JsonObject[];
   assert.deepEqual(
     resources.map((resource) => resource.uri),
-    [
-      "dmfaster://docs/agents",
-      CAMPAIGN_WORKSPACE_RESOURCE_URI,
-      PREVIOUS_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-      V5_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-      V4_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-      V3_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-      V2_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-      LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI,
-    ],
+    ["dmfaster://docs/agents"],
   );
-  assert.equal(resources[0]?.mimeType, "text/markdown");
-  assert.equal(
-    resources.find((resource) => resource.uri === CAMPAIGN_WORKSPACE_RESOURCE_URI)?.mimeType,
-    MCP_APP_RESOURCE_MIME_TYPE,
-  );
-
-  const mentionsTool = tools.find((tool) => tool.name === "workspace_mentions");
-  assert.ok(mentionsTool);
-  assert.equal((mentionsTool._meta as JsonObject)["openai/extensions"], undefined);
-  assert.deepEqual(((mentionsTool._meta as JsonObject).ui as JsonObject).visibility, ["app"]);
-  wire.send({
-    jsonrpc: "2.0",
-    id: 41,
-    method: "resources/templates/list",
-    params: { _meta: modernEnvelope },
-  });
-  const templatesResponse = await wire.receive();
-  const templates = (templatesResponse.result as JsonObject).resourceTemplates as Array<JsonObject>;
-  assert.deepEqual(
-    templates.map((template) => template.uriTemplate),
-    [
-      "dmfaster://companies/{country}/{businessId}",
-      "dmfaster://lists/{listId}",
-      "dmfaster://company-lists/{listId}",
-    ],
-  );
-
-  wire.send({
-    jsonrpc: "2.0",
-    id: 5,
-    method: "resources/read",
-    params: { uri: CAMPAIGN_WORKSPACE_RESOURCE_URI, _meta: modernEnvelope },
-  });
-  const resourceResponse = await wire.receive();
-  const contents = (resourceResponse.result as JsonObject).contents as Array<JsonObject>;
-  assert.equal(contents[0]?.mimeType, MCP_APP_RESOURCE_MIME_TYPE);
-  assert.deepEqual((contents[0]?._meta as JsonObject)["openai/ui"], {
-    availableDisplayModes: ["inline", "fullscreen"],
-    preferredDisplayMode: "fullscreen",
-  });
-  assert.match(String(contents[0]?.text), /ui\/initialize/u);
-  assert.match(String(contents[0]?.text), /campaign_prepare/u);
-  assert.equal(
-    ((contents[0]?._meta as JsonObject).ui as JsonObject).domain,
-    "https://app.dmfaster.com",
-  );
-  const csp = ((contents[0]?._meta as JsonObject).ui as JsonObject).csp as JsonObject;
-  assert.deepEqual(csp.connectDomains, []);
-  assert.deepEqual(csp.frameDomains, []);
-  assert.deepEqual(csp.resourceDomains, [
-    "https://app.dmfaster.com",
-    "https://www.google.com",
-    "https://t0.gstatic.com",
-    "https://t1.gstatic.com",
-    "https://t2.gstatic.com",
-    "https://t3.gstatic.com",
-  ]);
-  assert.deepEqual((contents[0]?._meta as JsonObject)["openai/widgetCSP"], {
-    connect_domains: [],
-    resource_domains: csp.resourceDomains,
-  });
-  wire.send({
-    jsonrpc: "2.0",
-    id: 51,
-    method: "resources/read",
-    params: { uri: LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI, _meta: modernEnvelope },
-  });
-  const legacyResource = await wire.receive();
-  const legacyContents = (legacyResource.result as JsonObject).contents as Array<JsonObject>;
-  assert.equal(legacyContents[0]?.uri, LEGACY_CAMPAIGN_WORKSPACE_RESOURCE_URI);
-  assert.equal(legacyContents[0]?.text, contents[0]?.text);
-
   wire.send({
     jsonrpc: "2.0",
     id: 6,
     method: "tools/call",
-    params: {
-      name: "campaign_workspace",
-      arguments: { state: campaignState },
-      _meta: modernEnvelope,
-    },
+    params: { name: "campaign_workspace", arguments: {}, _meta: modernEnvelope },
   });
-  const presented = await wire.receive();
-  const presentation = (presented.result as JsonObject).structuredContent as JsonObject;
-  assert.equal(presentation.view, "dmfaster.campaign_workspace");
-  assert.deepEqual(presentation.state, campaignState);
-  assert.deepEqual(calls, [{ tool: "workspace.briefing", input: {} }]);
+  const retired = await wire.receive();
+  assert.ok(retired.error || (retired.result as JsonObject)?.isError);
+  assert.equal(calls.length, 1);
 });
 
 test("rejects the 2025 initialize flow and remains available for stateless MCP", async (context) => {
@@ -519,186 +279,6 @@ test("rejects the 2025 initialize flow and remains available for stateless MCP",
   });
   const discovered = await wire.receive();
   assert.deepEqual((discovered.result as JsonObject).supportedVersions, ["2026-07-28"]);
-});
-
-for (const name of ["workspace_open", "companies_workspace", "campaign_workspace"]) {
-  test(`${name} opens with empty arguments and reads only the authenticated first page`, async (context) => {
-    const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
-    const wire = createWire(fakeClient(calls));
-    context.after(() => wire.close());
-    wire.send({ jsonrpc: "2.0", id: 1, method: "tools/list", params: { _meta: modernEnvelope } });
-    const listed = (await wire.receive()).result as JsonObject;
-    const tool = (listed.tools as JsonObject[]).find((item) => item.name === name)!;
-    assert.deepEqual((tool._meta as JsonObject)["openai/ui"], {
-      entrypoints: [{ type: name === "workspace_open" ? "global" : "thread" }],
-    });
-    assert.ok(!((tool.inputSchema as JsonObject).required as string[] | undefined)?.length);
-    wire.send({
-      jsonrpc: "2.0",
-      id: 2,
-      method: "tools/call",
-      params: { name, arguments: {}, _meta: modernEnvelope },
-    });
-    const opened = (await wire.receive()).result as JsonObject;
-    assert.equal(opened.isError, undefined);
-    assert.equal((opened.structuredContent as JsonObject).view, "dmfaster.workspace");
-    assert.deepEqual(
-      calls,
-      name === "campaign_workspace"
-        ? [{ tool: "campaigns.list", input: { limit: 20 } }]
-        : [
-            {
-              tool: "companies.search",
-              input: {
-                filters: { countries: ["FI"], activeOnly: true },
-                pageSize: 20,
-                projection: "list",
-              },
-            },
-          ],
-    );
-  });
-}
-
-test("company presentation preserves complex filters and domain reads stay headless and app-callable", async (context) => {
-  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
-  const wire = createWire(fakeClient(calls));
-  context.after(() => wire.close());
-  wire.send({ jsonrpc: "2.0", id: 1, method: "tools/list", params: { _meta: modernEnvelope } });
-  const tools = ((await wire.receive()).result as JsonObject).tools as JsonObject[];
-  for (const name of [
-    "companies_filters",
-    "companies_search",
-    "company_inspect",
-    "history_list",
-    "companies_evidence_results",
-    "companies_list_prepare",
-    "campaign_draft_prepare",
-    "campaign_launch",
-  ]) {
-    const meta = tools.find((item) => item.name === name)!._meta as JsonObject;
-    assert.equal(meta["openai/widgetAccessible"], true);
-    assert.equal(meta["openai/outputTemplate"], undefined);
-    assert.deepEqual((meta.ui as JsonObject).visibility, ["model", "app"]);
-  }
-  for (const name of [
-    "companies_fit_start",
-    "companies_evidence_start",
-    "companies_evidence_advance",
-    "companies_evidence_cancel",
-  ]) {
-    assert.equal(
-      (tools.find((item) => item.name === name)!._meta as JsonObject)["openai/widgetAccessible"],
-      false,
-    );
-  }
-  const filters = {
-    countries: ["FI", "SE"],
-    activeOnly: true,
-    technologies: ["shopify"],
-    hasWebsite: true,
-    employeeMin: "2",
-    industryCodeSelections: [{ classification: "TOL", version: "2025", codes: ["62010"] }],
-  };
-  wire.send({
-    jsonrpc: "2.0",
-    id: 2,
-    method: "tools/call",
-    params: {
-      name: "companies_workspace",
-      arguments: { filters, pageSize: 5 },
-      _meta: modernEnvelope,
-    },
-  });
-  const response = (await wire.receive()).result as JsonObject;
-  assert.equal(response.isError, undefined);
-  assert.equal((response.structuredContent as JsonObject).section, "companies");
-  assert.deepEqual(calls, [
-    { tool: "companies.search", input: { filters, pageSize: 5, projection: "list" } },
-  ]);
-});
-
-test("saved campaign entrypoint delegates exact identity and preserves read failures", async (context) => {
-  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
-  const wire = createWire({
-    async invoke(tool, input) {
-      calls.push({ tool, input });
-      throw new Error("Campaign access denied");
-    },
-  });
-  context.after(() => wire.close());
-  wire.send({
-    jsonrpc: "2.0",
-    id: 1,
-    method: "tools/call",
-    params: {
-      name: "campaign_workspace",
-      arguments: { campaignId: "campaign_owned_123" },
-      _meta: modernEnvelope,
-    },
-  });
-  const opened = (await wire.receive()).result as JsonObject;
-  assert.equal(opened.isError, true);
-  assert.deepEqual(calls, [
-    { tool: "campaign.inspect", input: { campaignId: "campaign_owned_123" } },
-  ]);
-  const payload = opened.structuredContent as JsonObject;
-  assert.equal((payload.result as JsonObject).ok, false);
-  assert.match(JSON.stringify(payload), /Campaign access denied/);
-});
-
-test("native outreach forms survive fresh MCP requests and retain read-only execution", async (t) => {
-  const calls: string[] = [];
-  const wire = createWire({
-    async invoke(tool) {
-      calls.push(tool);
-      return {
-        ...result(tool),
-        data: {
-          emailAvailable: false,
-          mailboxes: [],
-          browserProfiles: [],
-          sms: { available: false, configured: false, enabled: false, phoneNumber: "" },
-        },
-      };
-    },
-  });
-  t.after(() => wire.close());
-  const envelope = {
-    ...modernEnvelope,
-    "io.modelcontextprotocol/clientCapabilities": {
-      elicitation: { form: {} },
-      extensions: { "openai/elicitation": { form: {} } },
-    },
-  };
-  wire.send({
-    jsonrpc: "2.0",
-    id: 1,
-    method: "tools/call",
-    params: { name: "outreach_details", arguments: {}, _meta: envelope },
-  });
-  const first = await wire.receive();
-  assert.equal(first.error, undefined, JSON.stringify(first));
-  assert.equal((first.result as JsonObject).resultType, "input_required");
-  const details = { channel: "instagram", name: "Reviewed outreach", body: "Hello", dailyCap: 20 };
-  wire.send({
-    jsonrpc: "2.0",
-    id: 2,
-    method: "tools/call",
-    params: {
-      name: "outreach_details",
-      arguments: {},
-      inputResponses: { outreach: { action: "accept", content: details } },
-      _meta: envelope,
-    },
-  });
-  const second = await wire.receive();
-  assert.equal(second.error, undefined, JSON.stringify(second));
-  const data = (second.result as JsonObject).structuredContent as JsonObject;
-  assert.equal(data.status, "collected");
-  assert.deepEqual(data.details, details);
-  assert.equal(data.preparationStartsSending, false);
-  assert.deepEqual(calls, ["senders.inspect", "senders.inspect"]);
 });
 
 test(
@@ -736,7 +316,11 @@ test(
       jsonrpc: "2.0",
       id: 900,
       method: "tools/call",
-      params: { name: "workspace_briefing", arguments: {}, _meta: modernEnvelope },
+      params: {
+        name: "tools_call",
+        arguments: { tool: "workspace_briefing", input: {} },
+        _meta: modernEnvelope,
+      },
     });
     await entered;
     wire.send({
@@ -814,4 +398,89 @@ test("heartbeat fits in 300 bytes over the actual MCP wire and full diagnostics 
     ((full.result as JsonObject).structuredContent as JsonObject).tool,
     "agent.heartbeat",
   );
+});
+
+test("compact dispatch reports invalid input before invoking the domain adapter", async (t) => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const wire = createWire(fakeClient(calls));
+  t.after(() => wire.close());
+  wire.send({
+    jsonrpc: "2.0",
+    id: 950,
+    method: "tools/call",
+    params: {
+      name: "tools_call",
+      arguments: {
+        tool: "companies_search",
+        input: { filters: { country: "FI", unsupportedTest: true } },
+      },
+      _meta: modernEnvelope,
+    },
+  });
+  const response = await wire.receive();
+  const payload = response.result as {
+    isError: boolean;
+    structuredContent: { error: { code: string; message: string } };
+  };
+  assert.equal(payload.isError, true);
+  assert.equal(payload.structuredContent.error.code, "invalid_input");
+  assert.match(payload.structuredContent.error.message, /tools_discover/);
+  assert.match(payload.structuredContent.error.message, /No action was executed/);
+  assert.equal(calls.length, 0);
+});
+
+test("dispatchers advertise accurate effects and reject mismatched tools before execution", async (t) => {
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  const wire = createWire(fakeClient(calls));
+  t.after(() => wire.close());
+  wire.send({ jsonrpc: "2.0", id: 960, method: "tools/list", params: { _meta: modernEnvelope } });
+  const catalog = (await wire.receive()).result as {
+    tools: Array<{
+      name: string;
+      annotations: { readOnlyHint: boolean; destructiveHint: boolean };
+    }>;
+  };
+  assert.equal(
+    catalog.tools.find((tool) => tool.name === "tools_read")?.annotations.readOnlyHint,
+    true,
+  );
+  assert.equal(
+    catalog.tools.find((tool) => tool.name === "tools_write")?.annotations.destructiveHint,
+    false,
+  );
+  assert.equal(
+    catalog.tools.find((tool) => tool.name === "tools_call")?.annotations.destructiveHint,
+    true,
+  );
+  for (const [name, tool] of [
+    ["tools_read", "campaign_launch"],
+    ["tools_write", "campaign_launch"],
+    ["tools_write", "companies_search"],
+  ]) {
+    wire.send({
+      jsonrpc: "2.0",
+      id: 961,
+      method: "tools/call",
+      params: { name, arguments: { tool, input: {} }, _meta: modernEnvelope },
+    });
+    const response = (await wire.receive()).result as {
+      isError: boolean;
+      structuredContent: { error: { message: string } };
+    };
+    assert.equal(response.isError, true);
+    assert.match(response.structuredContent.error.message, /requires tools_/);
+  }
+  assert.equal(calls.length, 0);
+  wire.send({
+    jsonrpc: "2.0",
+    id: 962,
+    method: "tools/call",
+    params: {
+      name: "tools_read",
+      arguments: { tool: "companies_search", input: { filters: { country: "FI" } } },
+      _meta: modernEnvelope,
+    },
+  });
+  await wire.receive();
+  assert.equal(calls.length, 1);
 });

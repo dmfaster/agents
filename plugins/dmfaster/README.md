@@ -7,33 +7,19 @@ manifests. The hosted endpoint supports MCP 2025 hosts. The separately published
 version-pinned stdio MCP package requires MCP 2026-07-28; the CLI remains available
 for headless callers.
 
-The 2.3.0 source exposes 145 bounded domain tools plus an optional
-portable MCP Apps Companies and campaign workspaces. It adds Instagram ICP text-to-list runs and covers social prospecting, company research, exact
-audience and draft preparation, inbox and pipeline work, follow-up control,
-sender readiness and paginated outcomes. Replies require the user's explicit
-instruction for the exact text and report delivery state. Campaign launch and
-pause require the owner's direct-control grant or the existing per-action
-approval path. The interface does not expose provider credentials or bypass
-the browser extension's execution boundary.
+The source exposes typed, scoped operations for company research, prospecting,
+campaign drafts, inbox and pipeline work, sender readiness and outcomes. The
+compact catalog advertises common operations directly; `tools_discover` finds
+other permitted operations and returns the right dispatcher and input schema.
+The server is headless: the former campaign and company MCP Apps workspaces,
+forms and composer mentions are retired. Domain tools preserve the underlying
+reads and workflows. Catalog contents depend on the connection's grants and the
+deployed version; source presence alone does not establish live availability.
 
-Instagram follower, following, liker and commenter extraction uses existing
-lead credits: one credit per saved profile. Enrichment is separate. Durable job
-receipts report saved lists, final costs and refunds; retries recover the same
-job. Company and saved-list composer mentions use the host's native extension
-when supported, while every profile/list read keeps the current workspace
-permissions. Selecting a mention never grants action permission.
-
-A first-time paid user can state the campaign goal without learning DM Faster's
-screens or tool names. The agent carries the plan through validation, exact
-audience preview, and private draft preparation. If browser-based sending is not
-ready, launch preflight returns one machine-readable setup link and an exact
-resume call; the user only completes the browser-store installation/link and
-any approval explicitly required by the returned connection or action state.
-
-Compliant MCP Apps hosts can render the campaign workspace inline. Modern
-headless hosts use the same complete campaign state and 125 domain tools without
-losing any server capability or safety guarantee; older clients do not receive
-a legacy MCP downgrade.
+Prospecting uses existing lead credits, with enrichment charged separately.
+Job receipts report saved lists, settled costs and refunds. Drafting does not
+send. Replies and campaign control follow their existing explicit-instruction,
+permission and action-precondition requirements.
 
 ## Release status
 
@@ -62,11 +48,15 @@ and plugin publication are separate approved releases.
 
 ## Authentication
 
-Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
+For the hosted plugin, connect through the host's OAuth flow and approve the
+requested workspace permissions. Existing grants remain in effect; reconnect
+only if additional scopes are needed. This path does not require the local CLI.
+
+For the optional local CLI and stdio server, Node.js 24 and macOS Keychain or Linux Secret Service are required. Windows is
 not supported in this release.
 
 ```bash
-npx --yes @dmfaster/cli@2.7.6 auth login --json
+npx --yes @dmfaster/cli@2.9.0 auth login --json
 ```
 
 The default `full` profile supports the complete campaign-agent workflow. Use

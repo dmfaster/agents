@@ -11,21 +11,11 @@ import {
   buildProspectingRequest,
   imageManifest,
 } from "@dmfaster/sdk/instagram-prospecting";
-import {
-  createInstagramEvaluationService,
-  type InstagramEvaluationPage,
-} from "../src/instagram-evaluation.ts";
+import { createInstagramEvaluationService } from "../src/instagram-evaluation.ts";
 import {
   registerInstagramWorkspace,
   instagramWorkspaceOutputSchema,
-  INSTAGRAM_WORKSPACE_RESOURCE_URI,
 } from "../src/instagram-workspace.ts";
-import {
-  instagramShortlist,
-  instagramShortlistCsv,
-  mergeInstagramPage,
-  instagramCounts,
-} from "../ui/instagram-data.ts";
 import type { AgentInvoker } from "../src/tools.ts";
 
 const spec = {
@@ -111,7 +101,7 @@ async function fixture(t: { after(fn: () => Promise<void>): void }, client?: Age
   );
   return { directory, profile, image, tools, resources, service };
 }
-test("the MCP App opens exact named snapshots and offers identical headless data without defaulting to an audience", async (t) => {
+test("private snapshot tools preserve exact named data without UI resources or a default audience", async (t) => {
   const { tools, resources, service } = await fixture(t);
   const open = tools.get("instagram_workspace")!;
   const browse = (await open.call({})) as { structuredContent: unknown };
@@ -125,21 +115,8 @@ test("the MCP App opens exact named snapshots and offers identical headless data
     result.structuredContent.evaluation,
     await service.evaluate({ datasetId: "photos", mode: "replay" }),
   );
-  assert.equal(
-    (open.options._meta as { ui: { resourceUri: string } }).ui.resourceUri,
-    INSTAGRAM_WORKSPACE_RESOURCE_URI,
-  );
-  const resource = (await resources.get(INSTAGRAM_WORKSPACE_RESOURCE_URI)!.read()) as {
-    contents: {
-      mimeType: string;
-      text: string;
-      _meta: { ui: { csp: { connectDomains: string[] } } };
-    }[];
-  };
-  assert.equal(resource.contents[0]!.mimeType, "text/html;profile=mcp-app");
-  assert.deepEqual(resource.contents[0]!._meta.ui.csp.connectDomains, []);
-  assert(resource.contents[0]!.text.includes("Instagram prospecting"));
-  assert(!resource.contents[0]!.text.includes("node:fs"));
+  assert.equal(open.options._meta, undefined);
+  assert.equal(resources.size, 0);
 });
 test("profile details preserve original fields and images only in metadata and fence changed evidence", async (t) => {
   const { tools, service, image, directory } = await fixture(t);
@@ -254,95 +231,4 @@ test("acquisition quote authorization failures remain failures rather than a fab
   };
   assert.equal(result.isError, true);
   assert.deepEqual(result.structuredContent.quote, quote);
-});
-function page(offset = 0): InstagramEvaluationPage {
-  return {
-    stage: "private_evaluation",
-    datasetId: "photos",
-    revision: "a".repeat(64),
-    policyHash: "b".repeat(64),
-    spec,
-    totalProfiles: 4,
-    offset,
-    scanned: 2,
-    counts: { accept: 1, review: 1, exclude: 0, pending: 0 },
-    results: [
-      {
-        profileId: String(offset + 1),
-        username: `photo_${offset + 1}`,
-        instagramUrl: "",
-        split: "development",
-        observedAt: "2026-10-04",
-        requestHash: "c".repeat(64),
-        evidenceHash: "d".repeat(64),
-        policyHash: "b".repeat(64),
-        imageCount: 0,
-        status: "accept",
-        reasons: [],
-        criteria: {},
-        preferenceScore: null,
-        evidence: {},
-        recordedAt: "2026-10-04",
-        rawJudgmentsReused: true,
-      },
-      {
-        profileId: String(offset + 2),
-        username: `photo_${offset + 2}`,
-        instagramUrl: "",
-        split: "development",
-        observedAt: "=HOSTILE()",
-        requestHash: "e".repeat(64),
-        evidenceHash: "f".repeat(64),
-        policyHash: "b".repeat(64),
-        imageCount: 0,
-        status: "review",
-        reasons: ["unknown evidence"],
-        criteria: {},
-        preferenceScore: null,
-        evidence: {},
-        recordedAt: "2026-10-04",
-        rawJudgmentsReused: true,
-      },
-    ],
-    nextCursor: offset === 0 ? "cursor" : null,
-    inferenceCalls: 0,
-    customerCreditsSpent: 0,
-    note: "Private",
-  };
-}
-test("pagination aggregates exact loaded counts and rejects changed policies, overlaps and skipped pages", () => {
-  const first = mergeInstagramPage(null, page());
-  const second = mergeInstagramPage(first, page(2));
-  assert.deepEqual(instagramCounts(second.rows), { accept: 2, review: 2, exclude: 0, pending: 0 });
-  assert.throws(
-    () => mergeInstagramPage(first, { ...page(2), policyHash: "e".repeat(64) }),
-    /stale/,
-  );
-  assert.throws(() => mergeInstagramPage(first, page()), /stale/);
-  assert.throws(() => mergeInstagramPage(null, page(2)), /first/);
-  assert.throws(
-    () =>
-      mergeInstagramPage(first, {
-        ...page(2),
-        counts: { accept: 0, review: 2, exclude: 0, pending: 0 },
-      }),
-    /inexact/,
-  );
-});
-test("shortlist export preserves review status, neutralizes formulas and refuses excluded or pending selections", () => {
-  const rows = page().results;
-  const selected = instagramShortlist(rows, new Set(["1", "2"]));
-  const csv = instagramShortlistCsv(selected);
-  assert(csv.includes('"review","true"'));
-  assert(csv.includes('"\'=HOSTILE()"'));
-  assert(csv.includes("https://www.instagram.com/photo_1/"));
-  assert.throws(() => instagramShortlist(rows, new Set(["missing"])), /invalid_shortlist/);
-  assert.throws(
-    () =>
-      instagramShortlist(
-        [{ ...rows[0]!, status: "exclude" } as (typeof rows)[number]],
-        new Set(["1"]),
-      ),
-    /invalid_shortlist/,
-  );
 });

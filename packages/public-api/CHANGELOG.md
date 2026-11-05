@@ -27,6 +27,12 @@ builds and generator checks are recorded separately in STATUS-V2.md.
 
 # Agent contract changelog
 
+## 2.9.0 — List merge archive parity (2026-11-05)
+
+Added: optional `archiveSources` input for `list.merge`, matching the app's Lists page merge. Unchanged originals are archived into the new list; campaigns that target them keep sending unchanged. A preview with it reports `archiveSourceListIds`; a created merge reports `archivedSourceCount`.
+
+Compatibility: omitting `archiveSources` keeps the 2.8 behavior (originals stay active). No new permissions or migrations.
+
 ## 2.3.0 — Agent product feedback (2026-10-23)
 
 Added: `feedback.submit` and `feedback.list` with minimal structured reports, optional reproduction context, durable idempotency keys, stable receipts and author/workspace-scoped pagination. Operators can review reports through `ops_product_feedback`. Stored report text is untrusted customer content; a received receipt does not promise a fix.

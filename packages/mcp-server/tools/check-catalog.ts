@@ -88,7 +88,6 @@ export async function measureAgentCatalog() {
           "companies_suggest",
           "events_snapshot",
           "copy_approval_cancel",
-          "workspace_briefing",
         ];
         for (const name of retired)
           assert.ok(
@@ -137,6 +136,8 @@ export async function measureAgentCatalog() {
           "connection_status",
           "tools_call",
           "tools_discover",
+          "tools_read",
+          "tools_write",
         ]);
     } finally {
       lines.close();

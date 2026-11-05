@@ -224,6 +224,7 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     policies = {},
     scopes = {},
     ownerOnly = [],
+    workspacePermissions = {},
     inputOnlyPreviews = [],
     inputs = [],
     data = [],
@@ -231,8 +232,9 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     mcpOutputSchemas = [],
     inputSchemaDocuments = {},
     inputSchemaDefinitions = {};
-  function bundledOutputSchema(schema) {
-    const definitions = {};
+  const outputSchemaDefinitions = {};
+  function outputSchemaDocument(schema) {
+    const definitions = outputSchemaDefinitions;
     function convert(value) {
       if (Array.isArray(value)) return value.map(convert);
       if (!value || typeof value !== "object") return value;
@@ -249,7 +251,7 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
       }
       return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, convert(child)]));
     }
-    return { ...convert(schema), $defs: definitions };
+    return convert(schema);
   }
   function collectInputReferences(value) {
     if (Array.isArray(value)) {
@@ -277,6 +279,30 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
       approval = operation["x-dmfaster-approval"];
     const owner = operation["x-dmfaster-owner-only"],
       cli = operation["x-dmfaster-cli"];
+    const permissions = operation["x-dmfaster-workspace-permissions"];
+    if (permissions !== undefined) {
+      if (
+        owner ||
+        !Array.isArray(permissions) ||
+        permissions.some(
+          (p) =>
+            ![
+              "edit",
+              "send",
+              "reply",
+              "manageSending",
+              "export",
+              "delete",
+              "manageMembers",
+              "billing",
+            ].includes(p),
+        ) ||
+        new Set(permissions).size !== permissions.length ||
+        (effect !== "read" && !permissions.length)
+      )
+        throw Error(`Invalid workspace permissions: ${name}`);
+      workspacePermissions[name] = permissions;
+    }
     let mcp = operation["x-dmfaster-mcp"];
     const deprecated = operation["x-dmfaster-deprecated"];
     if (deprecated !== undefined) {
@@ -321,6 +347,7 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
       mcp.annotations.readOnlyHint !== (effect === "read") ||
       (effect !== "read" &&
         !owner &&
+        !permissions?.length &&
         !(
           ["recorder.settings.update", "recorder.event.override.update", "call.bot.join"].includes(
             name,
@@ -347,7 +374,17 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
             effect === "write" &&
             operation["x-dmfaster-write-boundary"] === "call_approve_insight" &&
             operation["x-dmfaster-required-scopes"]?.includes("calls:write") &&
-            operation["x-dmfaster-required-scopes"]?.includes("calls:transcripts:read"))
+            operation["x-dmfaster-required-scopes"]?.includes("calls:transcripts:read")) ||
+          (["call.outcome.set", "meeting.link", "meeting.unlink"].includes(name) &&
+            operation["x-dmfaster-write-boundary"] === "call_record_outcome" &&
+            operation["x-dmfaster-required-scopes"]?.includes("calls:write")) ||
+          (["calendar.meeting.reschedule", "calendar.meeting.cancel"].includes(name) &&
+            operation["x-dmfaster-write-boundary"] === "call_manage_meeting" &&
+            operation["x-dmfaster-required-scopes"]?.includes("calendar:write")) ||
+          (name === "leads.add" &&
+            effect === "write" &&
+            operation["x-dmfaster-write-boundary"] === "workspace_edit" &&
+            operation["x-dmfaster-required-scopes"]?.includes("campaigns:write"))
         )) ||
       (effect === "external" && approval !== "human_confirmation")
     )
@@ -382,9 +419,7 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     );
     const resultSchema = operation.responses?.["200"]?.content?.["application/json"]?.schema;
     if (!resultSchema) throw Error(`Missing output schema: ${name}`);
-    mcpOutputSchemas.push(
-      `${json(name)}: z.fromJSONSchema(${json(bundledOutputSchema(resultSchema))})`,
-    );
+    mcpOutputSchemas.push(`${json(name)}: ${json(outputSchemaDocument(resultSchema))}`);
     inputSchemaDocuments[name] = operation.requestBody.content["application/json"].schema;
     collectInputReferences(inputSchemaDocuments[name]);
   }
@@ -411,7 +446,7 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
       throw Error(`Invalid error catalog entry: ${code}`);
   }
   const errorCatalog = `export const AGENT_ERROR_CATALOG = ${json(errors)} as const;\n`;
-  const common = `${header}export const AGENT_CONTRACT_VERSION = ${json(schemas.AgentToolResultBase.properties.contractVersion.const)} as const;\nexport const AGENT_TOOL_NAMES = ${json(names)} as const;\nexport const AGENT_TOOL_POLICIES = Object.freeze(${json(policies)} as const);\nexport const AGENT_TOOL_SCOPES = ${json(scopes)} as const;\nexport const AGENT_OWNER_ONLY_TOOLS = ${json(ownerOnly)} as const;\nexport const AGENT_INPUT_ONLY_PREVIEW_TOOLS = ${json(inputOnlyPreviews)} as const;\n${errorCatalog}export const AGENT_SALES_EVENT_TYPES = ${json(schemas.AgentSalesEventType?.enum || [])} as const;\n`;
+  const common = `${header}export const AGENT_CONTRACT_VERSION = ${json(schemas.AgentToolResultBase.properties.contractVersion.const)} as const;\nexport const AGENT_TOOL_NAMES = ${json(names)} as const;\nexport const AGENT_TOOL_POLICIES = Object.freeze(${json(policies)} as const);\nexport const AGENT_TOOL_SCOPES = ${json(scopes)} as const;\nexport const AGENT_OWNER_ONLY_TOOLS = ${json(ownerOnly)} as const;\nexport const AGENT_WORKSPACE_TOOL_PERMISSIONS = ${json(workspacePermissions)} as const;\nexport const AGENT_INPUT_ONLY_PREVIEW_TOOLS = ${json(inputOnlyPreviews)} as const;\n${errorCatalog}export const AGENT_SALES_EVENT_TYPES = ${json(schemas.AgentSalesEventType?.enum || [])} as const;\n`;
   const artifacts = new Map([
     [
       "packages/sdk/src/generated/tools.ts",
@@ -435,8 +470,12 @@ export function compileAgentContract(document, { includeServer = false } = {}) {
     [
       "packages/mcp-server/src/generated/output-schemas.ts",
       header +
-        'import { z } from "zod";\n' +
-        `export const AGENT_OUTPUT_SCHEMAS = {${mcpOutputSchemas.join(",\n")}} as const;\n`,
+        'import type { z } from "zod";\n' +
+        'import type { AgentToolName } from "@dmfaster/sdk";\n' +
+        'import { lazyOutputSchema } from "../output-schema.ts";\n' +
+        `const definitions: Record<string, z.core.JSONSchema.JSONSchema> = ${json(outputSchemaDefinitions)};\n` +
+        `const roots: Record<AgentToolName, z.core.JSONSchema.JSONSchema> = {${mcpOutputSchemas.join(",\n")}};\n` +
+        `export const AGENT_OUTPUT_SCHEMAS = Object.fromEntries(Object.entries(roots).map(([name, root]) => [name, lazyOutputSchema(root, definitions)])) as unknown as Record<AgentToolName, z.ZodType>;\n`,
     ],
     ["site/src/lib/agent-platform/public-contract.generated.ts", common],
   ]);

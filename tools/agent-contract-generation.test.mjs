@@ -34,7 +34,7 @@ test("generation is deterministic and includes every adapter without private cod
   assert.match(first.get("packages/mcp-server/src/generated/input-schemas.ts"), /\.strict\(\)/);
   assert.match(
     first.get("packages/mcp-server/src/generated/output-schemas.ts"),
-    /z\.fromJSONSchema\(/,
+    /lazyOutputSchema\(root, definitions\)/,
   );
 });
 
@@ -87,7 +87,10 @@ test("missing permissions, unsafe action hints and duplicate aliases fail genera
   for (const mutate of [
     (op) => delete op["x-dmfaster-approval"],
     (op) => (op["x-dmfaster-required-scopes"] = ["unknown:scope"]),
-    (op) => (op["x-dmfaster-owner-only"] = false),
+    (op) => delete op["x-dmfaster-workspace-permissions"],
+    (op) => (op["x-dmfaster-workspace-permissions"] = []),
+    (op) => (op["x-dmfaster-workspace-permissions"] = ["unknown"]),
+    (op) => (op["x-dmfaster-owner-only"] = true),
     (op) => (op["x-dmfaster-mcp"].annotations.readOnlyHint = true),
     (op) => (op["x-dmfaster-mcp"].name = "workspace_briefing"),
     (op) => delete op["x-dmfaster-cli"],
@@ -131,10 +134,10 @@ test("webhook headers permit only bounded string maps and reject unconstrained d
 
 test("non-owner insight review is restricted to the explicit call capability and both scopes", () => {
   for (const mutate of [
-    op => delete op["x-dmfaster-write-boundary"],
-    op => op["x-dmfaster-write-boundary"] = "authenticated_user",
-    op => op["x-dmfaster-required-scopes"] = ["calls:write"],
-    op => op["x-dmfaster-required-scopes"] = ["calls:transcripts:read"],
+    (op) => delete op["x-dmfaster-write-boundary"],
+    (op) => (op["x-dmfaster-write-boundary"] = "authenticated_user"),
+    (op) => (op["x-dmfaster-required-scopes"] = ["calls:write"]),
+    (op) => (op["x-dmfaster-required-scopes"] = ["calls:transcripts:read"]),
   ]) {
     const d = contract();
     mutate(d.paths["/api/v1/agent/tools/call.insight.review"].post);
@@ -142,12 +145,11 @@ test("non-owner insight review is restricted to the explicit call capability and
   }
 });
 
-
 test("manual withdrawal requires call control boundary and both scopes", () => {
   for (const mutate of [
-    op => delete op["x-dmfaster-write-boundary"],
-    op => op["x-dmfaster-required-scopes"] = ["calls:record"],
-    op => op["x-dmfaster-required-scopes"] = ["calls:transcripts:read"],
+    (op) => delete op["x-dmfaster-write-boundary"],
+    (op) => (op["x-dmfaster-required-scopes"] = ["calls:record"]),
+    (op) => (op["x-dmfaster-required-scopes"] = ["calls:transcripts:read"]),
   ]) {
     const d = contract();
     mutate(d.paths["/api/v1/agent/tools/call.participant.withdrawal.report"].post);
@@ -156,6 +158,18 @@ test("manual withdrawal requires call control boundary and both scopes", () => {
 });
 
 test("non-owner call deletion requires explicit delete capability boundary", () => {
-  const d=contract();delete d.paths["/api/v1/agent/tools/call.delete"].post["x-dmfaster-write-boundary"];
-  assert.throws(()=>compileAgentContract(d),/Unsafe metadata/);
+  const d = contract();
+  delete d.paths["/api/v1/agent/tools/call.delete"].post["x-dmfaster-write-boundary"];
+  assert.throws(() => compileAgentContract(d), /Unsafe metadata/);
+});
+
+test("string enums compile compactly and repeated leaf schemas share constants", () => {
+  const artifacts = compileAgentContract(contract());
+  const source = artifacts.get("packages/mcp-server/src/generated/input-schemas.ts");
+  assert.match(source, /z\.enum\(/);
+  assert.match(source, /const SharedInput\d+Schema =/);
+  assert.equal(
+    source.split("Optional run correlation. Also accepted as X-DMFaster-Run-Id.").length - 1,
+    1,
+  );
 });

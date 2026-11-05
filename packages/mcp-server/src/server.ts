@@ -21,7 +21,7 @@ import { z } from "zod";
 import type { AgentInvoker } from "./tools.ts";
 import { createDmfasterMcpCore, toolFailure } from "./core.ts";
 import { mcpToolDescription } from "./tool-guidance.ts";
-import { localConnectionSchema } from "./presentation-schemas.ts";
+import { localConnectionSchema } from "./connection-schemas.ts";
 import {
   instagramEvaluationConfigFromEnv,
   registerInstagramEvaluation,
@@ -68,12 +68,15 @@ export async function inspectMcpConnection(
       token: config.token,
       ...(input.fetch ? { fetch: input.fetch } : {}),
     });
-    const readiness = await inspectAgentReadiness({
-      scopes: identity.credential.scopes,
-      isOwner: identity.user.id === identity.workspace.id,
-      expiresAt: identity.credential.expiresAt,
-      read: (tool) => client.invoke(tool, {}),
-    });
+    const readiness =
+      toolsView === "names" || toolsView === "identity"
+        ? {}
+        : await inspectAgentReadiness({
+            scopes: identity.credential.scopes,
+            isOwner: identity.user.id === identity.workspace.id,
+            expiresAt: identity.credential.expiresAt,
+            read: (tool) => client.invoke(tool, {}),
+          });
     const scopeEligibleTools = AGENT_TOOL_NAMES.filter((tool) =>
       AGENT_TOOL_SCOPES[tool].every((scope) => grantedScopes.has(scope)),
     ).map((tool) => ({ tool, mcpTool: AGENT_TOOL_DEFINITIONS[tool].mcp.name }));
@@ -125,10 +128,9 @@ function registerConnectionStatus(server: McpServer, env: NodeJS.ProcessEnv, inp
         "Check local authentication and the selected workspace without exposing the credential. Use when setup or permissions are unclear.",
       ),
       inputSchema: z
-        .object({ toolsView: z.enum(["summary", "names", "full"]).optional() })
+        .object({ toolsView: z.enum(["summary", "names", "full", "identity"]).optional() })
         .strict(),
       outputSchema: localConnectionSchema,
-      _meta: { "openai/widgetAccessible": true },
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -160,12 +162,10 @@ export function createDmfasterMcpServer(input: {
   env?: NodeJS.ProcessEnv;
   auth?: McpAuthInput;
   instagramEvaluation?: InstagramEvaluationConfig;
-  uiTools?: boolean;
 }) {
   return createDmfasterMcpCore({
     catalogProfile: input.env?.DMFASTER_MCP_PROFILE === "full" ? "full" : "compact",
     client: input.client,
-    uiTools: input.uiTools === true,
     registerLocalConnection(server) {
       registerConnectionStatus(server, input.env ?? process.env, input.auth ?? {});
       const evaluation =

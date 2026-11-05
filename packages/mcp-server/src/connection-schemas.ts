@@ -1,7 +1,4 @@
 import { z } from "zod";
-import { campaignStateSchema } from "./tools.ts";
-import { AGENT_OUTPUT_SCHEMAS } from "./generated/output-schemas.ts";
-import { CompanySearchFiltersSchema } from "./generated/input-schemas.ts";
 
 export const toolFailureSchema = z
   .object({
@@ -26,50 +23,6 @@ export const toolFailureSchema = z
       .strict(),
   })
   .strict();
-
-export const workspaceOutputSchema = z
-  .object({
-    version: z.literal(1),
-    view: z.literal("dmfaster.workspace"),
-    section: z.enum(["companies", "campaigns"]).optional(),
-    filters: CompanySearchFiltersSchema.optional(),
-    savedListId: z.string().optional(),
-    savedListPageSize: z.number().int().min(1).max(100).optional(),
-    result: z.union([
-      AGENT_OUTPUT_SCHEMAS["campaigns.list"],
-      AGENT_OUTPUT_SCHEMAS["campaign.inspect"],
-      AGENT_OUTPUT_SCHEMAS["companies.search"],
-      AGENT_OUTPUT_SCHEMAS["companies.list.inspect"],
-      AGENT_OUTPUT_SCHEMAS["companies.evidence.results"],
-      toolFailureSchema.extend({ ok: z.literal(false) }),
-    ]),
-  })
-  .strict();
-
-const planOutputSchema = z
-  .object({
-    version: z.literal(1),
-    view: z.literal("dmfaster.campaign_workspace"),
-    state: campaignStateSchema,
-    campaignId: z.string().nullable(),
-    actions: z
-      .object({
-        validate: z.literal("campaign_validate"),
-        preview: z.literal("audience_preview"),
-        preparePrivateDraft: z.literal("campaign_prepare"),
-        requestLaunchApproval: z.literal("campaign_launch_preflight"),
-      })
-      .strict(),
-    safety: z
-      .object({
-        preparationStartsSending: z.literal(false),
-        launchRequiresHumanApproval: z.literal(true),
-        exactAudienceRequiredForPreparation: z.literal(true),
-      })
-      .strict(),
-  })
-  .strict();
-export const campaignWorkspaceOutputSchema = z.union([workspaceOutputSchema, planOutputSchema]);
 
 const party = z
   .object({
@@ -125,12 +78,18 @@ const readinessFields = {
     .optional(),
 };
 const connectionViewFields = {
+  knownToolBlockerCount: z.number().int().nonnegative().optional(),
+  availabilityBasis: z.literal("granted_scopes_only").optional(),
+  availabilityNote: z.string().optional(),
+  toolBlockers: z
+    .record(z.string(), z.object({ code: z.string(), nextAction: z.string() }).strict())
+    .optional(),
   blockedTools: z
     .array(z.object({ name: z.string(), requiredScope: z.string() }).strict())
     .optional(),
   grantUrl: z.string().url().optional(),
   agent: z.object({ id: z.string(), name: z.string(), status: z.string() }).strict().optional(),
-  toolsView: z.enum(["summary", "names", "full"]).optional(),
+  toolsView: z.enum(["summary", "names", "full", "identity"]).optional(),
   tools: z
     .object({
       available: z.number().int(),

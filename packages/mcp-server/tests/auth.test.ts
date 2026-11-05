@@ -184,3 +184,32 @@ test("connection status distinguishes scope eligibility from final authorization
   assert.match(String(status.authorizationNote), /plan/);
   assert.equal(JSON.stringify(status).includes(token), false);
 });
+
+test("identity view proves the owner connection without opening any provider", async () => {
+  let calls = 0;
+  const status = await inspectMcpConnection(
+    { DMFASTER_API_URL: "https://app.dmfaster.test", DMFASTER_TOKEN: generatedToken() },
+    {
+      homeDirectory: unusedHome(),
+      fetch: async () => {
+        calls++;
+        return Response.json({
+          authenticated: true,
+          credential: {
+            id: "test",
+            name: "Test",
+            client: "Test",
+            scopes: ["workspace:read", "calendar:read", "sending:read"],
+            expiresAt: "2030-01-01T00:00:00Z",
+          },
+          workspace: { id: "owner", name: "Workspace" },
+          user: { id: "owner", name: "Owner" },
+        });
+      },
+    },
+    "identity",
+  );
+  assert.equal(status.status, "authenticated");
+  assert.equal(calls, 1);
+  assert.equal("readiness" in status, false);
+});

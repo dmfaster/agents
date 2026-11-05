@@ -13,9 +13,7 @@ import type { AgentInvoker } from "./tools.ts";
 import { AGENT_INPUT_SCHEMAS } from "./generated/input-schemas.ts";
 import { AGENT_OUTPUT_SCHEMAS } from "./generated/output-schemas.ts";
 import { toolFailure } from "./core.ts";
-import { INSTAGRAM_WORKSPACE_HTML } from "./instagram-workspace-html.ts";
 
-export const INSTAGRAM_WORKSPACE_RESOURCE_URI = "ui://dmfaster/instagram-workspace/v1.html";
 export const instagramWorkspaceInputSchema = instagramEvaluateInputSchema.extend({
   datasetId: instagramEvaluateInputSchema.shape.datasetId.optional(),
   mode: z.enum(["prepare", "replay"]).default("replay"),
@@ -105,57 +103,22 @@ const readAnnotations = {
   idempotentHint: true,
   openWorldHint: false,
 };
-const appToolMetadata = { ui: { visibility: ["model", "app"] }, "openai/widgetAccessible": true };
 
-/** Private local MCP App only. Hosted registration and mutations remain separate. */
+/** Private local snapshot tools. Hosted registration and mutations remain separate. */
 export function registerInstagramWorkspace(
   server: McpServer,
   service: InstagramEvaluationService,
   client: AgentInvoker,
 ) {
-  const resourceMeta = {
-    ui: { csp: { connectDomains: [], resourceDomains: [], frameDomains: [] }, prefersBorder: true },
-    "openai/widgetDescription":
-      "Review saved Instagram ICP decisions, original evidence and a provisional shortlist.",
-    "openai/widgetPrefersBorder": true,
-    "openai/widgetCSP": { connect_domains: [], resource_domains: [] },
-  };
-  server.registerResource(
-    "Instagram prospecting",
-    INSTAGRAM_WORKSPACE_RESOURCE_URI,
-    {
-      mimeType: "text/html;profile=mcp-app",
-      description:
-        "Private saved-profile review and shortlist export. No provider requests or sending.",
-      _meta: resourceMeta,
-    },
-    async () => ({
-      contents: [
-        {
-          uri: INSTAGRAM_WORKSPACE_RESOURCE_URI,
-          mimeType: "text/html;profile=mcp-app",
-          text: INSTAGRAM_WORKSPACE_HTML,
-          _meta: resourceMeta,
-        },
-      ],
-    }),
-  );
   server.registerTool(
     "instagram_workspace",
     {
       title: "Instagram prospecting",
       description:
-        "Open the private Instagram ICP review view. Omit datasetId to browse explicitly configured snapshots; pass datasetId and optional spec to replay a page. Returns the same typed decisions as instagram_profiles_evaluate, without repeating inference. Headless hosts receive complete structured data. Counts describe the page, not unscanned matches. Selection/export does not save a customer list or authorize sending.",
+        "Read private Instagram ICP review data. Omit datasetId to browse explicitly configured snapshots; pass datasetId and optional spec to replay a page. Returns the same typed decisions as instagram_profiles_evaluate, without repeating inference. Headless hosts receive complete structured data. Counts describe the page, not unscanned matches. Selection/export does not save a customer list or authorize sending.",
       inputSchema: instagramWorkspaceInputSchema,
       outputSchema: instagramWorkspaceOutputSchema,
       annotations: readAnnotations,
-      _meta: {
-        ...appToolMetadata,
-        ui: { resourceUri: INSTAGRAM_WORKSPACE_RESOURCE_URI, visibility: ["model", "app"] },
-        "ui/resourceUri": INSTAGRAM_WORKSPACE_RESOURCE_URI,
-        "openai/outputTemplate": INSTAGRAM_WORKSPACE_RESOURCE_URI,
-        "openai/ui": { entrypoints: [{ type: "thread" }] },
-      },
     },
     async (input) => {
       try {
@@ -195,7 +158,6 @@ export function registerInstagramWorkspace(
       inputSchema: instagramProfileInputSchema,
       outputSchema: instagramProfileOutputSchema,
       annotations: readAnnotations,
-      _meta: appToolMetadata,
     },
     async (input) => {
       try {
@@ -232,7 +194,6 @@ export function registerInstagramWorkspace(
       inputSchema: instagramAcquisitionInputSchema,
       outputSchema: instagramAcquisitionOutputSchema,
       annotations: { ...readAnnotations, openWorldHint: true },
-      _meta: appToolMetadata,
     },
     async (input) => {
       try {

@@ -7,31 +7,22 @@ import type {
 import { z } from "zod";
 
 import { AGENT_TOOL_NAMES, AGENT_TOOL_DEFINITIONS } from "@dmfaster/sdk";
-import {
-  AGENT_INPUT_SCHEMAS,
-  ResourceIdSchema,
-  AgentCampaignStateSchema,
-} from "./generated/input-schemas.ts";
+import { AGENT_INPUT_SCHEMAS } from "./generated/input-schemas.ts";
 import { AGENT_OUTPUT_SCHEMAS } from "./generated/output-schemas.ts";
 
 export const MCP_AGENT_TOOL_NAMES = AGENT_TOOL_NAMES.map(
   (name) => AGENT_TOOL_DEFINITIONS[name].mcp.name,
 );
 
-export const MCP_PRESENTATION_TOOL_NAMES = [
-  "campaign_workspace",
-  "companies_workspace",
-  "workspace_open",
-  "workspace_mentions",
-  "outreach_details",
+export const MCP_LOCAL_TOOL_NAMES = [
+  "connection_status",
+  "tools_discover",
+  "tools_read",
+  "tools_write",
+  "tools_call",
 ] as const;
-export const MCP_LOCAL_TOOL_NAMES = ["connection_status", "tools_discover", "tools_call"] as const;
 
-export const MCP_TOOL_NAMES = [
-  ...MCP_AGENT_TOOL_NAMES,
-  ...MCP_LOCAL_TOOL_NAMES,
-  ...MCP_PRESENTATION_TOOL_NAMES,
-] as const;
+export const MCP_TOOL_NAMES = [...MCP_AGENT_TOOL_NAMES, ...MCP_LOCAL_TOOL_NAMES] as const;
 
 export type McpAgentToolName = (typeof MCP_AGENT_TOOL_NAMES)[number];
 export type McpToolName = (typeof MCP_TOOL_NAMES)[number];
@@ -64,9 +55,6 @@ export type AgentToolDefinition = {
 export type AgentToolRegistrar = {
   register(definition: AgentToolDefinition): void;
 };
-
-export const campaignIdSchema = ResourceIdSchema;
-export const campaignStateSchema = AgentCampaignStateSchema;
 
 export function createAgentToolDefinitions(client: AgentInvoker): AgentToolDefinition[] {
   return AGENT_TOOL_NAMES.map((tool) => {

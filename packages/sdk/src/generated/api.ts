@@ -1549,6 +1549,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/campaign.variation.performance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Compare message variation reply rates
+         * @description Compare saved campaign message variations by human reply rate, with seven-day mature counts and attribution coverage. Defaults to the last 30 days, ranked by observed reply rate. Reply-only aggregates; no calendar records or inbound message text. No automatic winner selection.
+         */
+        post: operations["campaignVariationPerformance"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/campaigns.list": {
         parameters: {
             query?: never;
@@ -2540,7 +2560,7 @@ export interface paths {
         put?: never;
         /**
          * Request owner approval of campaign copy
-         * @description Create an owner review of exact campaign copy and audience. Email recipient consent is entered by the owner in the approval page. Never sends or authorizes launch.
+         * @description dryRun renders the exact copy, audience count and approval page without creating a review. Otherwise creates an owner review. Email consent is entered on that page. Never sends or authorizes launch.
          */
         post: operations["copyApprovalRequest"];
         delete?: never;
@@ -2989,6 +3009,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent/tools/leads.add": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add leads to a campaign or list
+         * @description Adds leads to any of the caller's campaigns, including a completed campaign, or to one of their lists. Preview is the default and returns a confirm token. Applying that token reopens a completed campaign to paused and never starts sending. Ineligible leads are skipped and counted.
+         */
+        post: operations["leadsAdd"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent/tools/leads.enrich.inspect": {
         parameters: {
             query?: never;
@@ -3343,6 +3383,26 @@ export interface paths {
          * @description Read an existing Instagram list, its exact target count, bounded username page and resource version. Supply username to check exact membership across the whole list, independently of the page. Company lists require the company audience workflow.
          */
         post: operations["listInspect"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/agent/tools/list.merge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Combine lead lists into a new named list
+         * @description Combine 2–10 saved lead lists into a new named list. Resolve names with lists_list. Set preview to true for the unique lead count before saving. Set archiveSources to true to archive unchanged originals like the app does; campaigns keep using archived lists. The same sources and name reuse the saved list.
+         */
+        post: operations["listMerge"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3715,7 +3775,7 @@ export interface paths {
         put?: never;
         /**
          * Inspect readiness for an agent action
-         * @description Read current connection scope and provider readiness. Per-action approval, policy, budgets and launch preflights still apply.
+         * @description Check current action permissions, connection scope and provider readiness. Teammate sender checks may require an exact campaign preflight; owner sender setup stays private. Per-action approval, policy, budgets and launch preflights still apply.
          */
         post: operations["readinessCheck"];
         delete?: never;
@@ -5224,12 +5284,14 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.7.6";
+            contractVersion: "2.9.0";
             data: {
                 nextInSeconds: number;
             };
             /** @constant */
             ok: true;
+            /** @description Negotiated quota metadata, matching the full response envelope. */
+            rateLimit?: components["schemas"]["AgentRateLimitEnvelope"] | null;
             /** @description Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox. */
             serverTime: components["schemas"]["ResourceVersion"];
         };
@@ -5314,19 +5376,21 @@ export interface components {
         };
         AgentLead: {
             avatarUrl: string;
-            /** @description needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged. */
+            /** @description True when the stored needsReply flag is set and the presented intent is not not_interested or opt_out. The stored flag and the reply policy are unchanged. */
             awaitingReply?: boolean;
             campaignId: string;
             channels: components["schemas"]["TargetChannel"][];
             companyName: string;
             companyOutreachId: string;
+            /** @description Address extracted when the reply invites an email. Omitted when none was extracted. Presentation only; the stored classification is unchanged. */
+            contactEmail?: string;
             contactName: string;
             conversationChannel?: string;
             /** @description The newest linked inbox conversation for replies_list rows; null when none is linked. */
             conversationId?: string | null;
             handle: string;
             id: string;
-            /** @description Classified reply intent, auto_reply for an automatic inbound, or unclassified. Null only when the row has no linked conversation. */
+            /** @description Classified reply intent, auto_reply for an automatic inbound, or unclassified. Null only when the row has no linked conversation. An email invitation is presented as information_requested, and an objection or capacity limit on a positive label is presented as unclear. The stored classification is unchanged. */
             intent?: string | null;
             interestLevel?: string | null;
             lastContactedAt: string;
@@ -5337,10 +5401,11 @@ export interface components {
                 direction?: string | null;
                 text?: string;
             } | null;
+            /** @description False when the presented intent is opt_out or not_interested, including when the stored flag is true. Other intents keep the stored flag. The stored flag and the reply policy are unchanged. */
             needsReply?: boolean;
             stage: components["schemas"]["PipelineStage"];
             /**
-             * @description Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
+             * @description Next step implied by the presented intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. Any other intent with stored needsReply false is none.
              * @enum {string}
              */
             suggestedAction?: "reply" | "book_meeting" | "schedule_followup" | "ask_for_referral" | "close_politely" | "close_without_reply" | "wait" | "review" | "none";
@@ -5597,6 +5662,8 @@ export interface components {
             errors?: {
                 allowed?: string[];
                 code: string;
+                expected?: string;
+                field?: string;
                 message: string;
                 path: string;
             }[];
@@ -5621,7 +5688,7 @@ export interface components {
             source: "workspace_campaigns" | "worker_control_plane" | "campaign_diagnostics" | "pipeline" | "inbox" | "company_database" | "classification_catalog" | "campaign_workflow" | "analytics_snapshot";
         };
         /** @enum {string} */
-        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "prospect.query" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel" | "events.list" | "conversations.changes" | "suppressions.list" | "suppressions.add" | "suppressions.remove" | "workspace.sandbox.create" | "sandbox.seed" | "sandbox.inbound.simulate" | "sandbox.clock.advance" | "call.outcome.set" | "meeting.link" | "meeting.unlink" | "webhooks.create" | "webhooks.list" | "webhooks.update" | "webhooks.delete" | "webhooks.test" | "webhooks.replay" | "meetings.unlinked.list" | "pipeline.reconcile" | "workspace.agent_sales.get" | "workspace.agent_sales.update" | "sandbox.provider.update" | "reply.templates.list" | "reply.templates.create" | "reply.templates.update" | "reply.templates.delete" | "reply.policy.get" | "reply.policy.update" | "reply.approvals.list" | "conversation.draft.save" | "conversation.followup.set" | "conversation.followup.clear" | "followups.due" | "conversations.bulk.update" | "pipeline.board" | "calendar.booking.link.create" | "calendar.meeting.reschedule" | "calendar.meeting.cancel" | "campaign.followups.configure" | "campaign.variants.configure" | "recorder.settings.get" | "recorder.settings.update" | "recorder.bots.list" | "call.transcript.get" | "call.recording.get" | "call.transcripts.get" | "call.transcripts.search" | "readiness.check" | "sender.retire" | "sender.unretire" | "attribution.check" | "campaign.reengagement.prepare" | "agents.list" | "agent.inspect" | "agent.create.request" | "agent.pause" | "agent.resume" | "agent.credential.rotate" | "event_consumers.list" | "event_consumers.create" | "events.ack" | "events.snapshot" | "webhook.deliveries.list" | "webhooks.dlq.replay" | "classification.feedback" | "classification.quality" | "classification.backfill.plan" | "work_queue.list" | "work_item.claim" | "work_item.release" | "work_item.snooze" | "work_item.complete" | "work_queue.config.get" | "work_queue.config.update" | "metrics.reconcile" | "agent.heartbeat" | "agent.run.start" | "agent.run.end" | "agent.runs.list" | "agent.run.inspect" | "workspace.halt" | "workspace.resume" | "channel.halt" | "workspace.automation.inspect" | "feedback.submit" | "feedback.list" | "entity.resolve" | "entities.get" | "people.upsert" | "companies.upsert" | "entity.merge" | "entity.split" | "budget.status" | "call.stats.get" | "call.coaching.get" | "call.analytics.query" | "call.insight.get" | "call.access.list" | "call.audit.list" | "call.activity.get" | "call.analysis.get" | "call.outcome.confirm" | "call.attendance.get" | "call.insight.review" | "recorder.event.override.get" | "recorder.event.override.update" | "call.bot.cancel" | "call.bot.remove" | "call.recording.stop" | "recorder.status" | "call.bot.join" | "recorder.join.get" | "call.participant.withdrawal.report" | "call.delete" | "copy.approval.request" | "campaign.draft.plan" | "campaign.draft.readiness" | "prospecting.preview" | "companies.lookalike" | "commitments.propose" | "commitments.list" | "commitment.update" | "commitment.confirm.batch" | "commitment.reminder.draft" | "list.rename" | "list.archive" | "campaign.draft.archive" | "copy.approval.inspect" | "copy.approval.cancel" | "approval.cancel" | "approvals.list";
+        AgentToolName: "analytics.summary" | "workspace.briefing" | "campaigns.list" | "campaign.inspect" | "campaign.copy.inspect" | "sending.inspect" | "replies.list" | "conversations.list" | "conversation.inspect" | "conversation.update" | "conversation.reply" | "conversation.reply.inspect" | "campaign.messages.draft.list" | "campaign.messages.draft.update" | "campaign.messages.list" | "campaign.messages.update" | "campaign.followups.list" | "campaign.followups.cancel" | "campaign.outcomes.list" | "sending.test.prepare" | "sending.test.send" | "sending.test.inspect" | "senders.inspect" | "history.list" | "pipeline.inspect" | "pipeline.cards.list" | "pipeline.stage.update" | "pipeline.note.list" | "pipeline.note.add" | "company.timeline" | "industry.lookup" | "campaign.validate" | "audience.preview" | "lists.list" | "list.inspect" | "list.target.remove" | "campaign.draft.prepare" | "campaign.draft.update" | "list.import" | "leads.add" | "list.prepare" | "campaign.prepare" | "campaign.launch.preflight" | "campaign.launch" | "campaign.pause.preflight" | "campaign.pause" | "companies.filters" | "companies.suggest" | "prospect.query" | "companies.search" | "companies.evidence.search" | "companies.knowledge.search" | "companies.knowledge" | "companies.evidence.start" | "companies.evidence.advance" | "companies.evidence.status" | "companies.evidence.results" | "companies.evidence.cancel" | "company.inspect" | "companies.fit.start" | "companies.fit.advance" | "companies.fit.results" | "companies.fit.proposal" | "companies.list.prepare" | "companies.list.inspect" | "companies.list.refine" | "campaign.operation.inspect" | "campaign.delivery.inspect" | "campaign.delivery.update" | "sending.instagram.pacing.inspect" | "sending.instagram.pacing.update" | "companies.fit.status" | "companies.fit.cancel" | "companies.fit.runs.list" | "companies.fit.run" | "companies.fit.cohort" | "campaign.variation.performance" | "copy.performance" | "calendar.status" | "calendar.availability" | "calendar.meeting.book" | "calls.list" | "call.inspect" | "instagram.extract.quote" | "instagram.extract.start" | "instagram.extract.inspect" | "instagram.extract.results" | "instagram.purchases.list" | "instagram.purchases.inspect" | "instagram.purchases.results" | "leads.status" | "leads.extract.quote" | "leads.extract.start" | "leads.extract.inspect" | "leads.extract.refresh" | "leads.extract.continue" | "leads.enrich.preview" | "leads.enrich.start" | "leads.enrich.inspect" | "leads.prospect.quote" | "leads.prospect.start" | "leads.prospect.inspect" | "leads.prospect.results" | "leads.prospect.advance" | "leads.prospect.cancel" | "events.list" | "conversations.changes" | "suppressions.list" | "suppressions.add" | "suppressions.remove" | "workspace.sandbox.create" | "sandbox.seed" | "sandbox.inbound.simulate" | "sandbox.clock.advance" | "call.outcome.set" | "meeting.link" | "meeting.unlink" | "webhooks.create" | "webhooks.list" | "webhooks.update" | "webhooks.delete" | "webhooks.test" | "webhooks.replay" | "meetings.unlinked.list" | "pipeline.reconcile" | "workspace.agent_sales.get" | "workspace.agent_sales.update" | "sandbox.provider.update" | "reply.templates.list" | "reply.templates.create" | "reply.templates.update" | "reply.templates.delete" | "reply.policy.get" | "reply.policy.update" | "reply.approvals.list" | "conversation.draft.save" | "conversation.followup.set" | "conversation.followup.clear" | "followups.due" | "conversations.bulk.update" | "pipeline.board" | "calendar.booking.link.create" | "calendar.meeting.reschedule" | "calendar.meeting.cancel" | "campaign.followups.configure" | "campaign.variants.configure" | "recorder.settings.get" | "recorder.settings.update" | "recorder.bots.list" | "call.transcript.get" | "call.recording.get" | "call.transcripts.get" | "call.transcripts.search" | "readiness.check" | "sender.retire" | "sender.unretire" | "attribution.check" | "campaign.reengagement.prepare" | "agents.list" | "agent.inspect" | "agent.create.request" | "agent.pause" | "agent.resume" | "agent.credential.rotate" | "event_consumers.list" | "event_consumers.create" | "events.ack" | "events.snapshot" | "webhook.deliveries.list" | "webhooks.dlq.replay" | "classification.feedback" | "classification.quality" | "classification.backfill.plan" | "work_queue.list" | "work_item.claim" | "work_item.release" | "work_item.snooze" | "work_item.complete" | "work_queue.config.get" | "work_queue.config.update" | "metrics.reconcile" | "agent.heartbeat" | "agent.run.start" | "agent.run.end" | "agent.runs.list" | "agent.run.inspect" | "workspace.halt" | "workspace.resume" | "channel.halt" | "workspace.automation.inspect" | "feedback.submit" | "feedback.list" | "entity.resolve" | "entities.get" | "people.upsert" | "companies.upsert" | "entity.merge" | "entity.split" | "budget.status" | "call.stats.get" | "call.coaching.get" | "call.analytics.query" | "call.insight.get" | "call.access.list" | "call.audit.list" | "call.activity.get" | "call.analysis.get" | "call.outcome.confirm" | "call.attendance.get" | "call.insight.review" | "recorder.event.override.get" | "recorder.event.override.update" | "call.bot.cancel" | "call.bot.remove" | "call.recording.stop" | "recorder.status" | "call.bot.join" | "recorder.join.get" | "call.participant.withdrawal.report" | "call.delete" | "copy.approval.request" | "campaign.draft.plan" | "campaign.draft.readiness" | "prospecting.preview" | "companies.lookalike" | "commitments.propose" | "commitments.list" | "commitment.update" | "commitment.confirm.batch" | "commitment.reminder.draft" | "list.merge" | "list.rename" | "list.archive" | "campaign.draft.archive" | "copy.approval.inspect" | "copy.approval.cancel" | "approval.cancel" | "approvals.list";
         AgentToolPolicy: {
             /** @enum {string} */
             approval: "none" | "human_confirmation";
@@ -5635,7 +5702,7 @@ export interface components {
             build?: string;
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.7.6";
+            contractVersion?: "2.9.0";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
@@ -8076,9 +8143,16 @@ export interface components {
         CampaignSummary: {
             channels: components["schemas"]["TargetChannel"][];
             dailyCap: number;
+            failedCount?: number;
             id: string;
             name: string;
+            /**
+             * @description Processing outcome independent of control status; failures are not confirmed deliveries or permission to retry.
+             * @enum {string|null}
+             */
+            processingOutcome?: "finished_with_failures" | null;
             sentCount: number;
+            skippedCount?: number;
             status: components["schemas"]["CampaignStatus"];
             targetCount: number;
             /** Format: date-time */
@@ -8126,6 +8200,20 @@ export interface components {
             };
             /** @constant */
             tool?: "campaign.variants.configure";
+        };
+        CampaignVariationPerformanceInput: {
+            campaignId: components["schemas"]["ResourceId"];
+            /**
+             * @description Optional channel filter for template_variation only.
+             * @enum {string}
+             */
+            channel?: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
+            from?: components["schemas"]["ResourceVersion"];
+            limit?: number;
+            offset?: number;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            to?: components["schemas"]["ResourceVersion"];
         };
         ChannelHaltInput: {
             /** @enum {string} */
@@ -8837,10 +8925,12 @@ export interface components {
             companies?: {
                 [key: string]: unknown;
             }[];
-            /** @description The profile headline is the stored figure that prospect_query, prospecting_preview and companies_search filter on, so rows and profiles agree. A newer financial history year is reported in newerHistory and is not used by search until the published revision has it. */
+            /** @description The profile headline is the newest fiscal year with a published revenue, the year the FI search snapshot filters on (promoted_newest_year; previousHeadline keeps the stored figures). A newer year without revenue is reported in newerHistory. Operating margin is derived from the same year's operating profit and revenue. */
             financialReview?: {
                 /** @enum {string} */
-                comparison: "newer_history_available" | "no_newer_history" | "unknown";
+                comparison: "promoted_newest_year" | "newer_history_available" | "no_newer_history" | "unknown";
+                /** @description Set when the newest year has no employee count and the headline keeps this year's. */
+                employeeFiscalYear?: string;
                 headlineYear: string | null;
                 latestHistoryYear: string | null;
                 newerHistory?: {
@@ -8848,6 +8938,12 @@ export interface components {
                     fiscalYear: string;
                     revenueEur: number | null;
                 } | null;
+                /** @description The stored figures replaced by the newest fiscal year. */
+                previousHeadline?: {
+                    employeeCount: number | null;
+                    fiscalYear: string | null;
+                    revenueEur: number | null;
+                };
             };
             notFound?: string[];
             /** @description The complete current Companies drawer profile. Additional properties preserve all app profile sections as they evolve. */
@@ -8983,10 +9079,13 @@ export interface components {
             /** @constant */
             version: 1;
         };
+        /** @description Supply companyKey as returned by prospect_query or company_inspect (for example FI:0198452-3), or country plus businessId. Finnish companies only. */
         CompanyKnowledgeInput: {
-            businessId: string;
+            businessId?: string;
+            /** @description Public company key, for example FI:0198452-3. */
+            companyKey?: string;
             /** @enum {string} */
-            country: "FI";
+            country?: "FI";
             /** @description Pin subsequent source pages to the knowledgeRevision returned by the first read. */
             expectedKnowledgeRevision?: string;
             maxAgeDays?: number;
@@ -9666,7 +9765,7 @@ export interface components {
         };
         CopyApprovalRequestInput: {
             campaignId?: string;
-            /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
+            /** @description True renders the exact copy, audience count and approval-page contents without creating a review or authorizing launch. False or omission creates the owner review. */
             dryRun?: boolean;
             idempotencyKey: components["schemas"]["IdempotencyKey"];
             plan?: components["schemas"]["ProspectingPlan"];
@@ -10090,7 +10189,7 @@ export interface components {
         /** @enum {string} */
         InboxChannel: "instagram" | "facebook" | "linkedin" | "gmail" | "outlook" | "email" | "sms";
         InboxConversationCompact: {
-            /** @description needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged. */
+            /** @description True when the stored needsReply flag is set and the presented intent is not not_interested or opt_out. The stored flag and the reply policy are unchanged. */
             awaitingReply?: boolean;
             campaignId?: string;
             channel: components["schemas"]["InboxChannel"];
@@ -10101,10 +10200,11 @@ export interface components {
             lastMessageAt?: string;
             lastMessageDirection?: string;
             lastMessageText?: string;
+            /** @description False when the presented intent is opt_out or not_interested, including when the stored flag is true. Other intents keep the stored flag. The stored flag and the reply policy are unchanged. */
             needsReply?: boolean;
             status?: string;
             /**
-             * @description Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
+             * @description Next step implied by the presented intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. Any other intent with stored needsReply false is none.
              * @enum {string}
              */
             suggestedAction?: "reply" | "book_meeting" | "schedule_followup" | "ask_for_referral" | "close_politely" | "close_without_reply" | "wait" | "review" | "none";
@@ -10145,7 +10245,7 @@ export interface components {
         };
         InboxConversationSummary: {
             attributionMethod?: string | null;
-            /** @description needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged. */
+            /** @description True when the stored needsReply flag is set and the presented intent is not not_interested or opt_out. The stored flag and the reply policy are unchanged. */
             awaitingReply?: boolean;
             businessId?: string | null;
             campaignId: string;
@@ -10179,6 +10279,7 @@ export interface components {
             meetingId?: string | null;
             /** @enum {string} */
             meetingStatus?: "none" | "booked" | "held" | "no_show";
+            /** @description False when the presented intent is opt_out or not_interested, including when the stored flag is true. Other intents keep the stored flag. The stored flag and the reply policy are unchanged. */
             needsReply: boolean;
             nextActionAt?: string | null;
             nextActionNote?: string | null;
@@ -10188,7 +10289,7 @@ export interface components {
             /** @enum {string} */
             status: "open" | "closed";
             /**
-             * @description Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
+             * @description Next step implied by the presented intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. Any other intent with stored needsReply false is none.
              * @enum {string}
              */
             suggestedAction?: "reply" | "book_meeting" | "schedule_followup" | "ask_for_referral" | "close_politely" | "close_without_reply" | "wait" | "review" | "none";
@@ -10295,7 +10396,7 @@ export interface components {
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
             /** @enum {string} */
-            type: "followers" | "following" | "likers" | "commenters";
+            type: "followers" | "following";
             username: string;
         };
         InstagramExtractionQuoteResult: components["schemas"]["AgentToolResultBase"] & {
@@ -10322,7 +10423,7 @@ export interface components {
             /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
             runId?: string;
             /** @enum {string} */
-            type: "followers" | "following" | "likers" | "commenters";
+            type: "followers" | "following";
             username: string;
         };
         InstagramExtractionStartResult: components["schemas"]["AgentToolResultBase"] & {
@@ -10773,6 +10874,75 @@ export interface components {
             /** @enum {string} */
             status: "ready" | "queued" | "running" | "completed" | "failed" | "blocked";
         };
+        LeadsAddData: {
+            added?: number;
+            campaign?: {
+                id: string;
+                status: string;
+                willReopen: boolean;
+            };
+            campaignStatus?: string;
+            confirmToken?: string;
+            dedicatedListId?: string;
+            expiresAt?: string;
+            list?: {
+                afterAdd: number;
+                current: number;
+                id: string;
+                willCopy?: boolean;
+            };
+            newTotal?: number;
+            preview: boolean;
+            remaining?: number;
+            requestId?: string;
+            skipped: {
+                duplicate: number;
+                excluded: number;
+                noChannel: number;
+                pending: number;
+                priorContact: number;
+                replied: number;
+                suppressed: number;
+            };
+            sourceRemaining?: number;
+            started?: boolean;
+            targetGoal?: number;
+            toAdd?: number;
+        };
+        LeadsAddInput: {
+            allowPriorContactOn?: ("instagram" | "facebook" | "linkedin" | "gmail" | "sms")[];
+            campaignId?: string;
+            /** @enum {string} */
+            channel?: "instagram" | "facebook" | "linkedin" | "gmail" | "sms";
+            confirmToken?: string;
+            idempotencyKey: components["schemas"]["IdempotencyKey"];
+            leads: {
+                companyIds: string[];
+            } | {
+                filter?: {
+                    country?: string;
+                    hasChannel?: boolean;
+                    hasMobile?: boolean;
+                    industry?: string;
+                };
+                fromListId: string;
+                limit?: number;
+            } | {
+                usernames: string[];
+            };
+            limit?: number;
+            listId?: string;
+            preview?: boolean;
+            reason: string;
+            /** @description Optional run correlation. Also accepted as X-DMFaster-Run-Id. */
+            runId?: string;
+            targetTotal?: number;
+        };
+        LeadsAddResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: components["schemas"]["AgentWritePreviewData"] | (components["schemas"]["LeadsAddData"] | null);
+            /** @constant */
+            tool?: "leads.add";
+        };
         LeadsStatusInput: {
             cursor?: string;
             limit?: number;
@@ -10842,6 +11012,30 @@ export interface components {
             data?: components["schemas"]["ListInspectData"] | components["schemas"]["CompanyListInspectData"] | null;
             /** @constant */
             tool?: "list.inspect";
+        };
+        ListMergeInput: {
+            /** @description Archive the source lists after the merged list is saved, as the app's Lists page merge does. Omitted or false keeps them active. Only sources unchanged since they were read are archived; campaigns that target an archived list keep sending to it. */
+            archiveSources?: boolean;
+            newName: string;
+            /** @description Return the resulting lead count without creating a list. */
+            preview?: boolean;
+            /** @description Distinct saved list IDs from lists_list. */
+            sourceListIds: string[];
+        };
+        ListMergeResult: components["schemas"]["AgentToolResultBase"] & {
+            data?: {
+                /** @description Created with archiveSources only. Source lists archived by this call. */
+                archivedSourceCount?: number;
+                /** @description Preview with archiveSources only. Source lists that would be archived after saving. */
+                archiveSourceListIds?: string[];
+                leadCount: number;
+                listId?: string;
+                name: string;
+                /** @enum {string} */
+                status: "preview" | "created" | "existing";
+            } | null;
+            /** @constant */
+            tool?: "list.merge";
         };
         ListPrepareInput: {
             /** @description True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements. */
@@ -11486,6 +11680,8 @@ export interface components {
         ProspectQueryData: {
             /** @description Exact filters for prospecting_preview and campaign_draft_plan; their inventoryTotal equals matched before contact exclusions. Null when the ICP cannot be expressed as filters. */
             campaignFilters?: components["schemas"]["CompanySearchFilters"] | null;
+            /** @description Legend for the ch column bitmask; sendable routes and contact-only data. */
+            chBits?: string;
             clarification?: {
                 /** @description Each option keeps the rest of the ICP. matched is its exact total before contact exclusions, or null when unavailable or above 200,000. Re-run with querySignature or pass industries. */
                 options: {
@@ -11498,6 +11694,8 @@ export interface components {
                 question: string;
             };
             columns: string[];
+            /** @description ICP terms that were not applied. Present only when status is partial. */
+            droppedTerms?: string[];
             export?: null;
             nextCursor: string;
             notes?: string[];
@@ -11521,11 +11719,13 @@ export interface components {
                     /** @enum {string} */
                     evidence?: "not_checked";
                     label: string;
+                    /** @description True only when this segment's coverage is complete. SaaS stays false. */
+                    labelPublished?: boolean;
                     /** @enum {string} */
-                    labelSource: "code" | "tech";
+                    labelSource: "code" | "tech" | "evidence";
                 }[];
                 /** @enum {string} */
-                labelSource: "code" | "tech";
+                labelSource: "code" | "tech" | "evidence";
                 regions?: string[];
                 revenueEur?: {
                     max?: number;
@@ -11537,11 +11737,18 @@ export interface components {
                 websiteFacts?: ("b2c" | "b2b" | "saas")[];
             };
             rows: (string | number | null)[][];
+            /** @description Data sources that were unavailable, so their terms were dropped. */
+            sourceUnavailable?: {
+                reason: string;
+                /** @enum {string} */
+                source: "recruitment";
+                term: string;
+            }[];
             /**
-             * @description needs_clarification means the ICP named no single industry and nothing was searched; pick one clarification option. too_large means more than 200,000 companies match.
+             * @description needs_clarification means the ICP named no single industry and nothing was searched; pick one clarification option. too_large means more than 200,000 companies match. partial means part of the ICP was not applied (droppedTerms); totals are exact for the applied part only.
              * @enum {string}
              */
-            status?: "ok" | "needs_clarification" | "too_large";
+            status?: "ok" | "partial" | "needs_clarification" | "too_large";
             totals: {
                 eligible?: number;
                 evidenceOnlyAvailable?: number;
@@ -12653,6 +12860,11 @@ export interface components {
             body: string;
             bookedRecipients?: number;
             channel: string;
+            /**
+             * @description Recovered rows group exact delivered text; they do not reconstruct original templates or A/B slots.
+             * @enum {string}
+             */
+            copyBasis?: "saved_template" | "recovered_delivered_copy";
             credibleInterval?: components["schemas"]["CredibleInterval"] | null;
             humanResponders: number;
             linkedMatureRecipients: number;
@@ -12662,7 +12874,7 @@ export interface components {
             revisionId: string;
             sentRecipients: number;
             subject: string;
-            variantIndex: number;
+            variantIndex: number | null;
         };
         WebhookDeliveriesListInput: {
             cursor?: string;
@@ -15811,6 +16023,36 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    campaignVariationPerformance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CampaignVariationPerformanceInput"];
+            };
+        };
+        responses: {
+            /** @description Compare message variation reply rates */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CopyPerformanceResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     campaignsList: {
         parameters: {
             query?: never;
@@ -17916,6 +18158,37 @@ export interface operations {
             503: components["responses"]["ServiceUnavailable"];
         };
     };
+    leadsAdd: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadsAddInput"];
+            };
+        };
+        responses: {
+            /** @description Lead append preview or receipt. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadsAddResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            404: components["responses"]["NotFound"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
     leadEnrichmentInspect: {
         parameters: {
             query?: never;
@@ -18446,6 +18719,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ListInspectResult"];
+                };
+            };
+            400: components["responses"]["BadRequest"];
+            401: components["responses"]["Unauthorized"];
+            403: components["responses"]["Forbidden"];
+            429: components["responses"]["TooManyRequests"];
+            500: components["responses"]["InternalServerError"];
+            503: components["responses"]["ServiceUnavailable"];
+        };
+    };
+    listMerge: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListMergeInput"];
+            };
+        };
+        responses: {
+            /** @description Combine lead lists into a new named list */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListMergeResult"];
                 };
             };
             400: components["responses"]["BadRequest"];

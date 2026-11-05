@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DM Faster Agent API
-  version: 2.7.6
+  version: 2.9.0
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
@@ -81,6 +81,12 @@ x-dmfaster-errors:
   insufficient_scope:
     nextAction: Ask the workspace owner to grant the required scope through connection settings.
     docsUrl: https://dmfaster.com/docs/agents#errors-insufficient_scope
+  workspace_permission_required:
+    nextAction: Ask a workspace administrator to review your app permissions. Reconnecting does not change them.
+    docsUrl: https://dmfaster.com/docs/agents#errors-workspace_permission_required
+  daily_cap_exceeded:
+    nextAction: Use the workspace sending limit returned by the server, then retry with the corrected daily cap.
+    docsUrl: https://dmfaster.com/docs/agents#errors-daily_cap_exceeded
   invalid_cursor:
     nextAction: Restart from the first page without a cursor.
     docsUrl: https://dmfaster.com/docs/agents#errors-invalid_cursor
@@ -137,8 +143,11 @@ x-dmfaster-errors:
   call_access_denied:
     nextAction: Ask the organizer to share the call and the owner to grant requiredScope.
     docsUrl: https://dmfaster.com/docs/agents#errors-call_access_denied
+  agent_prospecting_disabled:
+    nextAction: Prospecting is not enabled for this workspace. Contact DM Faster support with the workspace ID and request ID. Do not retry unchanged or change connection permissions; no customer opt-in setting is required.
+    docsUrl: https://dmfaster.com/docs/agents#errors-agent_prospecting_disabled
   feature_disabled:
-    nextAction: Ask the workspace owner to opt in to this feature.
+    nextAction: This feature is not enabled for this workspace. Contact DM Faster support with the tool name, workspace ID and request ID. Reconnecting or changing scopes does not enable it; do not assume a customer settings toggle exists.
     docsUrl: https://dmfaster.com/docs/agents#errors-feature_disabled
   recorder_consent_required:
     nextAction: Connect your own calendar and approve a recording notice before enabling auto-join.
@@ -343,8 +352,6 @@ paths:
         - workspace:read
       x-dmfaster-approval: none
       x-dmfaster-owner-only: false
-      x-dmfaster-deprecated:
-        successor: analytics_summary
       x-dmfaster-mcp:
         name: workspace_briefing
         title: Workspace briefing
@@ -775,7 +782,7 @@ paths:
         title: Read inbox conversation
         description:
           Read an exact conversation's inbound and outbound message page. Pass nextCursor with the same
-          conversation ID to continue.
+          conversation ID to continue. Reading does not mark it read.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -823,7 +830,8 @@ paths:
         - inbox:read
         - inbox:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["reply"]
       x-dmfaster-mcp:
         name: conversation_update
         title: Update inbox conversation
@@ -878,7 +886,8 @@ paths:
         - inbox:read
         - inbox:write
       x-dmfaster-approval: human_confirmation
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["reply"]
       x-dmfaster-mcp:
         name: conversation_reply
         title: Send conversation reply
@@ -1043,7 +1052,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: campaign_messages_draft_update
         title: Prepare unique recipient copy before launch
@@ -1165,7 +1175,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: campaign_messages_update
         title: Customize queued recipient messages
@@ -1273,7 +1284,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: campaign_followups_cancel
         title: Cancel queued follow-ups
@@ -1759,7 +1771,8 @@ paths:
         - pipeline:read
         - pipeline:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: pipeline_stage_update
         title: Update pipeline stage
@@ -1857,7 +1870,8 @@ paths:
         - pipeline:read
         - pipeline:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: pipeline_note_add
         title: Add pipeline note
@@ -2232,7 +2246,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["delete"]
       x-dmfaster-mcp:
         name: list_target_remove
         title: Remove an Instagram target
@@ -2294,7 +2309,8 @@ paths:
         - campaigns:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: campaign_draft_prepare
         title: Prepare a campaign from a saved list
@@ -2358,7 +2374,8 @@ paths:
         - campaigns:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: campaign_draft_update
         title: Update a saved social campaign draft
@@ -2416,7 +2433,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: list_import
         title: Import Instagram username list
@@ -2457,6 +2475,63 @@ paths:
           $ref: "#/components/responses/InternalServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/leads.add:
+    post:
+      tags:
+        - Agent tools
+      operationId: leadsAdd
+      summary: Add leads to a campaign or list
+      description:
+        Adds leads to any of the caller's campaigns, including a completed campaign, or to one of their
+        lists. Preview is the default and returns a confirm token. Applying that token reopens a completed
+        campaign to paused and never starts sending. Ineligible leads are skipped and counted.
+      x-dmfaster-effect: write
+      x-dmfaster-required-scopes:
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-write-boundary: workspace_edit
+      x-dmfaster-mcp:
+        name: leads_add
+        title: Add leads
+        description:
+          Add leads to one of your campaigns or lists. Preview first, then apply the returned confirm token
+          with the same idempotency key. Completed campaigns reopen to paused. Sending never starts.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign planning and drafts
+        usage: leads add --campaign CAMPAIGN --idempotency-key KEY
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadsAddInput"
+      responses:
+        "200":
+          description: Lead append preview or receipt.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadsAddResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/list.prepare:
     post:
       x-dmfaster-preview: input_only
@@ -2470,7 +2545,8 @@ paths:
         - audiences:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-deprecated:
         successor: companies_list_prepare
       x-dmfaster-mcp:
@@ -2526,7 +2602,8 @@ paths:
         - audiences:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-deprecated:
         successor: campaign_draft_plan
       x-dmfaster-mcp:
@@ -2584,7 +2661,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:launch
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["send", "manageSending"]
       x-dmfaster-mcp:
         name: campaign_launch_preflight
         title: Preflight campaign launch
@@ -2641,7 +2719,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:launch
       x-dmfaster-approval: human_confirmation
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["send", "manageSending"]
       x-dmfaster-mcp:
         name: campaign_launch
         title: Launch approved campaign
@@ -2700,7 +2779,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["send", "manageSending"]
       x-dmfaster-mcp:
         name: campaign_pause_preflight
         title: Preflight campaign pause
@@ -2755,7 +2835,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:write
       x-dmfaster-approval: human_confirmation
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["send", "manageSending"]
       x-dmfaster-mcp:
         name: campaign_pause
         title: Pause approved campaign
@@ -2982,15 +3063,16 @@ paths:
         name: companies_search
         title: Search companies
         description:
-          Search indexed saved company data without website model calls. Results are candidates matching
+          Use projection list for fast prospecting; company_inspect loads full profiles for shortlisted companies.
+          Returns exact totals and stable pagination. Search indexed saved data without website model calls.
+          Results are candidates matching
           saved filters; industry membership does not establish the actual offering, buyer type or current
           contact employment. Qualify shortlisted companies with company_inspect and website evidence. Combine
           country, industry, employee/revenue bounds, technologies, Google Ads activity windows and Meta Ads
           filters in one request. Use this for structured ICPs before website evidence research; only
           unsupported website predicates need inference. Discover options with companies_filters. Ads reflect
-          dated observations, not guaranteed live activity. Use projection list for fast prospecting views and
-          company_inspect for full profiles; omit projection for rich rows. Returns an exact total and stable
-          pagination. Echo querySignature and expectedRevision on subsequent pages.
+          dated observations, not guaranteed live activity. Omit projection or use rich when contact arrays
+          are needed. Echo querySignature and expectedRevision on subsequent pages.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -3165,12 +3247,9 @@ paths:
         name: companies_knowledge
         title: Read saved public company knowledge
         description:
-          Inspect one Finnish company's offering and buyers using saved website facts and paginated
-          original sourceEvidence, including when assessments are null. Read related sections together and
-          preserve seller, customer and partner attribution. For further sourcePage values pass the first
-          response's knowledgeRevision as expectedKnowledgeRevision with unchanged sourcePageSize. No website
-          fetch, Jev call or private run access. Source passages are unassessed; fact quotations are context
-          samples, not selected supporting citations.
+          Inspect one Finnish company by companyKey (FI:0198452-3) or country plus businessId. Saved website
+          facts and paginated sourceEvidence stay available when assessments are null. Pass knowledgeRevision
+          as expectedKnowledgeRevision on later source pages. No website fetch, Jev call or private run access.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -3778,7 +3857,8 @@ paths:
         - audiences:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: companies_list_prepare
         title: Save company shortlist
@@ -3888,7 +3968,8 @@ paths:
         - campaigns:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["delete"]
       x-dmfaster-mcp:
         name: companies_list_refine
         title: Refine disabled campaign audience
@@ -4050,7 +4131,8 @@ paths:
         - campaigns:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: campaign_delivery_update
         title: Update ongoing campaign delivery
@@ -4477,6 +4559,56 @@ paths:
           $ref: "#/components/responses/InternalServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/campaign.variation.performance:
+    post:
+      tags:
+        - Agent tools
+      operationId: campaignVariationPerformance
+      summary: Compare message variation reply rates
+      description: Compare saved campaign message variations by human reply rate, with seven-day mature counts and attribution coverage. Defaults to the last 30 days, ranked by observed reply rate. Reply-only aggregates; no calendar records or inbound message text. No automatic winner selection.
+      x-dmfaster-effect: read
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - sending:read
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-mcp:
+        name: campaign_variation_performance
+        title: Compare message variation reply rates
+        description: Compare A/B message variations and best reply rates for one campaign. Returns saved copy, seven-day mature counts and attribution coverage, ranked best first. Defaults to 30 days; no inbound reply text or calendar data. Null rates mean incomplete evidence, not zero.
+        annotations:
+          readOnlyHint: true
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Agent workflows
+        usage: campaign variation performance --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignVariationPerformanceInput"
+      responses:
+        "200":
+          description: Compare message variation reply rates
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CopyPerformanceResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/copy.performance:
     post:
       tags:
@@ -4550,7 +4682,8 @@ paths:
       x-dmfaster-required-scopes:
         - calendar:read
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: []
       x-dmfaster-mcp:
         name: calendar_status
         title: Inspect calendar connection
@@ -4603,7 +4736,8 @@ paths:
       x-dmfaster-required-scopes:
         - calendar:read
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: []
       x-dmfaster-mcp:
         name: calendar_availability
         title: Find available meeting slots
@@ -4660,7 +4794,8 @@ paths:
         - inbox:read
         - pipeline:write
       x-dmfaster-approval: human_confirmation
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["manageMembers"]
       x-dmfaster-mcp:
         name: calendar_meeting_book
         title: Book a conversation meeting
@@ -6413,7 +6548,8 @@ paths:
       x-dmfaster-required-scopes:
         - calls:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-write-boundary: call_record_outcome
       x-dmfaster-mcp:
         name: call_outcome_set
         title: Record an authorized meeting outcome and update its linked pipeline card.
@@ -6450,7 +6586,8 @@ paths:
       x-dmfaster-required-scopes:
         - calls:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-write-boundary: call_record_outcome
       x-dmfaster-mcp:
         name: meeting_link
         title: Link a meeting to one workspace conversation or company without sending invitations.
@@ -6487,7 +6624,8 @@ paths:
       x-dmfaster-required-scopes:
         - calls:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-write-boundary: call_record_outcome
       x-dmfaster-mcp:
         name: meeting_unlink
         title: Remove an explicit meeting link without deleting meeting history or moving pipeline cards backwards.
@@ -7246,7 +7384,8 @@ paths:
         - inbox:read
         - inbox:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["reply"]
       x-dmfaster-mcp:
         name: conversation_draft_save
         title: conversation draft save
@@ -7288,7 +7427,8 @@ paths:
         - inbox:read
         - inbox:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["reply"]
       x-dmfaster-mcp:
         name: conversation_followup_set
         title: conversation followup set
@@ -7327,7 +7467,8 @@ paths:
       x-dmfaster-required-scopes:
         - inbox:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["reply"]
       x-dmfaster-mcp:
         name: conversation_followup_clear
         title: conversation followup clear
@@ -7403,7 +7544,8 @@ paths:
       x-dmfaster-required-scopes:
         - inbox:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["reply"]
       x-dmfaster-mcp:
         name: conversations_bulk_update
         title: Bulk update conversations
@@ -7559,7 +7701,8 @@ paths:
         - inbox:read
         - pipeline:write
       x-dmfaster-approval: human_confirmation
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-write-boundary: call_manage_meeting
       x-dmfaster-mcp:
         name: calendar_meeting_reschedule
         title: calendar meeting reschedule
@@ -7613,7 +7756,8 @@ paths:
         - inbox:read
         - pipeline:write
       x-dmfaster-approval: human_confirmation
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-write-boundary: call_manage_meeting
       x-dmfaster-mcp:
         name: calendar_meeting_cancel
         title: calendar meeting cancel
@@ -7664,7 +7808,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: campaign_followups_configure
         title: Configure campaign follow-ups
@@ -7717,7 +7862,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:write
       x-dmfaster-approval: human_confirmation
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: campaign_variants_configure
         title: Configure weighted campaign variants
@@ -8126,19 +8272,23 @@ paths:
       operationId: readinessCheck
       summary: Inspect readiness for an agent action
       description:
-        Read current connection scope and provider readiness. Per-action approval, policy, budgets and
+        Check current action permissions, connection scope and provider readiness. Teammate sender checks
+        may require an exact campaign preflight; owner sender setup stays private. Per-action approval, policy, budgets and
         launch preflights still apply.
       x-dmfaster-effect: read
       x-dmfaster-required-scopes:
         - workspace:read
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["send", "manageSending", "reply", "edit", "manageMembers"]
       x-dmfaster-mcp:
         name: readiness_check
         title: Inspect readiness for an agent action
         description:
-          Read current connection scope and provider readiness. Per-action approval, policy, budgets and
-          launch preflights still apply.
+          Check action permissions, connection scope and provider readiness. Teammates use their app
+          permissions; sender setup stays owner-only. A generic teammate sender check reports an
+          explicit blocker and directs exact campaign checks to campaign_launch_preflight.
+          Readiness never authorizes sending; action preflights still apply.
         annotations:
           readOnlyHint: true
           destructiveHint: false
@@ -11528,27 +11678,27 @@ paths:
       x-dmfaster-write-boundary: call_delete
   /api/v1/agent/tools/copy.approval.request:
     post:
-      x-dmfaster-preview: input_only
       tags:
         - Agent tools
       operationId: copyApprovalRequest
       summary: Request owner approval of campaign copy
       description:
-        Create an owner review of exact campaign copy and audience. Email recipient consent is entered by
-        the owner in the approval page. Never sends or authorizes launch.
+        dryRun renders the exact copy, audience count and approval page without creating a review. Otherwise
+        creates an owner review. Email consent is entered on that page. Never sends or authorizes launch.
       x-dmfaster-effect: draft
       x-dmfaster-required-scopes:
         - audiences:read
         - campaigns:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: copy_approval_request
         title: Request owner approval of campaign copy
         description:
-          Create an owner review of exact campaign copy and audience. Email recipient consent is entered by
-          the owner in the approval page. Never sends or authorizes launch.
+          dryRun renders the exact copy, audience count and approval page without creating a review. Otherwise
+          creates an owner review. Email consent is entered on that page. Never sends or authorizes launch.
         annotations:
           readOnlyHint: false
           destructiveHint: false
@@ -11600,7 +11750,8 @@ paths:
         - campaigns:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: campaign_draft_plan
         title: Plan or create a complete disabled campaign
@@ -11655,7 +11806,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:read
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: []
       x-dmfaster-mcp:
         name: campaign_draft_readiness
         title: Check draft readiness without launch intent
@@ -11708,7 +11860,8 @@ paths:
       x-dmfaster-required-scopes:
         - audiences:read
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: []
       x-dmfaster-mcp:
         name: prospecting_preview
         title: Preview a compact exact prospect audience
@@ -11762,7 +11915,8 @@ paths:
         - audiences:read
         - pipeline:read
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: []
       x-dmfaster-mcp:
         name: companies_lookalike
         title: Find deterministic company lookalikes
@@ -12079,6 +12233,57 @@ paths:
           $ref: "#/components/responses/InternalServerError"
         "503":
           $ref: "#/components/responses/ServiceUnavailable"
+  /api/v1/agent/tools/list.merge:
+    post:
+      tags:
+        - Agent tools
+      operationId: listMerge
+      summary: Combine lead lists into a new named list
+      description: Combine 2–10 saved lead lists into a new named list. Resolve names with lists_list. Set preview to true for the unique lead count before saving. Set archiveSources to true to archive unchanged originals like the app does; campaigns keep using archived lists. The same sources and name reuse the saved list.
+      x-dmfaster-effect: draft
+      x-dmfaster-required-scopes:
+        - campaigns:read
+        - campaigns:write
+      x-dmfaster-approval: none
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
+      x-dmfaster-mcp:
+        name: list_merge
+        title: Combine lead lists into a new named list
+        description: Combine 2–10 saved lead lists into a new named list. Resolve names with lists_list. Set preview to true for the unique lead count before saving. Set archiveSources to true to archive unchanged originals like the app does; campaigns keep using archived lists. The same sources and name reuse the saved list.
+        annotations:
+          readOnlyHint: false
+          destructiveHint: false
+          idempotentHint: true
+          openWorldHint: false
+      x-dmfaster-cli:
+        section: Campaign planning and drafts
+        usage: list merge --input FILE
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListMergeInput"
+      responses:
+        "200":
+          description: Combine lead lists into a new named list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListMergeResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
   /api/v1/agent/tools/list.rename:
     post:
       x-dmfaster-preview: input_only
@@ -12092,7 +12297,8 @@ paths:
         - campaigns:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-mcp:
         name: list_rename
         title: Rename a saved list
@@ -12143,7 +12349,8 @@ paths:
         - campaigns:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["delete"]
       x-dmfaster-mcp:
         name: list_archive
         title: Archive an unused agent list
@@ -12196,7 +12403,8 @@ paths:
         - campaigns:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["delete"]
       x-dmfaster-mcp:
         name: campaign_draft_archive
         title: Archive an unstarted agent draft
@@ -12247,7 +12455,8 @@ paths:
       x-dmfaster-required-scopes:
         - campaigns:read
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: []
       x-dmfaster-mcp:
         name: copy_approval_inspect
         title: Inspect campaign copy approval
@@ -12298,7 +12507,8 @@ paths:
         - campaigns:read
         - campaigns:write
       x-dmfaster-approval: none
-      x-dmfaster-owner-only: true
+      x-dmfaster-owner-only: false
+      x-dmfaster-workspace-permissions: ["edit"]
       x-dmfaster-deprecated:
         successor: approval_cancel
       x-dmfaster-mcp:
@@ -13132,7 +13342,16 @@ components:
     CompanyKnowledgeInput:
       type: object
       additionalProperties: false
+      description:
+        Supply companyKey as returned by prospect_query or company_inspect (for example FI:0198452-3),
+        or country plus businessId. Finnish companies only.
       properties:
+        companyKey:
+          type: string
+          minLength: 4
+          maxLength: 200
+          pattern: "^[A-Za-z]{2}:.+$"
+          description: Public company key, for example FI:0198452-3.
         country:
           type: string
           enum:
@@ -13164,9 +13383,6 @@ components:
           minLength: 1
           maxLength: 100
           description: Optional run correlation. Also accepted as X-DMFaster-Run-Id.
-      required:
-        - country
-        - businessId
     CompanyKnowledgeSources:
       type: object
       additionalProperties: false
@@ -14225,6 +14441,7 @@ components:
         - campaign.draft.prepare
         - campaign.draft.update
         - list.import
+        - leads.add
         - list.prepare
         - campaign.prepare
         - campaign.launch.preflight
@@ -14261,6 +14478,7 @@ components:
         - companies.fit.runs.list
         - companies.fit.run
         - companies.fit.cohort
+        - campaign.variation.performance
         - copy.performance
         - calendar.status
         - calendar.availability
@@ -14414,6 +14632,7 @@ components:
         - commitment.update
         - commitment.confirm.batch
         - commitment.reminder.draft
+        - list.merge
         - list.rename
         - list.archive
         - campaign.draft.archive
@@ -14517,6 +14736,12 @@ components:
                 type: array
                 items:
                   type: string
+              field:
+                type: string
+                maxLength: 200
+              expected:
+                type: string
+                maxLength: 200
         code:
           type: string
           minLength: 1
@@ -14635,7 +14860,7 @@ components:
               const: tool_execution
         contractVersion:
           type: string
-          const: 2.7.6
+          const: 2.9.0
         rateLimit:
           oneOf:
             - $ref: "#/components/schemas/AgentRateLimitEnvelope"
@@ -16012,7 +16237,7 @@ components:
             dailyCap:
               type: integer
               minimum: 1
-              maximum: 60
+              maximum: 2147483647
             pacingSeconds:
               type: integer
               minimum: 12
@@ -16134,7 +16359,7 @@ components:
         dailyCap:
           type: integer
           minimum: 1
-          maximum: 60
+          maximum: 2147483647
         pacingSeconds:
           type: integer
           minimum: 12
@@ -16266,7 +16491,7 @@ components:
         dailyCap:
           type: integer
           minimum: 1
-          maximum: 60
+          maximum: 2147483647
         pacingSeconds:
           type: integer
           minimum: 12
@@ -16389,7 +16614,7 @@ components:
         dailyCap:
           type: integer
           minimum: 1
-          maximum: 60
+          maximum: 2147483647
         pacingSeconds:
           type: integer
           minimum: 12
@@ -16531,6 +16756,241 @@ components:
                 - $ref: "#/components/schemas/AgentWritePreviewData"
                 - oneOf:
                     - $ref: "#/components/schemas/ListImportData"
+                    - type: "null"
+    LeadsAddInput:
+      type: object
+      additionalProperties: false
+      required:
+        - leads
+        - reason
+        - idempotencyKey
+      properties:
+        campaignId:
+          type: string
+          minLength: 1
+          maxLength: 180
+        listId:
+          type: string
+          minLength: 1
+          maxLength: 180
+        channel:
+          type: string
+          enum:
+            - instagram
+            - facebook
+            - linkedin
+            - gmail
+            - sms
+        targetTotal:
+          type: integer
+          minimum: 1
+          maximum: 20000
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 5000
+        allowPriorContactOn:
+          type: array
+          maxItems: 4
+          items:
+            type: string
+            enum:
+              - instagram
+              - facebook
+              - linkedin
+              - gmail
+              - sms
+        leads:
+          oneOf:
+            - type: object
+              additionalProperties: false
+              required:
+                - companyIds
+              properties:
+                companyIds:
+                  type: array
+                  minItems: 1
+                  maxItems: 5000
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 180
+            - type: object
+              additionalProperties: false
+              required:
+                - fromListId
+              properties:
+                fromListId:
+                  type: string
+                  minLength: 1
+                  maxLength: 180
+                limit:
+                  type: integer
+                  minimum: 1
+                  maximum: 5000
+                filter:
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    hasMobile:
+                      type: boolean
+                    hasChannel:
+                      type: boolean
+                    industry:
+                      type: string
+                      minLength: 1
+                      maxLength: 80
+                    country:
+                      type: string
+                      minLength: 2
+                      maxLength: 2
+            - type: object
+              additionalProperties: false
+              required:
+                - usernames
+              properties:
+                usernames:
+                  type: array
+                  minItems: 1
+                  maxItems: 5000
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 64
+        preview:
+          type: boolean
+        confirmToken:
+          type: string
+          minLength: 64
+          maxLength: 64
+          pattern: "^[a-f0-9]{64}$"
+        reason:
+          type: string
+          minLength: 3
+          maxLength: 500
+        idempotencyKey:
+          $ref: "#/components/schemas/IdempotencyKey"
+        runId:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Optional run correlation. Also accepted as X-DMFaster-Run-Id.
+    LeadsAddData:
+      type: object
+      additionalProperties: false
+      required:
+        - preview
+        - skipped
+      properties:
+        preview:
+          type: boolean
+        campaign:
+          type: object
+          additionalProperties: false
+          required:
+            - id
+            - status
+            - willReopen
+          properties:
+            id:
+              type: string
+            status:
+              type: string
+            willReopen:
+              type: boolean
+        list:
+          type: object
+          additionalProperties: false
+          required:
+            - id
+            - current
+            - afterAdd
+          properties:
+            id:
+              type: string
+            current:
+              type: integer
+              minimum: 0
+            afterAdd:
+              type: integer
+              minimum: 0
+            willCopy:
+              type: boolean
+        toAdd:
+          type: integer
+          minimum: 0
+        added:
+          type: integer
+          minimum: 0
+        skipped:
+          type: object
+          additionalProperties: false
+          required:
+            - duplicate
+            - replied
+            - excluded
+            - suppressed
+            - priorContact
+            - pending
+            - noChannel
+          properties:
+            duplicate:
+              type: integer
+              minimum: 0
+            replied:
+              type: integer
+              minimum: 0
+            excluded:
+              type: integer
+              minimum: 0
+            suppressed:
+              type: integer
+              minimum: 0
+            priorContact:
+              type: integer
+              minimum: 0
+            pending:
+              type: integer
+              minimum: 0
+            noChannel:
+              type: integer
+              minimum: 0
+        sourceRemaining:
+          type: integer
+          minimum: 0
+        confirmToken:
+          type: string
+        expiresAt:
+          type: string
+        newTotal:
+          type: integer
+          minimum: 0
+        remaining:
+          type: integer
+          minimum: 0
+        campaignStatus:
+          type: string
+        targetGoal:
+          type: integer
+          minimum: 0
+        requestId:
+          type: string
+        started:
+          type: boolean
+        dedicatedListId:
+          type: string
+    LeadsAddResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              const: leads.add
+            data:
+              oneOf:
+                - $ref: "#/components/schemas/AgentWritePreviewData"
+                - oneOf:
+                    - $ref: "#/components/schemas/LeadsAddData"
                     - type: "null"
     ListPrepareInput:
       type: object
@@ -17306,7 +17766,7 @@ components:
           $ref: "#/components/schemas/AgentActionAuthorization"
         approvalUrl:
           type: string
-          pattern: ^https://
+          pattern: ^https://|^http://(?:localhost|127\.0\.0\.1|\[::1\])(?::[0-9]+)?(?:/|$)
     BrowserWorkerSetupResume:
       type: object
       additionalProperties: false
@@ -17341,7 +17801,7 @@ components:
             - offline
         setupUrl:
           type: string
-          pattern: ^https://
+          pattern: ^https://|^http://(?:localhost|127\.0\.0\.1|\[::1\])(?::[0-9]+)?(?:/|$)
         message:
           type: string
           minLength: 1
@@ -17519,6 +17979,16 @@ components:
           type: integer
           minimum: 0
         sentCount:
+          type: integer
+          minimum: 0
+        processingOutcome:
+          description: Processing outcome independent of control status; failures are not confirmed deliveries or permission to retry.
+          type: [string, "null"]
+          enum: [finished_with_failures, null]
+        skippedCount:
+          type: integer
+          minimum: 0
+        failedCount:
           type: integer
           minimum: 0
         dailyCap:
@@ -18625,6 +19095,7 @@ components:
           type: string
         needsReply:
           type: boolean
+          description: False when the presented intent is opt_out or not_interested, including when the stored flag is true. Other intents keep the stored flag. The stored flag and the reply policy are unchanged.
         suggestedAction:
           type: string
           enum:
@@ -18637,10 +19108,10 @@ components:
             - wait
             - review
             - none
-          description: Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
+          description: Next step implied by the presented intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. Any other intent with stored needsReply false is none.
         awaitingReply:
           type: boolean
-          description: needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged.
+          description: True when the stored needsReply flag is set and the presented intent is not not_interested or opt_out. The stored flag and the reply policy are unchanged.
         interestLevel:
           type:
             - string
@@ -18648,10 +19119,18 @@ components:
         intent:
           description:
             Classified reply intent, auto_reply for an automatic inbound, or unclassified. Null only when
-            the row has no linked conversation.
+            the row has no linked conversation. An email invitation is presented as
+            information_requested, and an objection or capacity limit on a positive label is presented
+            as unclear. The stored classification is unchanged.
           type:
             - string
             - "null"
+        contactEmail:
+          description:
+            Address extracted when the reply invites an email. Omitted when none was extracted.
+            Presentation only; the stored classification is unchanged.
+          type: string
+          maxLength: 320
         lastMessage:
           description:
             Latest inbound message with text when one exists; otherwise the latest non-empty message, up to
@@ -19016,6 +19495,7 @@ components:
           type: string
         needsReply:
           type: boolean
+          description: False when the presented intent is opt_out or not_interested, including when the stored flag is true. Other intents keep the stored flag. The stored flag and the reply policy are unchanged.
         suggestedAction:
           type: string
           enum:
@@ -19028,10 +19508,10 @@ components:
             - wait
             - review
             - none
-          description: Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
+          description: Next step implied by the presented intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. Any other intent with stored needsReply false is none.
         awaitingReply:
           type: boolean
-          description: needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged.
+          description: True when the stored needsReply flag is set and the presented intent is not not_interested or opt_out. The stored flag and the reply policy are unchanged.
         unreadCount:
           type: integer
         interestLevel:
@@ -19136,6 +19616,7 @@ components:
           minimum: 0
         needsReply:
           type: boolean
+          description: False when the presented intent is opt_out or not_interested, including when the stored flag is true. Other intents keep the stored flag. The stored flag and the reply policy are unchanged.
         suggestedAction:
           type: string
           enum:
@@ -19148,10 +19629,10 @@ components:
             - wait
             - review
             - none
-          description: Next step implied by the stored intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. needsReply false is none.
+          description: Next step implied by the presented intent. not_interested is close_politely and opt_out is close_without_reply, never a sales follow-up. Any other intent with stored needsReply false is none.
         awaitingReply:
           type: boolean
-          description: needsReply without a not_interested or opt_out intent. A clear no stays listed but is not awaiting a reply; the stored needsReply flag is unchanged.
+          description: True when the stored needsReply flag is set and the presented intent is not not_interested or opt_out. The stored flag and the reply policy are unchanged.
         interestLevel:
           type: string
           enum:
@@ -21521,11 +22002,46 @@ components:
           type: string
           enum:
             - ok
+            - partial
             - needs_clarification
             - too_large
           description:
             needs_clarification means the ICP named no single industry and nothing was searched; pick
-            one clarification option. too_large means more than 200,000 companies match.
+            one clarification option. too_large means more than 200,000 companies match. partial means
+            part of the ICP was not applied (droppedTerms); totals are exact for the applied part only.
+        droppedTerms:
+          type: array
+          maxItems: 20
+          description: ICP terms that were not applied. Present only when status is partial.
+          items:
+            type: string
+            maxLength: 80
+        sourceUnavailable:
+          type: array
+          maxItems: 5
+          description: Data sources that were unavailable, so their terms were dropped.
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - source
+              - term
+              - reason
+            properties:
+              source:
+                type: string
+                enum:
+                  - recruitment
+              term:
+                type: string
+                maxLength: 80
+              reason:
+                type: string
+                maxLength: 300
+        chBits:
+          type: string
+          maxLength: 300
+          description: Legend for the ch column bitmask; sendable routes and contact-only data.
         clarification:
           type: object
           additionalProperties: false
@@ -21603,6 +22119,10 @@ components:
                     enum:
                       - code
                       - tech
+                      - evidence
+                  labelPublished:
+                    type: boolean
+                    description: True only when this segment's coverage is complete. SaaS stays false.
                   evidence:
                     type: string
                     enum:
@@ -21686,6 +22206,7 @@ components:
               enum:
                 - code
                 - tech
+                - evidence
             excludePreviouslyContacted:
               type: boolean
         totals:
@@ -22129,9 +22650,34 @@ components:
             comparison:
               type: string
               enum:
+                - promoted_newest_year
                 - newer_history_available
                 - no_newer_history
                 - unknown
+            previousHeadline:
+              type: object
+              additionalProperties: false
+              description: The stored figures replaced by the newest fiscal year.
+              required:
+                - fiscalYear
+                - employeeCount
+                - revenueEur
+              properties:
+                fiscalYear:
+                  type:
+                    - string
+                    - "null"
+                employeeCount:
+                  type:
+                    - integer
+                    - "null"
+                revenueEur:
+                  type:
+                    - number
+                    - "null"
+            employeeFiscalYear:
+              type: string
+              description: Set when the newest year has no employee count and the headline keeps this year's.
             newerHistory:
               type:
                 - object
@@ -22153,9 +22699,10 @@ components:
                     - number
                     - "null"
           description:
-            The profile headline is the stored figure that prospect_query, prospecting_preview and
-            companies_search filter on, so rows and profiles agree. A newer financial history year is
-            reported in newerHistory and is not used by search until the published revision has it.
+            The profile headline is the newest fiscal year with a published revenue, the year the FI
+            search snapshot filters on (promoted_newest_year; previousHeadline keeps the stored
+            figures). A newer year without revenue is reported in newerHistory. Operating margin is
+            derived from the same year's operating profit and revenue.
         revision:
           type: string
         profile:
@@ -23313,7 +23860,7 @@ components:
             dailyCap:
               type: integer
               minimum: 1
-              maximum: 60
+              maximum: 2147483647
             pacingSeconds:
               type: integer
               minimum: 12
@@ -23827,6 +24374,40 @@ components:
               oneOf:
                 - $ref: "#/components/schemas/CompanyFitCohortData"
                 - type: "null"
+    CampaignVariationPerformanceInput:
+      type: object
+      additionalProperties: false
+      required:
+        - campaignId
+      properties:
+        channel:
+          type: string
+          enum:
+            - instagram
+            - facebook
+            - linkedin
+            - gmail
+            - sms
+          description: Optional channel filter for template_variation only.
+        campaignId:
+          $ref: "#/components/schemas/ResourceId"
+        from:
+          $ref: "#/components/schemas/ResourceVersion"
+        to:
+          $ref: "#/components/schemas/ResourceVersion"
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 25
+        offset:
+          type: integer
+          minimum: 0
+          maximum: 1000000
+        runId:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Optional run correlation. Also accepted as X-DMFaster-Run-Id.
     CopyPerformanceInput:
       type: object
       additionalProperties: false
@@ -24033,8 +24614,12 @@ components:
           type: string
           minLength: 1
           maxLength: 160
+        copyBasis:
+          type: string
+          enum: [saved_template, recovered_delivered_copy]
+          description: Recovered rows group exact delivered text; they do not reconstruct original templates or A/B slots.
         variantIndex:
-          type: integer
+          type: [integer, "null"]
           minimum: 0
           maximum: 100
         subject:
@@ -25345,12 +25930,10 @@ components:
           enum:
             - followers
             - following
-            - likers
-            - commenters
         count:
           type: integer
           minimum: 1
-          maximum: 2147483647
+          maximum: 100000
         currency:
           type: string
           enum:
@@ -25389,8 +25972,6 @@ components:
           enum:
             - followers
             - following
-            - likers
-            - commenters
         count:
           type: integer
           minimum: 1
@@ -33572,7 +34153,12 @@ components:
           description: Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox.
         contractVersion:
           type: string
-          const: 2.7.6
+          const: 2.9.0
+        rateLimit:
+          oneOf:
+            - $ref: "#/components/schemas/AgentRateLimitEnvelope"
+            - type: "null"
+          description: Negotiated quota metadata, matching the full response envelope.
         data:
           type: object
           additionalProperties: false
@@ -39504,7 +40090,7 @@ components:
         dailyCap:
           type: integer
           minimum: 1
-          maximum: 60
+          maximum: 2147483647
         pacingSeconds:
           type: integer
           minimum: 12
@@ -39550,7 +40136,7 @@ components:
       properties:
         dryRun:
           type: boolean
-          description: "True returns a non-executing input-only preview. Resource, version, policy and budget checks remain pending; policyDecision.allowed is false. False or omission retains the original operation and approval requirements."
+          description: "True renders the exact copy, audience count and approval-page contents without creating a review or authorizing launch. False or omission creates the owner review."
         plan:
           $ref: "#/components/schemas/ProspectingPlan"
         idempotencyKey:
@@ -39939,6 +40525,63 @@ components:
         - text
         - expectedConversationUpdatedAt
         - idempotencyKey
+    ListMergeInput:
+      type: object
+      additionalProperties: false
+      required: [sourceListIds, newName]
+      properties:
+        sourceListIds:
+          type: array
+          minItems: 2
+          maxItems: 10
+          items:
+            type: string
+            minLength: 1
+            maxLength: 180
+          description: Distinct saved list IDs from lists_list.
+        newName:
+          type: string
+          minLength: 1
+          maxLength: 120
+        preview:
+          type: boolean
+          description: Return the resulting lead count without creating a list.
+        archiveSources:
+          type: boolean
+          description: Archive the source lists after the merged list is saved, as the app's Lists page merge does. Omitted or false keeps them active. Only sources unchanged since they were read are archived; campaigns that target an archived list keep sending to it.
+    ListMergeResult:
+      allOf:
+        - $ref: "#/components/schemas/AgentToolResultBase"
+        - type: object
+          properties:
+            tool:
+              const: list.merge
+            data:
+              oneOf:
+                - type: object
+                  additionalProperties: false
+                  required: [status, name, leadCount]
+                  properties:
+                    status:
+                      type: string
+                      enum: [preview, created, existing]
+                    name:
+                      type: string
+                    leadCount:
+                      type: integer
+                      minimum: 0
+                    listId:
+                      type: string
+                    archiveSourceListIds:
+                      type: array
+                      items:
+                        type: string
+                      description: Preview with archiveSources only. Source lists that would be archived after saving.
+                    archivedSourceCount:
+                      type: integer
+                      minimum: 0
+                      description: Created with archiveSources only. Source lists archived by this call.
+                - type: "null"
     ListRenameInput:
       type: object
       additionalProperties: false
