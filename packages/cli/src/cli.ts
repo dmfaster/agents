@@ -35,6 +35,7 @@ import {
   type AcquireLoginLock,
   type OpenBrowser,
 } from "@dmfaster/local-auth";
+import { createReadStream } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { parseSavedListCommand } from "./saved-lists.ts";
@@ -42,7 +43,7 @@ import { parseInstagramUsernameFile } from "./list-import.ts";
 
 import { resolveCliConfig, type ResolvedCliConfig } from "./config.ts";
 
-export const CLI_VERSION = "2.7.7";
+export const CLI_VERSION = "2.7.8";
 
 function agentCommandHelp() {
   const sections = new Map<string, string[]>();
@@ -135,16 +136,21 @@ export type CliContext = {
 class UsageError extends Error {}
 
 async function readInputSource(path: string, context: CliContext, maxBytes: number) {
-  if (path !== "-") {
-    return (context.readTextFile ?? ((filePath: string) => readFile(filePath, "utf8")))(path);
-  }
+  const input =
+    path === "-"
+      ? (context.stdin ?? process.stdin)
+      : context.readTextFile
+        ? [await context.readTextFile(path)]
+        : createReadStream(path, { end: maxBytes });
   const chunks: Buffer[] = [];
   let total = 0;
-  for await (const chunk of context.stdin ?? process.stdin) {
+  for await (const chunk of input) {
     const buffer = Buffer.from(chunk);
     total += buffer.byteLength;
     if (total > maxBytes) {
-      throw new UsageError(`Standard input cannot exceed ${maxBytes} bytes.`);
+      throw new UsageError(
+        `${path === "-" ? "Standard input" : "Input file"} cannot exceed ${maxBytes} bytes.`,
+      );
     }
     chunks.push(buffer);
   }

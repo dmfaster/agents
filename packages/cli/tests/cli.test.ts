@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { randomBytes } from "node:crypto";
 import test from "node:test";
 
@@ -594,6 +597,25 @@ test("list import forwards the reviewed CSV with a stable retry key", async () =
   assert.deepEqual(first.usernames, ["coach.fi", "second", "coach.fi"]);
   assert.equal(first.idempotencyKey, second.idempotencyKey);
   assert.equal(first.name, "Finland Coaches");
+});
+
+test("list import bounds real files at the exact byte limit", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "dmf-import-"));
+  const path = join(dir, "contacts.csv");
+  const args = ["list", "import", "--name", "Contacts", "--file", path];
+  const calls: Array<{ tool: AgentToolName; input: unknown }> = [];
+  try {
+    const exact = "username\ncoach".padEnd(65536, " ");
+    await writeFile(path, exact);
+    assert.equal(await runCli(args, configuredContext(calls)), 0);
+    await writeFile(path, exact + " ");
+    const stderr = output();
+    assert.equal(await runCli(args, { ...configuredContext(calls), stderr: stderr.stream }), 2);
+    assert.match(stderr.read(), /65536 bytes/);
+    assert.equal(calls.length, 1);
+  } finally {
+    await rm(dir, { recursive: true });
+  }
 });
 
 test("list import rejects malformed files/options before invoking the API", async () => {

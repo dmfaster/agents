@@ -5224,7 +5224,7 @@ export interface components {
         };
         AgentHeartbeatCompactResult: {
             /** @constant */
-            contractVersion: "2.7.7";
+            contractVersion: "2.7.8";
             data: {
                 nextInSeconds: number;
             };
@@ -5635,7 +5635,7 @@ export interface components {
             build?: string;
             consistency: components["schemas"]["AgentToolConsistency"];
             /** @constant */
-            contractVersion?: "2.7.7";
+            contractVersion?: "2.7.8";
             data: unknown;
             durationMs: number;
             error: components["schemas"]["AgentToolError"] | null;
