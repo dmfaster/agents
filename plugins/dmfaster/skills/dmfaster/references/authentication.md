@@ -25,14 +25,14 @@ repository, or MCP configuration.
 Check the current credential without a global install:
 
 ```bash
-npx --yes @dmfaster/cli@2.7.7 auth status --json
-npx --yes @dmfaster/cli@2.7.7 doctor --json
+npx --yes @dmfaster/cli@2.7.8 auth status --json
+npx --yes @dmfaster/cli@2.7.8 doctor --json
 ```
 
 When authentication is required:
 
 ```bash
-npx --yes @dmfaster/cli@2.7.7 auth login --json
+npx --yes @dmfaster/cli@2.7.8 auth login --json
 ```
 
 The CLI prints an `authorization_required` JSON event and a human-readable

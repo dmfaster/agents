@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: DM Faster Agent API
-  version: 2.7.7
+  version: 2.7.8
   description: |
     The stable API used by DM Faster agent clients. Every token is bound to one
     workspace. Campaign planning and private drafts use the same authoritative
@@ -14635,7 +14635,7 @@ components:
               const: tool_execution
         contractVersion:
           type: string
-          const: 2.7.7
+          const: 2.7.8
         rateLimit:
           oneOf:
             - $ref: "#/components/schemas/AgentRateLimitEnvelope"
@@ -33572,7 +33572,7 @@ components:
           description: Accepted heartbeat timestamp; uses the advanceable workspace clock in a sandbox.
         contractVersion:
           type: string
-          const: 2.7.7
+          const: 2.7.8
         data:
           type: object
           additionalProperties: false

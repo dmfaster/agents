@@ -21,7 +21,7 @@ credit spending, launch, pause or sending.
 For CLI fallback, prefix each CLI suffix with:
 
 ```text
-npx --yes @dmfaster/cli@2.7.7
+npx --yes @dmfaster/cli@2.7.8
 ```
 
 Use `dmfaster describe COMMAND` for the generated JSON input schema, scopes,
