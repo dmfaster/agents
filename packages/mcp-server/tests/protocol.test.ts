@@ -3,6 +3,7 @@ import { createInterface } from "node:readline";
 import { PassThrough } from "node:stream";
 import test from "node:test";
 
+import { AGENT_TOOL_DEFINITIONS } from "@dmfaster/sdk";
 import type { AgentToolInputMap, AgentToolName, AgentToolResult } from "@dmfaster/sdk";
 import { serveStdio, StdioServerTransport } from "@modelcontextprotocol/server/stdio";
 
@@ -319,7 +320,10 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
   });
   const listed = await wire.receive();
   const tools = (listed.result as JsonObject).tools as Array<JsonObject>;
-  assert.deepEqual(tools.map((tool) => tool.name).sort(), [...MCP_TOOL_NAMES].sort());
+  const hidden = new Set<string>(Object.values(AGENT_TOOL_DEFINITIONS)
+    .filter(({ mcp }) => "deprecatedSuccessor" in mcp)
+    .map(({ mcp }) => mcp.name));
+  assert.deepEqual(tools.map((tool) => tool.name).sort(), MCP_TOOL_NAMES.filter((name) => !hidden.has(name)).sort());
   for (const name of [
     "senders_inspect",
     "agent_heartbeat",
@@ -340,12 +344,7 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
     ],
     true,
   );
-  assert.equal(
-    (tools.find((tool) => tool.name === "campaign_prepare")?._meta as JsonObject)[
-      "openai/widgetAccessible"
-    ],
-    true,
-  );
+  assert.equal(tools.some((tool) => tool.name === "campaign_prepare"), false);
   const workspaceTool = tools.find((tool) => tool.name === "campaign_workspace");
   assert.ok(workspaceTool);
   assert.equal(
@@ -362,8 +361,8 @@ test("serves the stateless MCP 2026-07-28 protocol over stdio", async (context) 
     id: 3,
     method: "tools/call",
     params: {
-      name: "workspace_briefing",
-      arguments: {},
+      name: "tools_call",
+      arguments: { tool: "workspace_briefing", input: {} },
       _meta: modernEnvelope,
     },
   });
@@ -567,7 +566,6 @@ test("company presentation preserves complex filters and domain reads stay headl
   wire.send({ jsonrpc: "2.0", id: 1, method: "tools/list", params: { _meta: modernEnvelope } });
   const tools = ((await wire.receive()).result as JsonObject).tools as JsonObject[];
   for (const name of [
-    "companies_filters",
     "companies_search",
     "company_inspect",
     "history_list",
@@ -736,7 +734,7 @@ test(
       jsonrpc: "2.0",
       id: 900,
       method: "tools/call",
-      params: { name: "workspace_briefing", arguments: {}, _meta: modernEnvelope },
+      params: { name: "tools_call", arguments: { tool: "workspace_briefing", input: {} }, _meta: modernEnvelope },
     });
     await entered;
     wire.send({

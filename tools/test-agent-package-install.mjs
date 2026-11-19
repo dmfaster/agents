@@ -19,14 +19,6 @@ const packageNames = [
   "@dmfaster/mcp-server",
 ];
 const mcpClientPackage = "@modelcontextprotocol/client@2.0.0";
-const campaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v7.html";
-const previousCampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v6.html";
-const v5CampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v5.html";
-const v4CampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v4.html";
-const v3CampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v3.html";
-const v2CampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v2.html";
-const legacyCampaignWorkspaceUri = "ui://dmfaster/campaign-workspace/v1.html";
-const mcpAppMimeType = "text/html;profile=mcp-app";
 const releaseVersion = JSON.parse(
   readFileSync(path.join(repoRoot, "packages", "local-auth", "package.json"), "utf8"),
 ).version;
@@ -36,14 +28,15 @@ const sourceContract = parse(
 );
 const expectedTools = [
   ...Object.entries(sourceContract.paths)
-    .filter(([path]) => path.startsWith("/api/v1/agent/tools/"))
+    .filter(
+      ([path, methods]) =>
+        path.startsWith("/api/v1/agent/tools/") &&
+        !methods.post["x-dmfaster-deprecated"]?.successor,
+    )
     .map(([, methods]) => methods.post["x-dmfaster-mcp"].name),
-  "campaign_workspace",
-  "companies_workspace",
-  "workspace_open",
-  "workspace_mentions",
-  "outreach_details",
   "connection_status",
+  "tools_discover",
+  "tools_call",
 ];
 const temporaryRoot = mkdtempSync(path.join(tmpdir(), "dmfaster-agent-packages-"));
 const artifactDirectory = path.join(temporaryRoot, "artifacts");
@@ -324,6 +317,7 @@ try {
     args: [mcpServerBinary],
     env: {
       ...process.env,
+      DMFASTER_MCP_PROFILE: "full",
       DMFASTER_API_URL: "http://127.0.0.1:9",
       DMFASTER_TOKEN: `dmf_pat_${"0".repeat(64)}`,
     },
@@ -340,66 +334,39 @@ try {
     assert.deepEqual(
       listed.tools.map((tool) => tool.name).sort(),
       [...expectedTools].sort(),
-      "the packed MCP server must expose every domain tool, connection status, and the Companies/campaign views",
+      "the packed full catalog must expose current domain tools; deprecated names remain dispatched by tools_call",
     );
-    for (const tool of listed.tools.filter(
-      (candidate) =>
-        ![
-          "connection_status",
-          "campaign_workspace",
-          "companies_workspace",
-          "workspace_open",
-        ].includes(candidate.name),
-    )) {
-      assert.equal(tool.outputSchema?.type, "object", `${tool.name} must describe its output`);
+    for (const tool of listed.tools.filter((candidate) => candidate.name !== "connection_status")) {
+      if (["tools_discover", "tools_call"].includes(tool.name))
+        assert.equal(tool.outputSchema?.type, "object");
+      else assert.equal(tool.outputSchema, undefined, `${tool.name} keeps discovery compact`);
     }
-    const workspaceTool = listed.tools.find((tool) => tool.name === "campaign_workspace");
-    assert.equal(workspaceTool?._meta?.ui?.resourceUri, campaignWorkspaceUri);
-    assert.equal(workspaceTool?._meta?.["openai/outputTemplate"], campaignWorkspaceUri);
-    const companiesTool = listed.tools.find((tool) => tool.name === "companies_workspace");
-    assert.equal(companiesTool?._meta?.ui?.resourceUri, campaignWorkspaceUri);
-    assert.equal(companiesTool?.annotations?.readOnlyHint, true);
-    assert.equal(
-      listed.tools.find((tool) => tool.name === "companies_evidence_results")?._meta?.[
-        "openai/widgetAccessible"
-      ],
-      true,
-    );
-    for (const name of [
-      "companies_evidence_start",
-      "companies_evidence_advance",
-      "companies_evidence_cancel",
-    ])
-      assert.equal(
-        listed.tools.find((tool) => tool.name === name)?._meta?.["openai/widgetAccessible"],
-        false,
-      );
+    for (const tool of listed.tools) {
+      assert.equal(tool._meta?.ui?.resourceUri, undefined);
+      assert.equal(tool._meta?.["openai/outputTemplate"], undefined);
+    }
 
-    const listedResources = await client.listResources();
-    assert.deepEqual(
-      listedResources.resources.map((resource) => resource.uri),
-      [
-        campaignWorkspaceUri,
-        previousCampaignWorkspaceUri,
-        v5CampaignWorkspaceUri,
-        v4CampaignWorkspaceUri,
-        v3CampaignWorkspaceUri,
-        v2CampaignWorkspaceUri,
-        legacyCampaignWorkspaceUri,
-      ],
-      "the packed MCP server must expose its current workspace and compatibility resources",
+    const guideUri = "dmfaster://docs/agents";
+    const resources = await client.listResources();
+    assert.ok(resources.resources.some((resource) => resource.uri === guideUri));
+    const guide = await client.readResource({ uri: guideUri });
+    assert.equal(guide.contents[0]?.mimeType, "text/markdown");
+    assert.match(guide.contents[0]?.text || "", /tools_discover/);
+
+    assert.equal(
+      listed.tools.some((tool) => tool.name === "campaign_workspace"),
+      false,
     );
-    assert.equal(listedResources.resources[0]?.mimeType, mcpAppMimeType);
-    const workspaceResource = await client.readResource({ uri: campaignWorkspaceUri });
-    assert.equal(workspaceResource.contents[0]?.mimeType, mcpAppMimeType);
-    assert.match(workspaceResource.contents[0]?.text || "", /ui\/initialize/u);
-    assert.match(workspaceResource.contents[0]?.text || "", /campaign_launch_preflight/u);
+    assert.equal(
+      listed.tools.some((tool) => tool.name === "companies_workspace"),
+      false,
+    );
   } finally {
     await client.close();
   }
 
   process.stdout.write(
-    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 domain tools, connection status and Companies/campaign views passed.\n",
+    "Packed SDK, auth, CLI, and MCP artifacts install cleanly; CLI fallback briefing and MCP 2026-07-28 domain tools, connection status and headless catalog passed.\n",
   );
 } finally {
   const expectedPrefix = path.join(tmpdir(), "dmfaster-agent-packages-");
