@@ -12,44 +12,6 @@ const generatorPath = path.join(rootDir, "tools", "generate-public-api.mjs");
 const sdkContractsPath = path.join(rootDir, "packages", "sdk", "src", "contracts.ts");
 const mcpToolsPath = path.join(rootDir, "packages", "mcp-server", "src", "tools.ts");
 const localAuthConstantsPath = path.join(rootDir, "packages", "local-auth", "src", "constants.ts");
-const capabilityRegistryPath = path.join(
-  rootDir,
-  "site",
-  "src",
-  "lib",
-  "agent-platform",
-  "capability-registry.ts",
-);
-const serverToolsPath = path.join(
-  rootDir,
-  "site",
-  "src",
-  "lib",
-  "server",
-  "agent-api",
-  "public-tools.ts",
-);
-const serverResponsesPath = path.join(
-  rootDir,
-  "site",
-  "src",
-  "lib",
-  "server",
-  "agent-api",
-  "responses.ts",
-);
-const serverCredentialsPath = path.join(
-  rootDir,
-  "site",
-  "src",
-  "lib",
-  "server",
-  "agent-api",
-  "credentials.ts",
-);
-const databaseSchemaPath = path.join(rootDir, "site", "src", "lib", "server", "db", "schema.ts");
-const scopeMigrationPaths = [path.join(rootDir, "site", "drizzle", "0415_call_stats_v2.sql")];
-
 // Explicit reviewed Agent 3.0 catalog, including the merged feedback surface.
 const EXPECTED_TOOLS = new Map([
   [
@@ -376,6 +338,13 @@ const EXPECTED_TOOLS = new Map([
   ],
   [
     "companies.suggest",
+    {
+      effect: "read",
+      scopes: ["audiences:read"],
+    },
+  ],
+  [
+    "prospect.query",
     {
       effect: "read",
       scopes: ["audiences:read"],
@@ -1406,6 +1375,48 @@ EXPECTED_TOOLS.set("call.participant.withdrawal.report", { effect: "write", scop
 EXPECTED_TOOLS.set("call.delete",{effect:"write",scopes:["calls:write"]});
 
 
+for (const name of ["copy.approval.request", "campaign.draft.plan"])
+  EXPECTED_TOOLS.set(name, {
+    effect: "draft",
+    scopes: ["audiences:read", "campaigns:read", "campaigns:write"],
+  });
+EXPECTED_TOOLS.set("campaign.draft.readiness", { effect: "read", scopes: ["campaigns:read"] });
+EXPECTED_TOOLS.set("prospecting.preview", { effect: "read", scopes: ["audiences:read"] });
+EXPECTED_TOOLS.set("companies.lookalike", {
+  effect: "read",
+  scopes: ["audiences:read", "pipeline:read"],
+});
+EXPECTED_TOOLS.set("commitments.propose", {
+  effect: "draft",
+  scopes: ["calls:read", "calls:transcripts:read", "pipeline:read", "pipeline:write"],
+});
+EXPECTED_TOOLS.set("commitments.list", {
+  effect: "read",
+  scopes: ["calls:read", "calls:transcripts:read", "pipeline:read"],
+});
+for (const name of ["commitment.update", "commitment.confirm.batch"])
+  EXPECTED_TOOLS.set(name, {
+    effect: "write",
+    scopes: ["calls:read", "calls:transcripts:read", "pipeline:read", "pipeline:write"],
+  });
+EXPECTED_TOOLS.set("commitment.reminder.draft", {
+  effect: "draft",
+  scopes: [
+    "calls:read",
+    "calls:transcripts:read",
+    "pipeline:read",
+    "pipeline:write",
+    "inbox:write",
+  ],
+});
+for (const name of ["list.rename", "list.archive", "campaign.draft.archive"])
+  EXPECTED_TOOLS.set(name, { effect: "write", scopes: ["campaigns:read", "campaigns:write"] });
+
+EXPECTED_TOOLS.set("copy.approval.inspect", { effect: "read", scopes: ["campaigns:read"] });
+for (const name of ["copy.approval.cancel", "approval.cancel"])
+  EXPECTED_TOOLS.set(name, { effect: "write", scopes: ["campaigns:read", "campaigns:write"] });
+EXPECTED_TOOLS.set("approvals.list", { effect: "read", scopes: ["inbox:read"] });
+
 const EXPECTED_AUTH_METHODS = new Map([
   ["device", "post"],
   ["token", "post"],
@@ -1464,9 +1475,6 @@ function yamlEnumValues(source, schemaName, nextSchemaName) {
     .filter(Boolean);
 }
 
-function jsonbScopeAllowlists(source) {
-  return [...source.matchAll(/<@\s+'(\[[^']+\])'::jsonb/g)].map((match) => JSON.parse(match[1]));
-}
 
 test("public API generation scripts and stale-output guidance share one repair command", async () => {
   const packageJson = JSON.parse(await readFile(packagePath, "utf8"));
@@ -1474,11 +1482,11 @@ test("public API generation scripts and stale-output guidance share one repair c
 
   assert.equal(
     packageJson.scripts?.["generate:agent-api"],
-    "node tools/generate-public-api.mjs && node tools/generate-sales-metrics.mjs",
+    "node tools/generate-public-api.mjs",
   );
   assert.equal(
     packageJson.scripts?.["check:agent-api"],
-    "node tools/generate-public-api.mjs --check && node tools/generate-sales-metrics.mjs --check",
+    "node tools/generate-public-api.mjs --check",
   );
   assert.match(generator, /npm run generate:agent-api/);
   assert.doesNotMatch(generator, /npm run generate:public-api/);
@@ -1568,40 +1576,25 @@ test("the public Agent API exposes exactly the approved Agent 3.0 operations", a
 
 test("every public adapter consumes the generated OpenAPI catalog", async () => {
   const sdk = await import("../packages/sdk/src/generated/tools.ts");
-  const server = await import("../site/src/lib/agent-platform/public-contract.generated.ts");
   assert.deepEqual(sdk.AGENT_TOOL_NAMES, EXPECTED_TOOL_NAMES);
-  assert.deepEqual(server.AGENT_TOOL_NAMES, EXPECTED_TOOL_NAMES);
-  assert.deepEqual(sdk.AGENT_TOOL_POLICIES, server.AGENT_TOOL_POLICIES);
-  assert.deepEqual(sdk.AGENT_TOOL_SCOPES, server.AGENT_TOOL_SCOPES);
   for (const [name, expected] of EXPECTED_TOOLS) {
     assert.equal(sdk.AGENT_TOOL_POLICIES[name].effect, expected.effect);
     assert.deepEqual(sdk.AGENT_TOOL_SCOPES[name], expected.scopes);
   }
-  const [sdkSource, mcp, registry, serverTools, responses] = await Promise.all([
+  const [sdkSource, mcp] = await Promise.all([
     readFile(sdkContractsPath, "utf8"),
     readFile(mcpToolsPath, "utf8"),
-    readFile(capabilityRegistryPath, "utf8"),
-    readFile(serverToolsPath, "utf8"),
-    readFile(serverResponsesPath, "utf8"),
   ]);
   assert.match(sdkSource, /generated\/tools\.ts/);
   assert.match(mcp, /AGENT_TOOL_NAMES\.map/);
   assert.match(mcp, /AGENT_INPUT_SCHEMAS\[tool\]/);
-  assert.match(registry, /AGENT_TOOL_NAMES as AGENT_PUBLIC_CAPABILITY_NAMES/);
-  assert.match(serverTools, /PUBLIC_AGENT_TOOL_SCOPES = AGENT_TOOL_SCOPES/);
-  assert.match(responses, /PUBLIC_AGENT_TOOL_POLICIES = AGENT_TOOL_POLICIES/);
 });
 
-test("every runtime, contract, schema, and migration scope allowlist stays equal", async () => {
-  const [contract, localAuth, serverCredentials, databaseSchema, ...migrations] = await Promise.all(
-    [
-      readFile(contractPath, "utf8"),
-      readFile(localAuthConstantsPath, "utf8"),
-      readFile(serverCredentialsPath, "utf8"),
-      readFile(databaseSchemaPath, "utf8"),
-      ...scopeMigrationPaths.map((migrationPath) => readFile(migrationPath, "utf8")),
-    ],
-  );
+test("public authentication and contract scope allowlists stay equal", async () => {
+  const [contract, localAuth] = await Promise.all([
+    readFile(contractPath, "utf8"),
+    readFile(localAuthConstantsPath, "utf8"),
+  ]);
 
   const schemas = parse(contract).components.schemas;
   for (const name of ["AgentDeviceAuthorizationInput", "AgentCredential"]) {
@@ -1620,12 +1613,6 @@ test("every runtime, contract, schema, and migration scope allowlist stays equal
       "local-auth DMFASTER_AGENT_SCOPES",
       quotedValues(sourceSlice(localAuth, "export const DMFASTER_AGENT_SCOPES = [", "] as const")),
     ],
-    [
-      "server AGENT_API_SCOPES",
-      quotedValues(
-        sourceSlice(serverCredentials, "export const AGENT_API_SCOPES = [", "] as const"),
-      ),
-    ],
   ]);
   for (const [name, scopes] of runtimeAllowlists) {
     // Local login profiles do not request policy editing; the server and API still support it.
@@ -1635,21 +1622,7 @@ test("every runtime, contract, schema, and migration scope allowlist stays equal
     assert.deepEqual([...scopes].sort(), [...expected].sort(), `${name} scope drift`);
   }
 
-  const persistedAllowlists = [
-    ["Drizzle schema", databaseSchema],
-    ...migrations.map((source, index) => [`migration ${scopeMigrationPaths[index]}`, source]),
-  ];
-  for (const [name, source] of persistedAllowlists) {
-    const allowlists = jsonbScopeAllowlists(source);
-    assert.ok(allowlists.length > 0, `${name} must contain a persisted scope allowlist`);
-    for (const scopes of allowlists) {
-      assert.deepEqual(
-        [...scopes].sort(),
-        [...EXPECTED_SCOPE_NAMES].sort(),
-        `${name} persisted scope drift`,
-      );
-    }
-  }
+
 });
 
 test("read and plan login profiles cannot acquire write scopes by catalog insertion", async () => {

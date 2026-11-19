@@ -28,3 +28,7 @@ test("rejects invalid or multi-column records without a partial import", () => {
     assert.throws(() => parseInstagramUsernameFile(input));
   }
 });
+
+test("invalid usernames identify the physical line after skipped blanks", () => {
+  assert.throws(() => parseInstagramUsernameFile("\nusername\n\nvalid_name\nbad name"), /row 5/);
+});

@@ -3,18 +3,17 @@ export function parseInstagramUsernameFile(text: string): string[] {
   if (Buffer.byteLength(text, "utf8") > 64 * 1024) {
     throw new Error("The import file must be at most 64 KiB.");
   }
-  const rows = text
-    .replace(/^\uFEFF/, "")
-    .split(/\r\n|\n|\r/)
-    .filter((row) => row.trim());
+  const rows = text.replace(/^\uFEFF/, "").split(/\r\n|\n|\r/);
+  const firstValue = rows.findIndex((row) => row.trim());
   const values = rows
     .map((row, index) => {
       const value = row.trim();
+      if (!value) return null;
       const cell =
         value.startsWith('"') && value.endsWith('"')
           ? value.slice(1, -1).replaceAll('""', '"')
           : value;
-      if (index === 0 && /^(username|instagram_username)$/i.test(cell)) return null;
+      if (index === firstValue && /^(username|instagram_username)$/i.test(cell)) return null;
       const username = cell.trim().replace(/^@/, "").toLowerCase();
       if (!/^[a-z0-9_](?:[a-z0-9_.]{0,28}[a-z0-9_])?$/.test(username) || username.includes("..")) {
         throw new Error(
